@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
-import { ArrowUpRight } from 'lucide-react';
+import { useLayoutEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { paths } from '../../common/router/routePaths';
 import './ProgramContent.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const asset = (number) => `/images/programs/program-${String(number).padStart(2, '0')}.png`;
 
@@ -73,6 +77,51 @@ function Calendar() {
 }
 
 export default function ProgramContent() {
+    const locationsRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const section = locationsRef.current;
+        const canvas = section.querySelector('.program-locations__canvas');
+        const intro = section.querySelector('.program-locations__intro');
+        const programs = section.querySelector('.program-locations__programs');
+        const media = gsap.matchMedia();
+
+        media.add('(prefers-reduced-motion: no-preference)', () => {
+            section.classList.add('program-locations--scrolling');
+
+            // Fit the full design height before measuring its horizontal travel.
+            const scale = () => Math.min(1, section.clientHeight / canvas.offsetHeight);
+            const introWidth = () => window.matchMedia('(max-width: 900px)').matches ? section.clientWidth : 1920;
+            const extraSpace = () => Math.max(0, section.clientWidth / scale() - introWidth());
+            const distance = () => Math.max(0, (canvas.offsetWidth + extraSpace()) * scale() - section.clientWidth);
+            const fitCanvas = () => {
+                gsap.set(canvas, { scale: scale(), transformOrigin: 'top left' });
+                gsap.set(intro, { width: section.clientWidth / scale() });
+                gsap.set(programs, { x: extraSpace() });
+            };
+            fitCanvas();
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top top',
+                    end: () => `+=${Math.max(1, distance()) * 1.06}`,
+                    pin: true,
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                    onRefreshInit: fitCanvas,
+                },
+            });
+            // Reserve the first part of the pinned scroll for the introduction.
+            timeline.to({}, { duration: 0.06 });
+            timeline.to(canvas, { x: () => -distance(), duration: 1, ease: 'none' });
+
+            return () => section.classList.remove('program-locations--scrolling');
+        });
+
+        return () => media.revert();
+    }, []);
+
     return (
         <main className="program-page">
             <section className="program-hero">
@@ -150,12 +199,13 @@ export default function ProgramContent() {
                 <img className="program-feature__visual" src="/images/programs/program-feature-main.svg" alt="레고로 만든 미래자동차 코딩 워크샵 모형" />
             </section>
 
-            <section className="program-locations">
+            <section className="program-locations" ref={locationsRef} tabIndex={0} aria-label="지점별 프로그램">
                 <div className="program-locations__canvas">
                     <div className="program-locations__intro">
                         <h2>PROGRAMS BY LOCATION</h2>
                         <p>각 지점에서 만나볼 수 있는 다양한 체험 프로그램을 확인해보세요.</p>
                     </div>
+                    <div className="program-locations__programs">
                     <div className="program-locations__branch program-locations__branch--seoul">
                         <h3>SEOUL<br />PROGRAMS</h3>
                         <p>서울 지점의 다양한 프로그램을 만나보세요.</p>
@@ -174,6 +224,7 @@ export default function ProgramContent() {
                             </div>
                         </article>
                     ))}
+                    </div>
                 </div>
             </section>
 

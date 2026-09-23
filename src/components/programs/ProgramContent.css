@@ -195,4 +195,8 @@ body:has(.program-page) .site-header{position:absolute;background:#fff;color:#11
 }
 @media(max-width:900px){.program-closing img{object-fit:cover}
 }
-/* Program component styles. */
+.program-page{overflow-x:clip;overflow-y:visible}
+.program-locations.program-locations--scrolling{height:min(1080px,100svh);overflow:hidden}
+.program-locations--scrolling .program-locations__canvas{will-change:transform}
+.program-locations__programs{position:absolute;inset:0}
+@media(max-width:900px){.program-locations.program-locations--scrolling{height:min(760px,100svh)}}
