@@ -1,0 +1,294 @@
+.site-footer {
+    background: #063452;
+    color: #fff;
+    padding: 90px clamp(24px, 5.2vw, 100px) 35px;
+    overflow: hidden;
+}
+.site-footer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 20px;
+}
+.site-footer__top p {
+    font-size: clamp(24px, 3vw, 48px);
+    line-height: 1.25;
+    font-weight: 600;
+}
+.site-footer__social {
+    display: flex;
+    gap: 20px;
+}
+.site-footer__social a {
+    display: grid;
+    place-items: center;
+    border: 1px solid #ffffff80;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+.site-footer__links {
+    display: flex;
+    gap: 32px;
+    margin-top: 55px;
+    flex-wrap: wrap;
+}
+.site-footer__links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom: 1px solid #ffffff80;
+    padding-bottom: 7px;
+}
+.site-footer__wordmark {
+    display: block;
+    font-family: var(--font-en);
+    font-size: clamp(70px, 12vw, 240px);
+    letter-spacing: -0.095em;
+    line-height: 0.76;
+    margin: 95px 0 45px;
+    white-space: nowrap;
+}
+.site-footer small {
+    color: #ffffffa9;
+}
+@media (max-width: 680px) {
+    .site-footer {
+        padding-top: 60px;
+    }
+    .site-footer__top {
+        display: block;
+    }
+    .site-footer__social {
+        margin-top: 30px;
+    }
+    .site-footer__links {
+        gap: 18px;
+    }
+    .site-footer__wordmark {
+        margin-top: 80px;
+        font-size: 15vw;
+    }
+}
+
+.reservation-footer {
+    position: relative;
+    height: 798px;
+    overflow: hidden;
+    padding: 116px 100px 0;
+    background: #111;
+    color: #fff;
+}
+.reservation-footer__meta {
+    position: relative;
+    z-index: 2;
+    width: max-content;
+}
+.reservation-footer__social {
+    display: flex;
+    gap: 20px;
+}
+.reservation-footer__social a {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+}
+.reservation-footer__social svg {
+    width: 22px;
+    height: 22px;
+}
+.reservation-footer__meta nav {
+    display: flex;
+    gap: 17px;
+    margin-top: 20px;
+}
+.reservation-footer__meta nav a,
+.reservation-footer__meta p {
+    font-size: 15px;
+    font-weight: 500;
+}
+.reservation-footer__meta p {
+    margin-top: 16px;
+}
+.reservation-footer__wordmark {
+    position: absolute;
+    z-index: 1;
+    top: 293px;
+    left: 100px;
+    width: 1130px;
+    height: 242px;
+}
+.reservation-footer > small {
+    position: absolute;
+    z-index: 3;
+    top: 557px;
+    left: 100px;
+    font: 500 15px var(--font-en);
+}
+.reservation-footer__cars {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 350px;
+}
+.reservation-footer__car,
+.reservation-footer__rock {
+    position: absolute;
+    object-fit: contain;
+}
+.reservation-footer__car--one {
+    left: 3%;
+    bottom: -9px;
+    width: 450px;
+    transform: rotate(7.89deg);
+}
+.reservation-footer__car--two {
+    left: 22%;
+    bottom: 4px;
+    width: 483px;
+    transform: rotate(-15deg);
+}
+.reservation-footer__car--three {
+    left: 43%;
+    bottom: 0;
+    width: 545px;
+}
+.reservation-footer__car--four {
+    right: -1%;
+    bottom: -8px;
+    width: 579px;
+    transform: rotate(6.98deg);
+}
+.reservation-footer__rock {
+    z-index: 2;
+    right: 19%;
+    bottom: 129px;
+    width: 209px;
+    transform: rotate(-10.56deg);
+}
+.reservation-footer__rock img {
+    width: 100%;
+}
+.reservation-footer__car,
+.reservation-footer__rock {
+    opacity: 0;
+    will-change: transform;
+    transform-origin: center center;
+    filter: drop-shadow(0 18px 13px rgba(0, 0, 0, 0.3));
+}
+.reservation-footer.is-physics-running .reservation-footer__car,
+.reservation-footer.is-physics-running .reservation-footer__rock,
+.reservation-footer.is-physics-static .reservation-footer__car,
+.reservation-footer.is-physics-static .reservation-footer__rock {
+    opacity: 1;
+}
+.reservation-footer.is-physics-running .reservation-footer__car,
+.reservation-footer.is-physics-running .reservation-footer__rock {
+    pointer-events: none;
+}
+.reservation-footer__rock {
+    aspect-ratio: 171.86/137.329;
+}
+.reservation-footer__rock .reservation-footer__rock-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.reservation-footer__rock .reservation-footer__rock-eye {
+    position: absolute;
+    top: 25%;
+    left: 61.71%;
+    width: 11.86%;
+    height: auto;
+}
+@media (max-width: 1100px) {
+    .reservation-footer {
+        height: 650px;
+        padding: 80px 40px 0;
+    }
+    .reservation-footer__wordmark {
+        top: 245px;
+        left: 40px;
+        width: 80vw;
+        height: auto;
+    }
+    .reservation-footer > small {
+        top: 450px;
+        left: 40px;
+    }
+    .reservation-footer__cars {
+        height: 260px;
+    }
+    .reservation-footer__car--one {
+        width: 32vw;
+    }
+    .reservation-footer__car--two {
+        width: 34vw;
+    }
+    .reservation-footer__car--three {
+        width: 37vw;
+    }
+    .reservation-footer__car--four {
+        width: 38vw;
+    }
+    .reservation-footer__rock {
+        width: 14vw;
+        bottom: 95px;
+    }
+}
+@media (max-width: 680px) {
+    .reservation-footer {
+        height: 560px;
+        padding: 60px 24px 0;
+    }
+    .reservation-footer__meta nav {
+        gap: 12px;
+        flex-wrap: wrap;
+        max-width: 300px;
+    }
+    .reservation-footer__meta nav a,
+    .reservation-footer__meta p {
+        font-size: 12px;
+    }
+    .reservation-footer__wordmark {
+        top: 235px;
+        left: 24px;
+        width: 88vw;
+    }
+    .reservation-footer > small {
+        top: 360px;
+        left: 24px;
+        font-size: 9px;
+    }
+    .reservation-footer__cars {
+        height: 190px;
+    }
+    .reservation-footer__car--one {
+        left: -8%;
+        width: 42vw;
+    }
+    .reservation-footer__car--two {
+        left: 19%;
+        width: 45vw;
+    }
+    .reservation-footer__car--three {
+        left: 43%;
+        width: 48vw;
+    }
+    .reservation-footer__car--four {
+        right: -13%;
+        width: 50vw;
+    }
+    .reservation-footer__rock {
+        display: none;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .reservation-footer__car,
+    .reservation-footer__rock {
+        will-change: auto;
+    }
+}

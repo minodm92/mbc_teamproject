@@ -1,0 +1,1 @@
+.pagination{display:flex;justify-content:center;gap:7px;margin:35px 0}.pagination button{min-width:39px;min-height:39px;padding:7px;border:1px solid #9aa5ab;background:#fff}.pagination button[aria-current=page]{background:#063452;color:#fff}.pagination button:disabled{opacity:.4;cursor:default}

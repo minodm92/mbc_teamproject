@@ -1,0 +1,15 @@
+export {
+  MotorstudioPage,
+  LocationPage,
+  MobilityPage,
+  ExhibitionsPage,
+  ExhibitionDetailPage,
+  ProgramsPage,
+  ProgramDetailPage,
+  MembershipPage,
+  NoticesPage,
+  NoticeDetailPage,
+  NewsroomPage,
+  NotFoundPage,
+  SiteMapPage,
+} from '../../components/content/ContentPages';

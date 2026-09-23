@@ -1,0 +1,19 @@
+﻿.board-toolbar{display:flex;gap:10px;margin-bottom:25px}
+.board-toolbar input,.board-toolbar select{border:1px solid #aaa;padding:12px}
+.board-toolbar input{flex:1}
+.board-toolbar a{background:#063452;color:#fff;padding:12px 20px}
+.board-list{border-top:1px solid #aaa}
+.board-list a{display:grid;grid-template-columns:100px 1fr 140px 130px;gap:15px;border-bottom:1px solid #ccc;padding:25px 0;align-items:center}
+.board-list strong{font-size:19px}
+.board-detail{max-width:900px}
+.board-detail>p{padding:80px 0;min-height:280px;font-size:20px;white-space:pre-line}
+.board-detail button,.board-detail a{border:1px solid #aaa;background:#fff;padding:10px 15px;margin-right:8px}
+.board-detail>div{margin-top:30px}
+.board-form{max-width:760px;margin:auto}
+@media(max-width:700px){.board-toolbar{flex-wrap:wrap}
+.board-toolbar input{min-width:100%}
+.board-list a{grid-template-columns:1fr 1fr;gap:8px}
+.board-list strong{grid-column:1/3}
+.board-list time{text-align:right}
+}
+/* Board component styles. */

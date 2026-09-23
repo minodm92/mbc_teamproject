@@ -1,0 +1,60 @@
+﻿.checkout-page{padding:142px 24px 120px;background:#fff;color:#171717}
+.checkout-page__inner{width:min(1280px,100%);margin:0 auto}
+.checkout-page__eyebrow{color:#1769d1;font:700 13px var(--font-en);letter-spacing:.1em}
+.checkout-page h1{margin:12px 0 28px;padding-bottom:20px;border-bottom:2px solid #222;font-size:clamp(34px,4vw,54px);letter-spacing:-.055em}
+.checkout-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(340px,1fr);gap:42px}
+.checkout-main{padding-right:42px;border-right:1px solid #e2e2e2}
+.checkout-section{position:relative;margin-bottom:45px}
+.checkout-section__title{display:flex;align-items:end;justify-content:space-between;margin-bottom:14px}
+.checkout-section__title h2,.checkout-summary h2{font-size:20px}
+.checkout-section__title span{color:#777;font-size:12px}
+.checkout-info-table{border-top:1px solid #aaa}
+.checkout-info-table>div{display:grid;grid-template-columns:38% 1fr;min-height:50px;border-bottom:1px solid #e6e6e6}
+.checkout-info-table dt,.checkout-info-table dd{display:flex;align-items:center;padding:12px 16px;font-size:14px}
+.checkout-info-table dt{background:#f5f5f5;font-weight:700}
+.checkout-same{display:flex;justify-content:flex-end;margin:-2px 0 12px}
+.checkout-same input{position:absolute;opacity:0}
+.checkout-same span{display:flex;align-items:center;gap:6px;font-size:13px}
+.checkout-fields{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;padding:18px 20px;border-top:1px solid #ddd;border-bottom:1px solid #eee}
+.checkout-field{display:grid;gap:8px}
+.checkout-field span,.checkout-choice>span{font-size:12px;font-weight:700}
+.checkout-field em,.checkout-choice em{color:#e32b23;font-style:normal}
+.checkout-field input{height:48px;border:1px solid #c8cdd1;padding:0 13px}
+.checkout-choice{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:12px;margin-top:16px}
+.checkout-choice>div{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.checkout-choice button{height:46px;border:1px solid #ccd1d5;background:#fff}
+.checkout-choice button.is-selected{border-color:#1769d1;background:#edf5ff;color:#1769d1;font-weight:700}
+.checkout-agreement{display:flex;align-items:center;gap:8px;min-height:52px;border-bottom:1px solid #e6e6e6;font-size:14px;cursor:pointer}
+.checkout-agreement input{position:absolute;opacity:0}
+.checkout-agreement>span{display:grid;width:24px;height:24px;place-items:center;border:1px solid #c8cdd1;color:transparent}
+.checkout-agreement input:checked+span{border-color:#1769d1;background:#1769d1;color:#fff}
+.checkout-agreement b{margin-left:auto;font-size:24px;font-weight:400}
+.checkout-coupon{display:grid;grid-template-columns:1fr 130px 90px;align-items:center;gap:10px;padding:12px 14px;background:#f5f5f5}
+.checkout-coupon strong{height:42px;padding:11px;border:1px solid #c8cdd1;background:#fff;text-align:right;color:#1769d1}
+.checkout-coupon button{height:42px;border:0;background:#222;color:#fff}
+.checkout-subtitle{margin:28px 0 12px;font-size:15px}
+.payment-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.payment-methods button{display:flex;min-height:56px;align-items:center;justify-content:center;gap:8px;border:1px solid #c8cdd1;background:#fff}
+.payment-methods button.is-selected{border:2px solid #222}
+.checkout-summary{position:sticky;top:100px;align-self:start}
+.checkout-summary__block{margin-bottom:42px}
+.checkout-summary__heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.checkout-summary__heading button{border:0;background:#222;color:#fff;padding:9px 14px}
+.checkout-summary__block>h2{margin-bottom:13px}
+.checkout-total{display:flex;align-items:center;justify-content:space-between;padding:20px 16px;border-bottom:1px solid #222}
+.checkout-total span{font-weight:700}
+.checkout-total strong{color:#1769d1;font-size:22px}
+.checkout-pay{width:100%;height:58px;margin-top:32px;border:0;background:#1769d1;color:#fff;font-weight:800}
+.checkout-pay:disabled{background:#aeb5bd;cursor:not-allowed}
+@media(max-width:900px){.checkout-layout{grid-template-columns:1fr}
+.checkout-main{padding-right:0;border-right:0}
+.checkout-summary{position:static}
+.checkout-page{padding-top:115px}
+}
+@media(max-width:600px){.checkout-fields{grid-template-columns:1fr}
+.checkout-choice{grid-template-columns:1fr}
+.payment-methods{grid-template-columns:1fr 1fr}
+.checkout-coupon{grid-template-columns:1fr 90px}
+.checkout-coupon button{grid-column:1/-1}
+}
+/* Reservation checkout component styles. */

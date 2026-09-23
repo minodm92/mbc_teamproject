@@ -1,0 +1,32 @@
+﻿.page-shell{padding-top:80px;min-height:75vh}
+.page-shell__hero{background:var(--color-point-1);color:#fff;padding:100px clamp(24px,5.2vw,100px) 110px;min-height:420px;display:flex;flex-direction:column;justify-content:end}
+.page-shell__hero>span,.detail-copy>span{font:700 13px var(--font-en);letter-spacing:.12em;text-transform:uppercase}
+.page-shell__hero h1{font-size:clamp(42px,6.5vw,112px);letter-spacing:-.055em;line-height:1.08;margin:20px 0}
+.page-shell__hero p{font-size:clamp(16px,1.3vw,22px);line-height:1.6;max-width:800px}
+.page-shell__body{padding:90px clamp(24px,5.2vw,100px) 130px}
+.page-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:70px 30px}
+.editorial-panel{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;margin-bottom:100px}
+.editorial-panel h2,.detail-copy h2,.info-box h2{font-size:clamp(32px,3.5vw,64px);line-height:1.2;letter-spacing:-.05em;margin:20px 0}
+.editorial-panel p,.detail-copy p,.info-box p{font-size:18px;line-height:1.7;max-width:650px}
+.editorial-panel img{width:100%;height:auto}
+.feature-image{background:#e4eaee}
+.feature-image img{width:100%;max-height:730px;object-fit:cover}
+.detail-copy{padding:75px 0 20px;max-width:800px}
+.detail-copy p{margin-bottom:40px}
+.action-link{display:inline-flex;align-items:center;gap:12px;font-weight:700;border-bottom:1px solid;padding-bottom:8px}
+.info-box{padding:clamp(30px,4vw,75px);background:#e5edf0;min-height:260px}
+.notice-list{border-top:1px solid #1115}
+.notice-list a{display:grid;grid-template-columns:100px 1fr 150px 24px;gap:25px;align-items:center;padding:30px 0;border-bottom:1px solid #1115}
+.notice-list strong{font-size:clamp(17px,1.5vw,24px)}
+.notice-list span,.notice-list time{color:var(--color-sub-3)}
+.notice-detail{min-height:350px}
+.notice-detail p{font-size:20px;line-height:1.7;margin-bottom:100px}
+@media(max-width:760px){.page-shell{padding-top:72px}
+.page-shell__hero{min-height:370px;padding:75px 24px}
+.page-shell__body{padding:60px 24px 90px}
+.page-grid,.editorial-panel{grid-template-columns:1fr}
+.notice-list a{grid-template-columns:1fr 24px;gap:9px}
+.notice-list a span,.notice-list a time{grid-column:1}
+.notice-list a svg{grid-column:2;grid-row:1/4}
+}
+/* Content component styles. */

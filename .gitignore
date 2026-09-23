@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.local
+.env.*.local
+*.log
+
+# Test results
+coverage/
+test-results/
+playwright-report/
+junit.xml
+
+.vercel
+.env*
