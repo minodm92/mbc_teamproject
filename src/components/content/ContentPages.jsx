@@ -25,7 +25,7 @@ export function MembershipPage() { return <PageShell eyebrow="MEMBERSHIP" title=
 
 export function NoticesPage() { return <NoticesListing />; }
 
-export function NoticeDetailPage() { const { noticeId } = useParams(); const item = notices.find((row) => row.id === noticeId); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`${item.category} / ${item.date}`} title={item.title}><article className="notice-detail"><p>{item.content}</p><Link className="action-link" to={paths.notices}><ArrowLeft size={18} /> 목록으로</Link></article></PageShell>; }
+export function NoticeDetailPage() { const { noticeId } = useParams(); const item = notices.find((row) => row.id === noticeId); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`${item.category} / ${item.date}`} title={item.title}><article className="notice-detail"><p>{item.content || '상세 내용은 준비 중입니다.'}</p><Link className="action-link" to={paths.notices}><ArrowLeft size={18} /> 목록으로</Link></article></PageShell>; }
 
 export function NewsroomPage() { return <PageShell eyebrow="NEWSROOM" title="현대 모터스튜디오의 이야기" intro="공간과 사람, 모빌리티의 새로운 소식을 만나보세요."><div className="page-grid">{news.map((item) => <ContentCard key={item.id} image={item.image} eyebrow={item.subtitle} title={item.title} description={item.description} to={paths.location(item.location)} />)}</div></PageShell>; }
 
