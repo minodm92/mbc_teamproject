@@ -30,3 +30,125 @@
 .notice-list a svg{grid-column:2;grid-row:1/4}
 }
 /* Content component styles. */
+
+/* Location detail styling: scoped to pages rendering a location asset. */
+.page-shell:has(.feature-image img[src^="/images/locations/"]) {
+  --location-surface: #fff;
+  --location-ink: #0e0e0e;
+  padding-top: 0;
+  color: var(--location-ink);
+  background: var(--location-surface);
+}
+.page-shell:has(.feature-image img[src$="/seoul.svg"]) {
+  --location-surface: #2668d3;
+  --location-ink: #fff;
+}
+.page-shell:has(.feature-image img[src$="/hanam.svg"]) {
+  --location-surface: #2c5e8a;
+  --location-ink: #fff;
+}
+.page-shell:has(.feature-image img[src$="/busan.svg"]) {
+  --location-surface: #063452;
+  --location-ink: #fff;
+}
+.page-shell:has(.feature-image img[src$="/beijing.svg"]) {
+  --location-surface: #a8a7ac;
+}
+.page-shell:has(.feature-image img[src$="/senayan-park.svg"]) {
+  --location-surface: #363636;
+  --location-ink: #fff;
+}
+.page-shell:has(.feature-image img[src^="/images/locations/"]) .page-shell__hero {
+  min-height: 440px;
+  background: #111;
+  color: #fff;
+}
+.page-shell:has(.feature-image img[src^="/images/locations/"]) .page-shell__hero > span,
+.page-shell:has(.feature-image img[src^="/images/locations/"]) .detail-copy > span {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+.page-shell:has(.feature-image img[src^="/images/locations/"]) .page-shell__hero h1 {
+  font-size: clamp(42px, 4.167vw, 60px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+.page-shell:has(.feature-image img[src^="/images/locations/"]) .page-shell__hero p {
+  font-size: 16px;
+  line-height: 1.4;
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 76px);
+  min-height: 569px;
+  padding: 18px clamp(24px, 2vw, 38px);
+  background: var(--location-surface);
+  color: var(--location-ink);
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .feature-image {
+  grid-column: 2;
+  grid-row: 1;
+  background: transparent;
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .feature-image img {
+  display: block;
+  width: 100%;
+  max-height: 533px;
+  aspect-ratio: 714 / 533;
+  object-fit: contain;
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .detail-copy {
+  grid-column: 1;
+  grid-row: 1;
+  width: min(100%, 435px);
+  max-width: none;
+  padding: 0;
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .detail-copy h2 {
+  margin: 20px 0;
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .detail-copy p {
+  max-width: none;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .action-link {
+  color: inherit;
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .page-shell__body:has(> .feature-image img[src^="/images/locations/"]) {
+    gap: 28px;
+    min-height: 480px;
+  }
+  .page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .detail-copy {
+    width: 100%;
+  }
+}
+@media (max-width: 760px) {
+  .page-shell:has(.feature-image img[src^="/images/locations/"]) .page-shell__hero {
+    min-height: 370px;
+  }
+  .page-shell__body:has(> .feature-image img[src^="/images/locations/"]) {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    gap: 32px;
+    padding: 24px;
+  }
+  .page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .feature-image,
+  .page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .detail-copy {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .page-shell__body:has(> .feature-image img[src^="/images/locations/"]) .feature-image img {
+    max-height: none;
+  }
+}
