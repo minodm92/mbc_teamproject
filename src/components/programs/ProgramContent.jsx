@@ -77,7 +77,194 @@ function Calendar() {
 }
 
 export default function ProgramContent() {
+    const pageRef = useRef(null);
+    const openingRef = useRef(null);
+    const aboutRef = useRef(null);
     const locationsRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const opening = openingRef.current;
+        const hero = opening.querySelector('.program-hero');
+        const visual = hero.querySelector('img');
+        const manifesto = opening.querySelector('.program-manifesto');
+        const strip = opening.querySelector('.program-strip');
+        const track = strip.querySelector('.program-strip__track');
+        const group = track.querySelector('.program-strip__group');
+        const images = Array.from(group.children);
+        const centerIndex = Math.floor(images.length / 2);
+        const target = images[centerIndex];
+        const media = gsap.matchMedia();
+
+        media.add('(prefers-reduced-motion: no-preference)', () => {
+            const marqueeSpeed = 65;
+            const loopDistance = () => group.offsetWidth + parseFloat(getComputedStyle(group).columnGap);
+            const marquee = gsap.to(track, {
+                x: () => -loopDistance(),
+                duration: loopDistance() / marqueeSpeed,
+                ease: 'none',
+                repeat: -1,
+                paused: true,
+            });
+            let hovered = false;
+            let resumeTimer;
+            let waiting = false;
+            let transitionComplete = false;
+            const updateMarquee = () => {
+                if (transitionComplete && !hovered && !waiting) marquee.play();
+                else marquee.pause();
+                if (!transitionComplete) marquee.progress(0);
+            };
+            const pauseMarquee = () => {
+                hovered = true;
+                waiting = false;
+                window.clearTimeout(resumeTimer);
+                updateMarquee();
+            };
+            const resumeMarquee = () => {
+                hovered = false;
+                waiting = true;
+                window.clearTimeout(resumeTimer);
+                resumeTimer = window.setTimeout(() => {
+                    waiting = false;
+                    updateMarquee();
+                }, 1000);
+            };
+            strip.addEventListener('pointerenter', pauseMarquee);
+            strip.addEventListener('pointerleave', resumeMarquee);
+
+            const timeline = gsap.timeline({
+                defaults: { ease: 'none' },
+                onUpdate: function () {
+                    transitionComplete = this.progress() >= 0.999;
+                    updateMarquee();
+                },
+                scrollTrigger: {
+                    trigger: hero,
+                    start: () => `top+=${visual.offsetTop} 30%`,
+                    endTrigger: manifesto,
+                    end: 'top top',
+                    scrub: 0.9,
+                    invalidateOnRefresh: true,
+                    onRefresh: () => {
+                        marquee.invalidate().duration(loopDistance() / marqueeSpeed);
+                        updateMarquee();
+                    },
+                },
+            });
+
+            // Preserve the photo's proportions and crop to the destination frame.
+            const targetScale = () => Math.max(
+                target.offsetWidth / visual.offsetWidth,
+                target.offsetHeight / visual.offsetHeight,
+            );
+            timeline.fromTo(visual, { y: 0 }, {
+                y: () => manifesto.offsetTop + strip.offsetTop + target.offsetHeight / 2
+                    - hero.offsetTop - visual.offsetTop - visual.offsetHeight / 2,
+                duration: 1,
+            }, 0);
+            timeline.fromTo(visual, { scale: 1, clipPath: 'inset(0% 0%)' }, {
+                scale: targetScale,
+                clipPath: () => {
+                    const scale = targetScale();
+                    const vertical = Math.max(0, (1 - target.offsetHeight / (visual.offsetHeight * scale)) * 50);
+                    const horizontal = Math.max(0, (1 - target.offsetWidth / (visual.offsetWidth * scale)) * 50);
+                    return `inset(${vertical}% ${horizontal}%)`;
+                },
+                duration: 1,
+                ease: 'power1.inOut',
+            }, 0);
+            images.forEach((image, index) => {
+                if (index === centerIndex) return;
+                timeline.fromTo(image, {
+                    x: (index - centerIndex) * 32,
+                    y: 24,
+                    autoAlpha: 0,
+                }, {
+                    x: 0, y: 0, autoAlpha: 1, duration: 0.55, ease: 'power2.out',
+                }, 0.35 + Math.abs(index - centerIndex) * 0.08);
+            });
+            // Crossfade only after both images occupy exactly the same frame.
+            timeline.fromTo(target, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.22 }, 1);
+            timeline.fromTo(visual, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.22 }, 1);
+            timeline.fromTo(track.querySelectorAll('[aria-hidden="true"]'),
+                { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.22 }, 1);
+
+            let disposed = false;
+            // Font metrics can change the hero image position on small screens.
+            document.fonts.ready.then(() => {
+                if (!disposed) ScrollTrigger.refresh();
+            });
+            return () => {
+                disposed = true;
+                window.clearTimeout(resumeTimer);
+                strip.removeEventListener('pointerenter', pauseMarquee);
+                strip.removeEventListener('pointerleave', resumeMarquee);
+            };
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const section = aboutRef.current;
+        const collage = section.querySelector('.program-about__collage');
+        const cards = Array.from(collage.querySelectorAll('img'));
+        const media = gsap.matchMedia();
+        // Unrotated image positions, derived from the centers of the Figma bounds.
+        const stacked = [
+            { x: 1074.31, y: 285.35, rotation: -5.54 },
+            { x: 1075.73, y: 294.98, rotation: -14.16 },
+            { x: 1065, y: 295, rotation: 0 },
+        ];
+        const spread = [
+            { x: 1076.353, y: 155.371, rotation: 1.91 },
+            { x: 975.516, y: 266.935, rotation: -9.59 },
+            { x: 1089.636, y: 420.015, rotation: 5.14 },
+        ];
+        const expanded = [
+            { x: 1100.123, y: 109.664, rotation: 14.62 },
+            { x: 953.949, y: 248.095, rotation: -3.96 },
+            { x: 1124.149, y: 461.695, rotation: 14.62 },
+        ];
+
+        media.add({
+            desktop: '(min-width: 901px)',
+            mobile: '(max-width: 900px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.motion) return;
+            const timeline = gsap.timeline({
+                defaults: { ease: 'none' },
+                scrollTrigger: {
+                    trigger: context.conditions.mobile ? collage : section,
+                    start: 'top 75%',
+                    end: 'center 45%',
+                    scrub: 0.7,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            cards.forEach((card, index) => {
+                const offset = (pose, axis) => (pose[index][axis] - stacked[index][axis]) * card.offsetWidth / 570;
+                timeline.fromTo(card, {
+                    x: 0, y: 0, rotation: stacked[index].rotation,
+                }, {
+                    x: () => offset(spread, 'x'),
+                    y: () => offset(spread, 'y'),
+                    rotation: spread[index].rotation,
+                    duration: 0.55,
+                }, 0);
+                timeline.to(card, {
+                    x: () => offset(expanded, 'x'),
+                    y: () => offset(expanded, 'y'),
+                    rotation: expanded[index].rotation,
+                    duration: 0.45,
+                }, 0.55);
+            });
+        });
+
+        return () => media.revert();
+    }, []);
 
     useLayoutEffect(() => {
         const section = locationsRef.current;
@@ -94,14 +281,45 @@ export default function ProgramContent() {
             const introWidth = () => window.matchMedia('(max-width: 900px)').matches ? section.clientWidth : 1920;
             const extraSpace = () => Math.max(0, section.clientWidth / scale() - introWidth());
             const distance = () => Math.max(0, (canvas.offsetWidth + extraSpace()) * scale() - section.clientWidth);
+            const cards = Array.from(programs.querySelectorAll('.program-locations__branch, .program-location-card'));
+            gsap.set(cards, { x: 0, y: 0, opacity: 1 });
+            const cardSetters = cards.map((card) => ({
+                card,
+                x: gsap.quickSetter(card, 'x', 'px'),
+                y: gsap.quickSetter(card, 'y', 'px'),
+                opacity: gsap.quickSetter(card, 'opacity'),
+            }));
+            const revealEase = gsap.parseEase('power1.out');
+            const revealCards = () => {
+                const viewportWidth = section.clientWidth;
+                const canvasX = Number(gsap.getProperty(canvas, 'x'));
+                const canvasScale = scale();
+                const programOffset = extraSpace();
+                const revealDistance = Math.min(760, viewportWidth * 0.65);
+
+                cardSetters.forEach(({ card, x, y, opacity }) => {
+                    // Measure the layout position, excluding the card's reveal transform.
+                    const left = canvasX + (programOffset + card.offsetLeft) * canvasScale;
+                    const progress = gsap.utils.clamp(0, 1, (viewportWidth - left) / revealDistance);
+                    const remaining = 1 - revealEase(progress);
+                    // Anchor the starting position to the viewport's bottom-right corner.
+                    const startX = (viewportWidth - left) / canvasScale;
+                    const startY = section.clientHeight / canvasScale - card.offsetTop;
+                    x(startX * remaining);
+                    y(startY * remaining);
+                    opacity(Math.min(1, progress * 3));
+                });
+            };
             const fitCanvas = () => {
                 gsap.set(canvas, { scale: scale(), transformOrigin: 'top left' });
                 gsap.set(intro, { width: section.clientWidth / scale() });
                 gsap.set(programs, { x: extraSpace() });
             };
             fitCanvas();
+            revealCards();
 
             const timeline = gsap.timeline({
+                onUpdate: revealCards,
                 scrollTrigger: {
                     trigger: section,
                     start: 'top top',
@@ -110,6 +328,7 @@ export default function ProgramContent() {
                     scrub: true,
                     invalidateOnRefresh: true,
                     onRefreshInit: fitCanvas,
+                    onRefresh: revealCards,
                 },
             });
             // Reserve the first part of the pinned scroll for the introduction.
@@ -122,8 +341,46 @@ export default function ProgramContent() {
         return () => media.revert();
     }, []);
 
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const media = gsap.matchMedia();
+
+        media.add('(prefers-reduced-motion: no-preference)', () => {
+            const sections = page.querySelectorAll('section:not(.program-hero):not(.program-locations):not(.program-cards)');
+            const textSelector = [
+                'h2', 'h3', 'p', 'strong', 'dt', 'dd',
+                '.program-monthly__row > span',
+                '.program-feature__content > span',
+                '.program-feature__actions > a',
+                '.program-calendar__week',
+                '.program-calendar__days',
+                '.program-calendar > a',
+            ].join(', ');
+
+            sections.forEach((section) => {
+                section.querySelectorAll(textSelector).forEach((text) => {
+                    gsap.fromTo(text, { y: -28, autoAlpha: 0 }, {
+                        y: 0,
+                        autoAlpha: 1,
+                        duration: 0.75,
+                        ease: 'power2.out',
+                        scrollTrigger: {
+                            trigger: text,
+                            start: 'top 90%',
+                            toggleActions: 'play none none reverse',
+                            invalidateOnRefresh: true,
+                        },
+                    });
+                });
+            });
+        });
+
+        return () => media.revert();
+    }, []);
+
     return (
-        <main className="program-page">
+        <main className="program-page" ref={pageRef}>
+            <div className="program-opening" ref={openingRef}>
             <section className="program-hero">
                 <h1>Explore Programs<br />Through Creative<br />Experiences</h1>
                 <p>현대 모터스튜디오의 다양한 프로그램을 만나보세요.<br />새로운 아이디어를 발견하고, 직접 만들어보며, 다양한 방식으로 모빌리티를 경험할 수 있습니다.</p>
@@ -131,12 +388,25 @@ export default function ProgramContent() {
             </section>
 
             <section className="program-manifesto">
-                <div className="program-strip">{stripImages.map((image) => <img src={image} alt="" key={image} />)}</div>
+                <div className="program-strip">
+                    <div className="program-strip__track">
+                        <div className="program-strip__group">
+                            {stripImages.map((image) => <img src={image} alt="" key={image} draggable={false} />)}
+                        </div>
+                        {['before', 'after'].map((position) => (
+                            <div className={`program-strip__group program-strip__group--${position}`} aria-hidden="true" key={position}>
+                                {stripImages.map((image) => <img src={image} alt="" key={image} draggable={false} />)}
+                            </div>
+                        ))}
+                    </div>
+                </div>
                 <p>탐색 · 창작 · 경험 · 발견</p>
                 <h2>Experience Mobility in New Ways<br />Through Creative Programs at Hyundai Motorstudio</h2>
             </section>
 
-            <section className="program-about">
+            </div>
+
+            <section className="program-about" ref={aboutRef}>
                 <div><h2>Explore More Than<br />Just Mobility</h2><p>현대 모터스튜디오의 프로그램은 자동차를 중심으로 디자인, 기술, 창작 활동까지 다양한 경험을 제공합니다. 단순히 정보를 보는 것에서 그치지 않고, 직접 만들고 탐색하며 새로운 방식으로 모빌리티를 이해할 수 있도록 구성되어 있습니다.<br /><br />아이들은 물론 다양한 방문객이 각자의 관심에 맞는 프로그램을 경험하며 아이디어를 발견하고, 창의적인 활동을 통해 새로운 가능성을 자연스럽게 만나볼 수 있습니다.</p></div>
                 <div className="program-about__collage">
                     {[1, 2, 3].map((image) => (
