@@ -1,15 +1,17 @@
-import { Link, useParams } from 'react-router-dom';
+﻿import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowUpRight, MapPin } from 'lucide-react';
 import { locations, exhibitions, programs, notices, news, vehicles } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import ContentCard from '../../ui/ContentCard';
 import PageShell from '../../common/layout/PageShell';
 import NoticesListing from './NoticesListing';
+import LocationShowcase from './LocationShowcase';
+import { locationShowcase } from '../../common/data/locationShowcase';
 import './ContentPages.css';
 
-export function MotorstudioPage() { return <PageShell eyebrow="ABOUT HYUNDAI MOTORSTUDIO" title="움직임에서 경험으로" intro="현대 모터스튜디오는 자동차를 넘어 사람과 문화가 만나는 공간입니다."><div className="editorial-panel"><div><span>WHAT YOU FIND WHEN MOTION MEETS EXPERIENCE</span><h2>모빌리티의 새로운 가능성을 발견하는 곳</h2><p>공간마다 다른 이야기와 경험이 기다립니다. 원하는 지점을 선택해 자세한 정보를 확인해 보세요.</p></div><img src="/images/locations/seoul.svg" alt="현대 모터스튜디오 공간 일러스트" width="900" height="600" /></div><div className="page-grid">{locations.map((item) => <ContentCard key={item.slug} image={item.image} eyebrow={item.english} title={`현대 모터스튜디오 ${item.name}`} description={item.description} to={paths.location(item.slug)} />)}</div></PageShell>; }
+export function MotorstudioPage() { return <main><LocationShowcase /></main>; }
 
-export function LocationPage() { const { location } = useParams(); const item = locations.find((row) => row.slug === location); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`HYUNDAI MOTORSTUDIO ${item.english}`} title={`현대 모터스튜디오 ${item.name}`} intro={item.tagline}><div className="feature-image"><img src={item.image} alt={`${item.name} 공간 일러스트`} width="1500" height="850" /></div><div className="detail-copy"><span>EXPLORE THE SPACE</span><h2>{item.tagline}</h2><p>{item.description}</p><Link className="action-link" to={paths.reservations}>방문 예약 <ArrowUpRight size={18} /></Link></div></PageShell>; }
+export function LocationPage() { const { location } = useParams(); const item = locations.find((row) => row.slug === location); if (!item) return <NotFoundPage />; const detail = <div className="detail-copy"><span>EXPLORE THE SPACE</span><h2>{item.tagline}</h2><p>{item.description}</p><Link className="action-link" to={paths.reservations}>방문 예약 <ArrowUpRight size={18} /></Link></div>; if (locationShowcase.some((row) => !row.desktopOnly && row.id === location)) return <main><LocationShowcase key={location} /><div className="page-shell__body location-legacy-detail">{detail}</div></main>; if (location === 'beijing') return <><main className="studio-desktop"><LocationShowcase key={location} /></main><div className="location-legacy-detail"><PageShell eyebrow={`HYUNDAI MOTORSTUDIO ${item.english}`} title={`현대 모터스튜디오 ${item.name}`} intro={item.tagline}><div className="feature-image"><img src={item.image} alt={`${item.name} 공간 일러스트`} width="1500" height="850" /></div>{detail}</PageShell></div></>; return <PageShell eyebrow={`HYUNDAI MOTORSTUDIO ${item.english}`} title={`현대 모터스튜디오 ${item.name}`} intro={item.tagline}><div className="feature-image"><img src={item.image} alt={`${item.name} 공간 일러스트`} width="1500" height="850" /></div>{detail}</PageShell>; }
 
 export function MobilityPage() { return <PageShell eyebrow="MOBILITY" title="새로운 움직임을 경험하다" intro="미래의 이동 경험을 가까이에서 만나보세요."><div className="page-grid">{vehicles.map((item) => <ContentCard key={item.id} image={item.image} eyebrow={item.category} title={item.name} description={item.description} to={paths.reservations} />)}</div></PageShell>; }
 
