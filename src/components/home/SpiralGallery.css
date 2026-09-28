@@ -1,0 +1,10 @@
+﻿.spiral-gallery{position:absolute;z-index:3;top:50%;left:50%;width:100vw;height:100svh;transform:translate(-50%,-50%);overflow:hidden;perspective:1300px;pointer-events:none}
+.spiral-gallery__stage{position:relative;width:100%;height:100%;transform-style:preserve-3d;visibility:hidden}
+.spiral-gallery__slice{position:absolute;top:50%;left:50%;display:block;transform-origin:0 0;backface-visibility:visible;background-repeat:no-repeat;opacity:1}
+.spiral-gallery__static{display:none}
+@media(max-width:900px),(prefers-reduced-motion:reduce){
+    .spiral-gallery{position:static;width:100%;height:auto;transform:none;padding:36px 24px;perspective:none;pointer-events:auto}
+    .spiral-gallery__stage{display:none}
+    .spiral-gallery__static{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .spiral-gallery__static img{display:block;width:100%;height:auto}
+}

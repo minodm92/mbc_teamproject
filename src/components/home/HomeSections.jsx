@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
+import { homeAsset as asset } from './homeAssets';
 import './HomeSections.css';
-
-const asset = (name) => `/images/home-renewal/${name}`;
 
 export function HomeHero() {
   return (
