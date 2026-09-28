@@ -8,6 +8,15 @@
 .program-manifesto{position:relative;height:1080px;text-align:center}
 .program-strip{position:absolute;top:262px;left:50%;display:flex;width:max-content;gap:32px;transform:translateX(-50%)}
 .program-strip img{flex:0 0 345px;width:345px;height:278px;object-fit:fill}
+.program-strip__group>img{position:relative;transition:scale .3s ease,box-shadow .3s ease}
+@media(hover:hover) and (pointer:fine){.program-strip__group>img:hover{z-index:1;scale:1.05;box-shadow:0 14px 32px #00000026}}
+@media(prefers-reduced-motion:reduce){.program-strip__group>img{transition:none}.program-strip__group>img:hover{scale:1}}
+.program-strip__track{position:relative;width:max-content;--strip-gap:32px;will-change:transform}
+.program-strip__group{display:flex;width:max-content;gap:var(--strip-gap)}
+.program-strip__group--before{position:absolute;top:0;right:calc(100% + var(--strip-gap))}
+.program-strip__group--after{position:absolute;top:0;left:calc(100% + var(--strip-gap))}
+@media(max-width:900px){.program-strip__track{--strip-gap:20px}}
+@media(prefers-reduced-motion:reduce){.program-strip__group[aria-hidden="true"]{display:none}}
 .program-manifesto>p{position:absolute;top:672px;left:0;width:100%;font:500 18px/1.4 var(--font-ko)}
 .program-manifesto h2{position:absolute;top:735px;left:0;width:100%;font-size:48px;font-weight:550;line-height:1.1}
 .program-about{position:relative;height:1100px}
@@ -195,4 +204,12 @@ body:has(.program-page) .site-header{position:absolute;background:#fff;color:#11
 }
 @media(max-width:900px){.program-closing img{object-fit:cover}
 }
-/* Program component styles. */
+.program-page{overflow-x:clip;overflow-y:visible}
+.program-opening{position:relative;isolation:isolate}
+.program-opening .program-hero{z-index:2}
+.program-opening .program-manifesto{z-index:1}
+.program-opening .program-hero>img{transform-origin:center;will-change:transform,opacity}
+.program-locations.program-locations--scrolling{height:min(1080px,100svh);overflow:hidden}
+.program-locations--scrolling .program-locations__canvas{will-change:transform}
+.program-locations__programs{position:absolute;inset:0}
+@media(max-width:900px){.program-locations.program-locations--scrolling{height:min(760px,100svh)}}
