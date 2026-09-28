@@ -1,1 +1,5 @@
 .pagination{display:flex;justify-content:center;gap:7px;margin:35px 0}.pagination button{min-width:39px;min-height:39px;padding:7px;border:1px solid #9aa5ab;background:#fff}.pagination button[aria-current=page]{background:#063452;color:#fff}.pagination button:disabled{opacity:.4;cursor:default}
+.pagination--notice{flex-wrap:wrap;gap:8px;margin:0;padding:20px 24px 48px;border:0}
+.pagination--notice button{width:36px;min-width:36px;min-height:36px;height:36px;padding:1px 6px;border:0;background:transparent;color:#777;font-family:var(--font-en);font-size:15px;line-height:1.4}
+.pagination--notice button[aria-current=page],.pagination--notice button:nth-last-child(-n+2){background:transparent;color:var(--color-main-2)}
+.pagination--notice button:disabled{opacity:.35;cursor:default}

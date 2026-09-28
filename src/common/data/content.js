@@ -1,3 +1,5 @@
+import { designNotices } from './notices';
+
 export const locations = [
   { slug: 'goyang', name: '고양', english: 'GOYANG', tagline: '자동차와 사람이 만나는 새로운 공간', description: '다양한 차량과 모빌리티 경험을 한자리에서 만나보세요.', image: '/images/locations/goyang.svg' },
   { slug: 'seoul', name: '서울', english: 'SEOUL', tagline: '자동차 문화를 발견하는 공간', description: '자동차 문화와 취향을 공유하는 새로운 경험이 펼쳐집니다.', image: '/images/locations/seoul.svg' },
@@ -26,6 +28,7 @@ export const programs = [
 ];
 
 export const notices = [
+  ...designNotices,
   { id: 'opening', title: '현대 모터스튜디오 운영 안내', date: '2026.09.18', category: '운영', content: '방문 전 각 지점의 운영 시간과 프로그램 일정을 확인해 주세요.' },
   { id: 'reservation', title: '프로그램 예약 이용 안내', date: '2026.09.12', category: '예약', content: '프로그램 예약은 로그인 후 가능하며, 마이페이지에서 예약 내역을 확인할 수 있습니다.' },
   { id: 'exhibition', title: '새로운 전시 소식을 만나보세요', date: '2026.09.08', category: '전시', content: '현대 모터스튜디오의 새로운 전시와 이야기를 소개합니다.' },

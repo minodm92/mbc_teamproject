@@ -4,6 +4,7 @@ import { locations, exhibitions, programs, notices, news, vehicles } from '../..
 import { paths } from '../../common/router/routePaths';
 import ContentCard from '../../ui/ContentCard';
 import PageShell from '../../common/layout/PageShell';
+import NoticesListing from './NoticesListing';
 import './ContentPages.css';
 
 export function MotorstudioPage() { return <PageShell eyebrow="ABOUT HYUNDAI MOTORSTUDIO" title="움직임에서 경험으로" intro="현대 모터스튜디오는 자동차를 넘어 사람과 문화가 만나는 공간입니다."><div className="editorial-panel"><div><span>WHAT YOU FIND WHEN MOTION MEETS EXPERIENCE</span><h2>모빌리티의 새로운 가능성을 발견하는 곳</h2><p>공간마다 다른 이야기와 경험이 기다립니다. 원하는 지점을 선택해 자세한 정보를 확인해 보세요.</p></div><img src="/images/locations/seoul.svg" alt="현대 모터스튜디오 공간 일러스트" width="900" height="600" /></div><div className="page-grid">{locations.map((item) => <ContentCard key={item.slug} image={item.image} eyebrow={item.english} title={`현대 모터스튜디오 ${item.name}`} description={item.description} to={paths.location(item.slug)} />)}</div></PageShell>; }
@@ -22,7 +23,7 @@ export function ProgramDetailPage() { const { programId } = useParams(); const i
 
 export function MembershipPage() { return <PageShell eyebrow="MEMBERSHIP" title="경험을 더 가까이" intro="현대 모터스튜디오 멤버십과 함께 새로운 소식을 만나보세요."><div className="info-box"><h2>HYUNDAI MOTORSTUDIO MEMBERSHIP</h2><p>회원 계정으로 예약 내역을 관리하고 프로그램 정보를 확인할 수 있습니다.</p><Link className="action-link" to={paths.signup}>가입하기 <ArrowUpRight size={18} /></Link></div></PageShell>; }
 
-export function NoticesPage() { return <PageShell eyebrow="NOTICE" title="공지사항" intro="현대 모터스튜디오의 운영과 이용 소식을 확인하세요."><div className="notice-list">{notices.map((item) => <Link key={item.id} to={paths.notice(item.id)}><span>{item.category}</span><strong>{item.title}</strong><time>{item.date}</time><ArrowUpRight size={20} /></Link>)}</div></PageShell>; }
+export function NoticesPage() { return <NoticesListing />; }
 
 export function NoticeDetailPage() { const { noticeId } = useParams(); const item = notices.find((row) => row.id === noticeId); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`${item.category} / ${item.date}`} title={item.title}><article className="notice-detail"><p>{item.content}</p><Link className="action-link" to={paths.notices}><ArrowLeft size={18} /> 목록으로</Link></article></PageShell>; }
 
