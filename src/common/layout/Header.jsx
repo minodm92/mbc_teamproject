@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/useAuthStore';
 import './Header.css';
 
 const nav = [
-  { label: '현대모터스튜디오', to: paths.motorstudio, children: [{ label: '소개', to: paths.motorstudio }, ...[['고양', 'goyang'], ['서울', 'seoul'], ['하남', 'hanam'], ['부산', 'busan'], ['베이징', 'beijing'], ['스노우 파크', 'snow-park']].map(([label, slug]) => ({ label, to: paths.location(slug) }))] },
+  { label: '현대모터스튜디오', to: paths.motorstudio, children: [{ label: '소개', to: paths.motorstudio }, ...[['고양', 'goyang'], ['서울', 'seoul'], ['하남', 'hanam'], ['부산', 'busan'], ['베이징', 'beijing'], ['스나얀 파크', 'senayan-park']].map(([label, slug]) => ({ label, to: paths.location(slug) }))] },
   { label: '모빌리티', to: paths.mobility },
   { label: '전시/프로그램', to: paths.exhibitions, children: [{ label: '전시', to: paths.exhibitions }, { label: '프로그램', to: paths.programs }] },
   { label: '예약', to: paths.reservations },

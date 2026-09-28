@@ -4,7 +4,18 @@ export const locations = [
   { slug: 'hanam', name: '하남', english: 'HANAM', tagline: '일상 속에 스며드는 모빌리티', description: '차량 전시와 미디어 콘텐츠를 통해 모빌리티를 경험하세요.', image: '/images/locations/hanam.svg' },
   { slug: 'busan', name: '부산', english: 'BUSAN', tagline: '디자인과 미래를 잇는 공간', description: '디자인과 지속가능성을 새로운 시선으로 바라봅니다.', image: '/images/locations/busan.svg' },
   { slug: 'beijing', name: '베이징', english: 'BEIJING', tagline: '도시와 미래가 만나는 곳', description: '현대 모터스튜디오의 이야기를 도시의 시선으로 만나보세요.', image: '/images/locations/beijing.svg' },
-  { slug: 'snow-park', name: '스노우 파크', english: 'SNOW PARK', tagline: '계절 속 특별한 드라이빙', description: '자연과 움직임이 어우러지는 모빌리티 공간입니다.', image: '/images/locations/snow-park.svg' },
+  {
+    slug: 'senayan-park',
+    name: '스나얀 파크',
+    english: 'SENAYAN PARK',
+    tagline: '',
+    description: '',
+    keywords: ['CREATIVE PROGRAM', 'INTERACTIVE EXPERIENCE', 'DIGITAL TECHNOLOGY', 'BRAND EXPERIENCE'],
+    hours: '10:00 – 22:00',
+    address: 'Jl. Gerbang Pemuda No.3, Gelora, Tanah Abang,\nJakarta Pusat 10270, Indonesia (UG Floor)',
+    price: '무료 관람',
+    image: '/images/locations/senayan-park.svg',
+  },
 ];
 
 export const vehicles = [
