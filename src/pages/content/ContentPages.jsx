@@ -9,7 +9,8 @@ export {
   MembershipPage,
   NoticesPage,
   NoticeDetailPage,
-  NewsroomPage,
   NotFoundPage,
   SiteMapPage,
 } from '../../components/content/ContentPages';
+
+export { default as NewsroomPage } from '../../components/newsroom/NewsroomPage';
