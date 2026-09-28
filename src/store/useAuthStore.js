@@ -1,5 +1,18 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+// Preserve existing local sessions; unchecked logins are scoped to this tab.
+const authStorage = createJSONStorage(() => ({
+  getItem: (name) => sessionStorage.getItem(name) ?? localStorage.getItem(name),
+  setItem: (name, value) => {
+    const remember = JSON.parse(value).state.rememberLogin !== false;
+    const storage = remember ? localStorage : sessionStorage;
+    const otherStorage = remember ? sessionStorage : localStorage;
+    storage.setItem(name, value);
+    otherStorage.removeItem(name);
+  },
+  removeItem: (name) => { localStorage.removeItem(name); sessionStorage.removeItem(name); },
+}));
 
 export const TEST_ACCOUNT = {
   email: 'test@hyundaimotorstudio.com',
@@ -15,6 +28,8 @@ export const TEST_USER = {
 
 export const useAuthStore = create(persist((set) => ({
   user: null, isAuthenticated: false, authProvider: null, isAuthLoading: false, authError: null,
+  rememberLogin: true,
+  setRememberLogin: (rememberLogin) => set({ rememberLogin }),
   loginAsTestUser: () => set({ user: TEST_USER, isAuthenticated: true, authProvider: 'test', authError: null }),
   loginWithEmail: (email, password) => {
     if (!email || !password) { set({ authError: '이메일과 비밀번호를 입력해 주세요.' }); return false; }
@@ -27,4 +42,4 @@ export const useAuthStore = create(persist((set) => ({
   updateProfile: (updates) => set((state) => ({ user: { ...state.user, ...updates } })),
   logout: () => set({ user: null, isAuthenticated: false, authProvider: null }),
   clearAuthError: () => set({ authError: null }),
-}), { name: 'hms-auth', partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated, authProvider: state.authProvider }) }));
+}), { name: 'hms-auth', storage: authStorage, partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated, authProvider: state.authProvider, rememberLogin: state.rememberLogin }) }));

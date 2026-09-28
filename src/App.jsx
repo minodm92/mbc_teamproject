@@ -37,10 +37,12 @@ function ScrollToTop() {
 }
 
 export default function App() {
+    const { pathname } = useLocation();
+    const standaloneLogin = pathname.replace(/\/+$/, '') === '/login';
     return (
         <>
             <ScrollToTop />
-            <Header />
+            {!standaloneLogin && <Header />}
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/motorstudio" element={<MotorstudioPage />} />
@@ -155,7 +157,7 @@ export default function App() {
                 <Route path="/board/:postId" element={<BoardDetailPage />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
-            <Footer />
+            {!standaloneLogin && <Footer />}
         </>
     );
 }
