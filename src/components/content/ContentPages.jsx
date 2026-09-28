@@ -12,7 +12,7 @@ export function LocationPage() { const { location } = useParams(); const item = 
 
 export function MobilityPage() { return <PageShell eyebrow="MOBILITY" title="새로운 움직임을 경험하다" intro="미래의 이동 경험을 가까이에서 만나보세요."><div className="page-grid">{vehicles.map((item) => <ContentCard key={item.id} image={item.image} eyebrow={item.category} title={item.name} description={item.description} to={paths.reservations} />)}</div></PageShell>; }
 
-export function ExhibitionsPage() { return <PageShell eyebrow="EXHIBITION" title="지금 만나볼 수 있는 전시" intro="디자인, 기술, 문화가 만나는 현대 모터스튜디오의 전시를 소개합니다."><div className="page-grid">{exhibitions.map((item) => <ContentCard key={item.id} image={item.image} eyebrow={`${item.location} · ${item.date}`} title={item.subtitle} description={item.description} to={paths.exhibition(item.id)} />)}</div></PageShell>; }
+export { default as ExhibitionsPage } from './ExhibitionsPage';
 
 export function ExhibitionDetailPage() { const { exhibitionId } = useParams(); const item = exhibitions.find((row) => row.id === exhibitionId); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`${item.location} / EXHIBITION`} title={item.subtitle} intro={item.title}><div className="feature-image"><img src={item.image} alt={`${item.subtitle} 전시 일러스트`} width="1500" height="850" /></div><div className="detail-copy"><span>{item.date}</span><h2>{item.title}</h2><p>{item.description}</p><Link className="action-link" to={paths.reservations}>예약하기 <ArrowUpRight size={18} /></Link></div></PageShell>; }
 
