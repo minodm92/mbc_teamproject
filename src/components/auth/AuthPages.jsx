@@ -17,7 +17,7 @@ export function ProtectedRoute({ children }) {
 export function LoginPage() {
   const navigate = useNavigate(); const location = useLocation();
   const [userId, setUserId] = useState(''); const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); const [rememberLogin, setRememberLogin] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); const [rememberLogin, setRememberLogin] = useState(false); const [kakaoFeedback, setKakaoFeedback] = useState('');
   const loginWithTestCredentials = useAuthStore((state) => state.loginWithTestCredentials);
   const loginWithKakao = useAuthStore((state) => state.loginWithKakao);
   const authError = useAuthStore((state) => state.authError);
@@ -52,15 +52,16 @@ export function LoginPage() {
         }} onSubmit={(event) => {
           event.preventDefault();
           if (isAuthLoading) return;
+          setKakaoFeedback('');
           setPersistence(rememberLogin);
           if (loginWithTestCredentials(userId, password)) navigate(destination);
         }} noValidate>
           <label className="login-page__label" htmlFor="login-id">ID</label>
-          <input id="login-id" name="id" type="text" placeholder="아이디를 입력해주세요" value={userId} onChange={(event) => { setUserId(event.target.value); clearAuthError(); }} autoComplete="username" disabled={isAuthLoading} />
+          <input id="login-id" name="id" type="text" placeholder="아이디를 입력해주세요" value={userId} onChange={(event) => { setUserId(event.target.value); setKakaoFeedback(''); clearAuthError(); }} autoComplete="username" disabled={isAuthLoading} />
           <div className="login-page__password-field">
             <label className="login-page__label" htmlFor="login-password">PASSWORD</label>
             <div className="login-page__password">
-              <input id="login-password" name="password" type={showPassword ? 'text' : 'password'} placeholder="비밀번호를 입력해주세요" value={password} onChange={(event) => { setPassword(event.target.value); clearAuthError(); }} autoComplete="current-password" disabled={isAuthLoading} />
+              <input id="login-password" name="password" type={showPassword ? 'text' : 'password'} placeholder="비밀번호를 입력해주세요" value={password} onChange={(event) => { setPassword(event.target.value); setKakaoFeedback(''); clearAuthError(); }} autoComplete="current-password" disabled={isAuthLoading} />
               <PasswordToggle className="login-page__eye" visible={showPassword} controls="login-password" onToggle={() => setShowPassword((value) => !value)} />
             </div>
           </div>
@@ -68,11 +69,12 @@ export function LoginPage() {
             <label><input type="checkbox" checked={rememberLogin} onChange={(event) => setRememberLogin(event.target.checked)} disabled={isAuthLoading} />자동 로그인</label>
             <span aria-disabled="true">비밀번호 찾기</span>
           </div>
-          <p role="alert" aria-live="polite" className="login-page__error">{authError || ''}</p>
+          <p role="alert" aria-live="polite" className="login-page__error">{kakaoFeedback ? '' : authError || ''}</p>
           <button className="login-page__submit" type="submit" disabled={isAuthLoading}>LOGIN<span aria-hidden="true"><img src="/images/login/login-arrow.svg" width="16" height="16" alt="" /></span></button>
         </form>
         <div className="login-page__divider"><span>OR CONTINUE WITH</span></div>
-        <AuthSocialButtons className="login-page__social" loading={isAuthLoading} onKakao={loginWithKakao} />
+        <AuthSocialButtons className="login-page__social" loading={isAuthLoading} providers={['kakao']} onKakao={() => { loginWithKakao(); setKakaoFeedback(useAuthStore.getState().authError || '카카오 로그인을 이용하려면 서버 설정이 필요합니다. 테스트 로그인을 이용해 주세요.'); }} />
+        {kakaoFeedback && <p className="login-page__kakao-feedback" role="status" aria-live="polite">{kakaoFeedback}</p>}
         <p className="login-page__signup">아직 회원이 아니신가요?<Link to={paths.signup}>SIGN UP<img src="/images/login/signup-arrow.svg" width="13" height="13" alt="" /></Link></p>
       </div>
       <div className="login-page__meta"><span>© HYUNDAI MOTOR COMPANY.</span><a href="tel:18996611">고객센터 1899-6611</a></div>
