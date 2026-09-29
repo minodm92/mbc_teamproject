@@ -1,5 +1,5 @@
 ﻿.mobility-page {
-    --gutter: 3.385vw;
+    --gutter: 3.3854167vw;
     --vehicle-image-width: 41.6666667%;
     background: var(--color-main-1);
     color: var(--color-main-2);
@@ -340,7 +340,7 @@ body:has(.mobility-page) .site-header {
     position: absolute;
     z-index: 2;
     top: 8.333%;
-    left: 3.385%;
+    left: var(--gutter);
 }
 .mobility-statement h2 span {
     display: block;
@@ -355,14 +355,11 @@ body:has(.mobility-page) .site-header {
 }
 .mobility-statement__model-slot {
     position: absolute;
-    z-index: 3;
+    z-index: 1;
     inset: 0;
     display: grid;
     place-items: center;
     pointer-events: none;
-}
-.mobility-statement.is-model-exiting .mobility-statement__model-slot {
-    z-index: 5;
 }
 .mobility-statement__model-entry {
     width: min(72vw, 1100px);
@@ -374,23 +371,13 @@ body:has(.mobility-page) .site-header {
 .mobility-statement__model-entry.is-loaded {
     visibility: visible;
 }
-.mobility-statement__model-entry.is-warming {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 96px;
-    height: 96px;
-    opacity: 0.001;
-    visibility: visible;
-    transform: none !important;
-}
 .mobility-statement__model-idle,
 .mobility-statement__model-idle model-viewer {
     width: 100%;
     height: 100%;
 }
 .mobility-statement__model-idle {
-    animation: mobility-engine-idle 120ms steps(2, end) infinite;
+    animation: mobility-engine-idle 140ms steps(2, end) infinite;
 }
 .mobility-statement__model-idle model-viewer {
     display: block;
@@ -405,13 +392,13 @@ body:has(.mobility-page) .site-header {
         transform: translate3d(0, 0, 0);
     }
     25% {
-        transform: translate3d(0.6px, -0.35px, 0);
+        transform: translate3d(1px, -0.5px, 0);
     }
     50% {
-        transform: translate3d(-0.45px, 0.3px, 0);
+        transform: translate3d(-0.6px, 0.6px, 0);
     }
     75% {
-        transform: translate3d(0.3px, 0.45px, 0);
+        transform: translate3d(0.2px, 1px, 0);
     }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -507,37 +494,27 @@ body:has(.mobility-page) .site-header {
 }
 .mobility-drive__title {
     position: absolute;
+    z-index: 2;
     top: 8.333%;
     left: var(--gutter);
     width: 43.385%;
 }
 .mobility-drive__title h2 {
-    font: 550 clamp(52px, 4.167vw, 80px)/1 var(--font-en);
+    font: 600 clamp(52px, 4.167vw, 80px)/1 var(--font-en);
+    letter-spacing: 0;
+    white-space: nowrap;
 }
 .mobility-drive__title p {
     width: 505px;
     max-width: 100%;
     margin-top: 35px;
     font: 400 20px/1.4 var(--font-en);
-}
-.mobility-drive__model {
-    position: absolute;
-    top: 26.389%;
-    left: 41.615%;
-    width: 16.771%;
-    height: 59.722%;
-    overflow: hidden;
-}
-.mobility-drive__model img {
-    position: absolute;
-    top: -3.41%;
-    left: -16.46%;
-    width: 135.4%;
-    height: 106.51%;
-    max-width: none;
+    letter-spacing: 0;
+    overflow-wrap: break-word;
 }
 .mobility-drive ol {
     position: absolute;
+    z-index: 2;
     top: 15.463%;
     left: 70.313%;
     display: flex;
@@ -570,12 +547,7 @@ body:has(.mobility-page) .site-header {
     font: 400 18px/1.2 var(--font-en);
 }
 .mobility-route-hero {
-    position: relative;
-    height: 100svh;
-    min-height: 700px;
-    overflow: hidden;
-    background: var(--color-main-2);
-    color: var(--color-main-1);
+    display: none;
 }
 .mobility-route-hero::after {
     position: absolute;
@@ -606,12 +578,19 @@ body:has(.mobility-page) .site-header {
     font: 550 clamp(74px, 6.25vw, 120px)/1.3 var(--font-en);
 }
 .mobility-routes {
-    display: grid;
-    grid-template-columns: 50% 50%;
+    position: relative;
+    display: block;
+    height: 100svh;
+    min-height: 700px;
+    overflow: hidden;
+    background: var(--color-main-1);
 }
 .mobility-routes__visual {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 50%;
     height: 100%;
     overflow: hidden;
     color: var(--color-main-1);
@@ -632,6 +611,11 @@ body:has(.mobility-page) .site-header {
     max-width: none;
     object-fit: cover;
     object-position: center 65%;
+    opacity: 0;
+    transition: opacity 0.55s ease;
+}
+.mobility-routes__visual img.is-active {
+    opacity: 1;
 }
 .mobility-routes__visual-title {
     position: absolute;
@@ -640,6 +624,11 @@ body:has(.mobility-page) .site-header {
     left: 12.708%;
     width: 74.479%;
     text-align: center;
+    opacity: 1;
+    transition: opacity 0.55s ease;
+}
+.mobility-routes__visual-title.is-hidden {
+    opacity: 0;
 }
 .mobility-routes__visual-title p {
     font: 645 20px/1.4 var(--font-en);
@@ -650,10 +639,18 @@ body:has(.mobility-page) .site-header {
     white-space: nowrap;
 }
 .mobility-routes__content {
-    position: relative;
-    padding: 30.926% 0 0 8.542%;
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    padding: 0;
 }
 .mobility-routes__intro {
+    position: absolute;
+    top: 30.926%;
+    left: 8.542%;
     width: min(682px, calc(100% - 24px));
 }
 .mobility-routes__intro > span,
@@ -670,11 +667,13 @@ body:has(.mobility-page) .site-header {
     letter-spacing: 0;
 }
 .mobility-routes__difference {
-    margin-top: 101px;
+    position: absolute;
+    top: 53.333%;
+    left: 8.542%;
 }
 .mobility-routes__content > h3 {
     position: absolute;
-    top: 75.648%;
+    top: 74.167%;
     left: 8.542%;
 }
 .mobility-routes ul {
@@ -682,31 +681,44 @@ body:has(.mobility-page) .site-header {
     top: 83.426%;
     left: 8.542%;
     width: min(822px, calc(100% - 14px));
+    display: flex;
+    flex-direction: column;
+    gap: 55px;
+    transform: translateY(calc(var(--active-route-index, 0) * -278px));
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
 }
 .mobility-routes li {
     position: relative;
+    flex: 0 0 223px;
     height: 223px;
-    border-top: 1px solid var(--color-sub-1);
+    opacity: 0.5;
+    background: url('../../../public/images/mobility/route-list-line.svg') left top / 100% 1px
+        no-repeat;
+    transition: opacity 0.35s ease;
+}
+.mobility-routes li.is-active {
+    opacity: 1;
 }
 .mobility-routes li small {
     position: absolute;
     top: 17px;
     left: 0;
-    color: #505050;
+    color: #111;
     font: 550 18px/1.2 var(--font-en);
 }
 .mobility-routes li b {
     position: absolute;
     top: 17px;
     right: 0;
-    color: #505050;
+    color: #111;
     font: 645 20px/1.4 var(--font-en);
 }
 .mobility-routes li strong {
     position: absolute;
     top: 49px;
     left: 0;
-    color: #505050;
+    color: #111;
     font: 700 clamp(28px, 3.125vw, 60px)/1.2 var(--font-ko);
     letter-spacing: -2px;
     white-space: nowrap;
@@ -716,10 +728,12 @@ body:has(.mobility-page) .site-header {
     top: 179px;
     left: 0;
     width: 424px;
-    color: var(--color-sub-2);
+    color: #111;
     font: 500 15px/1.4 var(--font-ko);
 }
 .mobility-gallery {
+    height: 100svh;
+    min-height: 100svh;
     background: #fff;
 }
 .mobility-gallery img {
@@ -727,6 +741,7 @@ body:has(.mobility-page) .site-header {
     position: absolute;
     max-width: none;
     object-fit: cover;
+    will-change: transform;
 }
 .mobility-gallery img:nth-child(1) {
     top: 9.8148%;
@@ -765,6 +780,10 @@ body:has(.mobility-page) .site-header {
     height: 65.0926%;
 }
 @media (max-width: 900px) {
+    html:has(.mobility-page) {
+        scroll-behavior: smooth;
+    }
+
     .mobility-page {
         --gutter: 18px;
     }
@@ -916,14 +935,8 @@ body:has(.mobility-page) .site-header {
         left: 18px;
         width: auto;
     }
-    .mobility-drive__model {
-        top: 24%;
-        left: 35%;
-        width: 30%;
-        height: 30%;
-    }
     .mobility-drive ol {
-        top: 58%;
+        top: 42%;
         right: 18px;
         left: 18px;
         width: auto;
@@ -937,18 +950,31 @@ body:has(.mobility-page) .site-header {
     }
     .mobility-routes {
         display: block;
+        min-height: 100svh;
+        overflow: visible;
     }
     .mobility-routes__visual {
+        position: relative;
+        width: 100%;
         height: 75svh;
     }
     .mobility-routes__content {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        height: auto;
         padding: 70px 18px;
+    }
+    .mobility-routes__intro {
+        position: static;
     }
     .mobility-routes__intro,
     .mobility-routes ul {
         width: 100%;
     }
     .mobility-routes__difference {
+        position: static;
         margin-top: 60px;
     }
     .mobility-routes__content > h3 {
@@ -958,12 +984,14 @@ body:has(.mobility-page) .site-header {
     .mobility-routes ul {
         position: static;
         margin-top: 37px;
+        transform: none;
     }
     .mobility-routes li {
         min-height: 150px;
+        opacity: 1;
     }
     .mobility-gallery {
-        height: 760px;
+        height: 100svh;
     }
 }
 @media (max-width: 600px) {

@@ -2,14 +2,66 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
+import routeOverviewImage from '../../../public/images/mobility/route-overview-con6.png';
+import routeState01 from '../../../public/images/mobility/route-state-01.png';
+import routeState02 from '../../../public/images/mobility/route-state-02.jpg';
+import routeState03 from '../../../public/images/mobility/route-state-03.jpg';
+import routeState04 from '../../../public/images/mobility/route-state-04.jpg';
+import routeState05 from '../../../public/images/mobility/route-state-05.jpg';
+import routeState06 from '../../../public/images/mobility/route-state-06.jpg';
+import routeState07 from '../../../public/images/mobility/route-state-07.jpg';
+import routeState08 from '../../../public/images/mobility/route-state-08.jpg';
 import './VehicleDisplay.css';
 
 const routes = [
-    '하이 퍼포먼스 드라이브_언택트',
-    '하이 퍼포먼스 드라이브_선택',
-    '베이직 드라이브_언택트',
-    '베이직 드라이브_선택',
-    '비기너 드라이브',
+    {
+        title: '하이 퍼포먼스 드라이브_언택트',
+        description:
+            '드라이빙의 즐거움을 끌어올린 N브랜드의 퍼포먼스와 럭셔리 고성능의 GV60 마그마를 공공도로에서 안전하게 경험해 보세요.',
+        image: routeState01,
+    },
+    {
+        title: '프라이빗 신차 드라이브_언택트',
+        description:
+            '현대자동차에서 새롭게 출시한 차량을 빠르게 만나볼 수 있는 시승 프로그램을 체험해보세요.',
+        image: routeState02,
+    },
+    {
+        title: '베이직 드라이브',
+        description:
+            '자동차 전문가 Guru의 친절한 설명과 함께 현대자동차의 다양한 차량들을 현대 모터스튜디오에서 시승해보세요.',
+        image: routeState03,
+    },
+    {
+        title: '베이직 드라이브_언택트',
+        description:
+            "혼자 또는 사랑하는 가족, 지인들과 함께 차량에 집중하고 싶으시다면. '베이직 드라이브 언택트' 프로그램을 이용해 보세요.",
+        image: routeState04,
+    },
+    {
+        title: '비기너 드라이브',
+        description:
+            "수준별 다양한 코스가 준비된 '비기너 드라이브'! 아직은 운전이 서툴고 두려운 당신이라면 참여하셔서 운전에 대한 자신감을 키워보세요.",
+        image: routeState05,
+    },
+    {
+        title: '아웃도어 라이프_차콕',
+        description:
+            '차에서~ 콕! 다양한 용품을 싣고 떠나는 힐링 드라이브! 김포 한강 오토캠핑장에서 특별한 경험과 감성 가득한 추억을 만들어 보세요.',
+        image: routeState06,
+    },
+    {
+        title: '컴-페어 드라이브',
+        description:
+            '비교 가능한 시승 체험, 컴페어 드라이브. 가족, 친구와 함께 두 대를 시승해보고 차이를 느껴보세요.',
+        image: routeState07,
+    },
+    {
+        title: '헤리티지 드라이브',
+        description:
+            '한 시대를 풍미한 현대자동차의 클래식카 시승을 통해 그 때 그 시절의 레트로 감성을 느껴보세요.',
+        image: routeState08,
+    },
 ];
 const gallery = Array.from(
     { length: 6 },
@@ -32,16 +84,16 @@ const playgroundItems = [
         title: 'Step inside and experience thoughtful comfort',
         description:
             '실내에 직접 앉아 소재의 감촉과 공간의 편안함을 경험할 수 있습니다. 탑승자를 중심으로 설계된 정교한 배려를 온몸으로 느껴보세요.',
-        image: '/images/mobility/playground-state-03.png',
-        imageAlt: '차량의 넓은 실내 공간과 좌석 구성',
+        image: '/images/mobility/playground-state-02.png',
+        imageAlt: '뒷좌석에서 바라본 차량의 넓은 실내 공간',
     },
     {
         number: '03',
         title: 'Build a connection through every interaction',
         description:
             '운전석에 앉아 주요 조작 장치와 디스플레이를 직접 확인할 수 있습니다. 손끝에서 자연스럽게 이어지는 직관적인 상호작용을 경험해 보세요.',
-        image: '/images/mobility/playground-state-02.png',
-        imageAlt: '운전석의 조작 장치와 디스플레이를 안내받는 방문객',
+        image: '/images/mobility/playground-state-03.png',
+        imageAlt: '운전석에서 주요 조작 장치를 안내받는 방문객',
     },
     {
         number: '04',
@@ -57,7 +109,7 @@ const playgroundItems = [
         description:
             '전시 공간을 넘어 도로 위에서 펼쳐질 다양한 가능성을 상상할 수 있습니다. 당신의 일상과 여정에 어울리는 새로운 순간을 발견해 보세요.',
         image: '/images/mobility/playground-state-05.png',
-        imageAlt: '도로를 배경으로 전시된 차량의 측면 모습',
+        imageAlt: '해안 도로를 배경으로 전시된 차량의 측면 모습',
     },
 ];
 
@@ -236,22 +288,7 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
                             );
                     });
 
-                    const setModelWarmup = (active) => {
-                        document
-                            .querySelector('.mobility-statement__model-entry')
-                            ?.classList.toggle('is-warming', active);
-                    };
-
-                    // Render the real con3 model during the con2_4 hold so its
-                    // textures, shaders, shadow, and idle motion are ready in advance.
-                    timeline
-                        .call(() => {
-                            setModelWarmup(timeline.scrollTrigger.direction >= 0);
-                        })
-                        .to({}, { duration: outroHoldDuration })
-                        .call(() => {
-                            setModelWarmup(timeline.scrollTrigger.direction < 0);
-                        });
+                    timeline.to({}, { duration: outroHoldDuration });
 
                     section.dataset.slideCount = String(slides.length);
                     section.dataset.scrollTrigger = timeline.scrollTrigger ? 'active' : 'inactive';
@@ -262,9 +299,6 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
 
         return () => {
             cancelled = true;
-            document
-                .querySelector('.mobility-statement__model-entry')
-                ?.classList.remove('is-warming');
             context?.revert();
         };
     }, [triggerRef, vehicles.length]);
@@ -294,6 +328,11 @@ export default function VehicleDisplay() {
     const transitionRef = useRef(null);
     const statementRef = useRef(null);
     const playgroundRef = useRef(null);
+    const driveRef = useRef(null);
+    const routesRef = useRef(null);
+    const galleryRef = useRef(null);
+    const [activeRouteIndex, setActiveRouteIndex] = useState(0);
+    const [isRouteListActive, setIsRouteListActive] = useState(false);
     const persistentPlaygroundTitleRef = useRef(null);
     const [activePlaygroundIndex, setActivePlaygroundIndex] = useState(0);
     useEffect(() => {
@@ -390,7 +429,7 @@ export default function VehicleDisplay() {
         let cancelled = false;
         let modelViewer;
         let handleModelLoad;
-        let clearScrollInputLock = () => {};
+        let refreshLayout;
 
         Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
             ([gsapModule, triggerModule]) => {
@@ -417,125 +456,74 @@ export default function VehicleDisplay() {
                 )
                     return;
 
-                handleModelLoad = () => model.classList.add('is-loaded');
+                gsap.registerPlugin(ScrollTrigger);
+                refreshLayout = () => {
+                    requestAnimationFrame(() => ScrollTrigger.refresh());
+                };
+                handleModelLoad = () => {
+                    model.classList.add('is-loaded');
+                    refreshLayout();
+                };
                 modelViewer.addEventListener('load', handleModelLoad);
                 if (modelViewer.loaded) handleModelLoad();
+                window.addEventListener('load', refreshLayout);
+                window.addEventListener('pageshow', refreshLayout);
+                document.fonts?.ready.then(() => {
+                    if (!cancelled) refreshLayout();
+                });
 
-                gsap.registerPlugin(ScrollTrigger);
                 context = gsap.context(() => {
                     const belowViewport = (element) =>
                         window.innerHeight - element.offsetTop + element.offsetHeight;
                     const entranceDuration = 3;
                     const exitDuration = 1.8;
-                    const activeMotions = new Set();
-                    const blockedScrollKeys = new Set([
-                        'ArrowDown',
-                        'ArrowUp',
-                        'End',
-                        'Home',
-                        'PageDown',
-                        'PageUp',
-                        ' ',
-                    ]);
-                    let lockedScrollY = 0;
-                    let scrollRestoreFrame = 0;
-                    const preventScrollInput = (event) => event.preventDefault();
-                    const preventScrollKey = (event) => {
-                        if (blockedScrollKeys.has(event.key)) event.preventDefault();
-                    };
-                    const holdPinnedScrollPosition = () => {
-                        if (scrollRestoreFrame) return;
 
-                        scrollRestoreFrame = window.requestAnimationFrame(() => {
-                            scrollRestoreFrame = 0;
-                            if (activeMotions.size > 0 && window.scrollY !== lockedScrollY) {
-                                window.scrollTo(0, lockedScrollY);
-                            }
-                        });
-                    };
-                    const lockScrollInput = (motion) => {
-                        activeMotions.add(motion);
-                        if (activeMotions.size > 1) return;
+                    const syncStatementHandoff = (self) => {
+                        const playground = playgroundRef.current;
+                        const playgroundIsAhead = playground?.getBoundingClientRect().bottom > 0;
+                        const handoffIsActive = self.progress >= 0.92 && playgroundIsAhead;
 
-                        lockedScrollY = window.scrollY;
-                        window.addEventListener('wheel', preventScrollInput, { passive: false });
-                        window.addEventListener('touchmove', preventScrollInput, {
-                            passive: false,
-                        });
-                        window.addEventListener('keydown', preventScrollKey);
-                        window.addEventListener('scroll', holdPinnedScrollPosition, {
-                            passive: true,
-                        });
+                        section.dataset.handoffActive = String(handoffIsActive);
+                        gsap.set(handoffTitle, { autoAlpha: handoffIsActive ? 0 : 1 });
+                        gsap.set(persistentTitle, { autoAlpha: handoffIsActive ? 1 : 0 });
                     };
-                    const releaseScrollInput = (motion) => {
-                        activeMotions.delete(motion);
-                        if (activeMotions.size > 0) return;
 
-                        window.removeEventListener('wheel', preventScrollInput);
-                        window.removeEventListener('touchmove', preventScrollInput);
-                        window.removeEventListener('keydown', preventScrollKey);
-                        window.removeEventListener('scroll', holdPinnedScrollPosition);
-                        window.cancelAnimationFrame(scrollRestoreFrame);
-                        scrollRestoreFrame = 0;
-                    };
-                    clearScrollInputLock = () => {
-                        activeMotions.clear();
-                        window.removeEventListener('wheel', preventScrollInput);
-                        window.removeEventListener('touchmove', preventScrollInput);
-                        window.removeEventListener('keydown', preventScrollKey);
-                        window.removeEventListener('scroll', holdPinnedScrollPosition);
-                        window.cancelAnimationFrame(scrollRestoreFrame);
-                        scrollRestoreFrame = 0;
-                    };
-                    let entranceTimeline;
-                    let exitTimeline;
+                    const timeline = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'center center',
+                            end: () => `+=${window.innerHeight * 10}`,
+                            scrub: 1.5,
+                            pin: true,
+                            pinSpacing: true,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                            onUpdate: syncStatementHandoff,
+                            onRefresh: syncStatementHandoff,
+                        },
+                    });
 
                     if (!reduceMotion) {
-                        entranceTimeline = gsap
-                            .timeline({ paused: true })
+                        timeline
+                            .to({}, { duration: 1 })
                             .fromTo(
                                 model,
                                 { y: () => -window.innerHeight, scale: 0.96 },
-                                {
-                                    y: 0,
-                                    scale: 1,
-                                    duration: entranceDuration,
-                                    ease: 'power2.inOut',
-                                    immediateRender: true,
-                                },
-                                0
+                                { y: 0, scale: 1, duration: entranceDuration, ease: 'power2.inOut' }
                             )
                             .fromTo(
                                 title,
                                 { y: () => belowViewport(title) },
-                                {
-                                    y: 0,
-                                    duration: entranceDuration,
-                                    ease: 'power2.out',
-                                    immediateRender: true,
-                                },
-                                0
+                                { y: 0, duration: entranceDuration, ease: 'power2.out' },
+                                '<'
                             )
                             .fromTo(
                                 sub,
                                 { y: () => belowViewport(sub) },
-                                {
-                                    y: 0,
-                                    duration: entranceDuration,
-                                    ease: 'power2.out',
-                                    immediateRender: true,
-                                },
-                                0
-                            );
-
-                        entranceTimeline
-                            .eventCallback('onComplete', () => releaseScrollInput('entrance'))
-                            .eventCallback('onReverseComplete', () =>
-                                releaseScrollInput('entrance')
-                            );
-
-                        exitTimeline = gsap
-                            .timeline({ paused: true })
+                                { y: 0, duration: entranceDuration, ease: 'power2.out' },
+                                '<'
+                            )
+                            .to({}, { duration: 1.5 })
                             .to(
                                 model,
                                 {
@@ -544,7 +532,7 @@ export default function VehicleDisplay() {
                                     duration: exitDuration,
                                     ease: 'power2.inOut',
                                 },
-                                0
+                                '>'
                             )
                             .to(
                                 [eyebrow, sub],
@@ -553,75 +541,18 @@ export default function VehicleDisplay() {
                                     duration: exitDuration,
                                     ease: 'power2.inOut',
                                 },
-                                0
+                                '<'
                             )
                             .to(
-                                persistentTitle,
+                                handoffTitle,
                                 {
-                                    y: 0,
+                                    y: () => -handoffTitle.offsetTop,
                                     duration: exitDuration,
                                     ease: 'power2.inOut',
                                 },
-                                0
-                            );
-
-                        exitTimeline.eventCallback('onReverseComplete', () => {
-                            gsap.set(persistentTitle, { autoAlpha: 0 });
-                            gsap.set(handoffTitle, { autoAlpha: 1 });
-                            section.classList.remove('is-model-exiting');
-                            releaseScrollInput('exit');
-                        });
-                        exitTimeline.eventCallback('onComplete', () => {
-                            section.classList.remove('is-model-exiting');
-                            releaseScrollInput('exit');
-                        });
-                    }
-
-                    const timeline = gsap.timeline({
-                        scrollTrigger: {
-                            trigger: section,
-                            start: 'center center',
-                            end: () => `+=${window.innerHeight * 3}`,
-                            scrub: 0.6,
-                            pin: true,
-                            pinSpacing: true,
-                            anticipatePin: 1,
-                            invalidateOnRefresh: true,
-                        },
-                    });
-
-                    if (!reduceMotion) {
-                        timeline
-                            // Keep the first pinned view empty before beginning the entrance.
-                            .to({}, { duration: 1 })
-                            .call(() => {
-                                lockScrollInput('entrance');
-                                if (timeline.scrollTrigger.direction < 0) {
-                                    entranceTimeline.reverse();
-                                    return;
-                                }
-
-                                entranceTimeline.play();
-                            })
-                            // Keep the section pinned while the time-based entrance finishes.
-                            .to({}, { duration: 2.5 })
-                            .call(() => {
-                                lockScrollInput('exit');
-                                section.classList.add('is-model-exiting');
-                                if (timeline.scrollTrigger.direction < 0) {
-                                    exitTimeline.reverse();
-                                    return;
-                                }
-
-                                gsap.set(persistentTitle, {
-                                    autoAlpha: 1,
-                                    y: () => handoffTitle.offsetTop,
-                                });
-                                gsap.set(handoffTitle, { autoAlpha: 0 });
-                                exitTimeline.play();
-                            })
-                            // Hold the pin until the exit finishes; con4 enters on the next scroll.
-                            .to({}, { duration: 2.5 });
+                                '<'
+                            )
+                            .to({}, { duration: 0.7 });
                     } else {
                         timeline.to({}, { duration: 1 });
                     }
@@ -635,8 +566,11 @@ export default function VehicleDisplay() {
 
         return () => {
             cancelled = true;
-            clearScrollInputLock();
-            section.classList.remove('is-model-exiting');
+            delete section.dataset.handoffActive;
+            if (refreshLayout) {
+                window.removeEventListener('load', refreshLayout);
+                window.removeEventListener('pageshow', refreshLayout);
+            }
             modelViewer?.removeEventListener('load', handleModelLoad);
             context?.revert();
         };
@@ -664,21 +598,50 @@ export default function VehicleDisplay() {
                 gsap.registerPlugin(ScrollTrigger);
                 context = gsap.context(() => {
                     if (window.matchMedia('(min-width: 961px)').matches) {
+                        const syncPlaygroundState = (self) => {
+                            const nextIndex = Math.min(
+                                playgroundItems.length - 1,
+                                Math.floor(self.progress * playgroundItems.length)
+                            );
+
+                            setActivePlaygroundIndex(nextIndex);
+
+                            if (self.isActive) {
+                                gsap.set(persistentTitle, { autoAlpha: 1 });
+                                gsap.set(sectionTitle, { autoAlpha: 0 });
+                            } else if (self.progress >= 1) {
+                                gsap.set(persistentTitle, { autoAlpha: 0 });
+                                gsap.set(sectionTitle, { autoAlpha: 1 });
+                            } else {
+                                const handoffIsActive =
+                                    statementRef.current?.dataset.handoffActive === 'true';
+                                gsap.set(persistentTitle, {
+                                    autoAlpha: handoffIsActive ? 1 : 0,
+                                });
+                                gsap.set(sectionTitle, { autoAlpha: 0 });
+                            }
+                        };
+
                         ScrollTrigger.create({
                             trigger: section,
                             start: 'center center',
-                            end: () => `+=${window.innerHeight * 2.5}`,
+                            end: () => `+=${window.innerHeight * playgroundItems.length}`,
                             pin: true,
                             pinSpacing: true,
                             anticipatePin: 1,
                             invalidateOnRefresh: true,
-                            onLeave: () => {
-                                gsap.set(persistentTitle, { autoAlpha: 0 });
-                                gsap.set(sectionTitle, { autoAlpha: 1 });
-                            },
-                            onEnterBack: () => {
+                            onUpdate: syncPlaygroundState,
+                            onRefresh: syncPlaygroundState,
+                            onEnter: syncPlaygroundState,
+                            onEnterBack: syncPlaygroundState,
+                            onLeave: syncPlaygroundState,
+                            onLeaveBack: () => {
                                 gsap.set(sectionTitle, { autoAlpha: 0 });
-                                gsap.set(persistentTitle, { autoAlpha: 1 });
+                                const handoffIsActive =
+                                    statementRef.current?.dataset.handoffActive === 'true';
+                                gsap.set(persistentTitle, {
+                                    autoAlpha: handoffIsActive ? 1 : 0,
+                                });
                             },
                         });
                     } else {
@@ -696,6 +659,326 @@ export default function VehicleDisplay() {
                         });
                     }
 
+                    requestAnimationFrame(() => ScrollTrigger.refresh());
+                }, section);
+            }
+        );
+
+        return () => {
+            cancelled = true;
+            context?.revert();
+        };
+    }, []);
+
+    useEffect(() => {
+        const section = driveRef.current;
+        if (!section) return undefined;
+
+        void import('@google/model-viewer');
+
+        let context;
+        let cancelled = false;
+        let modelViewer;
+        let handleModelLoad;
+        let refreshLayout;
+
+        Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
+            ([gsapModule, triggerModule]) => {
+                if (cancelled) return;
+
+                const gsap = gsapModule.gsap;
+                const ScrollTrigger = triggerModule.ScrollTrigger;
+                const title = section.querySelector('.mobility-drive__title');
+                const list = section.querySelector('ol');
+                const model = section.querySelector('.mobility-statement__model-entry');
+                modelViewer = section.querySelector('model-viewer');
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                if (!title || !list || !model || !modelViewer) return;
+
+                gsap.registerPlugin(ScrollTrigger);
+                refreshLayout = () => {
+                    requestAnimationFrame(() => ScrollTrigger.refresh());
+                };
+                handleModelLoad = () => {
+                    model.classList.add('is-loaded');
+                    refreshLayout();
+                };
+                modelViewer.addEventListener('load', handleModelLoad);
+                if (modelViewer.loaded) handleModelLoad();
+                window.addEventListener('load', refreshLayout);
+                window.addEventListener('pageshow', refreshLayout);
+                document.fonts?.ready.then(() => {
+                    if (!cancelled) refreshLayout();
+                });
+
+                context = gsap.context(() => {
+                    const belowViewport = (element) =>
+                        window.innerHeight - element.offsetTop + element.offsetHeight;
+                    const entranceDuration = 3;
+                    const exitDuration = 1.8;
+                    const timeline = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'center center',
+                            end: () => `+=${window.innerHeight * 10}`,
+                            scrub: 1.5,
+                            pin: true,
+                            pinSpacing: true,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                        },
+                    });
+
+                    if (!reduceMotion) {
+                        timeline
+                            .to({}, { duration: 1 })
+                            .fromTo(
+                                model,
+                                { y: () => -window.innerHeight, scale: 0.96 },
+                                { y: 0, scale: 1, duration: entranceDuration, ease: 'power2.inOut' }
+                            )
+                            .fromTo(
+                                title,
+                                { y: () => belowViewport(title) },
+                                { y: 0, duration: entranceDuration, ease: 'power2.out' },
+                                '<'
+                            )
+                            .fromTo(
+                                list,
+                                { y: () => belowViewport(list) },
+                                { y: 0, duration: entranceDuration, ease: 'power2.out' },
+                                '<'
+                            )
+                            .to({}, { duration: 1.5 })
+                            .to(
+                                model,
+                                {
+                                    y: () => window.innerHeight + model.offsetHeight,
+                                    scale: 0.96,
+                                    duration: exitDuration,
+                                    ease: 'power2.inOut',
+                                },
+                                '>'
+                            )
+                            .to(
+                                [title, list],
+                                {
+                                    y: () => -window.innerHeight,
+                                    duration: exitDuration,
+                                    ease: 'power2.inOut',
+                                },
+                                '<'
+                            )
+                            .to({}, { duration: 0.7 });
+                    } else {
+                        timeline.to({}, { duration: 1 });
+                    }
+
+                    section.dataset.scrollTrigger = timeline.scrollTrigger ? 'active' : 'inactive';
+                    requestAnimationFrame(() => ScrollTrigger.refresh());
+                }, section);
+            }
+        );
+
+        return () => {
+            cancelled = true;
+            if (refreshLayout) {
+                window.removeEventListener('load', refreshLayout);
+                window.removeEventListener('pageshow', refreshLayout);
+            }
+            modelViewer?.removeEventListener('load', handleModelLoad);
+            context?.revert();
+        };
+    }, []);
+
+    useEffect(() => {
+        const section = routesRef.current;
+        if (
+            !section ||
+            window.matchMedia('(max-width: 900px)').matches ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        )
+            return undefined;
+
+        let context;
+        let cancelled = false;
+
+        Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
+            ([gsapModule, triggerModule]) => {
+                if (cancelled) return;
+
+                const gsap = gsapModule.gsap;
+                const ScrollTrigger = triggerModule.ScrollTrigger;
+                const visual = section.querySelector('.mobility-routes__visual');
+                const content = section.querySelector('.mobility-routes__content');
+                const heading = section.querySelector('.mobility-routes__visual-title h2');
+                const intro = section.querySelector('.mobility-routes__intro');
+                const difference = section.querySelector('.mobility-routes__difference');
+                const exploreHeading = section.querySelector('.mobility-routes__content > h3');
+                const routeList = section.querySelector('.mobility-routes ul');
+                if (
+                    !visual ||
+                    !content ||
+                    !heading ||
+                    !intro ||
+                    !difference ||
+                    !exploreHeading ||
+                    !routeList
+                )
+                    return;
+
+                gsap.registerPlugin(ScrollTrigger);
+                context = gsap.context(() => {
+                    const revealScreens = 2.5;
+                    const listTransitionScreens = 1.5;
+                    const routeScreens = routes.length;
+                    const routeStartScreen = revealScreens + listTransitionScreens;
+                    const totalScreens = routeStartScreen + routeScreens;
+                    const syncRouteState = (self) => {
+                        const routePhase = self.progress * totalScreens - routeStartScreen;
+                        const nextRouteListActive = routePhase >= 0;
+                        const routeProgress = Math.max(
+                            0,
+                            Math.min(0.999999, routePhase / routeScreens)
+                        );
+                        const nextIndex = Math.floor(routeProgress * routeScreens);
+                        setIsRouteListActive((currentValue) =>
+                            currentValue === nextRouteListActive
+                                ? currentValue
+                                : nextRouteListActive
+                        );
+                        setActiveRouteIndex((currentIndex) =>
+                            currentIndex === nextIndex ? currentIndex : nextIndex
+                        );
+                    };
+                    const timeline = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'center center',
+                            end: () => `+=${window.innerHeight * totalScreens}`,
+                            scrub: 1,
+                            pin: true,
+                            pinSpacing: true,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                            onUpdate: syncRouteState,
+                            onRefresh: syncRouteState,
+                        },
+                    });
+
+                    timeline
+                        .to({}, { duration: 0.5 })
+                        .fromTo(
+                            visual,
+                            { width: '100%' },
+                            { width: '50%', duration: 2, ease: 'power2.inOut' }
+                        )
+                        .fromTo(
+                            heading,
+                            {
+                                fontSize: () =>
+                                    `${Math.max(74, Math.min(120, window.innerWidth * 0.0625))}px`,
+                            },
+                            {
+                                fontSize: () =>
+                                    `${Math.max(58, Math.min(80, window.innerWidth * 0.04167))}px`,
+                                duration: 2,
+                                ease: 'power2.inOut',
+                            },
+                            '<'
+                        )
+                        .fromTo(
+                            content,
+                            { autoAlpha: 0, xPercent: 20 },
+                            { autoAlpha: 1, xPercent: 0, duration: 1.5, ease: 'power2.out' },
+                            '-=1.2'
+                        )
+                        .to({}, { duration: 0.5 })
+                        .to([intro, difference, exploreHeading], {
+                            y: () => -window.innerHeight,
+                            autoAlpha: 0,
+                            duration: 1.2,
+                            ease: 'power2.inOut',
+                        })
+                        .to(
+                            routeList,
+                            {
+                                top: '7.593%',
+                                duration: 1.5,
+                                ease: 'power2.inOut',
+                            },
+                            '<'
+                        )
+                        .to({}, { duration: routes.length * 1.2 });
+
+                    section.dataset.scrollTrigger = timeline.scrollTrigger ? 'active' : 'inactive';
+                    requestAnimationFrame(() => ScrollTrigger.refresh());
+                }, section);
+            }
+        );
+
+        return () => {
+            cancelled = true;
+            context?.revert();
+        };
+    }, []);
+
+    useEffect(() => {
+        const section = galleryRef.current;
+        if (!section) return undefined;
+
+        let context;
+        let cancelled = false;
+
+        Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
+            ([gsapModule, triggerModule]) => {
+                if (cancelled) return;
+
+                const gsap = gsapModule.gsap;
+                const ScrollTrigger = triggerModule.ScrollTrigger;
+
+                gsap.registerPlugin(ScrollTrigger);
+                context = gsap.context(() => {
+                    const galleryImages = Array.from(section.querySelectorAll('img'));
+                    const layersToRemove = galleryImages.slice(1).reverse();
+                    const entranceDelayScreens = 0.6;
+                    const betweenLayerDelayScreens = 0.5;
+                    const releaseDelayScreens = 0.6;
+                    const timeline = gsap.timeline({
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'center center',
+                            end: () =>
+                                `+=${
+                                    window.innerHeight *
+                                    (layersToRemove.length +
+                                        entranceDelayScreens +
+                                        betweenLayerDelayScreens *
+                                            Math.max(0, layersToRemove.length - 1) +
+                                        releaseDelayScreens)
+                                }`,
+                            scrub: 1,
+                            pin: true,
+                            pinSpacing: true,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                        },
+                    });
+
+                    timeline.to({}, { duration: entranceDelayScreens });
+                    layersToRemove.forEach((image, index) => {
+                        timeline.to(image, {
+                            y: () => -(image.offsetTop + image.offsetHeight),
+                            duration: 2,
+                            ease: 'none',
+                        });
+                        if (index < layersToRemove.length - 1) {
+                            timeline.to({}, { duration: betweenLayerDelayScreens });
+                        }
+                    });
+                    timeline.to({}, { duration: releaseDelayScreens });
+
+                    section.dataset.scrollTrigger = timeline.scrollTrigger ? 'active' : 'inactive';
                     requestAnimationFrame(() => ScrollTrigger.refresh());
                 }, section);
             }
@@ -879,7 +1162,7 @@ export default function VehicleDisplay() {
                 ))}
             </section>
 
-            <section className="mobility-drive mobility-section">
+            <section className="mobility-drive mobility-section" ref={driveRef}>
                 <div className="mobility-drive__title">
                     <h2>
                         CHOOSE YOUR ROAD
@@ -890,11 +1173,32 @@ export default function VehicleDisplay() {
                         DISCOVER DISTINCT ROUTES DESIGNED TO REVEAL A DIFFERENT SIDE OF EVERY DRIVE.
                     </p>
                 </div>
-                <div className="mobility-drive__model">
-                    <img
-                        src="/images/mobility/drive-top-primary.png"
-                        alt="위에서 바라본 파란색 차량"
-                    />
+                <div
+                    className="mobility-statement__model-slot"
+                    aria-label="2024 Hyundai Elantra N 3D model"
+                >
+                    <div className="mobility-statement__model-entry">
+                        <div className="mobility-statement__model-idle">
+                            <model-viewer
+                                src="/models/2024_hyundai_elantra_n.glb"
+                                alt="2024 Hyundai Elantra N"
+                                loading="eager"
+                                camera-orbit="0deg 0deg 105%"
+                                min-camera-orbit="auto 0deg auto"
+                                max-camera-orbit="auto 0deg auto"
+                                field-of-view="30deg"
+                                shadow-intensity="1"
+                                interaction-prompt="none"
+                                disable-zoom
+                            >
+                                <span
+                                    className="mobility-statement__model-progress"
+                                    slot="progress-bar"
+                                    aria-hidden="true"
+                                />
+                            </model-viewer>
+                        </div>
+                    </div>
                 </div>
                 <ol>
                     <li>
@@ -935,13 +1239,28 @@ export default function VehicleDisplay() {
                 </div>
             </section>
 
-            <section className="mobility-routes mobility-section">
+            <section className="mobility-routes mobility-section" ref={routesRef}>
                 <div className="mobility-routes__visual">
                     <img
-                        src="/images/mobility/route-hero-primary.jpg"
-                        alt="안개 낀 숲속 캠핑 드라이빙 코스"
+                        className={!isRouteListActive ? 'is-active' : ''}
+                        src={routeOverviewImage}
+                        alt="현대 모터스튜디오 고양 드라이빙 경로 지도"
                     />
-                    <div className="mobility-routes__visual-title">
+                    {routes.map((route, index) => (
+                        <img
+                            key={route.title}
+                            className={
+                                isRouteListActive && index === activeRouteIndex ? 'is-active' : ''
+                            }
+                            src={route.image}
+                            alt={`${route.title} 경로 이미지`}
+                        />
+                    ))}
+                    <div
+                        className={`mobility-routes__visual-title${
+                            isRouteListActive ? ' is-hidden' : ''
+                        }`}
+                    >
                         <p>EVERY ROAD TELLS A DIFFERENT STORY. FIND YOURS.</p>
                         <h2>ROUTE OVERVIEW</h2>
                     </div>
@@ -964,22 +1283,27 @@ export default function VehicleDisplay() {
                         DISTINCT EXPERIENCES
                     </p>
                     <h3>EXPLORE THE ROUTES</h3>
-                    <ul>
+                    <ul style={{ '--active-route-index': activeRouteIndex }}>
                         {routes.map((route, index) => (
-                            <li key={route}>
+                            <li
+                                key={route.title}
+                                className={
+                                    isRouteListActive && index === activeRouteIndex
+                                        ? 'is-active'
+                                        : ''
+                                }
+                            >
                                 <small>ROUTE</small>
                                 <b>{String(index + 1).padStart(2, '0')} .</b>
-                                <strong>{route}</strong>
-                                {index === 0 && (
-                                    <p>DISCOVER THE DESIGN, LOGYLOGYLOGYLOGYLOGY GY FFFFFFFFFF</p>
-                                )}
+                                <strong>{route.title}</strong>
+                                <p>{route.description}</p>
                             </li>
                         ))}
                     </ul>
                 </div>
             </section>
 
-            <section className="mobility-gallery mobility-section">
+            <section className="mobility-gallery mobility-section" ref={galleryRef}>
                 {gallery.map((image, index) => (
                     <img
                         key={image}
