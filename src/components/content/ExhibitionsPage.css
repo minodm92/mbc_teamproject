@@ -16,7 +16,7 @@ body:has(.exhibition-page) .site-header { background: #000; }
 .exhibition-preview { position: relative; }
 .exhibition-hero { height: 320vh; }
 .exhibition-preview { height: 380vh; }
-.exhibition-hero { background: #000; color: #fff; text-align: center; }
+.exhibition-hero { background: #111; color: #fff; text-align: center; }
 .exhibition-hero__frame,
 .exhibition-preview__canvas {
   position: sticky;
@@ -26,8 +26,7 @@ body:has(.exhibition-page) .site-header { background: #000; }
   height: 100vh;
   overflow: hidden;
 }
-.exhibition-hero__frame { isolation: isolate; background: #000; }
-.exhibition-hero__frame::after { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: radial-gradient(ellipse 37% 24% at 50% 44%, rgba(0,0,0,.18), transparent 100%), linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.08) 50%, rgba(0,0,0,.22)); }
+.exhibition-hero__frame { isolation: isolate; background: #111; }
 .exhibition-hero__image {
   position: absolute;
   top: 50%;
@@ -48,27 +47,32 @@ body:has(.exhibition-page) .site-header { background: #000; }
 .exhibition-intro { position: relative; z-index: 11; height: 260vh; margin-top: -16vh; text-align: center; background: #fff; }
 .exhibition-intro > div { position: sticky; top: 0; width: 642px; max-width: calc(100% - 48px); height: 100vh; margin-inline: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .exhibition-intro__eyebrow { font-size: 18px; font-weight: 500; line-height: 1.4; }
-.exhibition-intro h2 { margin-top: 35px; font-size: 96px; line-height: 1.1; transform-origin: center center; will-change: transform, opacity; }
+.exhibition-intro__title-spacer { width: 100%; height: 211.2px; margin-top: 35px; flex: 0 0 auto; }
+.exhibition-intro__title-frame { position: absolute; top: calc(50% - 10px); left: calc(50% + var(--viewport-scrollbar-half, 0px)); display: flex; width: 100%; height: 211.2px; align-items: center; justify-content: center; overflow: visible; transform: translate(-50%, -50%); }
+.exhibition-intro h2.exhibition-intro__title-visual { position: relative; width: max-content; margin: 0; font-size: 96px; font-weight: 550; line-height: 1.1; letter-spacing: 0; text-align: center; white-space: nowrap; transform: scale(.4878); transform-origin: center center; will-change: transform, opacity; }
+.exhibition-intro__title-visual > span { display: block; width: 100%; text-align: center; }
 .exhibition-intro__english { margin-top: 35px; font: 400 18px/1.2 var(--font-en) !important; }
 
-.exhibition-preview__canvas { background: #fff; perspective: 1200px; perspective-origin: 50% 50%; }
+.exhibition-preview__canvas { z-index: 12; background: #fff; perspective: 1450px; perspective-origin: 50% 50%; transform-style: preserve-3d; }
 .exhibition-preview__image {
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   left: var(--x);
   top: var(--y);
   width: var(--w);
   height: var(--h);
   object-fit: cover;
+  transform-origin: center center;
   will-change: transform;
   backface-visibility: hidden;
+  pointer-events: none;
 }
 .exhibition-preview h2 {
   position: absolute;
-  z-index: 3;
+  z-index: 1;
   top: 40.1852%;
-  left: 50%;
-  transform: translateX(-50%);
+  left: calc(50% + var(--viewport-scrollbar-half, 0px));
+  transform: translate3d(-50%, 0, 0);
   font-size: 96px;
   line-height: 1.1;
   text-align: center;
@@ -76,6 +80,24 @@ body:has(.exhibition-page) .site-header { background: #000; }
   overflow: visible;
   padding-block: .08em;
   will-change: transform, opacity;
+}
+.exhibition-preview h2 > span { display: block; }
+.exhibition-preview__expanded-image {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: calc(50% + var(--viewport-scrollbar-half, 0px));
+  display: block;
+  width: 37.916667vw;
+  height: auto;
+  aspect-ratio: 728 / 410;
+  object-fit: cover;
+  opacity: 0;
+  transform: translate3d(-50%, -50%, 0) scale(.07);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  pointer-events: none;
 }
 
 .exhibition-editorial { position: relative; height: 1000px; background: #fff; }
@@ -90,21 +112,25 @@ body:has(.exhibition-page) .site-header { background: #000; }
 .exhibition-editorial--feature h2 { overflow: visible; padding-block: .08em; transform-origin: left center; will-change: transform, opacity; }
 .exhibition-editorial--feature p { margin-top: 80px; }
 .exhibition-editorial--feature p { will-change: transform, opacity; }
-.exhibition-editorial--feature .exhibition-editorial__stage > img { right: 65px; width: 755px; }
+.exhibition-editorial--feature .exhibition-editorial__stage > img { right: 65px; width: 755px; transform-origin: center center; will-change: transform, opacity, clip-path; }
 .exhibition-editorial--reflection { z-index: 13; height: 270vh; margin-top: -24vh; }
 .exhibition-editorial--reflection .exhibition-editorial__stage { position: sticky; top: 0; width: 100%; height: 100vh; overflow: hidden; background: #fff; }
 .exhibition-editorial--reflection .exhibition-editorial__copy { top: 287px; left: 290px; }
 .exhibition-editorial--reflection h2 { overflow: visible; padding-block: .08em; transform-origin: center center; will-change: transform, opacity; }
+.exhibition-reflection__title-layout { opacity: 0; }
+.exhibition-reflection__title-render-layer { position: absolute; inset: 0; display: block; width: 100%; height: 100%; transform: scale(.58140); transform-origin: center center; will-change: transform; }
+.exhibition-reflection__title-visual { position: absolute; top: 50%; left: -36%; display: block; width: max-content; color: inherit; font-size: 172%; line-height: 1.1; letter-spacing: inherit; white-space: nowrap; transform: translateY(-50%); }
+.exhibition-reflection__title-visual > span { display: block; width: max-content; text-align: left; white-space: nowrap; }
 .exhibition-editorial--reflection p { margin-top: 50px; will-change: transform, opacity; }
 .exhibition-editorial--reflection .exhibition-editorial__stage > img { right: 300px; width: 760px; will-change: transform, opacity, clip-path; }
 
-.exhibition-sequence { position: relative; z-index: 12; height: 900vh; margin-top: -12vh; background: #111; }
+.exhibition-sequence { position: relative; z-index: 12; height: 1200vh; margin-top: -12vh; background: #111; }
 .exhibition-sequence__viewport { position: sticky; top: 0; height: 100vh; overflow: hidden; perspective: 1400px; background: #111; }
 .exhibition-scene { position: absolute; inset: 0; width: 100%; height: 100vh; margin: 0; padding: 0; overflow: hidden; background: transparent; color: #fff; visibility: hidden; }
 .exhibition-scene:first-child { visibility: visible; }
-.exhibition-scene__frame { position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate; }
-.exhibition-scene__frame > img { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: center center; will-change: transform, clip-path; }
-.exhibition-scene__shade { position: absolute; z-index: 1; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent 55%); will-change: clip-path; }
+.exhibition-scene__frame { position: relative; width: 100%; height: 100%; overflow: hidden; isolation: isolate; perspective: 1400px; perspective-origin: 50% 50%; }
+.exhibition-scene__frame > img { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; object-fit: cover; transform-origin: center center; will-change: transform; }
+.exhibition-scene__shade { position: absolute; z-index: 1; inset: 0; transform-origin: center center; background: linear-gradient(90deg, rgba(0,0,0,.28), transparent 55%); will-change: transform; }
 .exhibition-scene--4d-ride .exhibition-scene__shade,
 .exhibition-scene--connect-wall .exhibition-scene__shade { background: rgba(0,0,0,.2); }
 .exhibition-scene--mobility-art .exhibition-scene__shade { background: rgba(0,0,0,.4); }
@@ -149,9 +175,10 @@ body:has(.exhibition-page) .site-header { background: #000; }
 
 @media (max-width: 1200px) {
   .exhibition-page { --exhibition-side: 4vw; }
+  .exhibition-editorial--reflection .exhibition-reflection__title-visual { letter-spacing: -.025em; }
   .exhibition-hero { height: 220svh; }
   .exhibition-preview { height: 270svh; }
-  .exhibition-sequence { height: 800svh; }
+  .exhibition-sequence { height: 1067svh; }
   .exhibition-intro { height: 100svh; min-height: 700px; margin-top: -12svh; }
   .exhibition-editorial,
   .exhibition-closing { height: 100svh; min-height: 700px; }
