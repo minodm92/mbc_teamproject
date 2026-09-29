@@ -1,0 +1,28 @@
+.membership-card {
+  min-height: 260px;
+  padding: clamp(30px, 4vw, 75px);
+  background: #e5edf0;
+}
+
+.membership-card h2 {
+  margin: 20px 0;
+  font-size: clamp(32px, 3.5vw, 64px);
+  line-height: 1.2;
+  letter-spacing: -0.05em;
+}
+
+.membership-card p {
+  max-width: 650px;
+  margin-bottom: 40px;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.membership-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid;
+  font-weight: 700;
+}

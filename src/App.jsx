@@ -9,12 +9,12 @@ import {
     ExhibitionsPage as ExhibitionPage,
     ExhibitionDetailPage,
     ProgramDetailPage,
-    MembershipPage,
     NoticesPage,
     NoticeDetailPage,
     NewsroomPage,
     NotFoundPage,
 } from './pages/content/ContentPages';
+import MembershipPage from './pages/membership/MembershipPage';
 import VehicleDisplayPage from './pages/mobility/VehicleDisplayPage';
 import ProgramPage from './pages/programs/ProgramPage';
 import { LoginPage, SignUpPage, ProtectedRoute, KakaoCallbackPage } from './pages/auth/AuthPages';

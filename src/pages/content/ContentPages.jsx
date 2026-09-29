@@ -6,7 +6,6 @@ export {
   ExhibitionDetailPage,
   ProgramsPage,
   ProgramDetailPage,
-  MembershipPage,
   NoticesPage,
   NoticeDetailPage,
   NotFoundPage,
