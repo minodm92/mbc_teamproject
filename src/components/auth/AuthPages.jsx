@@ -84,4 +84,4 @@ export function LoginPage() {
 
 export function SignUpPage() { return <SignUpPageView />; }
 
-export function KakaoCallbackPage() { return <main className="form-page"><div className="form-page__wrap"><h1>카카오 로그인</h1><p>카카오 인증 서버가 연결되지 않았습니다. 테스트 계정을 이용해 주세요.</p><Link className="form-button" to={paths.login}>로그인으로 돌아가기</Link></div></main>; }
+export { default as KakaoCallbackPage } from './KakaoCallbackPage';
