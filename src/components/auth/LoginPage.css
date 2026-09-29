@@ -18,6 +18,8 @@
 .login-page__eyebrow { font: 500 15px/1.4 var(--font-en); color: var(--color-point-4); }
 .login-page h1 { height: 79px; padding-top: 18px; font: 500 60px/1.1 var(--font-en); white-space: nowrap; }
 .login-page__intro { min-height: 47px; padding-top: 19px; color: var(--color-sub-2); font: 600 16px/1.4 var(--font-ko); }
+.login-page__test-account { display: flex; flex-wrap: wrap; gap: 8px 16px; min-height: 20px; margin: 14px 0 -24px; color: var(--color-sub-2); font: 400 12px/1.5 var(--font-ko); }
+.login-page__test-account span:first-child { color: #777; }
 .login-page__form { padding-top: 46px; }
 .login-page__label { display: block; font: 500 15px/1.4 var(--font-en); }
 .login-page__form > .login-page__label { height: 29px; }
@@ -48,10 +50,9 @@
 .login-page__signup { display: flex; align-items: center; justify-content: center; gap: 16px; height: 50.188px; padding-top: 32px; color: var(--color-sub-2); font: 300 15px/1.4 var(--font-ko); }
 .login-page__signup a { display: flex; align-items: center; gap: 8px; color: #111; font: 500 15px/1.4 var(--font-en); }
 .login-page__signup img { width: 13px; height: 13px; transform: rotate(45deg); }
-.login-page__demo { position: absolute; top: calc(100% + 18px); left: 50%; transform: translateX(-50%); padding: 5px 8px; border: 0; background: transparent; color: #666; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
 .login-page__meta { position: absolute; bottom: 39px; left: 64px; right: 64px; display: flex; justify-content: space-between; gap: 16px; color: var(--color-sub-2); font: 500 15px/1.4 var(--font-en); }
-.login-page__error { margin-top: 22px; color: var(--color-point-4); font-size: 14px; line-height: 1.4; }
-.login-page__submit:disabled, .login-page__demo:disabled { opacity: .5; cursor: wait; }
+.login-page__error { min-height: 20px; margin: 22px 0 0; color: var(--color-point-4); font-size: 14px; line-height: 1.4; }
+.login-page__submit:disabled { opacity: .5; cursor: wait; }
 @media (min-width: 1024px) and (max-width: 1919px) {
   .login-page__logo, .login-page__brand, .login-page__locations { left: clamp(32px, 3.75vw, 72px); }
   .login-page__brand, .login-page__locations { right: clamp(32px, 3.75vw, 72px); }
