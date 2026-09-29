@@ -111,18 +111,27 @@
 .renewal-story--3 div{top:54px;right:calc(100% + 264px);text-align:right}
 .renewal-story--4{top:2138px;left:6.67%}
 .renewal-story--4 div{top:50px;left:calc(100% + 264px)}
-.renewal-guide{position:relative;min-height:1929px;padding:146px 5.208% 160px;background:#111;color:#fff}
-.renewal-guide header h2{font:550 80px/1.1 var(--font-en)}
-.renewal-guide header p{margin-top:30px;font-size:18px}
-.renewal-guide>img{position:absolute;top:391px;right:9.2%;width:327px;height:371px}
-.renewal-guide__links{width:min(1325px,82%);margin:190px auto 0}
-.renewal-guide__links a{display:flex;height:207px;align-items:center;justify-content:center;flex-direction:column;border-block:1px solid #363636;text-align:center}
-.renewal-guide__links span{color:#d00;font:550 18px var(--font-en);opacity:.6}
-.renewal-guide__links strong{margin-top:22px;font:300 45px/1.1 var(--font-en);opacity:.5}
-.renewal-guide__links .is-featured{height:312px}
-.renewal-guide__links .is-featured span{opacity:1}
-.renewal-guide__links .is-featured strong{font-size:48px;opacity:1}
-.renewal-guide__links small{margin-top:25px;font-size:22px;font-weight:200}
+.renewal-guide{position:relative;background:#111;color:#fff}
+.renewal-guide__stage{position:relative;box-sizing:border-box;padding:clamp(104px,11.5svh,140px) clamp(24px,5.208vw,100px) clamp(90px,10svh,108px);overflow:visible}
+.renewal-guide__stage>header{position:relative;z-index:3;width:max-content;max-width:100%;background:#111}
+.renewal-guide header h2{font:550 clamp(48px,3.333vw,64px)/1.03 var(--font-en)}
+.renewal-guide header p{margin:12px 0 0;font-size:18px;line-height:1.4}
+.renewal-guide__visuals{position:absolute;top:0;right:0;left:0;height:100svh;z-index:2;pointer-events:none}
+.renewal-guide__visual{position:absolute;top:0;width:327px;height:371px;opacity:0;visibility:hidden;transform:translateY(12px) scale(.92);transform-origin:center;transition:opacity .2s ease,transform .28s cubic-bezier(.2,.75,.25,1),visibility 0s linear .2s}
+.renewal-guide__visual.is-active{opacity:1;visibility:visible;transform:translateY(0) scale(1);transition-delay:0s}
+.renewal-guide__visual img{display:block;max-width:none}
+.renewal-guide__visual--1,.renewal-guide__visual--3,.renewal-guide__visual--5{right:9.1%}
+.renewal-guide__visual--2,.renewal-guide__visual--4{left:9.1%}
+.renewal-guide__viewport{position:relative;z-index:1;width:min(1325px,82%);margin:clamp(86px,10svh,110px) auto 0;overflow:visible}
+.renewal-guide__links{position:relative;top:auto;right:auto;left:auto;width:100%;margin:0;will-change:transform}
+.renewal-guide__links a{--scroll-emphasis:.22;box-sizing:border-box;display:flex;height:clamp(220px,23svh,250px);align-items:center;justify-content:center;flex-direction:column;padding:0 clamp(12px,2vw,24px);border-bottom:1px solid #363636;text-align:center}
+.renewal-guide__links a:first-child{border-top:1px solid #363636}
+.renewal-guide__links a.is-hovered{--scroll-emphasis:1!important;--description-emphasis:1!important}
+.renewal-guide__links span{color:#dd0000;font:550 18px/1.2 var(--font-en);opacity:calc(.4 + var(--scroll-emphasis)*.6);transform:translateY(4px);transition:opacity .22s linear,transform .3s cubic-bezier(.22,.61,.36,1)}
+.renewal-guide__links strong{margin-top:20px;color:#fff;font:300 clamp(36px,2.34vw,45px)/1.1 var(--font-en);font-weight:calc(300 + var(--scroll-emphasis)*250);opacity:calc(.28 + var(--scroll-emphasis)*.72);transform:translateY(7px);transition:opacity .22s linear,transform .34s cubic-bezier(.22,.61,.36,1),font-weight .2s ease}
+.renewal-guide__links a.is-active span,.renewal-guide__links a.is-hovered span,.renewal-guide__links a.is-active strong,.renewal-guide__links a.is-hovered strong{transform:translateY(0)}
+.renewal-guide__links small{max-width:90%;margin-top:clamp(24px,2.7svh,29px);font-size:14px;font-weight:200;line-height:1.3;opacity:var(--description-emphasis,0);transform:translateY(9px);transition:opacity .24s linear,transform .34s cubic-bezier(.22,.61,.36,1)}
+.renewal-guide__links a.is-active small,.renewal-guide__links a.is-hovered small{transform:translateY(0)}
 @media(max-width:900px){.renewal-hero{min-height:620px}
 .renewal-intro{height:800px}
 .renewal-intro__title{top:100px;left:24px}
@@ -168,11 +177,15 @@
 .renewal-story{position:relative!important;inset:auto!important;width:100%;margin-bottom:90px}
 .renewal-story img{width:100%;height:auto}
 .renewal-story div{position:static;width:100%;margin-top:25px;text-align:left!important}
-.renewal-guide{min-height:auto;padding:90px 24px}
+.renewal-guide{height:auto;min-height:auto;padding:90px 24px}
+.renewal-guide__stage{position:relative;top:auto;height:auto;min-height:0;padding:0;overflow:visible}
 .renewal-guide header h2{font-size:48px}
 .renewal-guide>img{display:none}
-.renewal-guide__links{width:100%;margin-top:80px}
-.renewal-guide__links strong{font-size:28px}
+.renewal-guide__visuals{display:none}
+.renewal-guide__viewport{width:100%;margin:80px auto 0}
+.renewal-guide__links{position:relative;top:auto;right:auto;left:auto;width:100%;margin:0;transform:none!important}
+.renewal-guide__links a,.renewal-guide__links a.is-active{height:auto;min-height:150px;margin-bottom:0;padding:24px 8px}
+.renewal-guide__links strong,.renewal-guide__links .is-active strong{font-size:28px}
 .renewal-guide__links small{padding-inline:15px;font-size:15px}
 .renewal-program>div{right:24px;left:24px}
 .renewal-program h2{font-size:42px}
