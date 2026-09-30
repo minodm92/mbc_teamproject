@@ -37,6 +37,7 @@ export default function ExhibitionsPage() {
     const page = pageRef.current;
     if (!page) return undefined;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mobileViewport = window.matchMedia('(max-width: 760px)');
     const hero = page.querySelector('.exhibition-hero');
     const heroImage = page.querySelector('.exhibition-hero__image');
     const heroCopy = page.querySelector('.exhibition-hero__copy');
@@ -85,8 +86,8 @@ export default function ExhibitionsPage() {
     const clamp = (value) => Math.min(1, Math.max(0, value));
     const ease = (value) => value * value * (3 - 2 * value);
     let introTitleBaseSize = 96;
-    const introTitleMaxScale = 2.05;
-    const reflectionTitleMaxScale = 1.72;
+    let introTitleMaxScale = 2.05;
+    let reflectionTitleMaxScale = 1.72;
     let frame = 0;
     let closingScale = 1;
     let closingImageY = 0;
@@ -96,6 +97,11 @@ export default function ExhibitionsPage() {
     const update = () => {
       frame = 0;
       const vh = window.innerHeight;
+      const mobilePacing = mobileViewport.matches;
+      const sectionProgress = (rect, section, holdScreens) => {
+        const holdDistance = mobilePacing ? vh * holdScreens : 0;
+        return clamp(-rect.top / Math.max(1, rect.height - vh - holdDistance));
+      };
       const heroRect = hero.getBoundingClientRect();
       const previewRect = preview.getBoundingClientRect();
       if (reducedMotion.matches) {
@@ -159,7 +165,7 @@ export default function ExhibitionsPage() {
         return;
       }
       if (heroRect.bottom > 0 && heroRect.top <= 0) {
-        const progress = clamp(-heroRect.top / Math.max(1, heroRect.height - vh));
+        const progress = sectionProgress(heroRect, hero, 0.25);
         const desktop = window.innerWidth > 1200;
         const expansion = ease(clamp((progress - (desktop ? 0.14 : 0.06)) / (desktop ? 0.6 : 0.68)));
         const initialWidth = window.innerWidth <= 760 ? 125 : 195;
@@ -172,11 +178,11 @@ export default function ExhibitionsPage() {
       const introRect = intro.getBoundingClientRect();
       if (introRect.bottom > 0 && introRect.top < vh) {
         const entry = ease(clamp((vh - introRect.top) / (vh * 0.8)));
-        const progress = clamp(-introRect.top / Math.max(1, introRect.height - vh));
+        const progress = sectionProgress(introRect, intro, 0.3);
         let titleScale = 0.46 + 0.19 * entry;
         if (introRect.top <= 0) {
-          if (progress < 0.38) titleScale = 0.65 + ease(progress / 0.38) * 1.4;
-          else if (progress < 0.68) titleScale = 2.05 - ease((progress - 0.38) / 0.3) * 1.05;
+          if (progress < 0.38) titleScale = 0.65 + ease(progress / 0.38) * (introTitleMaxScale - 0.65);
+          else if (progress < 0.68) titleScale = introTitleMaxScale - ease((progress - 0.38) / 0.3) * (introTitleMaxScale - 1);
           else titleScale = 1;
         }
         const detailReveal = ease(clamp((progress - 0.68) / 0.16));
@@ -190,7 +196,7 @@ export default function ExhibitionsPage() {
         introDescription.style.transform = `translate3d(0, ${((1 - detailReveal) * 16).toFixed(1)}px, 0)`;
       }
       if (previewRect.bottom > 0 && previewRect.top < vh) {
-        const progress = clamp(-previewRect.top / Math.max(1, previewRect.height - vh));
+        const progress = sectionProgress(previewRect, preview, 0.5);
         previewImages.forEach((image, index) => {
           const [, x, y, width, height] = exhibitionPreview[index];
           const depthProfile = exhibitionPreviewDepth[index];
@@ -228,7 +234,9 @@ export default function ExhibitionsPage() {
       const sequenceRect = sequence.getBoundingClientRect();
       if (sequenceRect.bottom > 0 && sequenceRect.top < vh) {
         const travel = Math.max(1, sequenceRect.height - vh);
-        const sequenceProgress = clamp(-sequenceRect.top / travel);
+        const mobileSequence = mobileViewport.matches;
+        const mobileLeadIn = mobileSequence ? vh : 0;
+        const sequenceProgress = clamp((-sequenceRect.top - mobileLeadIn) / Math.max(1, travel - mobileLeadIn));
         const chapterProgress = sequenceProgress * (sceneParts.length - 1);
         const activeChapter = Math.min(sceneParts.length - 2, Math.floor(chapterProgress));
         const phase = chapterProgress - activeChapter;
@@ -236,14 +244,14 @@ export default function ExhibitionsPage() {
           const isPast = index <= activeChapter;
           const isIncoming = index === activeChapter + 1;
           const titleReveal = index === 0
-            ? ease(clamp(sequenceProgress / 0.025))
+            ? mobileSequence ? 1 : ease(clamp(sequenceProgress / 0.025))
             : isIncoming ? ease(clamp((phase - 0.46) / 0.14)) : isPast ? 1 : 0;
           const imageProgress = index === 0
             ? 1
             : isIncoming ? ease(clamp(phase / 0.46)) : isPast ? 1 : 0;
           const imageOpacity = isIncoming ? ease(clamp(phase / 0.035)) : 1;
           const descriptionReveal = index === 0
-            ? ease(clamp((sequenceProgress - 0.012) / 0.025))
+            ? mobileSequence ? 1 : ease(clamp((sequenceProgress - 0.012) / 0.025))
             : isIncoming ? ease(clamp((phase - 0.56) / 0.12)) : isPast ? 1 : 0;
           const imageY = vh * 0.38 * (1 - imageProgress);
           const imageZ = sequenceDepth * imageProgress;
@@ -268,7 +276,19 @@ export default function ExhibitionsPage() {
       }
       const featureRect = feature.getBoundingClientRect();
       if (featureRect.bottom > 0 && featureRect.top < vh) {
-        const progress = clamp(-featureRect.top / Math.max(1, featureRect.height - vh));
+        let progress;
+        if (mobilePacing) {
+          const holdDistance = vh * 0.4;
+          const animationDistance = Math.max(1, featureRect.height - vh - holdDistance);
+          const distance = Math.max(0, -featureRect.top);
+          const contentReadyDistance = animationDistance * 0.66;
+          if (distance <= contentReadyDistance) progress = distance / animationDistance;
+          else if (distance <= contentReadyDistance + holdDistance) progress = 0.66;
+          else progress = (distance - holdDistance) / animationDistance;
+          progress = clamp(progress);
+        } else {
+          progress = clamp(-featureRect.top / Math.max(1, featureRect.height - vh));
+        }
         const imageReveal = ease(clamp((progress - 0.48) / 0.18));
         const exit = ease(clamp((progress - 0.84) / 0.14));
         featureImage.style.opacity = imageReveal.toFixed(3);
@@ -297,7 +317,7 @@ export default function ExhibitionsPage() {
       const reflectionRect = reflection.getBoundingClientRect();
       if (reflectionRect.bottom > 0 && reflectionRect.top < vh) {
         const entry = ease(clamp((vh - reflectionRect.top) / (vh * 0.52)));
-        const progress = clamp(-reflectionRect.top / Math.max(1, reflectionRect.height - vh));
+        const progress = sectionProgress(reflectionRect, reflection, 0.4);
         const titleGrow = ease(clamp(progress / 0.22));
         const titleSettle = ease(clamp((progress - 0.28) / 0.3));
         const imageReveal = ease(clamp((progress - 0.48) / 0.18));
@@ -309,7 +329,7 @@ export default function ExhibitionsPage() {
         const centerY = vh / 2 - finalTitleCenterY;
         const centeredX = centerX * (1 - titleSettle);
         const centeredY = centerY * (1 - titleSettle);
-        const titleScale = (0.68 + titleGrow * 1.04) * (1 - titleSettle) + titleSettle;
+        const titleScale = (0.68 + titleGrow * (reflectionTitleMaxScale - 0.68)) * (1 - titleSettle) + titleSettle;
 
         reflectionCopy.style.opacity = '1';
         reflectionCopy.style.transform = 'none';
@@ -324,7 +344,7 @@ export default function ExhibitionsPage() {
       }
       const closingRect = closing.getBoundingClientRect();
       if (closingRect.bottom > 0 && closingRect.top < vh) {
-        const progress = clamp(-closingRect.top / Math.max(1, closingRect.height - vh));
+        const progress = sectionProgress(closingRect, closing, 0.35);
         const titleReveal = ease(clamp((progress - 0.03) / 0.14));
         const backgroundReveal = ease(clamp((progress - 0.1) / 0.17));
         const imageReveal = ease(clamp((progress - 0.18) / 0.2));
@@ -354,6 +374,8 @@ export default function ExhibitionsPage() {
       const scrollbarHalfWidth = (window.innerWidth - document.documentElement.clientWidth) / 2;
       introTitleFrame.style.setProperty('--viewport-scrollbar-half', `${scrollbarHalfWidth}px`);
       previewCanvas.style.setProperty('--viewport-scrollbar-half', `${scrollbarHalfWidth}px`);
+      introTitleMaxScale = window.innerWidth <= 760 ? 1.08 : 2.05;
+      reflectionTitleMaxScale = window.innerWidth <= 760 ? 1 : 1.72;
       introTitle.style.removeProperty('font-size');
       introTitleBaseSize = Number.parseFloat(window.getComputedStyle(introTitle).fontSize) || 96;
       introTitleSpacer.style.height = `${introTitleBaseSize * 2.2}px`;
@@ -398,7 +420,7 @@ export default function ExhibitionsPage() {
     </section>
     <section className="exhibition-editorial exhibition-editorial--feature exhibition-reveal"><div className="exhibition-editorial__stage"><div className="exhibition-editorial__copy"><h2>DON'T JUST LOOK.<br />EXPERIENCE IT.</h2><p>보고 끝나는 전시가 아닌, 직접 움직이고<br />참여하며 모빌리티를 발견하는 경험.<br />자동차의 기술과 제작 과정부터 몰입형 콘텐츠까지<br />다양한 방식으로 자동차를 경험해 보세요.</p></div><img src={exhibitionImage('feature')} alt="현대 모터스튜디오 전시 공간" loading="lazy" /></div></section>
     <div className="exhibition-sequence"><div className="exhibition-sequence__viewport">{exhibitionScenes.map((scene) => <section className={`exhibition-scene exhibition-scene--${scene.image}`} key={scene.image} aria-label={scene.label || scene.title}><div className="exhibition-scene__frame"><img src={exhibitionImage(scene.image)} alt="" loading="lazy" /><div className="exhibition-scene__shade" /><div className="exhibition-scene__copy"><h2>{scene.title}</h2><p>{scene.description}</p></div></div></section>)}</div></div>
-    <section className="exhibition-editorial exhibition-editorial--reflection exhibition-reveal"><div className="exhibition-editorial__stage"><div className="exhibition-editorial__copy"><h2><span className="exhibition-reflection__title-layout">SO, WHAT<br />IS AN<br />EXHIBITION?</span><span className="exhibition-reflection__title-render-layer" aria-hidden="true"><span className="exhibition-reflection__title-visual"><span>SO, WHAT</span><span>IS AN</span><span>EXHIBITION?</span></span></span></h2><p>바라보는 것에서 그치지 않고,<br />직접 보고 느끼고 경험하는 순간.<br />현대 모터스튜디오의 전시는<br />모빌리티를 새로운 방식으로 만나는 경험입니다.</p></div><img src={exhibitionImage('reflection')} alt="현대 모터스튜디오 전시 관람객" loading="lazy" /></div></section>
+    <section className="exhibition-editorial exhibition-editorial--reflection exhibition-reveal"><div className="exhibition-editorial__stage"><div className="exhibition-editorial__copy"><h2><span className="exhibition-reflection__title-layout exhibition-reflection__title-layout--desktop">SO, WHAT<br />IS AN<br />EXHIBITION?</span><span className="exhibition-reflection__title-layout exhibition-reflection__title-layout--mobile">SO, WHAT IS AN<br />EXHIBITION?</span><span className="exhibition-reflection__title-render-layer" aria-hidden="true"><span className="exhibition-reflection__title-visual exhibition-reflection__title-visual--desktop"><span>SO, WHAT</span><span>IS AN</span><span>EXHIBITION?</span></span><span className="exhibition-reflection__title-visual exhibition-reflection__title-visual--mobile"><span>SO, WHAT IS AN</span><span>EXHIBITION?</span></span></span></h2><p>바라보는 것에서 그치지 않고,<br />직접 보고 느끼고 경험하는 순간.<br />현대 모터스튜디오의 전시는<br />모빌리티를 새로운 방식으로 만나는 경험입니다.</p></div><img src={exhibitionImage('reflection')} alt="현대 모터스튜디오 전시 관람객" loading="lazy" /></div></section>
     <section className="exhibition-closing exhibition-reveal"><div className="exhibition-closing__stage"><h2>EXPERIENCE THE EXHIBITION</h2><span aria-hidden="true">BEYOND WHAT<br />YOU SEE</span><img src={exhibitionImage('closing')} alt="현대 모터스튜디오 전시 공간" loading="lazy" /><p>자동차를 넘어 기술과 문화, 예술을 경험하는<br />현대 모터스튜디오의 전시를 만나보세요.</p></div></section>
   </main>;
 }
