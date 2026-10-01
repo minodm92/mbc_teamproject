@@ -1,4 +1,5 @@
 import { useSearchParams, Link } from 'react-router-dom';
+import { Paperclip } from 'lucide-react';
 import { notices } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import Pagination from '../../ui/Pagination';
@@ -23,6 +24,8 @@ export default function NoticesListing() {
   const page = Math.min(pageCount, Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1);
   const offset = (page - 1) * pageSize;
   const visible = [...pinned, ...regular.slice(offset, offset + pageSize)];
+  const listState = params.toString();
+  const detailSearch = listState ? `?from=${encodeURIComponent(listState)}` : '';
 
   function updateFilter(key, value) {
     setParams((previous) => {
@@ -60,11 +63,16 @@ export default function NoticesListing() {
         <p className="notices-page__sr-only" role="status">검색 결과 {filtered.length}건, {page}페이지</p>
         {visible.length ? <ul className="notices-page__list">
           {visible.map((notice, index) => <li key={notice.id}>
-            <Link className={`notices-page__row${notice.pinned ? ' notices-page__row--pinned' : ''}`} to={paths.notice(notice.id)}>
+            <Link className={`notices-page__row${notice.pinned ? ' notices-page__row--pinned' : ''}`} to={{ pathname: paths.notice(notice.id), search: detailSearch }}>
               <span className="notices-page__number">{notice.pinned ? <img src="/images/notices/pin.png" width="13" height="18" alt="고정 공지" /> : offset + index - pinned.length + 1}</span>
               <span className="notices-page__category">{notice.category}</span>
               <strong className="notices-page__title">{notice.title}</strong>
-              <time dateTime={notice.date.replaceAll('.', '-')}>{notice.date}</time>
+              <span className="notices-page__date">
+                <span className="notices-page__attachment" aria-hidden="true">
+                  {notice.content?.some?.((block) => block.type === 'image') && <Paperclip />}
+                </span>
+                <time dateTime={notice.date.replaceAll('.', '-')}>{notice.date}</time>
+              </span>
               <span className="notices-page__arrow" aria-hidden="true"><img src="/images/notices/arrow.svg" width="15" height="15" alt="" /></span>
             </Link>
           </li>)}
