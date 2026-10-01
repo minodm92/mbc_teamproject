@@ -1,4 +1,6 @@
 .location-showcase{background:var(--color-main-1);color:var(--color-main-2)}
+.location-intro-overlay{position:fixed;z-index:100;inset:0;display:grid;place-items:center;background:#0f0f0f;color:#fff;opacity:1}
+.location-intro-overlay__title{display:block;width:70%;height:auto;filter:brightness(0) invert(1);will-change:transform,filter}
 .location-hero{min-height:880px;min-height:max(880px,100svh);padding:101px 20px 0;display:grid;grid-template-rows:auto 1fr;gap:40px;overflow:clip}
 .location-hero__wordmark{margin:0;line-height:0;align-self:start;will-change:transform}
 .location-hero__wordmark img{display:block;width:100%;height:auto;aspect-ratio:1880/113}
@@ -9,7 +11,9 @@
 .location-stage{background:#fff;padding-top:40px}
 .location-stage__title{font-family:var(--font-en);font-size:clamp(30px,2.084vw,40px);font-weight:500;line-height:1.1;margin:0 3.125% 24px}
 .location-stage__scenes{display:grid}
-.location-scene{display:grid;grid-template-columns:minmax(0,1.56fr) minmax(0,1fr) minmax(0,1.67fr);gap:10px;padding:20px 20px 20px 3.125%;background:var(--scene-background);color:var(--scene-color);min-width:0}
+.location-scene{display:grid;grid-template-columns:minmax(0,1.56fr) minmax(0,1fr) minmax(0,1.67fr);gap:10px;padding:20px 20px 20px 3.125%;background:var(--scene-background);color:#fff;min-width:0}
+.location-scene:is([data-location="goyang"],[data-location="beijing"]){color:var(--color-main-2)}
+.location-scene :is(a,button){color:inherit}
 .location-scene__heading{min-width:0}
 .location-scene__heading h3{font-family:var(--font-en);font-size:clamp(42px,3.125vw,60px);font-weight:500;line-height:1.1;margin:0 0 14px}
 .location-scene__heading ul{font-family:var(--font-en);font-size:clamp(14px,.938vw,18px);font-weight:600;line-height:1.22;list-style:none;padding:0;margin:0}
@@ -44,8 +48,6 @@
   .location-stage__scenes{display:block}
   .location-scene,.location-scene.studio-desktop{display:grid;grid-area:auto;background:var(--scene-background);pointer-events:auto}
   .location-scene__row dd{white-space:pre-line}
-  .location-scene[data-location="senayan-park"] .location-scene__heading{padding-left:calc(40 * var(--u))}
-  .location-scene[data-location="senayan-park"] .location-scene__row dd{white-space:pre-line}
   .studio-section-title{font:550 calc(80 * var(--u))/1 var(--font-en);margin:0}
   .studio-details img{display:block;width:100%;height:100%;object-fit:cover}
   .studio-details a:hover{opacity:1}
@@ -107,6 +109,7 @@
   .location-scene__row{grid-template-columns:48px minmax(0,1fr);gap:10px}
 }
 @media(max-width:767px){
+  .location-intro-overlay__title{width:86%}
   .location-hero{padding:101px 16px 0;min-height:85svh}
   .location-hero__visual{width:58%}
   .location-stage{padding-top:40px}

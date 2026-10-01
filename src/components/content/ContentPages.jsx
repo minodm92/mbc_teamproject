@@ -6,10 +6,10 @@ import ContentCard from '../../ui/ContentCard';
 import PageShell from '../../common/layout/PageShell';
 import NoticesListing from './NoticesListing';
 import LocationShowcase from './LocationShowcase';
-import { locationShowcase } from '../../common/data/locationShowcase';
+import { locationShowcase } from './data/locationShowcase';
 import './ContentPages.css';
 
-export function MotorstudioPage() { return <main><LocationShowcase /></main>; }
+export function MotorstudioPage() { return <main><LocationShowcase intro /></main>; }
 
 export function LocationPage() { const { location } = useParams(); const item = locations.find((row) => row.slug === location); if (!item) return <NotFoundPage />; const detail = <div className="detail-copy"><span>EXPLORE THE SPACE</span>{item.tagline && <h2>{item.tagline}</h2>}{item.description && <p>{item.description}</p>}<Link className="action-link" to={paths.reservations}>방문 예약 <ArrowUpRight size={18} /></Link></div>; if (locationShowcase.some((row) => !row.desktopOnly && row.id === location)) return <main><LocationShowcase key={location} /><div className="page-shell__body location-legacy-detail">{detail}</div></main>; if (location === 'beijing') return <><main className="studio-desktop"><LocationShowcase key={location} /></main><div className="location-legacy-detail"><PageShell eyebrow={`HYUNDAI MOTORSTUDIO ${item.english}`} title={`현대 모터스튜디오 ${item.name}`} intro={item.tagline}><div className="feature-image"><img src={item.image} alt={`${item.name} 공간 일러스트`} width="1500" height="850" /></div>{detail}</PageShell></div></>; return <PageShell eyebrow={`HYUNDAI MOTORSTUDIO ${item.english}`} title={`현대 모터스튜디오 ${item.name}`} intro={item.tagline}><div className="feature-image"><img src={item.image} alt={`${item.name} 공간 일러스트`} width="1500" height="850" /></div>{detail}</PageShell>; }
 

@@ -1,22 +1,86 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { Flip } from 'gsap/Flip';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { locationShowcase } from '../../common/data/locationShowcase';
+import { locationShowcase } from './data/locationShowcase';
 import LocationDetails from './LocationDetails';
 import './LocationShowcase.css';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, Flip);
+
+const INTRO_TIMING = {
+  hold: 0.8,
+  transform: 0.8,
+  titleColorDelay: 0.58,
+  titleColor: 0.18,
+  overlayFade: 0.35,
+  visualReveal: 0.6,
+};
 
 const information = [['hours', '운영시간'], ['closed', '휴관일'], ['address', '주소'], ['price', '이용요금']];
 
-export default function LocationShowcase() {
+export default function LocationShowcase({ intro = false }) {
   const rootRef = useRef(null);
+  const [introVisible, setIntroVisible] = useState(intro);
 
   useLayoutEffect(() => {
     const root = rootRef.current;
     const media = gsap.matchMedia();
     const panels = [...root.querySelectorAll('.location-scene:not(.studio-desktop)')];
     const resetAccessibility = () => panels.forEach((panel) => panel.removeAttribute('aria-hidden'));
+
+    if (intro) {
+      const overlay = root.querySelector('.location-intro-overlay');
+      const overlayTitle = overlay?.querySelector('.location-intro-overlay__title');
+      const finalTitle = root.querySelector('.location-hero__wordmark img');
+      const heroVisual = root.querySelector('.location-hero__visual');
+      if (overlay && overlayTitle && finalTitle && heroVisual) {
+        media.add('(prefers-reduced-motion: no-preference)', () => {
+          gsap.set(heroVisual, { autoAlpha: 0, clipPath: 'inset(100% 0 0 0)' });
+          const timeline = gsap.timeline({ onComplete: () => {
+            gsap.set(heroVisual, { clearProps: 'opacity,visibility,clipPath' });
+          } });
+          timeline
+            .to({}, { duration: INTRO_TIMING.hold })
+            .addLabel('introTransform')
+            .to(overlay, {
+              backgroundColor: '#ffffff',
+              duration: INTRO_TIMING.transform,
+              ease: 'expo.inOut',
+            }, 'introTransform')
+            .to(overlayTitle, {
+              filter: 'brightness(0)',
+              duration: INTRO_TIMING.titleColor,
+              ease: 'power2.inOut',
+            }, `introTransform+=${INTRO_TIMING.titleColorDelay}`)
+            .add(Flip.fit(overlayTitle, finalTitle, {
+              absolute: true,
+              scale: true,
+              duration: INTRO_TIMING.transform,
+              ease: 'expo.inOut',
+            }), 'introTransform')
+            .to(overlay, {
+              autoAlpha: 0,
+              duration: INTRO_TIMING.overlayFade,
+              ease: 'power2.out',
+              onComplete: () => {
+                overlay.style.pointerEvents = 'none';
+                setIntroVisible(false);
+              },
+            }, `introTransform+=${INTRO_TIMING.transform - .2}`)
+            .to(heroVisual, {
+              autoAlpha: 1,
+              clipPath: 'inset(0% 0 0 0)',
+              duration: INTRO_TIMING.visualReveal,
+              ease: 'power3.out',
+            }, '>');
+          return () => timeline.kill();
+        }, root);
+        media.add('(prefers-reduced-motion: reduce)', () => {
+          setIntroVisible(false);
+        }, root);
+      }
+    }
 
     media.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.from('.location-hero__image', { scale: 1.06, duration: 1.2, ease: 'power2.out' });
@@ -133,9 +197,10 @@ export default function LocationShowcase() {
       media.revert();
       resetAccessibility();
     };
-  }, []);
+  }, [intro]);
 
   return <div className="location-showcase" ref={rootRef}>
+    {introVisible && <div className="location-intro-overlay" aria-hidden="true"><img className="location-intro-overlay__title" src="/images/locations/figma/wordmark.svg" alt="" /></div>}
     <section className="location-hero" aria-label="현대 모터스튜디오">
       <h1 className="location-hero__wordmark"><img src="/images/locations/figma/wordmark.svg" alt="HYUNDAI MOTORSTUDIO" width="1880" height="113" /></h1>
       <div className="location-hero__visual"><div className="location-hero__crop"><img className="location-hero__image" src="/images/locations/figma/hero.svg" alt="현대 모터스튜디오의 푸른 미디어 전시 공간" width="402" height="230" fetchPriority="high" /></div></div>
