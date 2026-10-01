@@ -14,72 +14,81 @@
 .renewal-top img{position:absolute;top:15px;left:26px;width:12px;height:15px}
 .renewal-top span{position:absolute;top:32px;left:20px}
 .renewal-location{position:relative;height:100svh;background:#fff}
-.renewal-location__list{position:absolute;z-index:2;top:50%;left:calc(12.5% + 75px);display:flex;width:348px;align-items:center;flex-direction:column;gap:10px;transform:translateY(-50%)}
+.renewal-location__list{position:absolute;z-index:2;top:50%;left:14.270833%;display:flex;width:348px;align-items:center;flex-direction:column;gap:10px;transform:translateY(-50%)}
 .renewal-location__list button{padding:0 12px;border:0;background:none;color:#848484;font:467 60px/1.1 var(--font-en);white-space:nowrap}
 .renewal-location__list button.is-active{background:#111;color:#fff}
 .renewal-location__rail{position:absolute;z-index:2;top:8%;left:calc(50% - 2px);width:4px;height:84%;border-radius:5px;background:#c3c3c3}
 .renewal-location__rail i{position:absolute;top:calc(var(--location-index) * 13.166667%);width:4px;height:34.166667%;border-radius:5px;background:#545454;transition:top .3s ease}
 .renewal-location__detail{position:absolute;z-index:2;top:24.3%;left:61.354167%;display:block;width:30.208333%}
 .renewal-location__detail img{display:block;width:100%;height:auto;aspect-ratio:580/320;object-fit:cover}
+.renewal-location__detail img.is-goyang{visibility:hidden}
 .renewal-location__detail>div{width:100%;margin-top:26px}
 .renewal-location__detail strong{display:block;font-size:22px;line-height:1.4}
 .renewal-location__detail p{margin-top:11px;font-size:18px;font-weight:500;line-height:1.4}
-.renewal-slogan{display:flex;height:100svh;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-.renewal-slogan p{font:400 clamp(60px,5.21vw,100px)/1.36 var(--font-en)}
-.renewal-slogan strong{display:block;min-width:3.7em;margin-top:52px;font:italic 700 clamp(90px,8.33vw,160px)/1 var(--font-en)}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){.renewal-slogan-entry{padding-block:30svh}}
+.renewal-slogan{display:flex;height:100svh;align-items:center;justify-content:center;flex-direction:column;color:#0e0e0e;text-align:center}
+.renewal-slogan p{font:800 clamp(60px,5.20833vw,100px)/1.24 var(--font-en);letter-spacing:-.02em}
+.renewal-slogan strong{display:block;min-width:3.7em;margin-top:24px;font:italic 700 clamp(90px,8.33333vw,160px)/1 var(--font-en);letter-spacing:-.04em}
+.renewal-slogan__cursor{display:inline-block;width:.055em;height:.8em;margin-left:.08em;background:currentColor;opacity:0;vertical-align:-.08em}
 .renewal-drive{position:relative;height:100svh;overflow:hidden;background:#fff}
 .renewal-drive__track{display:flex;width:max-content;height:100%;will-change:transform}
-.renewal-drive__slide{--drive-content-offset:max(0px,calc((100svh - min(56.25vw,1080px))/2));position:relative;flex:0 0 100vw;width:100vw;height:100%;text-align:center}
-.renewal-drive__slide h2{position:absolute;z-index:1;top:calc(min(3.333vw,64px) + var(--drive-content-offset));left:50%;margin:0;font:550 clamp(150px,15.625vw,300px)/1.3 var(--font-en);transform:translateX(-50%);white-space:nowrap}
-.renewal-drive__vehicle-frame{position:absolute;z-index:1;top:calc(min(14.0625vw,270px) + var(--drive-content-offset));left:50%;width:min(72.5vw,1392px);aspect-ratio:1392/515;overflow:hidden;transform:translateX(-50%)}
+.renewal-drive__slide{--drive-content-offset:max(0px,calc((100svh - 1080px)/2));position:relative;flex:0 0 100vw;width:100vw;height:100%;text-align:center}
+.renewal-drive__slide h2{position:absolute;z-index:1;top:calc(min(5.9259svh,64px) + var(--drive-content-offset));left:50%;margin:0;font:550 min(27.7778svh,300px)/1.3 var(--font-en);transform:translateX(-50%);white-space:nowrap}
+.renewal-drive__vehicle-frame{position:absolute;z-index:1;top:calc(min(25svh,270px) + var(--drive-content-offset));left:50%;width:min(128.8889svh,1392px);aspect-ratio:1392/515;overflow:hidden;transform:translateX(-50%)}
 .renewal-drive__vehicle{position:absolute;top:-29.23%;left:-11.09%;width:122.72%;height:auto;max-width:none}
-.renewal-drive__shadow{position:absolute;top:calc(min(39.599vw,760.3px) + var(--drive-content-offset));left:50%;width:min(69%,1325px);height:auto;transform:translateX(-50%)}
-.renewal-drive__vehicle-frame.is-ioniq5n{top:calc(min(11.3542vw,218px) + var(--drive-content-offset));width:min(75.99vw,1459px);aspect-ratio:1459/549}
+.renewal-drive__shadow{position:absolute;top:calc(min(70.3981svh,760.3px) + var(--drive-content-offset));left:50%;width:min(122.6852svh,1325px);height:auto;transform:translateX(-50%)}
+.renewal-drive__vehicle-frame.is-ioniq5n{top:calc(min(20.1852svh,218px) + var(--drive-content-offset));width:min(135.0926svh,1459px);aspect-ratio:1459/549}
 .renewal-drive__vehicle-frame.is-ioniq5n .renewal-drive__vehicle{top:-17.12%;left:-4.07%;width:106.7%;height:auto}
-.renewal-drive__shadow.is-ioniq5n{top:calc(min(38.297vw,735.3px) + var(--drive-content-offset))}
-.renewal-drive__vehicle-frame.is-casper{top:calc(min(10.1042vw,194px) + var(--drive-content-offset));width:min(63.958vw,1228px);aspect-ratio:1228/595}
+.renewal-drive__shadow.is-ioniq5n{top:calc(min(68.0833svh,735.3px) + var(--drive-content-offset))}
+.renewal-drive__vehicle-frame.is-casper{top:calc(min(17.963svh,194px) + var(--drive-content-offset));width:min(113.7037svh,1228px);aspect-ratio:1228/595}
 .renewal-drive__vehicle-frame.is-casper .renewal-drive__vehicle{top:-27.39%;left:-23.7%;width:144.46%;height:auto}
-.renewal-drive__shadow.is-casper{width:min(58.4%,1121px)}
-.renewal-drive__shadow.is-casper,.renewal-drive__shadow.is-g90{top:calc(min(37.932vw,728.3px) + var(--drive-content-offset))}
-.renewal-drive__vehicle-frame.is-g90{top:calc(min(15.625vw,300px) + var(--drive-content-offset));width:min(75.26vw,1445px);aspect-ratio:1445/467}
+.renewal-drive__shadow.is-casper{width:min(103.7963svh,1121px)}
+.renewal-drive__shadow.is-casper,.renewal-drive__shadow.is-g90{top:calc(min(67.4352svh,728.3px) + var(--drive-content-offset))}
+.renewal-drive__vehicle-frame.is-g90{top:calc(min(27.7778svh,300px) + var(--drive-content-offset));width:min(133.7963svh,1445px);aspect-ratio:1445/467}
 .renewal-drive__vehicle-frame.is-g90 .renewal-drive__vehicle{top:-48.18%;left:-11.21%;width:122.49%;height:auto}
-.renewal-drive__copy{position:absolute;top:calc(min(45.26vw,869px) + var(--drive-content-offset));right:10%;left:10%;text-align:center}
-.renewal-drive__copy h3{margin:0;font-size:30px}
-.renewal-drive__copy p{margin-top:33px;white-space:pre-line;font-size:18px;line-height:1.4}
+.renewal-drive__copy{position:absolute;top:calc(min(80.463svh,869px) + var(--drive-content-offset));right:10%;left:10%;text-align:center}
+.renewal-drive__copy h3{margin:0;font-size:min(2.7778svh,30px)}
+.renewal-drive__copy p{margin-top:min(3.0556svh,33px);white-space:pre-line;font-size:min(1.6667svh,18px);line-height:1.4}
 .renewal-experience{position:relative;height:100svh;overflow:hidden;background:#fff;color:#fff}
-.renewal-experience__background{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.renewal-experience__previews{position:absolute;inset:0;overflow:hidden;background:#111}
+.renewal-experience__previews img{position:absolute;top:-.06%;left:0;width:100%;height:100.13%;max-width:none;object-fit:cover;visibility:hidden;opacity:0}
+.renewal-experience__previews img:first-child{visibility:visible;opacity:1}
 .renewal-experience__shade{position:absolute;inset:0;z-index:1;background:rgb(34 34 34 / 30%);backdrop-filter:blur(1px)}
-.renewal-experience__blur{position:absolute;inset:0;z-index:2;backdrop-filter:blur(clamp(8px,.78125vw,15px))}
-.renewal-experience__ring-position{position:absolute;z-index:3;top:50%;left:50%;width:min(56.25vw,1080px);aspect-ratio:1;transform:translate(-50%,-50%);touch-action:none;cursor:grab}
-.renewal-experience__ring{--ring-rotation:0deg;position:relative;width:100%;height:100%;pointer-events:none;user-select:none}
+.renewal-experience__ring-position{position:absolute;z-index:3;top:50%;left:50%;width:min(84svh,47.25vw,907px);aspect-ratio:1;transform:translate(-50%,-50%)}
+.renewal-experience__ring{--ring-rotation:0deg;position:relative;width:100%;height:100%;pointer-events:none;transform-origin:50% 50%;user-select:none;will-change:transform}
 .renewal-experience__ring img{-webkit-user-drag:none;user-select:none}
 .renewal-experience__ring-item,.renewal-experience__pointer{pointer-events:none}
-.renewal-experience__ring-outline{position:absolute;inset:-1.2%;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgb(255 255 255 / 0%) 0deg 8deg,rgb(255 255 255 / 58%) 8deg 10deg);-webkit-mask:radial-gradient(transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(transparent calc(100% - 4px),#000 calc(100% - 3px));transform-origin:50% 50%;touch-action:none;user-select:none;cursor:grab;will-change:transform}
-.renewal-experience__ring-outline:active{cursor:grabbing}
-.renewal-experience__ring-item{position:absolute;top:var(--y);left:var(--x);display:block;width:24.61%;aspect-ratio:1;overflow:hidden;transform:translate(-50%,-50%) rotate(var(--rotate));-webkit-mask-image:var(--mask-image);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:100% 100%;mask-image:var(--mask-image);mask-repeat:no-repeat;mask-position:center;mask-size:100% 100%}
-.renewal-experience__ring-item img{display:block;width:142%;height:142%;max-width:none;object-fit:cover;transform:translate(-14.08%,-14.08%) rotate(calc(var(--rotate) * -1 - var(--ring-rotation)));transform-origin:50% 50%}
-.renewal-experience__pointer{position:absolute;top:34.46%;left:77.9%;display:block;width:21.3%;height:auto;max-width:none;transform:translate(-50%,-50%) rotate(150.75deg)}
-.renewal-experience p{position:absolute;z-index:4;top:calc(50% - 36px);left:50%;margin:0;font:467 clamp(40px,3.125vw,60px)/1.1 var(--font-en);transform:translateX(-50%);white-space:nowrap}
-.renewal-vehicle-exhibition-title{display:flex;height:900px;align-items:center;justify-content:center;background:#fff;color:#111;text-align:center}
-.renewal-vehicle-exhibition-title h2{font:550 clamp(48px,3.64583vw,70px)/1.2 var(--font-en)}
+.renewal-experience__ring-item{position:absolute;top:var(--y);left:var(--x);display:block;width:24.61%;aspect-ratio:1;overflow:hidden;transform:translate(-50%,-50%) rotate(var(--rotate));transform-origin:50% 50%;backface-visibility:hidden;will-change:transform;-webkit-mask:url('./assets/experience-ring-1.png') center/100% 100% no-repeat;mask:url('./assets/experience-ring-1.png') center/100% 100% no-repeat}
+.renewal-experience__ring-item img{position:absolute;top:50%;left:50%;display:block;width:142%;height:142%;max-width:none;object-fit:cover;transform:translate(-50%,-50%);transform-origin:50% 50%;backface-visibility:hidden}
+.renewal-experience__indicator{position:absolute;inset:0;z-index:2;transform-origin:50% 50%;will-change:transform}
+.renewal-experience__pointer{position:absolute;top:34.462%;left:77.9017%;display:block;width:21.2963%;height:2px;max-width:none;transform:translate(-50%,-50%) rotate(150.75deg);transform-origin:50% 50%}
+.renewal-experience p{position:absolute;z-index:4;top:calc(50% - min(3.3333svh,1.875vw,36px));left:calc(50% + .5px);margin:0;font:467 min(5.5556svh,3.125vw,60px)/1.1 var(--font-en);transform:translateX(-50%);white-space:nowrap}
+.renewal-vehicle-exhibition-slogan-entry{background:#fff}
+.renewal-vehicle-exhibition-slogan{position:relative;display:flex;height:100svh;align-items:center;justify-content:center;background:#fff;color:#111;text-align:center}
+.renewal-vehicle-exhibition-shared-title{margin:0;font-family:var(--font-en);font-weight:550;white-space:nowrap}
+.renewal-vehicle-exhibition-slogan .renewal-vehicle-exhibition-shared-title{position:relative;font-size:clamp(48px,3.64583vw,70px);line-height:1.2}
+.renewal-vehicle-exhibition-title-handoff-layer{position:fixed;z-index:5;inset:0;pointer-events:none}
+.renewal-vehicle-exhibition-shared-title span,.renewal-vehicle-exhibition-card-list__header h2 span{display:block}
 .renewal-current,.renewal-story-title{display:flex;height:900px;align-items:center;justify-content:center;text-align:center}
-.renewal-vehicle-exhibition{position:relative;min-height:min(211.40625vw,4059px);background:#fff;color:#111}
-.renewal-vehicle-exhibition__header{position:absolute;top:min(4.53125vw,87px);left:5.208%;z-index:1}
-.renewal-vehicle-exhibition__header h2{font:550 clamp(50px,4.167vw,80px)/1.1 var(--font-en)}
-.renewal-vehicle-exhibition__header p{margin:30px 0 0;font-size:18px;font-weight:500;line-height:1.4}
-.renewal-vehicle-exhibition__cards{position:relative;height:min(211.40625vw,4059px);max-width:1920px;margin:0 auto}
-.renewal-vehicle-exhibition__card{position:absolute;width:min(30.46875vw,585px)}
-.renewal-vehicle-exhibition__card.is-avante-n{top:min(17.23958vw,331px);left:calc(50% + min(8.33333vw,160px))}
-.renewal-vehicle-exhibition__card.is-grandeur{top:min(35.46875vw,681px);left:min(5.20833vw,100px)}
-.renewal-vehicle-exhibition__card.is-ioniq-9{top:min(70.625vw,1356px);left:calc(62.5% + min(1.82292vw,35px))}
-.renewal-vehicle-exhibition__card.is-ioniq-5{top:min(91.77083vw,1762px);left:calc(12.5% + min(9.84375vw,189px))}
-.renewal-vehicle-exhibition__card.is-gv80{top:min(143.59375vw,2757px);left:calc(18.75% + min(5.20833vw,100px));transform:translateX(-50%)}
-.renewal-vehicle-exhibition__card.is-elantra{top:min(159.94792vw,3071px);left:calc(50% + min(10.52083vw,202px))}
-.renewal-vehicle-exhibition__card img{display:block;width:100%;height:auto;aspect-ratio:585/675;object-fit:cover}
-.renewal-vehicle-exhibition__card h3{margin-top:29px;font:645 30px/1.1 var(--font-en)}
-.renewal-vehicle-exhibition__card dl{display:grid;margin:26px 0 0;gap:9px}
-.renewal-vehicle-exhibition__card dl div{display:grid;grid-template-columns:150px 1fr;font:400 18px/1.2 var(--font-en)}
-.renewal-vehicle-exhibition__card dd{margin:0}
+.renewal-vehicle-exhibition-card-list{position:relative;height:min(211.40625vw,4059px);background:#fff;color:#111}
+.renewal-vehicle-exhibition-card-list__header{position:absolute;top:min(4.53125vw,87px);left:max(calc((100% - 1920px)/2 + 100px),5.20833vw);z-index:2}
+.renewal-vehicle-exhibition-card-list__title-slot{position:relative;width:min(50.72917vw,974px);height:min(9.16667vw,176px)}
+.renewal-vehicle-exhibition-card-list__header h2{margin:0;font:550 min(4.16667vw,80px)/1.1 var(--font-en);text-align:left;white-space:nowrap}
+.renewal-vehicle-exhibition-card-list__header p{width:min(30.46875vw,585px);margin:30px 0 0;font-size:min(.9375vw,18px);font-weight:500;line-height:1.4}
+.renewal-vehicle-exhibition-card-list__items{position:relative;height:100%;max-width:1920px;margin:0 auto}
+.renewal-vehicle-exhibition-card-list__item{position:absolute;width:min(30.46875vw,585px)}
+.renewal-vehicle-exhibition-card-list__item.is-avante-n{top:min(17.23958vw,331px);left:calc(50% + min(8.33333vw,160px))}
+.renewal-vehicle-exhibition-card-list__item.is-grandeur{top:min(35.46875vw,681px);left:min(5.20833vw,100px)}
+.renewal-vehicle-exhibition-card-list__item.is-ioniq-9{top:min(70.625vw,1356px);left:calc(62.5% + min(1.82292vw,35px))}
+.renewal-vehicle-exhibition-card-list__item.is-ioniq-5{top:min(91.77083vw,1762px);left:calc(12.5% + min(9.84375vw,189px))}
+.renewal-vehicle-exhibition-card-list__item.is-gv80{top:min(143.59375vw,2757px);left:calc(18.75% + min(5.20833vw,100px));transform:translateX(-50%)}
+.renewal-vehicle-exhibition-card-list__item.is-elantra{top:min(159.94792vw,3071px);left:calc(50% + min(10.52083vw,202px))}
+.renewal-vehicle-exhibition-card-list__item img{display:block;width:100%;height:auto;aspect-ratio:585/675;object-fit:cover}
+.renewal-vehicle-exhibition-card-list__item h3{margin-top:29px;font:645 min(1.5625vw,30px)/1.1 var(--font-en)}
+.renewal-vehicle-exhibition-card-list__item dl{display:grid;margin:26px 0 0;gap:9px}
+.renewal-vehicle-exhibition-card-list__item dl div{display:grid;grid-template-columns:min(7.8125vw,150px) 1fr;font:400 min(.9375vw,18px)/1.2 var(--font-en)}
+.renewal-vehicle-exhibition-card-list__item dd{margin:0}
+@media(min-width:901px) and (prefers-reduced-motion:no-preference){.renewal-vehicle-exhibition-slogan-entry{position:relative;z-index:2;padding-top:30svh}.renewal-vehicle-exhibition-card-list__mobile-title{display:none}}
 .renewal-current{position:relative;width:max(100vw,177.7778svh);height:max(100svh,56.25vw);margin-inline:auto;container-type:inline-size;background:#fff;color:#111;overflow:hidden}
 .renewal-current__content{position:absolute;z-index:2;top:50%;left:50%;display:flex;width:35.26042cqw;align-items:center;flex-direction:column;gap:1.97917cqw;transform:translate(-50%,-50%)}
 .renewal-current__heading{display:flex;width:29.84375cqw;align-items:center;flex-direction:column;gap:1.92708cqw}
@@ -170,18 +179,19 @@
 .renewal-drive__copy{top:auto;right:24px;bottom:7%;left:24px}
 .renewal-experience{height:100svh;min-height:600px}
 .renewal-program{height:70vh;min-height:600px}
-.renewal-vehicle-exhibition-title{height:650px}
+.renewal-vehicle-exhibition-slogan{height:650px}
 .renewal-current{display:flex;width:100%;height:auto;min-height:650px;padding:90px 24px;align-items:center;justify-content:center;flex-direction:column}
 .renewal-current__content{position:static;display:flex;width:100%;align-items:center;gap:32px;visibility:visible;opacity:1;transform:none}
 .renewal-current__heading{width:100%;gap:28px}
 .renewal-current__title,.renewal-current__copy{visibility:visible}
-.renewal-vehicle-exhibition{min-height:0;padding:90px 24px}
-.renewal-vehicle-exhibition__header{position:static}
-.renewal-vehicle-exhibition__header h2{font-size:clamp(38px,10vw,56px)}
-.renewal-vehicle-exhibition__header p{font-size:16px}
-.renewal-vehicle-exhibition__cards{display:grid;height:auto;margin-top:70px;gap:70px}
-.renewal-vehicle-exhibition__card{position:static;width:100%;transform:none!important}
-.renewal-vehicle-exhibition__card img{width:100%;height:auto;aspect-ratio:585/675}
+.renewal-vehicle-exhibition-card-list{height:auto;padding:90px 24px}
+.renewal-vehicle-exhibition-card-list__header{position:static}
+.renewal-vehicle-exhibition-card-list__title-slot{width:auto;height:auto}
+.renewal-vehicle-exhibition-card-list__header h2{font-size:clamp(38px,10vw,56px)}
+.renewal-vehicle-exhibition-card-list__header p{width:auto;margin-top:30px;font-size:16px}
+.renewal-vehicle-exhibition-card-list__items{display:grid;height:auto;margin-top:70px;gap:70px}
+.renewal-vehicle-exhibition-card-list__item,.renewal-vehicle-exhibition-card-list__item.is-gv80{position:static;width:100%;transform:none}
+.renewal-vehicle-exhibition-card-list__item img{width:100%;height:auto;aspect-ratio:585/675}
 .renewal-story-title{height:700px}
 .renewal-story-title__line-track{bottom:0;width:1px;height:180px}
 .renewal-stories{height:auto;padding:70px 24px;background:#fff}
@@ -213,7 +223,7 @@
 .renewal-drive__copy h3{font-size:23px}
 .renewal-drive__copy p{font-size:14px}
 .renewal-experience p{font-size:42px}
-.renewal-vehicle-exhibition-title h2{font-size:38px}
+.renewal-vehicle-exhibition-slogan h2,.renewal-vehicle-exhibition-card-list__header h2{font-size:min(8vw,38px)}
 .renewal-current h2{font-size:58px}
 .renewal-current p{font-size:18px}
 .renewal-story-title h2{font-size:38px}

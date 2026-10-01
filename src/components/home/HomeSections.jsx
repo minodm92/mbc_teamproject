@@ -2,6 +2,8 @@ import { Fragment, useId, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import heroPosterUrl from '../../../public/videos/home-hero-poster.png?url';
+import heroVideoUrl from '../../../public/videos/home-hero.mp4?url';
 import { homeAsset as asset } from './homeAssets';
 import './HomeSections.css';
 
@@ -15,12 +17,11 @@ export function HomeHero() {
         muted
         loop
         playsInline
-        preload="metadata"
-        poster={asset('hero-1.png')}
+        preload="auto"
+        poster={heroPosterUrl}
         aria-label="도심을 주행하는 현대자동차 영상"
       >
-        <source src="/videos/home-hero.webm" type="video/webm" />
-        <source src="/videos/home-hero.mp4" type="video/mp4" />
+        <source src={heroVideoUrl} type="video/mp4" />
       </video>
     </section>
   );

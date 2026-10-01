@@ -13,3 +13,7 @@ export function homeAsset(name) {
     if (!url) throw new Error(`Missing home asset: ${name}`);
     return url;
 }
+
+export function homeAssetEntries() {
+    return Object.entries(assets).map(([name, url]) => ({ name, url }));
+}
