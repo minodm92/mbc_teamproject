@@ -1,10 +1,11 @@
 ﻿import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowUpRight, MapPin } from 'lucide-react';
+import { ArrowUpRight, MapPin } from 'lucide-react';
 import { locations, exhibitions, programs, notices, news, vehicles } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import ContentCard from '../../ui/ContentCard';
 import PageShell from '../../common/layout/PageShell';
 import NoticesListing from './NoticesListing';
+import NoticeDetail from './NoticeDetail';
 import LocationShowcase from './LocationShowcase';
 import { locationShowcase } from '../../common/data/locationShowcase';
 import './ContentPages.css';
@@ -25,7 +26,7 @@ export function ProgramDetailPage() { const { programId } = useParams(); const i
 
 export function NoticesPage() { return <NoticesListing />; }
 
-export function NoticeDetailPage() { const { noticeId } = useParams(); const item = notices.find((row) => row.id === noticeId); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`${item.category} / ${item.date}`} title={item.title}><article className="notice-detail"><p>{item.content || '상세 내용은 준비 중입니다.'}</p><Link className="action-link" to={paths.notices}><ArrowLeft size={18} /> 목록으로</Link></article></PageShell>; }
+export function NoticeDetailPage() { const { noticeId } = useParams(); const index = notices.findIndex((row) => row.id === noticeId); if (index < 0) return <NotFoundPage />; return <NoticeDetail item={notices[index]} previous={notices[index - 1]} next={notices[index + 1]} />; }
 
 export function NewsroomPage() { return <PageShell eyebrow="NEWSROOM" title="현대 모터스튜디오의 이야기" intro="공간과 사람, 모빌리티의 새로운 소식을 만나보세요."><div className="page-grid">{news.map((item) => <ContentCard key={item.id} image={item.image} eyebrow={item.subtitle} title={item.title} description={item.description} to={paths.location(item.location)} />)}</div></PageShell>; }
 
