@@ -162,7 +162,7 @@ export default function ProgramContent() {
     useLayoutEffect(() => {
         const opening = openingRef.current;
         const hero = opening.querySelector('.program-hero');
-        const visual = hero.querySelector('img');
+        const visual = hero.querySelector('.program-hero__visual');
         const manifesto = opening.querySelector('.program-manifesto');
         const strip = opening.querySelector('.program-strip');
         const track = strip.querySelector('.program-strip__track');
@@ -172,8 +172,36 @@ export default function ProgramContent() {
         const target = images[centerIndex];
         const media = gsap.matchMedia();
 
-        media.add('(prefers-reduced-motion: no-preference)', () => {
-            const marqueeSpeed = () => window.matchMedia('(max-width: 900px)').matches ? 66 : 90;
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            narrowMobile: '(max-width: 480px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.motion) return undefined;
+            if (context.conditions.mobile || context.conditions.tablet) {
+                gsap.set(visual, { clearProps: 'transform,clipPath,opacity' });
+                if (!context.conditions.narrowMobile) return undefined;
+
+                const loopDistance = () => group.offsetWidth + parseFloat(getComputedStyle(group).columnGap);
+                const marquee = gsap.fromTo(track, {
+                    x: () => -loopDistance(),
+                }, {
+                    x: 0,
+                    duration: () => loopDistance() / 54,
+                    ease: 'none',
+                    repeat: -1,
+                    invalidateOnRefresh: true,
+                });
+                requestAnimationFrame(() => ScrollTrigger.refresh());
+
+                return () => {
+                    marquee.kill();
+                    gsap.set([track, visual], { clearProps: 'transform,opacity,clipPath,transformOrigin' });
+                };
+            }
+            const marqueeSpeed = () => window.matchMedia('(max-width: 1024px)').matches ? 66 : 90;
             const loopDistance = () => group.offsetWidth + parseFloat(getComputedStyle(group).columnGap);
             const marquee = gsap.to(track, {
                 x: () => -loopDistance(),
@@ -293,17 +321,52 @@ export default function ProgramContent() {
             { x: 953.949, y: 248.095, rotation: -3.96 },
             { x: 1124.149, y: 461.695, rotation: 14.62 },
         ];
-
         media.add({
-            desktop: '(min-width: 901px)',
-            mobile: '(max-width: 900px)',
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            phone: '(max-width: 480px)',
             motion: '(prefers-reduced-motion: no-preference)',
         }, (context) => {
             if (!context.conditions.motion) return;
+            if (context.conditions.phone) {
+                gsap.set(cards, { clearProps: 'transform,opacity,visibility' });
+                const targetOffsets = [
+                    { x: -43.7, y: -3.02, rotation: -1.57 },
+                    { x: 30.52, y: -1.57, rotation: 5.36 },
+                    { x: -11.42, y: -13.27, rotation: 11.77 },
+                ];
+                const timeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: collage,
+                        start: 'top 82%',
+                        end: 'bottom 48%',
+                        scrub: 0.65,
+                        invalidateOnRefresh: true,
+                    },
+                });
+
+                cards.forEach((card, index) => {
+                    const offset = targetOffsets[index];
+                    timeline.to(card, {
+                        x: () => offset.x * (card.offsetWidth / 224),
+                        y: () => offset.y * (card.offsetWidth / 224),
+                        rotation: offset.rotation,
+                        ease: 'none',
+                        duration: 1,
+                    }, 0);
+                });
+
+                return () => gsap.set(cards, { clearProps: 'transform,opacity,visibility' });
+            }
+            if (context.conditions.mobile || context.conditions.tablet) {
+                gsap.set([section, collage, ...cards, ...section.querySelectorAll('h2,p')], { clearProps: 'all' });
+                return () => gsap.set([section, collage, ...cards, ...section.querySelectorAll('h2,p')], { clearProps: 'all' });
+            }
             const timeline = gsap.timeline({
                 defaults: { ease: 'none' },
                 scrollTrigger: {
-                    trigger: context.conditions.mobile ? collage : section,
+                    trigger: section,
                     start: 'top 75%',
                     end: 'center 45%',
                     scrub: 0.7,
@@ -334,18 +397,117 @@ export default function ProgramContent() {
     }, []);
 
     useLayoutEffect(() => {
+        const page = pageRef.current;
+        const visual = page.querySelector('.program-feature__visual');
+        const image = visual?.querySelector('.program-image-reveal__source');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!image || !context.conditions.motion) return undefined;
+
+            const offset = context.conditions.desktop ? 110 : context.conditions.tablet ? 64 : 36;
+            gsap.fromTo(image, { x: offset, autoAlpha: 0 }, {
+                x: 0,
+                autoAlpha: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: visual,
+                    start: 'top 85%',
+                    end: 'top 55%',
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            return undefined;
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const section = page.querySelector('.program-discover');
+        const heading = section?.querySelector('h2');
+        const description = section?.querySelector('p');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+        }, (context) => {
+            if (!section || !heading || !description) return undefined;
+
+            if (!heading.querySelector('.program-discover__line')) {
+                heading.replaceChildren(
+                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: 'DISCOVER HANDS-ON PROGRAMS' }),
+                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: 'AT HYUNDAI MOTORSTUDIO.' }),
+                );
+            }
+            description.classList.add('program-discover__line');
+
+            const headingLines = Array.from(heading.querySelectorAll('.program-discover__line'));
+            const lines = [...headingLines, description];
+            const [firstLine, secondLine] = headingLines;
+            gsap.set(firstLine, { xPercent: -30, autoAlpha: 0 });
+            gsap.set(secondLine, { y: 24, autoAlpha: 0 });
+            gsap.set(description, { y: 18, autoAlpha: 0 });
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    scrub: 0.7,
+                    refreshPriority: -1,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            // 0–30% remains blank. The following phrases accumulate so the
+            // final state contains the complete con7 message.
+            timeline
+                // Keep the section intentionally blank through the first part
+                // of its scroll range, then reveal the copy sequentially.
+                .to({}, { duration: 2 })
+                .to(firstLine, { xPercent: 0, autoAlpha: 1, duration: 1.1, ease: 'none' })
+                .to(secondLine, { y: 0, autoAlpha: 1, duration: 1, ease: 'none' })
+                .to(description, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'none' });
+
+            const refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh());
+            return () => {
+                cancelAnimationFrame(refreshFrame);
+                timeline.kill();
+                gsap.set(lines, { clearProps: 'transform,opacity,visibility' });
+            };
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
         const section = locationsRef.current;
         const canvas = section.querySelector('.program-locations__canvas');
         const intro = section.querySelector('.program-locations__intro');
         const programs = section.querySelector('.program-locations__programs');
         const media = gsap.matchMedia();
 
-        media.add('(prefers-reduced-motion: no-preference)', () => {
+        media.add({
+            desktop: '(min-width: 1280px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.desktop || !context.conditions.motion) return undefined;
             section.classList.add('program-locations--scrolling');
 
             // Fit the full design height before measuring its horizontal travel.
             const scale = () => Math.min(1, section.clientHeight / canvas.offsetHeight);
-            const introWidth = () => window.matchMedia('(max-width: 900px)').matches ? section.clientWidth : 1920;
+            const introWidth = () => window.matchMedia('(max-width: 1024px)').matches ? section.clientWidth : 1920;
             const extraSpace = () => Math.max(0, section.clientWidth / scale() - introWidth());
             const distance = () => Math.max(0, (canvas.offsetWidth + extraSpace()) * scale() - section.clientWidth);
             const cards = Array.from(programs.querySelectorAll('.program-locations__branch, .program-location-card'));
@@ -359,6 +521,7 @@ export default function ProgramContent() {
             const revealEase = gsap.parseEase('power1.out');
             const revealCards = () => {
                 const viewportWidth = section.clientWidth;
+                const viewportHeight = section.clientHeight;
                 const canvasX = Number(gsap.getProperty(canvas, 'x'));
                 const canvasScale = scale();
                 const programOffset = extraSpace();
@@ -371,7 +534,7 @@ export default function ProgramContent() {
                     const remaining = 1 - revealEase(progress);
                     // Anchor the starting position to the viewport's bottom-right corner.
                     const startX = (viewportWidth - left) / canvasScale;
-                    const startY = section.clientHeight / canvasScale - card.offsetTop;
+                    const startY = viewportHeight / canvasScale - card.offsetTop;
                     x(startX * remaining);
                     y(startY * remaining);
                     opacity(Math.min(1, progress * 3));
@@ -408,21 +571,99 @@ export default function ProgramContent() {
         return () => media.revert();
     }, []);
 
+    // Tablet keeps con6 and the calendar in document flow.  Limit motion here
+    // to opacity and a small vertical offset so it cannot alter their measured
+    // height, horizontal geometry, or the calendar/list spacing.
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const media = gsap.matchMedia();
+
+        media.add({
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.tablet || !context.conditions.motion) return undefined;
+
+            const calendar = page.querySelector('.program-calendar');
+            const scheduleRows = page.querySelectorAll('.program-monthly__row');
+            const locationGroups = page.querySelectorAll('.program-locations__group');
+
+            if (calendar) {
+                gsap.fromTo(calendar, { autoAlpha: 0, y: 20 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.55,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: calendar,
+                        start: 'top 88%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                });
+            }
+
+            if (scheduleRows.length) {
+                gsap.fromTo(scheduleRows, { autoAlpha: 0, y: 16 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.45,
+                    stagger: 0.08,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: scheduleRows[0].parentElement,
+                        start: 'top 86%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                });
+            }
+
+            locationGroups.forEach((group) => {
+                const heading = group.querySelector('.program-locations__branch');
+                const cards = group.querySelectorAll('.program-location-card');
+                const targets = [heading, ...cards].filter(Boolean);
+                if (!targets.length) return;
+
+                gsap.fromTo(targets, { autoAlpha: 0, y: 20 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.55,
+                    stagger: 0.08,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: group,
+                        start: 'top 82%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                });
+            });
+
+            // matchMedia.revert() restores every inline transform/opacity when
+            // the breakpoint changes, including the individual location cards.
+            return undefined;
+        });
+
+        return () => media.revert();
+    }, []);
+
     useLayoutEffect(() => {
         const page = pageRef.current;
         const track = page.querySelector('.program-cards__track');
         const media = gsap.matchMedia();
 
         media.add({
-            desktop: '(min-width: 901px)',
-            mobile: '(max-width: 900px)',
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
             motion: '(prefers-reduced-motion: no-preference)',
         }, (context) => {
             if (!context.conditions.motion) return;
 
             const marquee = gsap.to(track, {
                 xPercent: -50,
-                duration: context.conditions.mobile ? 38 : 28,
+                duration: context.conditions.mobile || context.conditions.tablet ? 38 : 28,
                 ease: 'none',
                 repeat: -1,
             });
@@ -450,7 +691,12 @@ export default function ProgramContent() {
         const page = pageRef.current;
         const media = gsap.matchMedia();
 
-        media.add('(prefers-reduced-motion: no-preference)', () => {
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.motion || context.conditions.tablet) return undefined;
             const sections = page.querySelectorAll('section:not(.program-hero):not(.program-monthly):not(.program-feature):not(.program-locations):not(.program-discover):not(.program-cards)');
             const textSelector = [
                 'h2', 'h3', 'p', 'strong', 'dt', 'dd',
@@ -463,6 +709,7 @@ export default function ProgramContent() {
             ].join(', ');
 
             sections.forEach((section) => {
+                if (!context.conditions.desktop && section.classList.contains('program-about')) return;
                 section.querySelectorAll(textSelector).forEach((text) => {
                     gsap.fromTo(text, { y: -28, autoAlpha: 0 }, {
                         y: 0,
@@ -479,65 +726,6 @@ export default function ProgramContent() {
                 });
             });
 
-
-            const discover = page.querySelector('.program-discover');
-            const discoverHeading = discover?.querySelector('h2');
-            const discoverDescription = discover?.querySelector('p');
-
-            if (discoverHeading && !discoverHeading.querySelector('.program-discover__line')) {
-                const [firstLine, secondLine] = Array.from(discoverHeading.childNodes)
-                    .filter((node) => node.nodeType === Node.TEXT_NODE)
-                    .map((node) => node.textContent.trim())
-                    .filter(Boolean);
-                discoverHeading.replaceChildren(
-                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: firstLine }),
-                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: secondLine }),
-                );
-            }
-            discoverDescription?.classList.add('program-discover__line');
-            const discoverLines = discover?.querySelectorAll('.program-discover__line');
-
-            if (discoverLines?.length && discover?.dataset.legacyAnimation === 'true') {
-                discoverLines.forEach((line) => gsap.fromTo(line, { xPercent: -120, autoAlpha: 0 }, {
-                    xPercent: 0,
-                    autoAlpha: 1,
-                    duration: 0.7,
-                    ease: 'power2.out',
-                    stagger: 0,
-                    scrollTrigger: {
-                        trigger: line,
-                        start: 'top 88%',
-                        toggleActions: 'play none none reverse',
-                        invalidateOnRefresh: true,
-                    },
-                }));
-            }
-            // con7 sticky sequence
-            if (discoverLines?.length) {
-                const [firstLine, secondLine, thirdLine] = discoverLines;
-                const discoverTimeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: discover,
-                        start: 'top top',
-                        end: '+=240%',
-                        pin: true,
-                        scrub: 0.7,
-                        anticipatePin: 1,
-                        invalidateOnRefresh: true,
-                    },
-                });
-                discoverTimeline
-                    .fromTo(firstLine, { xPercent: -120, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'none' })
-                    .to(firstLine, { xPercent: 0, autoAlpha: 1, duration: 0.45, ease: 'none' })
-                    .to(firstLine, { y: -40, autoAlpha: 0, duration: 0.55, ease: 'none' })
-                    .fromTo(secondLine, { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'none' }, '<')
-                    .to(secondLine, { y: 0, autoAlpha: 1, duration: 0.45, ease: 'none' })
-                    .to(secondLine, { y: -40, autoAlpha: 0, duration: 0.55, ease: 'none' })
-                    .fromTo(thirdLine, { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'none' }, '<')
-                    .to(thirdLine, { y: 0, autoAlpha: 1, duration: 0.55, ease: 'none' })
-                    .to([firstLine, secondLine], { xPercent: 0, y: 0, autoAlpha: 1, duration: 0.6, ease: 'none' })
-                    .to(thirdLine, { y: 0, autoAlpha: 1, duration: 0.65, ease: 'none' });
-            }
             page.querySelectorAll('.program-image-reveal:not(.program-feature__visual)').forEach((reveal) => {
                 const source = reveal.querySelector('.program-image-reveal__source');
                 const stripLayer = reveal.querySelector('.program-image-reveal__strips');
@@ -579,18 +767,26 @@ export default function ProgramContent() {
             <section className="program-hero">
                 <h1>Explore Programs<br />Through Creative<br />Experiences</h1>
                 <p>현대 모터스튜디오의 다양한 프로그램을 만나보세요.<br />새로운 아이디어를 발견하고, 직접 만들어보며, 다양한 방식으로 모빌리티를 경험할 수 있습니다.</p>
-                <img src={asset(1)} alt="자동차 디자인 프로그램을 체험하는 모습" />
+                <div className="program-hero__visual"><img src={asset(1)} alt="자동차 디자인 프로그램을 체험하는 모습" /></div>
             </section>
 
             <section className="program-manifesto">
                 <div className="program-strip">
                     <div className="program-strip__track">
                         <div className="program-strip__group">
-                            {stripImages.map((image) => <span className="program-strip__item" key={image}><img src={image} alt="" draggable={false} /></span>)}
+                            {stripImages.map((image) => (
+                                <span className="program-strip__item" key={image}>
+                                    <span className="program-strip__motion"><img src={image} alt="" draggable={false} /></span>
+                                </span>
+                            ))}
                         </div>
                         {['before', 'after'].map((position) => (
                             <div className={`program-strip__group program-strip__group--${position}`} aria-hidden="true" key={position}>
-                                {stripImages.map((image) => <span className="program-strip__item" key={image}><img src={image} alt="" draggable={false} /></span>)}
+                                {stripImages.map((image) => (
+                                    <span className="program-strip__item" key={image}>
+                                        <span className="program-strip__motion"><img src={image} alt="" draggable={false} /></span>
+                                    </span>
+                                ))}
                             </div>
                         ))}
                     </div>
@@ -675,24 +871,42 @@ export default function ProgramContent() {
                         <p>각 지점에서 만나볼 수 있는 다양한 체험 프로그램을 확인해보세요.</p>
                     </div>
                     <div className="program-locations__programs">
-                    <div className="program-locations__branch program-locations__branch--seoul">
-                        <h3>SEOUL<br />PROGRAMS</h3>
-                        <p>서울 지점의 다양한 프로그램을 만나보세요.</p>
-                    </div>
-                    <div className="program-locations__branch program-locations__branch--goyang">
-                        <h3>GOYANG<br />PROGRAMS</h3>
-                        <p>고양 지점의 다양한 프로그램을 만나보세요.</p>
-                    </div>
-                    {locationPrograms.map((program) => (
-                        <article className="program-location-card" style={{ '--program-x': `${program.x}px` }} key={program.title}>
-                            <img src={`/images/programs/program-location-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
-                            <div>
-                                <h4>{program.title}</h4>
-                                <p>{program.description}</p>
-                                <dl><dt>참여가능연령</dt><dd>{program.age}</dd></dl>
+                        <div className="program-locations__group program-locations__group--seoul">
+                            <div className="program-locations__branch program-locations__branch--seoul">
+                                <h3>SEOUL<br />PROGRAMS</h3>
+                                <p>서울 지점의 다양한 프로그램을 만나보세요.</p>
                             </div>
-                        </article>
-                    ))}
+                            <div className="program-locations__cards">
+                                {locationPrograms.slice(0, 2).map((program) => (
+                                    <article className="program-location-card" style={{ '--program-x': `${program.x}px` }} key={program.title}>
+                                        <img src={`/images/programs/program-location-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
+                                        <div>
+                                            <h4>{program.title}</h4>
+                                            <p>{program.description}</p>
+                                            <dl><dt>참여가능연령</dt><dd>{program.age}</dd></dl>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="program-locations__group program-locations__group--goyang">
+                            <div className="program-locations__branch program-locations__branch--goyang">
+                                <h3>GOYANG<br />PROGRAMS</h3>
+                                <p>고양 지점의 다양한 프로그램을 만나보세요.</p>
+                            </div>
+                            <div className="program-locations__cards">
+                                {locationPrograms.slice(2).map((program) => (
+                                    <article className="program-location-card" style={{ '--program-x': `${program.x}px` }} key={program.title}>
+                                        <img src={`/images/programs/program-location-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
+                                        <div>
+                                            <h4>{program.title}</h4>
+                                            <p>{program.description}</p>
+                                            <dl><dt>참여가능연령</dt><dd>{program.age}</dd></dl>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
