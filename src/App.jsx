@@ -1,7 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Header from './common/layout/Header';
 import Footer from './common/layout/Footer';
+import PageLoader from './common/layout/PageLoader';
+import {
+    areHomeAssetsPreloaded,
+    preloadHomeAssets,
+} from './components/home/homePreloader';
 import HomePage from './pages/home/HomePage';
 import {
     MotorstudioPage,
@@ -19,7 +24,10 @@ import MembershipPage from './pages/membership/MembershipPage';
 import VehicleDisplayPage from './pages/mobility/VehicleDisplayPage';
 import ProgramPage from './pages/programs/ProgramPage';
 import { LoginPage, SignUpPage, ProtectedRoute, KakaoCallbackPage } from './pages/auth/AuthPages';
-import { ReservationPage as TestDrivePage, MyReservationsPage } from './pages/mobility/TestDrivePage';
+import {
+    ReservationPage as TestDrivePage,
+    MyReservationsPage,
+} from './pages/mobility/TestDrivePage';
 import ExhibitionReservationPage from './pages/reservation/ExhibitionReservationPage';
 import ProgramReservationPage from './pages/reservation/ProgramReservationPage';
 import ReservationCheckoutPage from './pages/reservation/ReservationCheckoutPage';
@@ -39,12 +47,76 @@ function ScrollToTop() {
 
 export default function App() {
     const { pathname } = useLocation();
+    const [loaderPhase, setLoaderPhase] = useState(() =>
+        pathname === '/' && !areHomeAssetsPreloaded() ? 'visible' : null
+    );
+    const [loaderProgress, setLoaderProgress] = useState(0);
     const standaloneAuth = ['/login', '/signup'].includes(pathname.replace(/\/+$/, ''));
+
+    useEffect(() => {
+        document.documentElement.classList.toggle('is-home-page', pathname === '/');
+
+        return () => {
+            document.documentElement.classList.remove('is-home-page');
+        };
+    }, [pathname]);
+
+    useEffect(() => {
+        if (pathname !== '/') {
+            setLoaderPhase(null);
+            document.body.classList.remove('is-page-loading');
+            return undefined;
+        }
+
+        if (areHomeAssetsPreloaded()) {
+            setLoaderProgress(100);
+            setLoaderPhase(null);
+            document.body.classList.remove('is-page-loading');
+            return undefined;
+        }
+
+        setLoaderPhase('visible');
+        setLoaderProgress(0);
+        document.body.classList.add('is-page-loading');
+
+        const abortController = new AbortController();
+        let disposed = false;
+        let hideTimer;
+        preloadHomeAssets({
+            signal: abortController.signal,
+            onProgress: (progress) => {
+                if (!disposed) setLoaderProgress(progress);
+            },
+        })
+            .then(() => {
+                if (disposed) return;
+                setLoaderProgress(100);
+                setLoaderPhase('leaving');
+                hideTimer = window.setTimeout(() => {
+                    setLoaderPhase(null);
+                    document.body.classList.remove('is-page-loading');
+                }, 1500);
+            })
+            .catch((error) => {
+                if (error.name !== 'AbortError') console.error(error);
+            });
+
+        return () => {
+            disposed = true;
+            abortController.abort();
+            window.clearTimeout(hideTimer);
+            document.body.classList.remove('is-page-loading');
+        };
+    }, [pathname]);
+
+    const showPage = pathname !== '/' || loaderPhase === 'leaving' || loaderPhase === null;
+
     return (
         <>
+            <PageLoader phase={loaderPhase} progress={loaderProgress} />
             <ScrollToTop />
-            {!standaloneAuth && <Header />}
-            <Routes>
+            {showPage && !standaloneAuth && <Header />}
+            {showPage && <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/motorstudio" element={<MotorstudioPage />} />
                 <Route path="/motorstudio/:location" element={<LocationPage />} />
@@ -158,8 +230,8 @@ export default function App() {
                 />
                 <Route path="/board/:postId" element={<BoardDetailPage />} />
                 <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-            {!standaloneAuth && <Footer />}
+            </Routes>}
+            {showPage && !standaloneAuth && <Footer />}
         </>
     );
 }
