@@ -397,6 +397,101 @@ export default function ProgramContent() {
     }, []);
 
     useLayoutEffect(() => {
+        const page = pageRef.current;
+        const visual = page.querySelector('.program-feature__visual');
+        const image = visual?.querySelector('.program-image-reveal__source');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!image || !context.conditions.motion) return undefined;
+
+            const offset = context.conditions.desktop ? 110 : context.conditions.tablet ? 64 : 36;
+            gsap.fromTo(image, { x: offset, autoAlpha: 0 }, {
+                x: 0,
+                autoAlpha: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: visual,
+                    start: 'top 85%',
+                    end: 'top 55%',
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            return undefined;
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const section = page.querySelector('.program-discover');
+        const heading = section?.querySelector('h2');
+        const description = section?.querySelector('p');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+        }, (context) => {
+            if (!section || !heading || !description) return undefined;
+
+            if (!heading.querySelector('.program-discover__line')) {
+                heading.replaceChildren(
+                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: 'DISCOVER HANDS-ON PROGRAMS' }),
+                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: 'AT HYUNDAI MOTORSTUDIO.' }),
+                );
+            }
+            description.classList.add('program-discover__line');
+
+            const headingLines = Array.from(heading.querySelectorAll('.program-discover__line'));
+            const lines = [...headingLines, description];
+            const [firstLine, secondLine] = headingLines;
+            gsap.set(firstLine, { xPercent: -30, autoAlpha: 0 });
+            gsap.set(secondLine, { y: 24, autoAlpha: 0 });
+            gsap.set(description, { y: 18, autoAlpha: 0 });
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    scrub: 0.7,
+                    refreshPriority: -1,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            // 0–30% remains blank. The following phrases accumulate so the
+            // final state contains the complete con7 message.
+            timeline
+                // Keep the section intentionally blank through the first part
+                // of its scroll range, then reveal the copy sequentially.
+                .to({}, { duration: 2 })
+                .to(firstLine, { xPercent: 0, autoAlpha: 1, duration: 1.1, ease: 'none' })
+                .to(secondLine, { y: 0, autoAlpha: 1, duration: 1, ease: 'none' })
+                .to(description, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'none' });
+
+            const refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh());
+            return () => {
+                cancelAnimationFrame(refreshFrame);
+                timeline.kill();
+                gsap.set(lines, { clearProps: 'transform,opacity,visibility' });
+            };
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
         const section = locationsRef.current;
         const canvas = section.querySelector('.program-locations__canvas');
         const intro = section.querySelector('.program-locations__intro');
@@ -426,6 +521,7 @@ export default function ProgramContent() {
             const revealEase = gsap.parseEase('power1.out');
             const revealCards = () => {
                 const viewportWidth = section.clientWidth;
+                const viewportHeight = section.clientHeight;
                 const canvasX = Number(gsap.getProperty(canvas, 'x'));
                 const canvasScale = scale();
                 const programOffset = extraSpace();
@@ -438,7 +534,7 @@ export default function ProgramContent() {
                     const remaining = 1 - revealEase(progress);
                     // Anchor the starting position to the viewport's bottom-right corner.
                     const startX = (viewportWidth - left) / canvasScale;
-                    const startY = section.clientHeight / canvasScale - card.offsetTop;
+                    const startY = viewportHeight / canvasScale - card.offsetTop;
                     x(startX * remaining);
                     y(startY * remaining);
                     opacity(Math.min(1, progress * 3));
@@ -630,100 +726,6 @@ export default function ProgramContent() {
                 });
             });
 
-
-            const discover = page.querySelector('.program-discover');
-            const discoverHeading = discover?.querySelector('h2');
-            const discoverDescription = discover?.querySelector('p');
-
-            if (discoverHeading && !discoverHeading.querySelector('.program-discover__line')) {
-                const [firstLine, secondLine, thirdLine] = context.conditions.desktop
-                    ? ['DISCOVER HANDS-ON PROGRAMS', 'AT HYUNDAI MOTORSTUDIO.', null]
-                    : ['DISCOVER HANDS-ON', 'PROGRAMS AT', 'HYUNDAI MOTORSTUDIO.'];
-                discoverHeading.replaceChildren(
-                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: firstLine }),
-                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: secondLine }),
-                    ...(thirdLine ? [Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: thirdLine })] : []),
-                );
-            }
-            discoverDescription?.classList.add('program-discover__line');
-            const discoverLines = discover?.querySelectorAll('.program-discover__line');
-
-            if (discoverLines?.length && discover?.dataset.legacyAnimation === 'true') {
-                discoverLines.forEach((line) => gsap.fromTo(line, { xPercent: -120, autoAlpha: 0 }, {
-                    xPercent: 0,
-                    autoAlpha: 1,
-                    duration: 0.7,
-                    ease: 'power2.out',
-                    stagger: 0,
-                    scrollTrigger: {
-                        trigger: line,
-                        start: 'top 88%',
-                        toggleActions: 'play none none reverse',
-                        invalidateOnRefresh: true,
-                    },
-                }));
-            }
-            // con7 sticky sequence
-            if (discoverLines?.length && context.conditions.desktop) {
-                const [firstLine, secondLine, thirdLine] = discoverLines;
-                const discoverTimeline = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: discover,
-                        start: 'top 78%',
-                        end: 'bottom 22%',
-                        scrub: 0.7,
-                        invalidateOnRefresh: true,
-                    },
-                });
-                discoverTimeline
-                    .fromTo(firstLine, { xPercent: -120, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.8, ease: 'none' })
-                    .to(firstLine, { xPercent: 0, autoAlpha: 1, duration: 0.45, ease: 'none' })
-                    .to(firstLine, { y: -40, autoAlpha: 0, duration: 0.55, ease: 'none' })
-                    .fromTo(secondLine, { y: 40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, ease: 'none' }, '<')
-                    .to(secondLine, { y: 0, autoAlpha: 1, duration: 0.45, ease: 'none' })
-                    .to(secondLine, { y: -40, autoAlpha: 0, duration: 0.55, ease: 'none' })
-                    .to([firstLine, secondLine], { xPercent: 0, y: 0, autoAlpha: 1, duration: 0.6, ease: 'none' })
-                    .fromTo(thirdLine, { y: -36, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, ease: 'none' }, '<')
-                    .to([firstLine, secondLine, thirdLine], { y: 0, autoAlpha: 1, duration: 0.65, ease: 'none' })
-                    .to({}, { duration: 1.5 });
-            } else if (discoverLines?.length) {
-                gsap.fromTo(discoverLines, { y: 20, autoAlpha: 0 }, {
-                    y: 0,
-                    autoAlpha: 1,
-                    duration: 0.55,
-                    stagger: 0.1,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: discover,
-                        start: 'top 78%',
-                        once: true,
-                        invalidateOnRefresh: true,
-                    },
-                });
-            }
-
-            // con5 desktop visual: a single right-to-left reveal. It uses the
-            // image source itself (rather than moving the layout wrapper), so
-            // the text column and section geometry remain completely stable.
-            const featureVisual = page.querySelector('.program-feature__visual');
-            const featureSource = featureVisual?.querySelector('.program-image-reveal__source');
-            const featureStrips = featureVisual?.querySelector('.program-image-reveal__strips');
-            if (featureVisual && featureSource) {
-                gsap.set(featureStrips, { display: 'none' });
-                gsap.set(featureSource, { autoAlpha: 1, clipPath: 'inset(0 0 0 100%)' });
-                gsap.to(featureSource, {
-                    clipPath: 'inset(0 0% 0 0)',
-                    duration: 1.05,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: featureVisual,
-                        start: 'top 82%',
-                        once: true,
-                        invalidateOnRefresh: true,
-                    },
-                });
-            }
-
             page.querySelectorAll('.program-image-reveal:not(.program-feature__visual)').forEach((reveal) => {
                 const source = reveal.querySelector('.program-image-reveal__source');
                 const stripLayer = reveal.querySelector('.program-image-reveal__strips');
@@ -909,7 +911,7 @@ export default function ProgramContent() {
                 </div>
             </section>
 
-            <section className="program-discover"><h2>DISCOVER HANDS-ON PROGRAMS<br />AT HYUNDAI MOTORSTUDIO.</h2><p>각 지점에서 만나볼 수 있는 다양한 체험 프로그램을 확인해보세요.</p></section>
+            <section className="program-discover"><h2>DISCOVER HANDS-ON PROGRAMS<br />AT HYUNDAI MOTORSTUDIO.</h2><p>보고, 만들고, 경험하는 모빌리티 프로그램</p></section>
             <section className="program-cards" aria-label="체험 프로그램 목록">
                 <div className="program-cards__track">
                     <div className="program-cards__group">
