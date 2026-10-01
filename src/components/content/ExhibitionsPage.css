@@ -250,3 +250,13 @@ body:has(.exhibition-page) .site-header { background: #000; }
   .exhibition-closing__stage > img { top: 36%; width: 80%; height: 38%; }
   .exhibition-closing__stage > p { font-size: 14px; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .exhibition-sequence { height: auto; margin-top: 0; }
+  .exhibition-sequence__viewport { position: static; height: auto; overflow: visible; }
+  .exhibition-scene,
+  .exhibition-scene:first-child {
+    position: relative;
+    visibility: visible;
+  }
+}
