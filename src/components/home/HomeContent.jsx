@@ -72,6 +72,7 @@ const experienceRing = [
 const stories = [
     {
         title: 'SEOUL, REBORN FOR CAR CULTURE',
+        titleLines: ['SEOUL, REBORN', 'FOR CAR CULTURE'],
         place: '현대 모터스튜디오 서울',
         copy: '자동차 마니아들의 놀이터로 새롭게 돌아온 현대 모터스튜디오 서울. 자동차 문화와 취향을 공유하는 새로운 공간을 만나보세요.',
         image: 'story-seoul.svg',
@@ -79,6 +80,7 @@ const stories = [
     },
     {
         title: 'A NEW EXPERIENCE IN HANAM',
+        titleLines: ['A NEW EXPERIENCE', 'IN HANAM'],
         place: '현대 모터스튜디오 하남',
         copy: '새롭게 리뉴얼된 현대 모터스튜디오 하남에서 차량 전시와 미디어 콘텐츠를 통해 더욱 몰입감 있는 모빌리티 경험을 제공합니다.',
         image: 'story-hanam.svg',
@@ -721,7 +723,12 @@ export default function HomeContent() {
                     HYUNDAI MOTORSTUDIO
                 </h2>
                 <p>현대 모터스튜디오의 새로운 이야기를 만나보세요.</p>
-                <i />
+                <span className="renewal-story-title__line-track" aria-hidden="true">
+                    <img className="renewal-story-title__line-base" src={asset('title-center-line.svg')} alt="" />
+                    <span className="renewal-story-title__line-fill">
+                        <img src={asset('title-center-line.svg')} alt="" />
+                    </span>
+                </span>
             </section>
             <HomeStories stories={stories} />
             <VisitorGuide links={guideLinks} />

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useId, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -27,8 +27,250 @@ export function HomeHero() {
 }
 
 export function HomeStories({ stories }) {
+  const sectionRef = useRef(null);
+  const lineRef = useRef(null);
+  const lineProgressRef = useRef(null);
+  const lineClipId = useId().replace(/:/g, '');
+
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    if (!section || !stories.length) return undefined;
+
+    const titleSection = section.previousElementSibling;
+    const titleLine = titleSection?.querySelector('.renewal-story-title__line-track');
+    const titleLineFill = titleLine?.querySelector('.renewal-story-title__line-fill');
+    const media = gsap.matchMedia();
+    const storiesSetup = (isMobile, reduceMotion = false) => {
+      const rows = [...section.querySelectorAll('.renewal-story')];
+      const images = rows.map((row) => row.querySelector('img')).filter(Boolean);
+      let isActive = true;
+      let layoutRefreshFrame;
+      let finalRefreshFrame;
+      let contentObserver;
+      let lineAnchors = [];
+      let lineTrigger;
+      const lineState = { progress: 0 };
+
+      const updateLineGeometry = () => {
+        if (isMobile || !lineRef.current) return;
+
+        const sectionRect = section.getBoundingClientRect();
+        const scale = Math.min(1, window.innerWidth / 1920);
+        const lineHeight = section.offsetHeight;
+        const markerGap = 16 * scale;
+        const lineInset = 2 * scale;
+        lineAnchors = rows.map((row) => {
+          const copy = row.querySelector('.renewal-story__copy');
+          const copyRect = copy?.getBoundingClientRect();
+          return copyRect ? copyRect.top - sectionRect.top + (10 * scale) : 0;
+        });
+
+        lineRef.current.setAttribute('viewBox', `0 0 8 ${lineHeight}`);
+        lineRef.current.style.height = `${lineHeight}px`;
+
+        const updateGroup = (groupName) => {
+          const group = lineRef.current.querySelector(`[data-line-group="${groupName}"]`);
+          const segments = group?.querySelectorAll('[data-line-segment]') || [];
+          const dots = group?.querySelectorAll('[data-line-dot]') || [];
+          const tail = group?.querySelector('[data-line-tail]');
+          let segmentStart = lineInset;
+
+          lineAnchors.forEach((anchor, index) => {
+            segments[index]?.setAttribute('d', `M4 ${segmentStart}V${Math.max(segmentStart, anchor - markerGap)}`);
+            dots[index]?.setAttribute('cy', anchor);
+            segmentStart = anchor + markerGap;
+          });
+          tail?.setAttribute('d', `M4 ${segmentStart}V${Math.max(segmentStart, lineHeight - lineInset)}`);
+        };
+
+        updateGroup('base');
+        updateGroup('progress');
+      };
+
+      const setLineProgress = (progressY) => {
+        if (isMobile || !lineProgressRef.current || !Number.isFinite(progressY)) return;
+        lineProgressRef.current.setAttribute('height', gsap.utils.clamp(0, section.offsetHeight, progressY));
+      };
+
+      const updateLineFromProgress = () => {
+        if (!titleLine || !titleLineFill) return;
+        const titleRect = titleLine.getBoundingClientRect();
+        const storyRect = section.getBoundingClientRect();
+        const titleHeight = titleLine.offsetHeight;
+        const storyStart = storyRect.top - titleRect.top;
+        const totalLength = storyRect.bottom - titleRect.top;
+        const traveled = totalLength * lineState.progress;
+        const titleFill = gsap.utils.clamp(0, titleHeight, traveled);
+
+        titleLineFill.style.clipPath = `inset(0 0 ${titleHeight - titleFill}px 0)`;
+        if (!isMobile && !reduceMotion) {
+          setLineProgress(traveled - storyStart);
+        }
+      };
+
+      const refreshAfterLayout = () => {
+        cancelAnimationFrame(layoutRefreshFrame);
+        cancelAnimationFrame(finalRefreshFrame);
+        layoutRefreshFrame = requestAnimationFrame(() => {
+          finalRefreshFrame = requestAnimationFrame(() => {
+            if (isActive) {
+              updateLineGeometry();
+              ScrollTrigger.refresh();
+            }
+          });
+        });
+      };
+
+      updateLineGeometry();
+
+      if (typeof ResizeObserver !== 'undefined') {
+        contentObserver = new ResizeObserver(refreshAfterLayout);
+        contentObserver.observe(section);
+        if (section.parentElement) contentObserver.observe(section.parentElement);
+        if (titleSection) contentObserver.observe(titleSection);
+        if (titleSection?.previousElementSibling) contentObserver.observe(titleSection.previousElementSibling);
+        if (titleLine) contentObserver.observe(titleLine);
+        rows.forEach((row) => contentObserver.observe(row));
+      }
+
+      if (document.readyState === 'complete') {
+        refreshAfterLayout();
+      } else {
+        window.addEventListener('load', refreshAfterLayout, { once: true });
+      }
+      document.fonts?.ready.then(refreshAfterLayout);
+
+      if (titleLine) {
+        const lineTween = gsap.fromTo(lineState, { progress: 0 }, {
+          progress: 1,
+          duration: 1,
+          ease: 'none',
+          onUpdate: updateLineFromProgress,
+          scrollTrigger: {
+            trigger: titleLine,
+            start: 'top bottom',
+            endTrigger: section,
+            end: 'bottom bottom',
+            scrub: 1,
+            invalidateOnRefresh: true,
+            onRefresh: updateLineFromProgress,
+          },
+        });
+        lineTrigger = lineTween.scrollTrigger;
+      }
+
+      rows.forEach((row, index) => {
+        const image = row.querySelector('img');
+        const copy = row.querySelector('.renewal-story__copy');
+        const isRightImageRow = index % 2 === 0;
+        const distance = isMobile ? 22 : 48;
+        const imageX = isMobile ? 0 : (isRightImageRow ? distance : -distance);
+        const copyX = isMobile ? 0 : (isRightImageRow ? -distance : distance);
+        const startState = isMobile ? { y: 20, opacity: 0 } : { x: copyX, opacity: 0 };
+        const imageStartState = isMobile ? { y: 24, opacity: 0 } : { x: imageX, opacity: 0 };
+        const settleState = isMobile ? { y: 0, opacity: 1 } : { x: 0, opacity: 1 };
+        if (reduceMotion) return;
+
+        const revealHold = 1;
+        const reveal = gsap.timeline({
+          scrollTrigger: {
+            trigger: row,
+            start: () => {
+              const anchorOffset = copy ? copy.offsetTop + 10 : row.offsetHeight / 2;
+              const nextRow = rows[index + 1];
+              const availableDistance = nextRow
+                ? nextRow.offsetTop - row.offsetTop
+                : section.offsetHeight - row.offsetTop;
+              const scrollDistance = Math.max(window.innerHeight * 0.42, availableDistance * 0.68);
+              const timelineDuration = revealHold + 0.08 + 0.9;
+              const holdDistance = scrollDistance * (revealHold / timelineDuration);
+              const topViewportPercent = 100 * (1 - (anchorOffset - holdDistance) / window.innerHeight);
+              return `top ${topViewportPercent}%`;
+            },
+            end: () => {
+              const nextRow = rows[index + 1];
+              const availableDistance = nextRow
+                ? nextRow.offsetTop - row.offsetTop
+                : section.offsetHeight - row.offsetTop;
+              return `+=${Math.max(window.innerHeight * 0.42, availableDistance * 0.68)}`;
+            },
+            refreshPriority: -1,
+            scrub: 0.35,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        reveal.to({}, { duration: revealHold, ease: 'none' });
+        if (copy) reveal.fromTo(copy, startState, { ...settleState, duration: 0.9, ease: 'none' }, revealHold);
+        if (image) reveal.fromTo(image, imageStartState, { ...settleState, duration: 0.9, ease: 'none' }, revealHold + 0.08);
+      });
+
+      if (reduceMotion) {
+        setLineProgress(section.offsetHeight);
+        if (titleLineFill) titleLineFill.style.clipPath = 'inset(0 0 0 0)';
+      }
+
+      const refreshOnImageLoad = refreshAfterLayout;
+      images.forEach((image) => {
+        if (!image.complete) image.addEventListener('load', refreshOnImageLoad, { once: true });
+      });
+
+      return () => {
+        isActive = false;
+        cancelAnimationFrame(layoutRefreshFrame);
+        cancelAnimationFrame(finalRefreshFrame);
+        window.removeEventListener('load', refreshAfterLayout);
+        images.forEach((image) => image.removeEventListener('load', refreshOnImageLoad));
+        contentObserver?.disconnect();
+        lineTrigger?.kill();
+      };
+    };
+
+    media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(false));
+    media.add('(max-width: 900px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(true));
+    media.add('(min-width: 901px) and (prefers-reduced-motion: reduce)', () => storiesSetup(false, true));
+    media.add('(max-width: 900px) and (prefers-reduced-motion: reduce)', () => storiesSetup(true, true));
+
+    return () => media.revert();
+  }, [stories.length]);
+
   return (
-    <section className="renewal-stories">
+    <section ref={sectionRef} className="renewal-stories">
+      <svg
+        ref={lineRef}
+        className="renewal-stories__center-line"
+        viewBox="0 0 8 2904"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <clipPath id={lineClipId} clipPathUnits="userSpaceOnUse">
+            <rect ref={lineProgressRef} x="0" y="0" width="8" height="0" />
+          </clipPath>
+        </defs>
+        <g data-line-group="base" className="renewal-stories__line-base">
+          {stories.map((story) => (
+            <Fragment key={`base-${story.title}`}>
+              <path data-line-segment />
+              <circle data-line-dot cx="4" r="4" />
+            </Fragment>
+          ))}
+          <path data-line-tail />
+        </g>
+        <g
+          data-line-group="progress"
+          className="renewal-stories__line-progress"
+          clipPath={`url(#${lineClipId})`}
+        >
+          {stories.map((story) => (
+            <Fragment key={`progress-${story.title}`}>
+              <path data-line-segment />
+              <circle data-line-dot cx="4" r="4" />
+            </Fragment>
+          ))}
+          <path data-line-tail />
+        </g>
+      </svg>
       {stories.map((story, index) => (
         <Link
           key={story.title}
@@ -36,8 +278,10 @@ export function HomeStories({ stories }) {
           to={story.to}
         >
           <img src={asset(story.image)} alt="" />
-          <div>
-            <h3>{story.title}</h3>
+          <div className="renewal-story__copy">
+            <h3>
+              {(story.titleLines || [story.title]).map((line) => <span key={line}>{line}</span>)}
+            </h3>
             <strong>{story.place}</strong>
             <p>{story.copy}</p>
           </div>
