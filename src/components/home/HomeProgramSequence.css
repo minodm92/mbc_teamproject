@@ -1,0 +1,72 @@
+.renewal-program-sequence {
+  position: relative;
+  z-index: 3;
+  height: 560svh;
+  color: #fff;
+  isolation: isolate;
+}
+
+.renewal-program-sequence__viewport {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+  max-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.renewal-program-sequence__masks { position: absolute; pointer-events: none; }
+.renewal-program-sequence__step { position: absolute; inset: 0; overflow: hidden; }
+.renewal-program-sequence__step--one { z-index: 1; }
+.renewal-program-sequence__step--two {
+  z-index: 2;
+  visibility: hidden;
+  clip-path: url(#home-program-step-02-clip);
+}
+.renewal-program-sequence__step--three {
+  z-index: 3;
+  visibility: hidden;
+  clip-path: url(#home-program-step-03-clip);
+}
+
+.renewal-program-sequence__background {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+}
+
+.renewal-program-sequence__copy {
+  position: absolute;
+  top: 73.611111%;
+  left: 5.208333%;
+  color: #fff;
+}
+.renewal-program-sequence__copy--one { width: 22.65625%; }
+.renewal-program-sequence__copy--two { width: 34.375%; }
+.renewal-program-sequence__copy span { display: block; font: 550 clamp(12px, .9375vw, 18px)/1.2 var(--font-en); }
+.renewal-program-sequence__copy h2 { margin: 7px 0 0; font: 700 clamp(28px, 3.125vw, 60px)/1.2 var(--font-ko); white-space: nowrap; }
+.renewal-program-sequence__copy p { margin: 26px 0 0; font: 300 clamp(12px, 1.041667vw, 20px)/1.4 var(--font-ko); }
+
+.renewal-program-sequence__count {
+  position: absolute;
+  top: 89.722222%;
+  left: 93.75%;
+  display: block;
+  color: #0e0e0e;
+  font: 400 clamp(10px, .78125vw, 15px)/1 var(--font-ko-main-2);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.renewal-program-sequence__count--two { padding: 2px 4px; background: rgb(255 255 255 / 20%); color: #222; }
+
+@media (max-width: 900px) {
+  .renewal-program-sequence__copy { top: auto; right: 5%; bottom: 12%; left: 5%; width: 90%; }
+  .renewal-program-sequence__copy h2 { font-size: clamp(24px, 5vw, 42px); white-space: normal; }
+  .renewal-program-sequence__copy p { margin-top: 14px; font-size: clamp(12px, 2.2vw, 16px); }
+  .renewal-program-sequence__copy p br { display: none; }
+  .renewal-program-sequence__count { top: auto; bottom: 5%; left: 93.75%; }
+}
