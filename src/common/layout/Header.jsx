@@ -13,7 +13,7 @@ const nav = [
   { label: '안내', to: paths.membership, children: [{ label: '멤버십', to: paths.membership }, { label: '공지사항', to: paths.notices }, { label: '뉴스룸', to: paths.newsroom }] },
 ];
 
-export default function Header() {
+export default function Header({ variant = 'light' }) {
   const [open, setOpen] = useState(false);
   const [subnavOpen, setSubnavOpen] = useState(false);
   const headerRef = useRef(null);
@@ -39,31 +39,39 @@ export default function Header() {
     setOpen(false);
     setSubnavOpen(false);
   };
+  const renderAsset = (name, className) => variant === 'light'
+    ? <img className={className} src={`/images/common/${name}.svg`} alt="" />
+    : <>
+      <img className={`${className} site-header__asset--dark`} src={`/images/common/${name}-black.svg`} alt="" />
+      <img className={`${className} site-header__asset--light`} src={`/images/common/${name}.svg`} alt="" />
+    </>;
 
-  return <header ref={headerRef} className={`site-header${subnavOpen ? ' site-header--expanded' : ''}`}>
-    <Link className="site-header__logo" to={paths.home} onClick={closeMenus} aria-label="현대 모터스튜디오 홈">
-      <img src="/images/common/hyundai-motorstudio-logo.svg" alt="" />
-    </Link>
-    <nav className={`site-header__nav${open ? ' site-header__nav--open' : ''}`} aria-label="주 메뉴">
-      {nav.map((item) => <div className="site-header__group" key={item.label}>
-        {item.children
-          ? <button className="site-header__link" type="button" aria-expanded={subnavOpen} onClick={() => setSubnavOpen((value) => !value)}>{item.label}</button>
-          : <NavLink to={item.to} onClick={closeMenus} className="site-header__link">{item.label}</NavLink>}
-        {item.children && <div className="site-header__submenu">{item.children.map((child) => <NavLink key={child.to} to={child.to} onClick={closeMenus}>{child.label}</NavLink>)}</div>}
-      </div>)}
-    </nav>
-    <div className="site-header__actions">
-      <Link className="site-header__experience" to={paths.experience} onClick={closeMenus} aria-label="경험 찾기">
-        <img className="site-header__experience-car" src="/images/common/experience-car.svg" alt="" />
-        <img className="site-header__experience-eye" src="/images/common/experience-eye.svg" alt="" />
-        <img className="site-header__experience-wheel site-header__experience-wheel--front" src="/images/common/experience-wheel.svg" alt="" />
-        <img className="site-header__experience-wheel site-header__experience-wheel--rear" src="/images/common/experience-wheel.svg" alt="" />
-        <span>경험</span>
+  return <header ref={headerRef} className={`site-header site-header--${variant}${subnavOpen ? ' site-header--expanded' : ''}`}>
+    <div className="site-header__bar">
+      <Link className="site-header__logo" to={paths.home} onClick={closeMenus} aria-label="현대 모터스튜디오 홈">
+        {renderAsset('hyundai-motorstudio-logo', 'site-header__logo-image')}
       </Link>
-      <button className="site-header__account" type="button" aria-label={isAuthenticated ? '마이페이지' : '로그인'} onClick={() => { closeMenus(); navigate(isAuthenticated ? paths.mypage : paths.login); }}>
-        <img src="/images/common/profile.svg" alt="" />
-      </button>
-      <button className="site-header__toggle" type="button" aria-label={open ? '메뉴 닫기' : '메뉴 열기'} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSubnavOpen(false); }}>{open ? <X /> : <Menu />}</button>
+      <nav className={`site-header__nav${open ? ' site-header__nav--open' : ''}`} aria-label="주 메뉴">
+        {nav.map((item) => <div className="site-header__group" key={item.label}>
+          {item.children
+            ? <button className="site-header__link" type="button" aria-expanded={subnavOpen} onClick={() => setSubnavOpen((value) => !value)}>{item.label}</button>
+            : <NavLink to={item.to} onClick={closeMenus} className="site-header__link">{item.label}</NavLink>}
+          {item.children && <div className="site-header__submenu">{item.children.map((child) => <NavLink key={child.to} to={child.to} onClick={closeMenus}>{child.label}</NavLink>)}</div>}
+        </div>)}
+      </nav>
+      <div className="site-header__actions">
+        <Link className="site-header__experience" to={paths.experience} onClick={closeMenus} aria-label="경험 찾기">
+          {renderAsset('experience-car', 'site-header__experience-car')}
+          {renderAsset('experience-eye', 'site-header__experience-eye')}
+          {renderAsset('experience-wheel', 'site-header__experience-wheel site-header__experience-wheel--front')}
+          {renderAsset('experience-wheel', 'site-header__experience-wheel site-header__experience-wheel--rear')}
+          <span>경험</span>
+        </Link>
+        <button className="site-header__account" type="button" aria-label={isAuthenticated ? '마이페이지' : '로그인'} onClick={() => { closeMenus(); navigate(isAuthenticated ? paths.mypage : paths.login); }}>
+          {renderAsset('profile', 'site-header__account-image')}
+        </button>
+        <button className="site-header__toggle" type="button" aria-label={open ? '메뉴 닫기' : '메뉴 열기'} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSubnavOpen(false); }}>{open ? <X /> : <Menu />}</button>
+      </div>
     </div>
   </header>;
 }

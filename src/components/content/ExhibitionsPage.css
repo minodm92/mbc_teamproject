@@ -10,7 +10,6 @@
 .exhibition-page h1,
 .exhibition-page h2 { font-family: var(--font-en); font-weight: 600; letter-spacing: -.025em; }
 .exhibition-page p { font-family: var(--font-ko); }
-body:has(.exhibition-page) .site-header { background: #000; }
 
 .exhibition-hero,
 .exhibition-preview { position: relative; }
@@ -164,7 +163,6 @@ body:has(.exhibition-page) .site-header { background: #000; }
 .exhibition-closing__stage > p { position: absolute; top: 853px; left: 0; width: 100%; font-size: 16px; font-weight: 600; line-height: 1.4; will-change: transform, opacity; }
 
 @media (min-width: 1201px) {
-  body:has(.exhibition-page) .site-header,
   .exhibition-hero,
   .exhibition-hero__frame { background: #111; }
   .exhibition-hero { height: 420vh; }

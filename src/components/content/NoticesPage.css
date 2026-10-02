@@ -1,5 +1,4 @@
 .notices-page{--notice-gutter:75px;padding-top:80px;color:var(--color-main-2);background:#fff}
-body:has(.notices-page) .site-header{background:var(--color-main-2)}
 .notices-page__hero{padding:30px var(--notice-gutter) 72px}
 .notices-page__breadcrumb{display:flex;justify-content:flex-end;gap:15px;font-size:12px;line-height:16px;color:#777}
 .notices-page__breadcrumb a:first-child{font-family:var(--font-en)}
