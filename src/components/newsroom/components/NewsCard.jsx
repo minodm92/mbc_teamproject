@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { paths } from '../../../common/router/routePaths';
 
-export default function NewsCard({ article, variant = 'default' }) {
+export default function NewsCard({ article, variant = 'default', listPage = 1 }) {
     return (
         <article className={`newsroom-card${variant === 'related' ? ' newsroom-card--related' : ''}`}>
             <Link
                 className="newsroom-card__link"
-                to={paths.newsroomArticle(article.id)}
+                to={`${paths.newsroomArticle(article.id)}?page=${listPage}`}
                 aria-label={`${article.title} · ${article.location} · ${article.date}`}
             >
                 <span className="newsroom-card__media">

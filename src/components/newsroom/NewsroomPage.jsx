@@ -1,5 +1,5 @@
 import heroNight from './assets/hero-night.png';
-import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { newsroomArticles } from './data/newsroomData';
 import FeaturedNewsCard from './components/FeaturedNewsCard';
 import NewsCard from './components/NewsCard';
@@ -8,8 +8,20 @@ import PromotionalVideo from './components/PromotionalVideo';
 import './NewsroomPage.css';
 
 export function NewsroomPage() {
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageArticles = Array.from({ length: 3 }, () => newsroomArticles);
+    const pageArticles = [
+        newsroomArticles.slice(0, 9),
+        newsroomArticles.slice(9, 18),
+        newsroomArticles.slice(18, 27),
+    ];
+    const [searchParams, setSearchParams] = useSearchParams();
+    const requestedPage = Number(searchParams.get('page'));
+    const currentPage = Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= pageArticles.length
+        ? requestedPage
+        : 1;
+
+    const changePage = (page) => {
+        setSearchParams(page === 1 ? {} : { page: String(page) });
+    };
 
     return (
         <main className="newsroom-page">
@@ -42,13 +54,13 @@ export function NewsroomPage() {
                 </h2>
                 <div className="newsroom-news__grid">
                     {pageArticles[currentPage - 1].map((article) => (
-                        <NewsCard key={`${article.id}-${currentPage}`} article={article} />
+                        <NewsCard key={`${article.id}-${currentPage}`} article={article} listPage={currentPage} />
                     ))}
                 </div>
                 <NewsroomPagination
                     currentPage={currentPage}
                     pageCount={pageArticles.length}
-                    onPageChange={setCurrentPage}
+                    onPageChange={changePage}
                 />
             </section>
         </main>

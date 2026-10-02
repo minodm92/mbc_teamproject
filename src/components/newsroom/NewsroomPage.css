@@ -222,10 +222,10 @@
 
 .newsroom-card__information {
     display: flex;
-    width: calc(100% - 32px);
+    width: 100%;
     flex-direction: column;
     gap: 6px;
-    margin: 15px auto 0;
+    margin: 15px 0 0;
 }
 
 .newsroom-card__title {
@@ -238,7 +238,7 @@
 }
 
 .newsroom-card--related .newsroom-card__information {
-    width: calc(100% - 20px);
+    width: 100%;
 }
 
 .newsroom-card__location,
