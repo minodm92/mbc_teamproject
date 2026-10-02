@@ -4,11 +4,6 @@
     background: var(--color-main-1);
     color: var(--color-main-2);
 }
-body:has(.mobility-page) .site-header {
-    position: absolute;
-    background: transparent;
-    color: var(--color-main-1);
-}
 .mobility-page h1,
 .mobility-page h2,
 .mobility-page dt,

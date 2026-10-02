@@ -145,7 +145,6 @@
 .program-image-reveal__strip{position:relative;width:calc(100% / var(--strip-count) + 1px);height:100%;margin-left:-1px;overflow:hidden;flex:0 0 calc(100% / var(--strip-count) + 1px);clip-path:inset(0 0 100% 0);will-change:clip-path;backface-visibility:hidden}
 .program-image-reveal__strip:first-child{margin-left:0}
 .program-image-reveal__strip img{position:absolute;top:0;left:calc(var(--strip-index) * -100%);width:calc(var(--strip-count) * 100%);height:100%;max-width:none;object-fit:fill}
-body:has(.program-page) .site-header{position:absolute;background:#fff;color:#111}
 @media(max-width:900px){.program-hero{height:950px;padding:150px 20px 0}
 .program-hero h1{position:relative;top:auto;left:auto;width:auto}
 .program-hero h1,.program-about h2{font-size:42px}
@@ -457,7 +456,8 @@ body:has(.program-page) .site-header{position:absolute;background:#fff;color:#11
 /* Programs page mobile header — Figma 2213:16707 */
 @media(max-width:480px){
   body:has(.program-page) .site-header,
-  body:has(.program-page) .site-header.site-header--expanded{height:60px;padding:4px 18px;background:#fff;color:#111}
+  body:has(.program-page) .site-header.site-header--expanded{height:60px}
+  body:has(.program-page) .site-header__bar{height:60px;padding:4px 18px}
   body:has(.program-page) .site-header__logo{width:124px;height:28px;flex-basis:124px}
   body:has(.program-page) .site-header__account{display:none}
   body:has(.program-page) .site-header__actions{gap:0}

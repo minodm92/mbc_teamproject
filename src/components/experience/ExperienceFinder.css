@@ -39,8 +39,6 @@
 .match-panel__actions>button svg{width:15px}
 .match-page__hint{position:absolute;z-index:2;left:50%;bottom:30px;display:flex;align-items:center;gap:12px;color:#fff;font:700 10px var(--font-en);letter-spacing:.14em;transform:translateX(-50%)}
 .match-page__hint span{width:30px;height:1px;background:#fff}
-body:has(.match-page) .site-header{position:absolute;background:#fff;color:#111}
-body:has(.match-page) .site-header:not(:hover):not(:focus-within):not(.site-header--expanded) :is(.site-header__logo,.site-header__account) img{filter:brightness(0)}
 body:has(.match-page) .site-header__link.active{color:#003f78}
 body:has(.match-page) .reservation-footer{display:none}
 @media(max-width:1000px){.match-page{height:auto;min-height:100vh;padding:105px 18px 30px;overflow:visible}

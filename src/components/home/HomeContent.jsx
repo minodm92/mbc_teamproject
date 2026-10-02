@@ -8,6 +8,7 @@ import { locations } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import { HomeHero, HomeStories, VisitorGuide } from '../../components/home/HomeSections';
 import SpiralGallery from './SpiralGallery';
+import HomeProgramSequence from './HomeProgramSequence';
 import { createSpiralPath, spiralStripPose } from './spiralPath';
 import { homeAsset as asset } from './homeAssets';
 import './HomeContent.css';
@@ -1172,18 +1173,7 @@ export default function HomeContent() {
                 </div>
                 <SpiralGallery />
             </section>
-            <Link className="renewal-program" to={paths.programs}>
-                <img src={asset('program.svg')} alt="수소 에너지 탐험 프로그램" />
-                <div>
-                    <span>PROGRAM 01</span>
-                    <h2>수소 에너지 탐험</h2>
-                    <p>
-                        수전해 실험과 넥쏘 조립을 통해 수소에너지를 이해하고,
-                        <br />
-                        수소전기차의 구동 원리를 배우는 클래스입니다.
-                    </p>
-                </div>
-            </Link>
+            <HomeProgramSequence />
             <section className="renewal-story-title">
                 <h2>
                     THE LATEST FROM
