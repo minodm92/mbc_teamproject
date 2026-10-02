@@ -8,7 +8,6 @@ import { locations } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import { HomeHero, HomeStories, VisitorGuide } from '../../components/home/HomeSections';
 import SpiralGallery from './SpiralGallery';
-import { createSpiralPath, spiralStripPose } from './spiralPath';
 import { homeAsset as asset } from './homeAssets';
 import './HomeContent.css';
 
@@ -279,6 +278,7 @@ export default function HomeContent() {
     const currentExhibitionTopRef = useRef(null);
     const currentExhibitionBottomRef = useRef(null);
     const currentExhibitionCopyRef = useRef(null);
+    const spiralGalleryRef = useRef(null);
     const location = locations[selectedLocation];
     const locationDetail = locationDetails[location.slug] ?? location;
     const selectLocation = (index) => {
@@ -338,6 +338,7 @@ export default function HomeContent() {
             let cleanupSloganKeyboard;
             let cleanupExperienceWheel;
             let cleanupVehicleExhibitionTransition;
+            let cleanupCurrentExhibition;
             const image = transition.querySelector('.renewal-location-transition__image');
             const intro = transition.querySelector('.renewal-intro');
             const locationSection = transition.querySelector('.renewal-location');
@@ -473,11 +474,7 @@ export default function HomeContent() {
                         targetTag === 'INPUT' ||
                         targetTag === 'TEXTAREA' ||
                         targetTag === 'SELECT';
-                    if (
-                        sloganInputObserver.isEnabled &&
-                        !isEditable &&
-                        scrollKeys.has(event.key)
-                    ) {
+                    if (sloganInputObserver.isEnabled && !isEditable && scrollKeys.has(event.key)) {
                         event.preventDefault();
                     }
                 };
@@ -736,8 +733,32 @@ export default function HomeContent() {
                         width,
                     };
                 };
+                const measureTargetTitle = () => {
+                    const cardListBounds = vehicleExhibitionCardList.getBoundingClientRect();
+                    const slotBounds = vehicleExhibitionTitleSlot.getBoundingClientRect();
+
+                    // Finish the handoff while the card list is still 30% below the
+                    // viewport top. Once reparented, the title follows the section
+                    // upward through that extra scroll space into its final slot.
+                    return {
+                        top:
+                            slotBounds.top -
+                            cardListBounds.top +
+                            window.innerHeight * 0.3,
+                        left: slotBounds.left,
+                        width: slotBounds.width,
+                    };
+                };
                 let sourceTitleMetrics = measureSourceTitle();
+                let targetTitleMetrics = measureTargetTitle();
                 const renderVehicleExhibitionTitleHandoff = (progress) => {
+                    if (
+                        vehicleExhibitionSloganTitle.parentElement ===
+                            vehicleExhibitionTitleSlot &&
+                        progress >= 0.995
+                    ) {
+                        return;
+                    }
                     if (progress <= 0) {
                         if (
                             vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionSlogan
@@ -746,6 +767,7 @@ export default function HomeContent() {
                         }
                         clearTitleHandoffStyles();
                         sourceTitleMetrics = measureSourceTitle();
+                        targetTitleMetrics = measureTargetTitle();
                         return;
                     }
                     if (progress >= 1) {
@@ -760,7 +782,7 @@ export default function HomeContent() {
                     }
 
                     const source = sourceTitleMetrics;
-                    const target = vehicleExhibitionTitleSlot.getBoundingClientRect();
+                    const target = targetTitleMetrics;
                     const targetFontSize = Math.min(80, window.innerWidth * 0.0416667);
                     const easedProgress = progress * progress * (3 - 2 * progress);
                     const interpolate = (from, to) => from + (to - from) * easedProgress;
@@ -788,13 +810,117 @@ export default function HomeContent() {
                 const vehicleExhibitionTitleHandoff = ScrollTrigger.create({
                     trigger: vehicleExhibitionCardList,
                     start: () => vehicleExhibitionSloganPin.end,
-                    end: 'top top',
-                    scrub: true,
+                    end: 'top 30%',
+                    scrub: 1,
                     onUpdate: ({ progress }) => renderVehicleExhibitionTitleHandoff(progress),
-                    onRefresh: ({ progress }) => renderVehicleExhibitionTitleHandoff(progress),
+                    onRefresh: ({ progress }) => {
+                        targetTitleMetrics = measureTargetTitle();
+                        renderVehicleExhibitionTitleHandoff(progress);
+                    },
                     invalidateOnRefresh: true,
                 });
+                const vehicleExhibitionSectionPin = ScrollTrigger.create({
+                    trigger: vehicleExhibitionCardList,
+                    start: 'top top',
+                    end: () => `+=${window.innerHeight * 1.3}`,
+                    pin: vehicleExhibitionCardList,
+                    pinSpacing: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                });
+                const vehicleExhibitionDescription = vehicleExhibitionCardList.querySelector(
+                    '.renewal-vehicle-exhibition-card-list__header p'
+                );
+                let vehicleExhibitionReleaseDelay;
+                const completeVehicleExhibitionDescription = () => {
+                    releaseVehicleExhibitionInput();
+                };
+                const scheduleVehicleExhibitionRelease = () => {
+                    vehicleExhibitionReleaseDelay?.kill();
+                    vehicleExhibitionReleaseDelay = gsap.delayedCall(
+                        1,
+                        completeVehicleExhibitionDescription
+                    );
+                };
+                const vehicleExhibitionDescriptionReveal = vehicleExhibitionDescription
+                    ? gsap.fromTo(
+                          vehicleExhibitionDescription,
+                          {
+                              autoAlpha: 1,
+                              maskImage:
+                                  'linear-gradient(90deg, #000 0%, #000 45%, transparent 50%, transparent 100%)',
+                              maskPosition: '100% 0',
+                              maskSize: '240% 100%',
+                              webkitMaskImage:
+                                  'linear-gradient(90deg, #000 0%, #000 45%, transparent 50%, transparent 100%)',
+                              webkitMaskPosition: '100% 0',
+                              webkitMaskSize: '240% 100%',
+                              willChange: 'mask-position',
+                          },
+                          {
+                              maskPosition: '0% 0',
+                              webkitMaskPosition: '0% 0',
+                              duration: 1.2,
+                              ease: 'power2.out',
+                              onStart: holdVehicleExhibitionInput,
+                              onComplete: scheduleVehicleExhibitionRelease,
+                              onReverseComplete: releaseVehicleExhibitionInput,
+                              scrollTrigger: {
+                                  trigger: vehicleExhibitionCardList,
+                                  start: () => vehicleExhibitionSectionPin.start,
+                                  toggleActions: 'play none none reverse',
+                                  invalidateOnRefresh: true,
+                              },
+                          }
+                      )
+                    : null;
+                const vehicleExhibitionCards = gsap.utils.toArray(
+                    '.renewal-vehicle-exhibition-card-list__item',
+                    vehicleExhibitionCardList
+                );
+                const cardRevealTweens = vehicleExhibitionCards.map((card) => {
+                    const cardImage = card.querySelector('img');
+
+                    return gsap.fromTo(
+                        card,
+                        {
+                            autoAlpha: 0,
+                            clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+                        },
+                        {
+                            autoAlpha: 1,
+                            clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+                            duration: 1,
+                            ease: 'power2.out',
+                            scrollTrigger: {
+                                trigger: cardImage ?? card,
+                                start: () =>
+                                    Math.max(
+                                        vehicleExhibitionSectionPin.end + 1,
+                                        vehicleExhibitionSectionPin.end +
+                                            card.offsetTop -
+                                            window.innerHeight * 0.7
+                                    ),
+                                toggleActions: 'play none none reverse',
+                                invalidateOnRefresh: true,
+                            },
+                        }
+                    );
+                });
                 cleanupVehicleExhibitionTransition = () => {
+                    vehicleExhibitionReleaseDelay?.kill();
+                    vehicleExhibitionDescriptionReveal?.kill();
+                    if (vehicleExhibitionDescription) {
+                        gsap.set(vehicleExhibitionDescription, {
+                            clearProps:
+                                'opacity,visibility,maskImage,maskPosition,maskSize,webkitMaskImage,webkitMaskPosition,webkitMaskSize,willChange',
+                        });
+                    }
+                    cardRevealTweens.forEach((tween) => tween.kill());
+                    gsap.set(vehicleExhibitionCards, {
+                        clearProps: 'opacity,visibility,clipPath',
+                    });
+                    vehicleExhibitionSectionPin.kill();
                     vehicleExhibitionTitleHandoff.kill();
                     vehicleExhibitionTitleReveal.kill();
                     releaseVehicleExhibitionInput();
@@ -811,75 +937,51 @@ export default function HomeContent() {
             const currentBottom = currentExhibitionBottomRef.current;
             const currentCopy = currentExhibitionCopyRef.current;
             if (currentExhibition && currentTop && currentBottom && currentCopy) {
-                const gallery = currentExhibition.querySelector('.spiral-gallery');
-                const stage = gallery.querySelector('.spiral-gallery__stage');
-                const strips = [...gallery.querySelectorAll('.spiral-gallery__slice')].map(
-                    (element) => ({
-                        element,
-                        card: Number(element.dataset.card),
-                        slice: Number(element.dataset.slice),
-                    })
-                );
                 const helixState = { progress: 0 };
-                let path;
-                const measureHelix = () => {
-                    path = createSpiralPath(
-                        window.innerWidth,
-                        window.innerHeight,
-                        Math.max(...strips.map(({ card }) => card)) + 1,
-                        Number(strips[0].element.dataset.slices)
-                    );
-                    gsap.set(gallery, {
-                        perspective: path.perspective,
-                        left:
-                            window.innerWidth / 2 - currentExhibition.getBoundingClientRect().left,
-                    });
-                    const stripWidth = path.cardWidth / path.slices;
-                    strips.forEach(({ element, slice }) => {
-                        gsap.set(element, {
-                            width: stripWidth + 1,
-                            height: path.cardHeight,
-                            backgroundSize: `${path.cardWidth}px ${path.cardHeight}px`,
-                            backgroundPosition: `${-slice * stripWidth + 0.5}px 0px`,
-                        });
-                    });
-                };
-                measureHelix();
-                gsap.set(
-                    strips.map(({ element }) => element),
-                    { transform: 'none' }
-                );
-                gsap.set(stage, { visibility: 'hidden' });
-                const updateHelix = (progress) => {
-                    stage.style.visibility = progress <= 0 ? 'hidden' : 'visible';
-                    const halfWidth = (path.cardWidth / path.slices + 1) / 2;
-                    strips.forEach(({ element, card, slice }) => {
-                        const p = spiralStripPose(path, progress, card, slice);
-                        const x = p.x - p.dx * halfWidth;
-                        const y = p.y - p.dy * halfWidth - path.cardHeight / 2;
-                        const z = p.z - p.dz * halfWidth;
-                        element.style.transform = `matrix3d(${p.dx},${p.dy},${p.dz},0,0,1,0,0,${-p.dz},0,${p.dx},0,${x},${y},${z},1)`;
-                    });
-                };
+                const renderHelix = () => spiralGalleryRef.current?.render(helixState.progress);
                 const outsideLeft = () => -(window.innerWidth + currentTop.offsetWidth);
                 const outsideRight = () => window.innerWidth + currentBottom.offsetWidth;
+                const animationScrollViewports = 7.5;
+                const finalHoldViewports = 0.6;
+                const animationDuration = 4.05;
+                const finalHoldDuration =
+                    (animationDuration * finalHoldViewports) / animationScrollViewports;
+                let syncHelixTicker = () => {};
                 const currentTimeline = gsap.timeline({
                     defaults: { ease: 'none' },
                     scrollTrigger: {
                         trigger: currentExhibition,
                         start: 'center center',
-                        end: () => `+=${window.innerHeight * 6}`,
+                        end: () =>
+                            `+=${
+                                window.innerHeight * (animationScrollViewports + finalHoldViewports)
+                            }`,
                         pin: currentExhibition,
                         pinReparent: true,
-                        scrub: true,
+                        scrub: 1.5,
                         anticipatePin: 1,
                         invalidateOnRefresh: true,
+                        onUpdate: () => {
+                            renderHelix();
+                            syncHelixTicker();
+                        },
                         onRefresh: () => {
-                            measureHelix();
-                            updateHelix(helixState.progress);
+                            spiralGalleryRef.current?.resize();
+                            renderHelix();
+                            syncHelixTicker();
                         },
                     },
                 });
+                syncHelixTicker = () => {
+                    const scrollTrigger = currentTimeline.scrollTrigger;
+                    if (!scrollTrigger) return;
+                    const margin = window.innerHeight;
+                    const viewTop = window.scrollY - margin;
+                    const viewBottom = window.scrollY + window.innerHeight + margin;
+                    spiralGalleryRef.current?.setActive(
+                        viewBottom > scrollTrigger.start && viewTop < scrollTrigger.end
+                    );
+                };
                 currentTimeline.fromTo(
                     currentTop,
                     { autoAlpha: 1, x: outsideLeft },
@@ -900,11 +1002,24 @@ export default function HomeContent() {
                 );
                 currentTimeline.to(
                     helixState,
-                    { progress: 1, duration: 3, onUpdate: () => updateHelix(helixState.progress) },
-                    1.05
+                    { progress: 1, duration: 3.4, onUpdate: renderHelix },
+                    0.35
                 );
                 currentTimeline.to(currentTop, { x: outsideRight, duration: 1 }, 3.05);
                 currentTimeline.to(currentBottom, { x: outsideLeft, duration: 1 }, 3.05);
+                currentTimeline.to(currentCopy, { autoAlpha: 0, duration: 0.3 }, 3.05);
+                currentTimeline.to(
+                    helixState,
+                    { progress: 1, duration: finalHoldDuration, onUpdate: renderHelix },
+                    animationDuration
+                );
+                renderHelix();
+                syncHelixTicker();
+                cleanupCurrentExhibition = () => {
+                    spiralGalleryRef.current?.setActive(false);
+                    currentTimeline.scrollTrigger?.kill();
+                    currentTimeline.kill();
+                };
             }
             return () => {
                 sloganReset?.kill();
@@ -914,6 +1029,7 @@ export default function HomeContent() {
                 typingSequence?.kill();
                 cleanupExperienceWheel?.();
                 cleanupVehicleExhibitionTransition?.();
+                cleanupCurrentExhibition?.();
                 locationScrollRef.current = null;
             };
         });
@@ -1126,10 +1242,9 @@ export default function HomeContent() {
                         </h2>
                     </div>
                     <p>
-                        직접 달리며 만나는 현대자동차의 새로운 가능성. 보고, 듣고, 느끼는 것에서 한
-                        걸음 더 나아가
+                        직접 달리며 만나는 현대자동차의 새로운 가능성 보고, 듣고, 느끼는 것에서 한 걸음
                         <br />
-                        현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
+                        더 나아가 현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
                     </p>
                 </header>
                 <div className="renewal-vehicle-exhibition-card-list__items">
@@ -1170,7 +1285,7 @@ export default function HomeContent() {
                         EXHIBITION
                     </h2>
                 </div>
-                <SpiralGallery />
+                <SpiralGallery ref={spiralGalleryRef} />
             </section>
             <Link className="renewal-program" to={paths.programs}>
                 <img src={asset('program.svg')} alt="수소 에너지 탐험 프로그램" />
@@ -1192,7 +1307,11 @@ export default function HomeContent() {
                 </h2>
                 <p>현대 모터스튜디오의 새로운 이야기를 만나보세요.</p>
                 <span className="renewal-story-title__line-track" aria-hidden="true">
-                    <img className="renewal-story-title__line-base" src={asset('title-center-line.svg')} alt="" />
+                    <img
+                        className="renewal-story-title__line-base"
+                        src={asset('title-center-line.svg')}
+                        alt=""
+                    />
                     <span className="renewal-story-title__line-fill">
                         <img src={asset('title-center-line.svg')} alt="" />
                     </span>
