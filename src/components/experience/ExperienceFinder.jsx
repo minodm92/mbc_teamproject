@@ -164,7 +164,14 @@ export default function ExperienceFinder() {
     }
     function showRecommendations() {
         if (!complete) return;
-        setRecommendations(getExperienceRecommendations({ experienceType, location, preference }));
+        const nextRecommendations = getExperienceRecommendations({ experienceType, location, preference });
+        setRecommendations(nextRecommendations);
+        window.localStorage.setItem('hyundai-experience-finder-result', JSON.stringify({
+            experienceType,
+            location,
+            preference,
+            recommendationTitles: nextRecommendations.map((item) => item.title),
+        }));
         setShowResult(true);
         requestAnimationFrame(() => panelRef.current?.scrollTo({ top: 0, behavior: 'smooth' }));
     }

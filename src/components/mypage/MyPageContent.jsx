@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CalendarDays, ChevronRight, CircleDollarSign, FileText, LogOut } from 'lucide-react';
+import { CalendarDays, ChevronRight, FileText, LogOut } from 'lucide-react';
 import { profileAvatars } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -11,11 +11,40 @@ import { compressProfileImage } from '../../common/utils/imageUpload';
 import { openKakaoPostcode } from '../../common/api/kakaoPostcode';
 import './MyPageContent.css';
 
+const EXPERIENCE_RESULT_KEY = 'hyundai-experience-finder-result';
+const experienceLabels = {
+  mobility: '차량 전시 · 시승',
+  art: '아트 전시',
+  experience: '체험 전시',
+  program: '프로그램',
+};
+const preferenceLabels = {
+  immersive: '몰입감 있는 경험',
+  interactive: '직접 참여하는 경험',
+  explore: '깊이 알아가는 경험',
+  sensory: '감각적인 경험',
+  together: '함께 즐기는 경험',
+  discover: '새로운 발견의 경험',
+};
+
+function getExperienceSummary() {
+  if (typeof window === 'undefined') return '아직 찾은 경험이 없습니다.';
+  try {
+    const result = JSON.parse(window.localStorage.getItem(EXPERIENCE_RESULT_KEY));
+    if (!result) return '아직 찾은 경험이 없습니다.';
+    const recommendation = result.recommendationTitles?.[0];
+    return recommendation || [experienceLabels[result.experienceType], preferenceLabels[result.preference]].filter(Boolean).join(' · ') || '아직 찾은 경험이 없습니다.';
+  } catch {
+    return '아직 찾은 경험이 없습니다.';
+  }
+}
+
 export function MyPage() {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const navigate = useNavigate();
   const [period, setPeriod] = useState('1개월');
+  const [experienceSummary] = useState(getExperienceSummary);
   const allInquiries = useInquiryStore((state) => state.inquiries ?? []);
   const allReservations = useReservationStore((state) => state.reservations ?? []);
   const inquiries = allInquiries.filter((item) => item.userId === user?.id);
@@ -40,9 +69,19 @@ export function MyPage() {
             <p>{user?.email}</p>
           </header>
 
-          <section className="mypage-points" aria-label="포인트 현황">
-            <div><span>사용 가능 포인트</span><strong><CircleDollarSign />0P</strong></div>
-            <div><span>소멸 예정 포인트 (30일)</span><strong><CircleDollarSign />0P</strong></div>
+          <section className="mypage-finding" aria-label="경험 찾기 결과">
+            <span>관심 분야</span><strong>{experienceSummary}</strong>
+          </section>
+
+          <section className="mypage-membership" aria-label="멤버십 현황">
+            <div className="mypage-membership__grade">
+              <span>HYUNDAI MOTORSTUDIO CLUB</span>
+              <strong>BASIC</strong>
+              <p>현대 모터스튜디오의 기본 멤버십 전시와 프로그램,<br />다양한 멤버십 혜택을 경험해보세요.</p>
+              <small><span>PROGRAM BENEFIT</span><i /><span>MEMBER CONTENT</span><i /><span>EVENT ACCESS</span></small>
+            </div>
+            <div className="mypage-membership__stat"><span>쿠폰</span><strong>1<em>개</em></strong></div>
+            <div className="mypage-membership__stat"><span>예약</span><strong>{reservations.length}<em>개</em></strong></div>
           </section>
 
           <section className="mypage-history">
