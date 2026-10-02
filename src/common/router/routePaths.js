@@ -7,7 +7,7 @@ export const paths = {
   reservationCheckout: '/reservations/checkout',
   experience: '/experience',
   myReservations: '/reservations/mine', membership: '/membership', notices: '/notices',
-  notice: (id) => `/notices/${id}`, newsroom: '/newsroom', login: '/login', signup: '/signup',
+  notice: (id) => `/notices/${id}`, newsroom: '/newsroom', newsroomArticle: (id) => `/newsroom/${encodeURIComponent(id)}`, login: '/login', signup: '/signup',
   mypage: '/mypage', profile: '/mypage/profile', inquiries: '/inquiries', inquiryWrite: '/inquiries/write',
   inquiry: (id) => `/inquiries/${id}`, inquiryEdit: (id) => `/inquiries/${id}/edit`,
 };

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { registerDemoAccount } from '../common/auth/demoAccounts';
 
 // Preserve existing local sessions; unchecked logins are scoped to this tab.
 const authStorage = createJSONStorage(() => ({
@@ -15,6 +16,7 @@ const authStorage = createJSONStorage(() => ({
 }));
 
 export const TEST_ACCOUNT = {
+  id: 'test',
   email: 'test@hyundaimotorstudio.com',
   password: 'test1234',
 };
@@ -30,6 +32,20 @@ export const useAuthStore = create(persist((set) => ({
   user: null, isAuthenticated: false, authProvider: null, isAuthLoading: false, authError: null,
   rememberLogin: true,
   setRememberLogin: (rememberLogin) => set({ rememberLogin }),
+  loginWithTestCredentials: (id, password) => {
+    const normalizedId = typeof id === 'string' ? id.trim().toLowerCase() : '';
+    if (!normalizedId || !password) {
+      set({ authError: '아이디와 비밀번호를 입력해 주세요.' });
+      return false;
+    }
+    if (normalizedId !== TEST_ACCOUNT.id || password !== TEST_ACCOUNT.password) {
+      set({ authError: '아이디 또는 비밀번호를 확인해 주세요.' });
+      return false;
+    }
+    set({ user: TEST_USER, isAuthenticated: true, authProvider: 'test', authError: null });
+    return true;
+  },
+  registerDemoAccount,
   loginAsTestUser: () => set({ user: TEST_USER, isAuthenticated: true, authProvider: 'test', authError: null }),
   loginWithEmail: (email, password) => {
     if (!email || !password) { set({ authError: '이메일과 비밀번호를 입력해 주세요.' }); return false; }

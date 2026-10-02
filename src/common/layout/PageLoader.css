@@ -1,0 +1,88 @@
+body.is-page-loading {
+    overflow: hidden;
+}
+html.is-home-page {
+    scrollbar-width: none;
+}
+html.is-home-page::-webkit-scrollbar {
+    display: none;
+}
+.page-loader {
+    position: fixed;
+    z-index: 10000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background-color: #0d0d0d;
+    background-image:
+        linear-gradient(
+            90deg,
+            transparent calc(20% - 0.5px),
+            rgb(255 255 255 / 4%) calc(20% - 0.5px),
+            rgb(255 255 255 / 4%) calc(20% + 0.5px),
+            transparent calc(20% + 0.5px)
+        ),
+        linear-gradient(
+            90deg,
+            transparent calc(50% - 0.5px),
+            rgb(255 255 255 / 4%) calc(50% - 0.5px),
+            rgb(255 255 255 / 4%) calc(50% + 0.5px),
+            transparent calc(50% + 0.5px)
+        ),
+        linear-gradient(
+            90deg,
+            transparent calc(80% - 0.5px),
+            rgb(255 255 255 / 4%) calc(80% - 0.5px),
+            rgb(255 255 255 / 4%) calc(80% + 0.5px),
+            transparent calc(80% + 0.5px)
+        );
+    color: #fff;
+    opacity: 1;
+    transition: opacity 1.5s ease;
+    cursor: wait;
+}
+.page-loader.is-leaving {
+    opacity: 0;
+    pointer-events: none;
+}
+.page-loader__gauge {
+    display: block;
+    width: min(430px, 82vw);
+    height: auto;
+    overflow: visible;
+}
+.page-loader__ticks line {
+    stroke-width: 5;
+    stroke-linecap: butt;
+    transition: stroke 0.04s linear;
+}
+.page-loader__labels text {
+    fill: #b8b8b8;
+    font: 500 10px/1 var(--font-en);
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+.page-loader__number {
+    fill: #fff;
+    font: 550 50px/1 var(--font-en);
+    font-variant-numeric: tabular-nums;
+    text-anchor: middle;
+    letter-spacing: -3px;
+}
+.page-loader__unit {
+    fill: #ff7100;
+    font: 700 14px/1 var(--font-en);
+}
+@media (max-width: 600px) {
+    .page-loader__gauge {
+        width: min(360px, 90vw);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .page-loader {
+        transition: none;
+    }
+    .page-loader__ticks line {
+        transition: none;
+    }
+}

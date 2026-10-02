@@ -1,4 +1,5 @@
 import heroNight from './assets/hero-night.png';
+import { useState } from 'react';
 import { newsroomArticles } from './data/newsroomData';
 import FeaturedNewsCard from './components/FeaturedNewsCard';
 import NewsCard from './components/NewsCard';
@@ -7,6 +8,9 @@ import PromotionalVideo from './components/PromotionalVideo';
 import './NewsroomPage.css';
 
 export function NewsroomPage() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageArticles = Array.from({ length: 3 }, () => newsroomArticles);
+
     return (
         <main className="newsroom-page">
             <section className="newsroom-intro" aria-label="뉴스룸">
@@ -37,11 +41,15 @@ export function NewsroomPage() {
                     NEWS
                 </h2>
                 <div className="newsroom-news__grid">
-                    {newsroomArticles.map((article) => (
-                        <NewsCard key={article.id} article={article} />
+                    {pageArticles[currentPage - 1].map((article) => (
+                        <NewsCard key={`${article.id}-${currentPage}`} article={article} />
                     ))}
                 </div>
-                <NewsroomPagination />
+                <NewsroomPagination
+                    currentPage={currentPage}
+                    pageCount={pageArticles.length}
+                    onPageChange={setCurrentPage}
+                />
             </section>
         </main>
     );

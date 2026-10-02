@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { paths } from '../../common/router/routePaths';
@@ -29,7 +29,8 @@ const discoverPrograms = [
     { image: 5, title: '아이오닉 5 충전 원리 체험 워크샵' },
 ];
 
-const monthlyPrograms = [
+const scheduleData = {
+    16: [
     {
         location: '고양',
         image: '/images/programs/program-monthly-01.svg',
@@ -48,9 +49,30 @@ const monthlyPrograms = [
         title: '레고와 함께하는 SPOT 로봇 코딩 워크샵',
         description: '사람을 대신하여 다양한 임무를 수행하는 SPOT 로봇을 코딩 교육을 통해 직접\n움직여 보면서 우리의 생활을 더 편리하게 해주는 미래 모빌리티를 직접 경험해 보세요.',
     },
-];
+    ],
+    17: [
+        {
+            location: '고양',
+            image: '/images/programs/program-monthly-17-01.svg',
+            title: '레고와 함께하는 미래자동차 코딩 워크샵 (새싹 Ver)',
+            description: '미래 자동차의 다양한 기술과 자율주행의 원리를 아이들이 쉽게 이해할 수 있는\n새싹 단계 코딩 교육을 통해 재미있게 체험하는 클래스입니다.',
+        },
+        {
+            location: '서울',
+            image: '/images/programs/program-monthly-17-02.svg',
+            title: '수소전기차와 오호볼 이야기',
+            description: "환경을 지키기 위한 현대자동차의 노력 '수소전기차'의 원리에 대해 배우고,\n오호볼을 만들어보며 환경과 미래 기술에 대해 생각해 보는 클래스입니다.",
+        },
+        {
+            location: '서울',
+            image: '/images/programs/program-monthly-17-03.svg',
+            title: '현대자동차 직업체험 워크샵 - 한국어',
+            description: '현대자동차 엔지니어, 연구원, 디자이너가 되어 Into The Car 전시를 색다르게\n경험하는 어린이 가이드 투어 프로그램입니다.',
+        },
+    ],
+};
 
-function Calendar() {
+function Calendar({ selectedDate, onSelectDate }) {
     const days = ['', 31, ...Array.from({ length: 30 }, (_, index) => index + 1), '', '', ''];
     return (
         <div className="program-calendar">
@@ -63,10 +85,19 @@ function Calendar() {
             <div className="program-calendar__days">
                 {days.map((day, index) => (
                     <span
-                        className={`${day && (day === 31 || day <= 15) ? 'is-muted' : ''}${day === 16 ? ' is-selected' : ''}`}
+                        className={`${day && (day === 31 || day <= 15 || (day === 16 && selectedDate === 17)) ? 'is-muted' : ''}${day === selectedDate ? ' is-selected' : ''}${day === 16 || day === 17 ? ' is-selectable' : ''}`}
                         key={`${day}-${index}`}
+                        role={day === 16 || day === 17 ? 'button' : undefined}
+                        tabIndex={day === 16 || day === 17 ? 0 : undefined}
+                        onClick={day === 16 || day === 17 ? () => onSelectDate(day) : undefined}
+                        onKeyDown={day === 16 || day === 17 ? (event) => {
+                            if (event.key === 'Enter' || event.key === ' ') {
+                                event.preventDefault();
+                                onSelectDate(day);
+                            }
+                        } : undefined}
                     >
-                        {day === 16 && <img src="/images/programs/program-calendar-selected.svg" alt="" />}
+                        {day === selectedDate && <img src="/images/programs/program-calendar-selected.svg" alt="" />}
                         <b>{day}</b>
                     </span>
                 ))}
@@ -76,16 +107,62 @@ function Calendar() {
     );
 }
 
+function StripRevealImage({ className, src, alt, stripCount = 8 }) {
+    return (
+        <div className={`program-image-reveal ${className}`}>
+            <img className="program-image-reveal__source" src={src} alt={alt} />
+            <div className="program-image-reveal__strips" aria-hidden="true">
+                {Array.from({ length: stripCount }, (_, index) => (
+                    <span
+                        className="program-image-reveal__strip"
+                        style={{ '--strip-count': stripCount, '--strip-index': index }}
+                        key={index}
+                    >
+                        <img src={src} alt="" />
+                    </span>
+                ))}
+            </div>
+        </div>
+    );
+}
+
 export default function ProgramContent() {
     const pageRef = useRef(null);
     const openingRef = useRef(null);
     const aboutRef = useRef(null);
     const locationsRef = useRef(null);
+    const [activeMarqueeItem, setActiveMarqueeItem] = useState(null);
+    const [selectedDate, setSelectedDate] = useState(16);
+    const [displayedDate, setDisplayedDate] = useState(16);
+    const [isFeatureDetailsOpen, setIsFeatureDetailsOpen] = useState(false);
+    const toggleMarqueeItem = (itemKey) => {
+        if (!window.matchMedia('(hover: none)').matches) return;
+        setActiveMarqueeItem((current) => current === itemKey ? null : itemKey);
+    };
+    const selectScheduleDate = (date) => {
+        if (date === selectedDate) return;
+        setSelectedDate(date);
+        setDisplayedDate(date);
+    };
+
+    useEffect(() => {
+        if (!isFeatureDetailsOpen) return undefined;
+        const previousOverflow = document.body.style.overflow;
+        const closeOnEscape = (event) => {
+            if (event.key === 'Escape') setIsFeatureDetailsOpen(false);
+        };
+        document.body.style.overflow = 'hidden';
+        document.addEventListener('keydown', closeOnEscape);
+        return () => {
+            document.body.style.overflow = previousOverflow;
+            document.removeEventListener('keydown', closeOnEscape);
+        };
+    }, [isFeatureDetailsOpen]);
 
     useLayoutEffect(() => {
         const opening = openingRef.current;
         const hero = opening.querySelector('.program-hero');
-        const visual = hero.querySelector('img');
+        const visual = hero.querySelector('.program-hero__visual');
         const manifesto = opening.querySelector('.program-manifesto');
         const strip = opening.querySelector('.program-strip');
         const track = strip.querySelector('.program-strip__track');
@@ -95,42 +172,59 @@ export default function ProgramContent() {
         const target = images[centerIndex];
         const media = gsap.matchMedia();
 
-        media.add('(prefers-reduced-motion: no-preference)', () => {
-            const marqueeSpeed = 65;
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            narrowMobile: '(max-width: 480px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.motion) return undefined;
+            if (context.conditions.mobile || context.conditions.tablet) {
+                gsap.set(visual, { clearProps: 'transform,clipPath,opacity' });
+                if (!context.conditions.narrowMobile) return undefined;
+
+                const loopDistance = () => group.offsetWidth + parseFloat(getComputedStyle(group).columnGap);
+                const marquee = gsap.fromTo(track, {
+                    x: () => -loopDistance(),
+                }, {
+                    x: 0,
+                    duration: () => loopDistance() / 54,
+                    ease: 'none',
+                    repeat: -1,
+                    invalidateOnRefresh: true,
+                });
+                requestAnimationFrame(() => ScrollTrigger.refresh());
+
+                return () => {
+                    marquee.kill();
+                    gsap.set([track, visual], { clearProps: 'transform,opacity,clipPath,transformOrigin' });
+                };
+            }
+            const marqueeSpeed = () => window.matchMedia('(max-width: 1024px)').matches ? 66 : 90;
             const loopDistance = () => group.offsetWidth + parseFloat(getComputedStyle(group).columnGap);
             const marquee = gsap.to(track, {
                 x: () => -loopDistance(),
-                duration: loopDistance() / marqueeSpeed,
+                duration: loopDistance() / marqueeSpeed(),
                 ease: 'none',
                 repeat: -1,
                 paused: true,
             });
-            let hovered = false;
-            let resumeTimer;
-            let waiting = false;
             let transitionComplete = false;
             const updateMarquee = () => {
-                if (transitionComplete && !hovered && !waiting) marquee.play();
+                if (transitionComplete) marquee.play();
                 else marquee.pause();
                 if (!transitionComplete) marquee.progress(0);
             };
-            const pauseMarquee = () => {
-                hovered = true;
-                waiting = false;
-                window.clearTimeout(resumeTimer);
-                updateMarquee();
-            };
+            const pauseMarquee = () => marquee.pause();
             const resumeMarquee = () => {
-                hovered = false;
-                waiting = true;
-                window.clearTimeout(resumeTimer);
-                resumeTimer = window.setTimeout(() => {
-                    waiting = false;
-                    updateMarquee();
-                }, 1000);
+                if (transitionComplete) marquee.play();
             };
-            strip.addEventListener('pointerenter', pauseMarquee);
-            strip.addEventListener('pointerleave', resumeMarquee);
+            const marqueeItems = track.querySelectorAll('.program-strip__item');
+            marqueeItems.forEach((item) => {
+                item.addEventListener('pointerenter', pauseMarquee);
+                item.addEventListener('pointerleave', resumeMarquee);
+            });
 
             const timeline = gsap.timeline({
                 defaults: { ease: 'none' },
@@ -146,7 +240,7 @@ export default function ProgramContent() {
                     scrub: 0.9,
                     invalidateOnRefresh: true,
                     onRefresh: () => {
-                        marquee.invalidate().duration(loopDistance() / marqueeSpeed);
+                        marquee.invalidate().duration(loopDistance() / marqueeSpeed());
                         updateMarquee();
                     },
                 },
@@ -196,9 +290,10 @@ export default function ProgramContent() {
             });
             return () => {
                 disposed = true;
-                window.clearTimeout(resumeTimer);
-                strip.removeEventListener('pointerenter', pauseMarquee);
-                strip.removeEventListener('pointerleave', resumeMarquee);
+                marqueeItems.forEach((item) => {
+                    item.removeEventListener('pointerenter', pauseMarquee);
+                    item.removeEventListener('pointerleave', resumeMarquee);
+                });
             };
         });
 
@@ -226,17 +321,52 @@ export default function ProgramContent() {
             { x: 953.949, y: 248.095, rotation: -3.96 },
             { x: 1124.149, y: 461.695, rotation: 14.62 },
         ];
-
         media.add({
-            desktop: '(min-width: 901px)',
-            mobile: '(max-width: 900px)',
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            phone: '(max-width: 480px)',
             motion: '(prefers-reduced-motion: no-preference)',
         }, (context) => {
             if (!context.conditions.motion) return;
+            if (context.conditions.phone) {
+                gsap.set(cards, { clearProps: 'transform,opacity,visibility' });
+                const targetOffsets = [
+                    { x: -43.7, y: -3.02, rotation: -1.57 },
+                    { x: 30.52, y: -1.57, rotation: 5.36 },
+                    { x: -11.42, y: -13.27, rotation: 11.77 },
+                ];
+                const timeline = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: collage,
+                        start: 'top 82%',
+                        end: 'bottom 48%',
+                        scrub: 0.65,
+                        invalidateOnRefresh: true,
+                    },
+                });
+
+                cards.forEach((card, index) => {
+                    const offset = targetOffsets[index];
+                    timeline.to(card, {
+                        x: () => offset.x * (card.offsetWidth / 224),
+                        y: () => offset.y * (card.offsetWidth / 224),
+                        rotation: offset.rotation,
+                        ease: 'none',
+                        duration: 1,
+                    }, 0);
+                });
+
+                return () => gsap.set(cards, { clearProps: 'transform,opacity,visibility' });
+            }
+            if (context.conditions.mobile || context.conditions.tablet) {
+                gsap.set([section, collage, ...cards, ...section.querySelectorAll('h2,p')], { clearProps: 'all' });
+                return () => gsap.set([section, collage, ...cards, ...section.querySelectorAll('h2,p')], { clearProps: 'all' });
+            }
             const timeline = gsap.timeline({
                 defaults: { ease: 'none' },
                 scrollTrigger: {
-                    trigger: context.conditions.mobile ? collage : section,
+                    trigger: section,
                     start: 'top 75%',
                     end: 'center 45%',
                     scrub: 0.7,
@@ -267,18 +397,117 @@ export default function ProgramContent() {
     }, []);
 
     useLayoutEffect(() => {
+        const page = pageRef.current;
+        const visual = page.querySelector('.program-feature__visual');
+        const image = visual?.querySelector('.program-image-reveal__source');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!image || !context.conditions.motion) return undefined;
+
+            const offset = context.conditions.desktop ? 110 : context.conditions.tablet ? 64 : 36;
+            gsap.fromTo(image, { x: offset, autoAlpha: 0 }, {
+                x: 0,
+                autoAlpha: 1,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: visual,
+                    start: 'top 85%',
+                    end: 'top 55%',
+                    scrub: true,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            return undefined;
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const section = page.querySelector('.program-discover');
+        const heading = section?.querySelector('h2');
+        const description = section?.querySelector('p');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+        }, (context) => {
+            if (!section || !heading || !description) return undefined;
+
+            if (!heading.querySelector('.program-discover__line')) {
+                heading.replaceChildren(
+                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: 'DISCOVER HANDS-ON PROGRAMS' }),
+                    Object.assign(document.createElement('span'), { className: 'program-discover__line', textContent: 'AT HYUNDAI MOTORSTUDIO.' }),
+                );
+            }
+            description.classList.add('program-discover__line');
+
+            const headingLines = Array.from(heading.querySelectorAll('.program-discover__line'));
+            const lines = [...headingLines, description];
+            const [firstLine, secondLine] = headingLines;
+            gsap.set(firstLine, { xPercent: -30, autoAlpha: 0 });
+            gsap.set(secondLine, { y: 24, autoAlpha: 0 });
+            gsap.set(description, { y: 18, autoAlpha: 0 });
+
+            const timeline = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 85%',
+                    end: 'bottom 20%',
+                    scrub: 0.7,
+                    refreshPriority: -1,
+                    invalidateOnRefresh: true,
+                },
+            });
+
+            // 0–30% remains blank. The following phrases accumulate so the
+            // final state contains the complete con7 message.
+            timeline
+                // Keep the section intentionally blank through the first part
+                // of its scroll range, then reveal the copy sequentially.
+                .to({}, { duration: 2 })
+                .to(firstLine, { xPercent: 0, autoAlpha: 1, duration: 1.1, ease: 'none' })
+                .to(secondLine, { y: 0, autoAlpha: 1, duration: 1, ease: 'none' })
+                .to(description, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'none' });
+
+            const refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh());
+            return () => {
+                cancelAnimationFrame(refreshFrame);
+                timeline.kill();
+                gsap.set(lines, { clearProps: 'transform,opacity,visibility' });
+            };
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
         const section = locationsRef.current;
         const canvas = section.querySelector('.program-locations__canvas');
         const intro = section.querySelector('.program-locations__intro');
         const programs = section.querySelector('.program-locations__programs');
         const media = gsap.matchMedia();
 
-        media.add('(prefers-reduced-motion: no-preference)', () => {
+        media.add({
+            desktop: '(min-width: 1280px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.desktop || !context.conditions.motion) return undefined;
             section.classList.add('program-locations--scrolling');
 
             // Fit the full design height before measuring its horizontal travel.
             const scale = () => Math.min(1, section.clientHeight / canvas.offsetHeight);
-            const introWidth = () => window.matchMedia('(max-width: 900px)').matches ? section.clientWidth : 1920;
+            const introWidth = () => window.matchMedia('(max-width: 1024px)').matches ? section.clientWidth : 1920;
             const extraSpace = () => Math.max(0, section.clientWidth / scale() - introWidth());
             const distance = () => Math.max(0, (canvas.offsetWidth + extraSpace()) * scale() - section.clientWidth);
             const cards = Array.from(programs.querySelectorAll('.program-locations__branch, .program-location-card'));
@@ -292,6 +521,7 @@ export default function ProgramContent() {
             const revealEase = gsap.parseEase('power1.out');
             const revealCards = () => {
                 const viewportWidth = section.clientWidth;
+                const viewportHeight = section.clientHeight;
                 const canvasX = Number(gsap.getProperty(canvas, 'x'));
                 const canvasScale = scale();
                 const programOffset = extraSpace();
@@ -304,7 +534,7 @@ export default function ProgramContent() {
                     const remaining = 1 - revealEase(progress);
                     // Anchor the starting position to the viewport's bottom-right corner.
                     const startX = (viewportWidth - left) / canvasScale;
-                    const startY = section.clientHeight / canvasScale - card.offsetTop;
+                    const startY = viewportHeight / canvasScale - card.offsetTop;
                     x(startX * remaining);
                     y(startY * remaining);
                     opacity(Math.min(1, progress * 3));
@@ -341,12 +571,133 @@ export default function ProgramContent() {
         return () => media.revert();
     }, []);
 
+    // Tablet keeps con6 and the calendar in document flow.  Limit motion here
+    // to opacity and a small vertical offset so it cannot alter their measured
+    // height, horizontal geometry, or the calendar/list spacing.
     useLayoutEffect(() => {
         const page = pageRef.current;
         const media = gsap.matchMedia();
 
-        media.add('(prefers-reduced-motion: no-preference)', () => {
-            const sections = page.querySelectorAll('section:not(.program-hero):not(.program-locations):not(.program-cards)');
+        media.add({
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.tablet || !context.conditions.motion) return undefined;
+
+            const calendar = page.querySelector('.program-calendar');
+            const scheduleRows = page.querySelectorAll('.program-monthly__row');
+            const locationGroups = page.querySelectorAll('.program-locations__group');
+
+            if (calendar) {
+                gsap.fromTo(calendar, { autoAlpha: 0, y: 20 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.55,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: calendar,
+                        start: 'top 88%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                });
+            }
+
+            if (scheduleRows.length) {
+                gsap.fromTo(scheduleRows, { autoAlpha: 0, y: 16 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.45,
+                    stagger: 0.08,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: scheduleRows[0].parentElement,
+                        start: 'top 86%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                });
+            }
+
+            locationGroups.forEach((group) => {
+                const heading = group.querySelector('.program-locations__branch');
+                const cards = group.querySelectorAll('.program-location-card');
+                const targets = [heading, ...cards].filter(Boolean);
+                if (!targets.length) return;
+
+                gsap.fromTo(targets, { autoAlpha: 0, y: 20 }, {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.55,
+                    stagger: 0.08,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: group,
+                        start: 'top 82%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                });
+            });
+
+            // matchMedia.revert() restores every inline transform/opacity when
+            // the breakpoint changes, including the individual location cards.
+            return undefined;
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const track = page.querySelector('.program-cards__track');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            mobile: '(max-width: 767px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.motion) return;
+
+            const marquee = gsap.to(track, {
+                xPercent: -50,
+                duration: context.conditions.mobile || context.conditions.tablet ? 38 : 28,
+                ease: 'none',
+                repeat: -1,
+            });
+            const pauseMarquee = () => marquee.pause();
+            const resumeMarquee = () => marquee.play();
+            const marqueeItems = track.querySelectorAll('.program-cards__item');
+            marqueeItems.forEach((item) => {
+                item.addEventListener('pointerenter', pauseMarquee);
+                item.addEventListener('pointerleave', resumeMarquee);
+            });
+
+            return () => {
+                marqueeItems.forEach((item) => {
+                    item.removeEventListener('pointerenter', pauseMarquee);
+                    item.removeEventListener('pointerleave', resumeMarquee);
+                });
+                marquee.kill();
+            };
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const page = pageRef.current;
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1280px)',
+            tablet: '(min-width: 768px) and (max-width: 1279px)',
+            motion: '(prefers-reduced-motion: no-preference)',
+        }, (context) => {
+            if (!context.conditions.motion || context.conditions.tablet) return undefined;
+            const sections = page.querySelectorAll('section:not(.program-hero):not(.program-monthly):not(.program-feature):not(.program-locations):not(.program-discover):not(.program-cards)');
             const textSelector = [
                 'h2', 'h3', 'p', 'strong', 'dt', 'dd',
                 '.program-monthly__row > span',
@@ -358,6 +709,7 @@ export default function ProgramContent() {
             ].join(', ');
 
             sections.forEach((section) => {
+                if (!context.conditions.desktop && section.classList.contains('program-about')) return;
                 section.querySelectorAll(textSelector).forEach((text) => {
                     gsap.fromTo(text, { y: -28, autoAlpha: 0 }, {
                         y: 0,
@@ -373,6 +725,37 @@ export default function ProgramContent() {
                     });
                 });
             });
+
+            page.querySelectorAll('.program-image-reveal:not(.program-feature__visual)').forEach((reveal) => {
+                const source = reveal.querySelector('.program-image-reveal__source');
+                const stripLayer = reveal.querySelector('.program-image-reveal__strips');
+                const strips = reveal.querySelectorAll('.program-image-reveal__strip');
+
+                gsap.set(source, { autoAlpha: 0 });
+                gsap.set(stripLayer, { display: 'flex' });
+                gsap.set(strips, { clipPath: 'inset(0 0 100% 0)' });
+
+                gsap.timeline({
+                    scrollTrigger: {
+                        trigger: reveal,
+                        start: 'top 88%',
+                        once: true,
+                        invalidateOnRefresh: true,
+                    },
+                    onComplete: () => {
+                        gsap.set(source, { autoAlpha: 1 });
+                        gsap.set(stripLayer, { display: 'none' });
+                    },
+                }).to(strips, {
+                    clipPath: 'inset(0 0 0% 0)',
+                    duration: 1.25,
+                    ease: 'power2.out',
+                    stagger: {
+                        amount: 0.18,
+                        from: 'start',
+                    },
+                });
+            });
         });
 
         return () => media.revert();
@@ -384,18 +767,26 @@ export default function ProgramContent() {
             <section className="program-hero">
                 <h1>Explore Programs<br />Through Creative<br />Experiences</h1>
                 <p>현대 모터스튜디오의 다양한 프로그램을 만나보세요.<br />새로운 아이디어를 발견하고, 직접 만들어보며, 다양한 방식으로 모빌리티를 경험할 수 있습니다.</p>
-                <img src={asset(1)} alt="자동차 디자인 프로그램을 체험하는 모습" />
+                <div className="program-hero__visual"><img src={asset(1)} alt="자동차 디자인 프로그램을 체험하는 모습" /></div>
             </section>
 
             <section className="program-manifesto">
                 <div className="program-strip">
                     <div className="program-strip__track">
                         <div className="program-strip__group">
-                            {stripImages.map((image) => <img src={image} alt="" key={image} draggable={false} />)}
+                            {stripImages.map((image) => (
+                                <span className="program-strip__item" key={image}>
+                                    <span className="program-strip__motion"><img src={image} alt="" draggable={false} /></span>
+                                </span>
+                            ))}
                         </div>
                         {['before', 'after'].map((position) => (
                             <div className={`program-strip__group program-strip__group--${position}`} aria-hidden="true" key={position}>
-                                {stripImages.map((image) => <img src={image} alt="" key={image} draggable={false} />)}
+                                {stripImages.map((image) => (
+                                    <span className="program-strip__item" key={image}>
+                                        <span className="program-strip__motion"><img src={image} alt="" draggable={false} /></span>
+                                    </span>
+                                ))}
                             </div>
                         ))}
                     </div>
@@ -421,9 +812,9 @@ export default function ProgramContent() {
 
             <section className="program-monthly">
                 <div className="program-monthly__heading"><h2>MONTHLY CALENDAR</h2><p>이번 달 현대 모터스튜디오에서 진행되는<br />다양한 프로그램을 확인해 보세요.</p></div>
-                <Calendar />
-                <div className="program-monthly__programs">
-                    {monthlyPrograms.map((program) => (
+                <Calendar selectedDate={selectedDate} onSelectDate={selectScheduleDate} />
+                <div className="program-monthly__programs" key={displayedDate}>
+                    {scheduleData[displayedDate].map((program) => (
                         <div className="program-monthly__row" key={program.title}>
                             <span>{program.location}</span>
                             <article>
@@ -463,10 +854,14 @@ export default function ProgramContent() {
                     </dl>
                     <div className="program-feature__actions">
                         <Link to={paths.programReservation}>Reservation</Link>
-                        <a href="#program-details">Details</a>
+                        <button type="button" onClick={() => setIsFeatureDetailsOpen(true)}>Details</button>
                     </div>
                 </div>
-                <img className="program-feature__visual" src="/images/programs/program-feature-main.svg" alt="레고로 만든 미래자동차 코딩 워크샵 모형" />
+                <StripRevealImage
+                    className="program-feature__visual"
+                    src="/images/programs/program-feature-main.svg"
+                    alt="레고로 만든 미래자동차 코딩 워크샵 모형"
+                />
             </section>
 
             <section className="program-locations" ref={locationsRef} tabIndex={0} aria-label="지점별 프로그램">
@@ -476,31 +871,129 @@ export default function ProgramContent() {
                         <p>각 지점에서 만나볼 수 있는 다양한 체험 프로그램을 확인해보세요.</p>
                     </div>
                     <div className="program-locations__programs">
-                    <div className="program-locations__branch program-locations__branch--seoul">
-                        <h3>SEOUL<br />PROGRAMS</h3>
-                        <p>서울 지점의 다양한 프로그램을 만나보세요.</p>
-                    </div>
-                    <div className="program-locations__branch program-locations__branch--goyang">
-                        <h3>GOYANG<br />PROGRAMS</h3>
-                        <p>고양 지점의 다양한 프로그램을 만나보세요.</p>
-                    </div>
-                    {locationPrograms.map((program) => (
-                        <article className="program-location-card" style={{ '--program-x': `${program.x}px` }} key={program.title}>
-                            <img src={`/images/programs/program-location-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
-                            <div>
-                                <h4>{program.title}</h4>
-                                <p>{program.description}</p>
-                                <dl><dt>참여가능연령</dt><dd>{program.age}</dd></dl>
+                        <div className="program-locations__group program-locations__group--seoul">
+                            <div className="program-locations__branch program-locations__branch--seoul">
+                                <h3>SEOUL<br />PROGRAMS</h3>
+                                <p>서울 지점의 다양한 프로그램을 만나보세요.</p>
                             </div>
-                        </article>
-                    ))}
+                            <div className="program-locations__cards">
+                                {locationPrograms.slice(0, 2).map((program) => (
+                                    <article className="program-location-card" style={{ '--program-x': `${program.x}px` }} key={program.title}>
+                                        <img src={`/images/programs/program-location-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
+                                        <div>
+                                            <h4>{program.title}</h4>
+                                            <p>{program.description}</p>
+                                            <dl><dt>참여가능연령</dt><dd>{program.age}</dd></dl>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="program-locations__group program-locations__group--goyang">
+                            <div className="program-locations__branch program-locations__branch--goyang">
+                                <h3>GOYANG<br />PROGRAMS</h3>
+                                <p>고양 지점의 다양한 프로그램을 만나보세요.</p>
+                            </div>
+                            <div className="program-locations__cards">
+                                {locationPrograms.slice(2).map((program) => (
+                                    <article className="program-location-card" style={{ '--program-x': `${program.x}px` }} key={program.title}>
+                                        <img src={`/images/programs/program-location-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
+                                        <div>
+                                            <h4>{program.title}</h4>
+                                            <p>{program.description}</p>
+                                            <dl><dt>참여가능연령</dt><dd>{program.age}</dd></dl>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <section className="program-discover"><h2>DISCOVER HANDS-ON PROGRAMS<br />AT HYUNDAI MOTORSTUDIO.</h2><p>보고, 만들고, 경험하는 모빌리티 프로그램</p></section>
-            <section className="program-cards">{discoverPrograms.map((program) => <Link to={paths.programReservation} key={program.title}><img src={`/images/programs/program-discover-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} /><strong>{program.title}</strong></Link>)}</section>
-            <section className="program-closing"><img src="/images/programs/program-closing.svg" alt="현대 모터스튜디오 프로그램에 참여하는 어린이들" /></section>
+            <section className="program-cards" aria-label="체험 프로그램 목록">
+                <div className="program-cards__track">
+                    <div className="program-cards__group">
+                        {discoverPrograms.map((program) => (
+                            <Link
+                                className={`program-cards__item program-marquee-item${activeMarqueeItem === `con8-${program.image}` ? ' is-active' : ''}`}
+                                to={paths.programReservation}
+                                key={program.title}
+                                onClick={(event) => {
+                                    if (!window.matchMedia('(hover: none)').matches) return;
+                                    event.preventDefault();
+                                    toggleMarqueeItem(`con8-${program.image}`);
+                                }}
+                            >
+                                <img src={`/images/programs/program-discover-${String(program.image).padStart(2, '0')}.svg`} alt={program.title} />
+                                <span className="program-marquee-item__overlay" aria-hidden="true">
+                                    <span className="program-marquee-item__category">KIDS PROGRAM</span>
+                                    <strong className="program-marquee-item__title">{program.title}</strong>
+                                    <span className="program-marquee-item__link">VIEW →</span>
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="program-cards__group" aria-hidden="true">
+                        {discoverPrograms.map((program) => (
+                            <Link
+                                className={`program-cards__item program-marquee-item${activeMarqueeItem === `con8-${program.image}` ? ' is-active' : ''}`}
+                                to={paths.programReservation}
+                                key={program.title}
+                                tabIndex={-1}
+                                onClick={(event) => {
+                                    if (!window.matchMedia('(hover: none)').matches) return;
+                                    event.preventDefault();
+                                    toggleMarqueeItem(`con8-${program.image}`);
+                                }}
+                            >
+                                <img src={`/images/programs/program-discover-${String(program.image).padStart(2, '0')}.svg`} alt="" />
+                                <span className="program-marquee-item__overlay" aria-hidden="true">
+                                    <span className="program-marquee-item__category">KIDS PROGRAM</span>
+                                    <strong className="program-marquee-item__title">{program.title}</strong>
+                                    <span className="program-marquee-item__link">VIEW →</span>
+                                </span>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+            <section className="program-closing">
+                <StripRevealImage
+                    className="program-closing__visual"
+                    src="/images/programs/program-closing.svg"
+                    alt="현대 모터스튜디오 프로그램에 참여하는 어린이들"
+                />
+            </section>
+            {isFeatureDetailsOpen && (
+                <div className="program-detail-modal" role="presentation" onMouseDown={() => setIsFeatureDetailsOpen(false)}>
+                    <section className="program-detail-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="program-detail-title" onMouseDown={(event) => event.stopPropagation()}>
+                        <button className="program-detail-modal__close" type="button" aria-label="상세 정보 닫기" onClick={() => setIsFeatureDetailsOpen(false)}>×</button>
+                        <img className="program-detail-modal__image" src="/images/programs/program-feature-main.svg" alt="레고로 만든 미래자동차 코딩 워크샵 모형" />
+                        <div className="program-detail-modal__content">
+                            <h2 id="program-detail-title">레고와 함께하는 미래자동차 코딩 워크샵 (새싹 ver)</h2>
+                            <p>미래 자동차의 다양한 기술과 자율주행의 원리를 아이들이 쉽게 이해할 수 있는 새싹 단계 코딩 교육을 통해 재미있게 체험하는 클래스입니다.</p>
+                            <Link to={paths.programReservation} onClick={() => setIsFeatureDetailsOpen(false)}>예약하기</Link>
+                            <dl className="program-detail-modal__info">
+                                <div><dt>참여가능연령</dt><dd>07세–09세</dd></div>
+                                <div><dt>운영시간</dt><dd>금 17:00, 토 10:00</dd></div>
+                                <div><dt>소요시간</dt><dd>80분</dd></div>
+                                <div><dt>참가비</dt><dd>22,000원</dd></div>
+                            </dl>
+                            <div className="program-detail-modal__notice">
+                                <strong>ⓘ 유의사항</strong>
+                                <ul>
+                                    <li>참가비에는 기념사진과 상설 전시 어린이 티켓 1매가 포함되어 있습니다.</li>
+                                    <li>레고 코딩 교구는 체험용이며 증정되지 않습니다.</li>
+                                    <li>본 프로그램은 보호자 당 어린이 1명 참여가 원칙이며, 부모님 미동반 프로그램입니다.</li>
+                                    <li>연령에 맞지 않을 경우, 프로그램 참여가 제한될 수 있습니다.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            )}
         </main>
     );
 }

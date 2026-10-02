@@ -1,212 +1,1371 @@
-﻿.renewal-home{overflow-x:clip;overflow-y:visible;background:#fff;color:#111}
-.renewal-home h1,.renewal-home h2,.renewal-home h3{margin:0}
-.renewal-hero{position:relative;height:100svh;min-height:700px;background:#9a9a9a;overflow:hidden}
-.renewal-hero video{display:block;width:100%;height:100%;object-fit:cover}
-.renewal-location-transition{--intro-copy-opacity:1;position:relative;isolation:isolate;background:#fff}
-@media(min-width:901px) and (prefers-reduced-motion:no-preference){.renewal-location-transition{min-height:calc(200svh + var(--location-scroll-distance,0px))}}
-.renewal-location-transition__image{position:absolute;z-index:1;top:0;left:0;width:100%;height:100svh;object-fit:cover;pointer-events:none;will-change:transform,width,height}
-.renewal-intro{position:relative;z-index:2;top:0;height:100svh;background:transparent;color:#fff;overflow:hidden}
-.renewal-intro__static-background{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.renewal-intro__title{position:absolute;z-index:2;top:11.7%;left:5.208%;font:550 clamp(54px,4.167vw,80px)/1.1 var(--font-en);white-space:nowrap;opacity:var(--intro-copy-opacity)}
-.renewal-intro__title em{font-weight:467}
-.renewal-intro__description{position:absolute;z-index:2;top:max(32.6%,calc(11.7% + clamp(54px,4.167vw,80px) * 2.2 + 24px));left:5.208%;margin:0;font-size:20px;font-weight:500;line-height:1.4;white-space:nowrap;opacity:var(--intro-copy-opacity)}
-.renewal-top{position:absolute;z-index:2;bottom:5.3%;right:5.208%;display:block;width:63px;height:63px;border-radius:50%;background:#a8a7ac80;color:#fff;font:500 12px/1.4 var(--font-en);opacity:var(--intro-copy-opacity)}
-.renewal-top img{position:absolute;top:15px;left:26px;width:12px;height:15px}
-.renewal-top span{position:absolute;top:32px;left:20px}
-.renewal-location{position:relative;height:100svh;background:#fff}
-.renewal-location__list{position:absolute;z-index:2;top:50%;left:calc(12.5% + 75px);display:flex;width:348px;align-items:center;flex-direction:column;gap:10px;transform:translateY(-50%)}
-.renewal-location__list button{padding:0 12px;border:0;background:none;color:#848484;font:467 60px/1.1 var(--font-en);white-space:nowrap}
-.renewal-location__list button.is-active{background:#111;color:#fff}
-.renewal-location__rail{position:absolute;z-index:2;top:8%;left:calc(50% - 2px);width:4px;height:84%;border-radius:5px;background:#c3c3c3}
-.renewal-location__rail i{position:absolute;top:calc(var(--location-index) * 13.166667%);width:4px;height:34.166667%;border-radius:5px;background:#545454;transition:top .3s ease}
-.renewal-location__detail{position:absolute;z-index:2;top:24.3%;left:61.354167%;display:block;width:30.208333%}
-.renewal-location__detail img{display:block;width:100%;height:auto;aspect-ratio:580/320;object-fit:cover}
-.renewal-location__detail>div{width:100%;margin-top:26px}
-.renewal-location__detail strong{display:block;font-size:22px;line-height:1.4}
-.renewal-location__detail p{margin-top:11px;font-size:18px;font-weight:500;line-height:1.4}
-.renewal-slogan{display:flex;height:100svh;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-.renewal-slogan p{font:400 clamp(60px,5.21vw,100px)/1.36 var(--font-en)}
-.renewal-slogan strong{display:block;min-width:3.7em;margin-top:52px;font:italic 700 clamp(90px,8.33vw,160px)/1 var(--font-en)}
-.renewal-drive{position:relative;height:100svh;overflow:hidden;background:#fff}
-.renewal-drive__track{display:flex;width:max-content;height:100%;will-change:transform}
-.renewal-drive__slide{--drive-content-offset:max(0px,calc((100svh - min(56.25vw,1080px))/2));position:relative;flex:0 0 100vw;width:100vw;height:100%;text-align:center}
-.renewal-drive__slide h2{position:absolute;z-index:1;top:calc(min(3.333vw,64px) + var(--drive-content-offset));left:50%;margin:0;font:550 clamp(150px,15.625vw,300px)/1.3 var(--font-en);transform:translateX(-50%);white-space:nowrap}
-.renewal-drive__vehicle-frame{position:absolute;z-index:1;top:calc(min(14.0625vw,270px) + var(--drive-content-offset));left:50%;width:min(72.5vw,1392px);aspect-ratio:1392/515;overflow:hidden;transform:translateX(-50%)}
-.renewal-drive__vehicle{position:absolute;top:-29.23%;left:-11.09%;width:122.72%;height:auto;max-width:none}
-.renewal-drive__shadow{position:absolute;top:calc(min(39.599vw,760.3px) + var(--drive-content-offset));left:50%;width:min(69%,1325px);height:auto;transform:translateX(-50%)}
-.renewal-drive__vehicle-frame.is-ioniq5n{top:calc(min(11.3542vw,218px) + var(--drive-content-offset));width:min(75.99vw,1459px);aspect-ratio:1459/549}
-.renewal-drive__vehicle-frame.is-ioniq5n .renewal-drive__vehicle{top:-17.12%;left:-4.07%;width:106.7%;height:auto}
-.renewal-drive__shadow.is-ioniq5n{top:calc(min(38.297vw,735.3px) + var(--drive-content-offset))}
-.renewal-drive__vehicle-frame.is-casper{top:calc(min(10.1042vw,194px) + var(--drive-content-offset));width:min(63.958vw,1228px);aspect-ratio:1228/595}
-.renewal-drive__vehicle-frame.is-casper .renewal-drive__vehicle{top:-27.39%;left:-23.7%;width:144.46%;height:auto}
-.renewal-drive__shadow.is-casper{width:min(58.4%,1121px)}
-.renewal-drive__shadow.is-casper,.renewal-drive__shadow.is-g90{top:calc(min(37.932vw,728.3px) + var(--drive-content-offset))}
-.renewal-drive__vehicle-frame.is-g90{top:calc(min(15.625vw,300px) + var(--drive-content-offset));width:min(75.26vw,1445px);aspect-ratio:1445/467}
-.renewal-drive__vehicle-frame.is-g90 .renewal-drive__vehicle{top:-48.18%;left:-11.21%;width:122.49%;height:auto}
-.renewal-drive__copy{position:absolute;top:calc(min(45.26vw,869px) + var(--drive-content-offset));right:10%;left:10%;text-align:center}
-.renewal-drive__copy h3{margin:0;font-size:30px}
-.renewal-drive__copy p{margin-top:33px;white-space:pre-line;font-size:18px;line-height:1.4}
-.renewal-experience{position:relative;height:100svh;overflow:hidden;background:#fff;color:#fff}
-.renewal-experience__background{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.renewal-experience__shade{position:absolute;inset:0;z-index:1;background:rgb(34 34 34 / 30%);backdrop-filter:blur(1px)}
-.renewal-experience__blur{position:absolute;inset:0;z-index:2;backdrop-filter:blur(clamp(8px,.78125vw,15px))}
-.renewal-experience__ring-position{position:absolute;z-index:3;top:50%;left:50%;width:min(56.25vw,1080px);aspect-ratio:1;transform:translate(-50%,-50%);touch-action:none;cursor:grab}
-.renewal-experience__ring{--ring-rotation:0deg;position:relative;width:100%;height:100%;pointer-events:none;user-select:none}
-.renewal-experience__ring img{-webkit-user-drag:none;user-select:none}
-.renewal-experience__ring-item,.renewal-experience__pointer{pointer-events:none}
-.renewal-experience__ring-outline{position:absolute;inset:-1.2%;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgb(255 255 255 / 0%) 0deg 8deg,rgb(255 255 255 / 58%) 8deg 10deg);-webkit-mask:radial-gradient(transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(transparent calc(100% - 4px),#000 calc(100% - 3px));transform-origin:50% 50%;touch-action:none;user-select:none;cursor:grab;will-change:transform}
-.renewal-experience__ring-outline:active{cursor:grabbing}
-.renewal-experience__ring-item{position:absolute;top:var(--y);left:var(--x);display:block;width:24.61%;aspect-ratio:1;overflow:hidden;transform:translate(-50%,-50%) rotate(var(--rotate));-webkit-mask-image:var(--mask-image);-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;-webkit-mask-size:100% 100%;mask-image:var(--mask-image);mask-repeat:no-repeat;mask-position:center;mask-size:100% 100%}
-.renewal-experience__ring-item img{display:block;width:142%;height:142%;max-width:none;object-fit:cover;transform:translate(-14.08%,-14.08%) rotate(calc(var(--rotate) * -1 - var(--ring-rotation)));transform-origin:50% 50%}
-.renewal-experience__pointer{position:absolute;top:34.46%;left:77.9%;display:block;width:21.3%;height:auto;max-width:none;transform:translate(-50%,-50%) rotate(150.75deg)}
-.renewal-experience p{position:absolute;z-index:4;top:calc(50% - 36px);left:50%;margin:0;font:467 clamp(40px,3.125vw,60px)/1.1 var(--font-en);transform:translateX(-50%);white-space:nowrap}
-.renewal-vehicle-exhibition-title{display:flex;height:900px;align-items:center;justify-content:center;background:#fff;color:#111;text-align:center}
-.renewal-vehicle-exhibition-title h2{font:550 clamp(48px,3.64583vw,70px)/1.2 var(--font-en)}
-.renewal-current,.renewal-story-title{display:flex;height:900px;align-items:center;justify-content:center;text-align:center}
-.renewal-vehicle-exhibition{position:relative;min-height:min(211.40625vw,4059px);background:#fff;color:#111}
-.renewal-vehicle-exhibition__header{position:absolute;top:min(4.53125vw,87px);left:5.208%;z-index:1}
-.renewal-vehicle-exhibition__header h2{font:550 clamp(50px,4.167vw,80px)/1.1 var(--font-en)}
-.renewal-vehicle-exhibition__header p{margin:30px 0 0;font-size:18px;font-weight:500;line-height:1.4}
-.renewal-vehicle-exhibition__cards{position:relative;height:min(211.40625vw,4059px);max-width:1920px;margin:0 auto}
-.renewal-vehicle-exhibition__card{position:absolute;width:min(30.46875vw,585px)}
-.renewal-vehicle-exhibition__card.is-avante-n{top:min(17.23958vw,331px);left:calc(50% + min(8.33333vw,160px))}
-.renewal-vehicle-exhibition__card.is-grandeur{top:min(35.46875vw,681px);left:min(5.20833vw,100px)}
-.renewal-vehicle-exhibition__card.is-ioniq-9{top:min(70.625vw,1356px);left:calc(62.5% + min(1.82292vw,35px))}
-.renewal-vehicle-exhibition__card.is-ioniq-5{top:min(91.77083vw,1762px);left:calc(12.5% + min(9.84375vw,189px))}
-.renewal-vehicle-exhibition__card.is-gv80{top:min(143.59375vw,2757px);left:calc(18.75% + min(5.20833vw,100px));transform:translateX(-50%)}
-.renewal-vehicle-exhibition__card.is-elantra{top:min(159.94792vw,3071px);left:calc(50% + min(10.52083vw,202px))}
-.renewal-vehicle-exhibition__card img{display:block;width:100%;height:auto;aspect-ratio:585/675;object-fit:cover}
-.renewal-vehicle-exhibition__card h3{margin-top:29px;font:645 30px/1.1 var(--font-en)}
-.renewal-vehicle-exhibition__card dl{display:grid;margin:26px 0 0;gap:9px}
-.renewal-vehicle-exhibition__card dl div{display:grid;grid-template-columns:150px 1fr;font:400 18px/1.2 var(--font-en)}
-.renewal-vehicle-exhibition__card dd{margin:0}
-.renewal-current{position:relative;width:max(100vw,177.7778svh);height:max(100svh,56.25vw);margin-inline:auto;container-type:inline-size;background:#fff;color:#111;overflow:hidden}
-.renewal-current__content{position:absolute;z-index:2;top:50%;left:50%;display:flex;width:35.26042cqw;align-items:center;flex-direction:column;gap:1.97917cqw;transform:translate(-50%,-50%)}
-.renewal-current__heading{display:flex;width:29.84375cqw;align-items:center;flex-direction:column;gap:1.92708cqw}
-.renewal-current h2{font:550 6.25cqw/1.3 var(--font-en);white-space:nowrap}
-.renewal-current p{margin:0;font:645 1.30208cqw/1.1 var(--font-en);text-align:center;white-space:nowrap}
-.renewal-current__title,.renewal-current__copy{visibility:hidden}
-.renewal-program{position:relative;display:block;height:1080px;color:#fff;overflow:hidden}
-.renewal-program>img{width:100%;height:100%;object-fit:cover}
-.renewal-program>div{position:absolute;bottom:9.4%;left:5.208%}
-.renewal-program span{font:550 18px var(--font-en)}
-.renewal-program h2{margin-top:7px;font-size:60px;letter-spacing:-2px}
-.renewal-program p{margin-top:26px;font-size:20px;line-height:1.4}
-.renewal-story-title{position:relative;height:1000px;flex-direction:column}
-.renewal-story-title h2{font:550 clamp(50px,3.65vw,70px)/1.2 var(--font-en)}
-.renewal-story-title p{margin-top:30px;font-size:20px}
-.renewal-story-title i{position:absolute;bottom:0;width:1px;height:326px;background:#848484}
-.renewal-stories{position:relative;height:2900px;background:linear-gradient(90deg,transparent calc(50% - .5px),#848484 calc(50% - .5px),#848484 calc(50% + .5px),transparent calc(50% + .5px))}
-.renewal-story{position:absolute;width:700px}
-.renewal-story img{display:block;width:700px;height:480px;object-fit:cover}
-.renewal-story div{position:absolute;width:600px}
-.renewal-story h3{font:645 30px/1.1 var(--font-en)}
-.renewal-story strong{display:block;margin-top:32px;font-size:24px}
-.renewal-story p{margin-top:6px;font-size:20px;line-height:1.4}
-.renewal-story--1{top:143px;right:6.67%}
-.renewal-story--1 div{top:83px;right:calc(100% + 266px);text-align:right}
-.renewal-story--2{top:749px;left:6.67%}
-.renewal-story--2 div{top:48px;left:calc(100% + 266px)}
-.renewal-story--3{top:1367px;right:6.67%}
-.renewal-story--3 div{top:54px;right:calc(100% + 264px);text-align:right}
-.renewal-story--4{top:2138px;left:6.67%}
-.renewal-story--4 div{top:50px;left:calc(100% + 264px)}
-.renewal-guide{position:relative;min-height:1929px;padding:146px 5.208% 160px;background:#111;color:#fff}
-.renewal-guide header h2{font:550 80px/1.1 var(--font-en)}
-.renewal-guide header p{margin-top:30px;font-size:18px}
-.renewal-guide>img{position:absolute;top:391px;right:9.2%;width:327px;height:371px}
-.renewal-guide__links{width:min(1325px,82%);margin:190px auto 0}
-.renewal-guide__links a{display:flex;height:207px;align-items:center;justify-content:center;flex-direction:column;border-block:1px solid #363636;text-align:center}
-.renewal-guide__links span{color:#d00;font:550 18px var(--font-en);opacity:.6}
-.renewal-guide__links strong{margin-top:22px;font:300 45px/1.1 var(--font-en);opacity:.5}
-.renewal-guide__links .is-featured{height:312px}
-.renewal-guide__links .is-featured span{opacity:1}
-.renewal-guide__links .is-featured strong{font-size:48px;opacity:1}
-.renewal-guide__links small{margin-top:25px;font-size:22px;font-weight:200}
-@media(max-width:900px){.renewal-hero{min-height:620px}
-.renewal-intro{height:800px}
-.renewal-intro__title{top:100px;left:24px}
-.renewal-intro__description{top:290px;right:24px;left:24px;font-size:17px;white-space:normal}
-.renewal-intro__description br{display:none}
-.renewal-top{top:auto;right:24px;bottom:32px}
-.renewal-location{height:auto;padding:90px 24px}
-.renewal-location__list{position:static;width:auto;transform:none}
-.renewal-location__rail{display:none}
-.renewal-location__detail{position:static;width:100%;margin-top:60px}
-.renewal-location__detail img{width:100%;height:auto;aspect-ratio:580/320}
-.renewal-location__detail>div{width:100%}
-.renewal-location__list button{font-size:42px}
-.renewal-slogan{height:800px}
-.renewal-drive{height:800px;overflow-x:auto;scroll-snap-type:x mandatory}
-.renewal-drive__track{width:max-content}
-.renewal-drive__slide{--drive-content-offset:0px;flex-basis:100vw;height:800px;scroll-snap-align:start}
-.renewal-drive__slide h2{top:100px;font-size:90px}
-.renewal-drive__vehicle-frame{top:22%;width:95%;height:48%}
-.renewal-drive__vehicle{inset:0;width:100%;height:100%;object-fit:contain}
-.renewal-drive__vehicle-frame.is-ioniq5n,.renewal-drive__vehicle-frame.is-casper,.renewal-drive__vehicle-frame.is-g90{top:22%;width:95%;height:48%}
-.renewal-drive__vehicle-frame.is-ioniq5n .renewal-drive__vehicle,.renewal-drive__vehicle-frame.is-casper .renewal-drive__vehicle,.renewal-drive__vehicle-frame.is-g90 .renewal-drive__vehicle{inset:0;width:100%;height:100%;object-fit:contain}
-.renewal-drive__shadow{top:70%;width:82%}
-.renewal-drive__shadow.is-casper{width:72%}
-.renewal-drive__copy{top:auto;right:24px;bottom:7%;left:24px}
-.renewal-experience{height:100svh;min-height:600px}
-.renewal-program{height:70vh;min-height:600px}
-.renewal-vehicle-exhibition-title{height:650px}
-.renewal-current{display:flex;width:100%;height:auto;min-height:650px;padding:90px 24px;align-items:center;justify-content:center;flex-direction:column}
-.renewal-current__content{position:static;display:flex;width:100%;align-items:center;gap:32px;visibility:visible;opacity:1;transform:none}
-.renewal-current__heading{width:100%;gap:28px}
-.renewal-current__title,.renewal-current__copy{visibility:visible}
-.renewal-vehicle-exhibition{min-height:0;padding:90px 24px}
-.renewal-vehicle-exhibition__header{position:static}
-.renewal-vehicle-exhibition__header h2{font-size:clamp(38px,10vw,56px)}
-.renewal-vehicle-exhibition__header p{font-size:16px}
-.renewal-vehicle-exhibition__cards{display:grid;height:auto;margin-top:70px;gap:70px}
-.renewal-vehicle-exhibition__card{position:static;width:100%;transform:none!important}
-.renewal-vehicle-exhibition__card img{width:100%;height:auto;aspect-ratio:585/675}
-.renewal-story-title{height:700px}
-.renewal-story-title i{height:180px}
-.renewal-stories{height:auto;padding:70px 24px;background:#fff}
-.renewal-story{position:relative!important;inset:auto!important;width:100%;margin-bottom:90px}
-.renewal-story img{width:100%;height:auto}
-.renewal-story div{position:static;width:100%;margin-top:25px;text-align:left!important}
-.renewal-guide{min-height:auto;padding:90px 24px}
-.renewal-guide header h2{font-size:48px}
-.renewal-guide>img{display:none}
-.renewal-guide__links{width:100%;margin-top:80px}
-.renewal-guide__links strong{font-size:28px}
-.renewal-guide__links small{padding-inline:15px;font-size:15px}
-.renewal-program>div{right:24px;left:24px}
-.renewal-program h2{font-size:42px}
-.renewal-program p br{display:none}
+﻿.renewal-home {
+  overflow-x: clip;
+  overflow-y: visible;
+  background: #fff;
+  color: #111;
 }
-@media(max-width:560px){.renewal-intro__title{font-size:42px}
-.renewal-intro__description{font-size:16px}
-.renewal-location__list button{font-size:34px}
-.renewal-slogan strong{font-size:58px}
-.renewal-drive h2{font-size:66px}
-.renewal-drive__copy h3{font-size:23px}
-.renewal-drive__copy p{font-size:14px}
-.renewal-experience p{font-size:42px}
-.renewal-vehicle-exhibition-title h2{font-size:38px}
-.renewal-current h2{font-size:58px}
-.renewal-current p{font-size:18px}
-.renewal-story-title h2{font-size:38px}
-.renewal-guide header h2{font-size:42px}
+.renewal-home h1,
+.renewal-home h2,
+.renewal-home h3 {
+  margin: 0;
 }
-@media(prefers-reduced-motion:reduce){.renewal-hero video{object-position:center}
+.renewal-hero {
+  position: relative;
+  height: 100svh;
+  min-height: 700px;
+  background: #9a9a9a;
+  overflow: hidden;
 }
-@media(max-width:900px){.renewal-location-transition__image{display:none}
-.renewal-intro{position:relative;margin-bottom:0}
-.renewal-intro__static-background{display:block}
-.renewal-location__detail img.is-goyang{visibility:visible}
+.renewal-hero video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-@media(prefers-reduced-motion:reduce){.renewal-location-transition__image{display:none}
-.renewal-intro{position:relative;margin-bottom:0}
-.renewal-intro__static-background{display:block}
-.renewal-location__detail img.is-goyang{visibility:visible}
+.renewal-location-transition {
+  --intro-copy-opacity: 1;
+  position: relative;
+  isolation: isolate;
+  background: #fff;
+}
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .renewal-location-transition {
+    min-height: calc(200svh + var(--location-scroll-distance, 0px));
+  }
+}
+.renewal-location-transition__image {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  object-fit: cover;
+  pointer-events: none;
+  will-change: transform, width, height;
+}
+.renewal-intro {
+  position: relative;
+  z-index: 2;
+  top: 0;
+  height: 100svh;
+  background: transparent;
+  color: #fff;
+  overflow: hidden;
+}
+.renewal-intro__static-background {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.renewal-intro__title {
+  position: absolute;
+  z-index: 2;
+  top: 11.7%;
+  left: 5.208%;
+  font: 550 clamp(54px, 4.167vw, 80px)/1.1 var(--font-en);
+  white-space: nowrap;
+  opacity: var(--intro-copy-opacity);
+}
+.renewal-intro__title em {
+  font-weight: 467;
+}
+.renewal-intro__description {
+  position: absolute;
+  z-index: 2;
+  top: max(32.6%, calc(11.7% + clamp(54px, 4.167vw, 80px) * 2.2 + 24px));
+  left: 5.208%;
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  opacity: var(--intro-copy-opacity);
+}
+.renewal-top {
+  position: absolute;
+  z-index: 2;
+  bottom: 5.3%;
+  right: 5.208%;
+  display: block;
+  width: 63px;
+  height: 63px;
+  border-radius: 50%;
+  background: #a8a7ac80;
+  color: #fff;
+  font: 500 12px/1.4 var(--font-en);
+  opacity: var(--intro-copy-opacity);
+}
+.renewal-top img {
+  position: absolute;
+  top: 15px;
+  left: 26px;
+  width: 12px;
+  height: 15px;
+}
+.renewal-top span {
+  position: absolute;
+  top: 32px;
+  left: 20px;
+}
+.renewal-location {
+  position: relative;
+  height: 100svh;
+  background: #fff;
+}
+.renewal-location__list {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 14.270833%;
+  display: flex;
+  width: 348px;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  transform: translateY(-50%);
+}
+.renewal-location__list button {
+  padding: 0 12px;
+  border: 0;
+  background: none;
+  color: #848484;
+  font: 467 60px/1.1 var(--font-en);
+  white-space: nowrap;
+}
+.renewal-location__list button.is-active {
+  background: #111;
+  color: #fff;
+}
+.renewal-location__rail {
+  position: absolute;
+  z-index: 2;
+  top: 8%;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 84%;
+  border-radius: 5px;
+  background: #c3c3c3;
+}
+.renewal-location__rail i {
+  position: absolute;
+  top: calc(var(--location-index) * 13.166667%);
+  width: 4px;
+  height: 34.166667%;
+  border-radius: 5px;
+  background: #545454;
+  transition: top 0.3s ease;
+}
+.renewal-location__detail {
+  position: absolute;
+  z-index: 2;
+  top: 24.3%;
+  left: 61.354167%;
+  display: block;
+  width: 30.208333%;
+}
+.renewal-location__detail img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 580/320;
+  object-fit: cover;
+}
+.renewal-location__detail img.is-goyang {
+  visibility: hidden;
+}
+.renewal-location__detail > div {
+  width: 100%;
+  margin-top: 26px;
+}
+.renewal-location__detail strong {
+  display: block;
+  font-size: 22px;
+  line-height: 1.4;
+}
+.renewal-location__detail p {
+  margin-top: 11px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .renewal-slogan-entry {
+    padding-block: 30svh;
+  }
+}
+.renewal-slogan {
+  display: flex;
+  height: 100svh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #0e0e0e;
+  text-align: center;
+}
+.renewal-slogan p {
+  font: 800 clamp(60px, 5.20833vw, 100px)/1.24 var(--font-en);
+  letter-spacing: -0.02em;
+}
+.renewal-slogan strong {
+  display: block;
+  min-width: 3.7em;
+  margin-top: 24px;
+  font: italic 700 clamp(90px, 8.33333vw, 160px)/1 var(--font-en);
+  letter-spacing: -0.04em;
+}
+.renewal-slogan__cursor {
+  display: inline-block;
+  width: 0.055em;
+  height: 0.8em;
+  margin-left: 0.08em;
+  background: currentColor;
+  opacity: 0;
+  vertical-align: -0.08em;
+}
+.renewal-drive {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: #fff;
+}
+.renewal-drive__track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  will-change: transform;
+}
+.renewal-drive__slide {
+  --drive-content-offset: max(0px, calc((100svh - 1080px) / 2));
+  position: relative;
+  flex: 0 0 100vw;
+  width: 100vw;
+  height: 100%;
+  text-align: center;
+}
+.renewal-drive__slide h2 {
+  position: absolute;
+  z-index: 1;
+  top: calc(min(5.9259svh, 64px) + var(--drive-content-offset));
+  left: 50%;
+  margin: 0;
+  font: 550 min(27.7778svh, 300px)/1.3 var(--font-en);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.renewal-drive__vehicle-frame {
+  position: absolute;
+  z-index: 1;
+  top: calc(min(25svh, 270px) + var(--drive-content-offset));
+  left: 50%;
+  width: min(128.8889svh, 1392px);
+  aspect-ratio: 1392/515;
+  overflow: hidden;
+  transform: translateX(-50%);
+}
+.renewal-drive__vehicle {
+  position: absolute;
+  top: -29.23%;
+  left: -11.09%;
+  width: 122.72%;
+  height: auto;
+  max-width: none;
+}
+.renewal-drive__shadow {
+  position: absolute;
+  top: calc(min(70.3981svh, 760.3px) + var(--drive-content-offset));
+  left: 50%;
+  width: min(122.6852svh, 1325px);
+  height: auto;
+  transform: translateX(-50%);
+}
+.renewal-drive__vehicle-frame.is-ioniq5n {
+  top: calc(min(20.1852svh, 218px) + var(--drive-content-offset));
+  width: min(135.0926svh, 1459px);
+  aspect-ratio: 1459/549;
+}
+.renewal-drive__vehicle-frame.is-ioniq5n .renewal-drive__vehicle {
+  top: -17.12%;
+  left: -4.07%;
+  width: 106.7%;
+  height: auto;
+}
+.renewal-drive__shadow.is-ioniq5n {
+  top: calc(min(68.0833svh, 735.3px) + var(--drive-content-offset));
+}
+.renewal-drive__vehicle-frame.is-casper {
+  top: calc(min(17.963svh, 194px) + var(--drive-content-offset));
+  width: min(113.7037svh, 1228px);
+  aspect-ratio: 1228/595;
+}
+.renewal-drive__vehicle-frame.is-casper .renewal-drive__vehicle {
+  top: -27.39%;
+  left: -23.7%;
+  width: 144.46%;
+  height: auto;
+}
+.renewal-drive__shadow.is-casper {
+  width: min(103.7963svh, 1121px);
+}
+.renewal-drive__shadow.is-casper,
+.renewal-drive__shadow.is-g90 {
+  top: calc(min(67.4352svh, 728.3px) + var(--drive-content-offset));
+}
+.renewal-drive__vehicle-frame.is-g90 {
+  top: calc(min(27.7778svh, 300px) + var(--drive-content-offset));
+  width: min(133.7963svh, 1445px);
+  aspect-ratio: 1445/467;
+}
+.renewal-drive__vehicle-frame.is-g90 .renewal-drive__vehicle {
+  top: -48.18%;
+  left: -11.21%;
+  width: 122.49%;
+  height: auto;
+}
+.renewal-drive__copy {
+  position: absolute;
+  top: calc(min(80.463svh, 869px) + var(--drive-content-offset));
+  right: 10%;
+  left: 10%;
+  text-align: center;
+}
+.renewal-drive__copy h3 {
+  margin: 0;
+  font-size: min(2.7778svh, 30px);
+}
+.renewal-drive__copy p {
+  margin-top: min(3.0556svh, 33px);
+  white-space: pre-line;
+  font-size: min(1.6667svh, 18px);
+  line-height: 1.4;
+}
+.renewal-experience {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: #fff;
+  color: #fff;
+}
+.renewal-experience__previews {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #111;
+}
+.renewal-experience__previews img {
+  position: absolute;
+  top: -0.06%;
+  left: 0;
+  width: 100%;
+  height: 100.13%;
+  max-width: none;
+  object-fit: cover;
+  visibility: hidden;
+  opacity: 0;
+}
+.renewal-experience__previews img:first-child {
+  visibility: visible;
+  opacity: 1;
+}
+.renewal-experience__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgb(34 34 34 / 30%);
+  backdrop-filter: blur(1px);
+}
+.renewal-experience__ring-position {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(84svh, 47.25vw, 907px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+.renewal-experience__ring {
+  --ring-rotation: 0deg;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  user-select: none;
+  will-change: transform;
+}
+.renewal-experience__ring img {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.renewal-experience__ring-item,
+.renewal-experience__pointer {
+  pointer-events: none;
+}
+.renewal-experience__ring-item {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  display: block;
+  width: 24.61%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  transform: translate(-50%, -50%) rotate(var(--rotate));
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+  will-change: transform;
+  -webkit-mask: url("./assets/experience-ring-1.png") center/100% 100% no-repeat;
+  mask: url("./assets/experience-ring-1.png") center/100% 100% no-repeat;
+}
+.renewal-experience__ring-item img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 142%;
+  height: 142%;
+  max-width: none;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  transform-origin: 50% 50%;
+  backface-visibility: hidden;
+}
+.renewal-experience__indicator {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.renewal-experience__pointer {
+  position: absolute;
+  top: 34.462%;
+  left: 77.9017%;
+  display: block;
+  width: 21.2963%;
+  height: 2px;
+  max-width: none;
+  transform: translate(-50%, -50%) rotate(150.75deg);
+  transform-origin: 50% 50%;
+}
+.renewal-experience p {
+  position: absolute;
+  z-index: 4;
+  top: calc(50% - min(3.3333svh, 1.875vw, 36px));
+  left: calc(50% + 0.5px);
+  margin: 0;
+  font: 467 min(5.5556svh, 3.125vw, 60px)/1.1 var(--font-en);
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.renewal-vehicle-exhibition-slogan-entry {
+  background: #fff;
+}
+.renewal-vehicle-exhibition-slogan {
+  position: relative;
+  display: flex;
+  height: 100svh;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #111;
+  text-align: center;
+}
+.renewal-vehicle-exhibition-shared-title {
+  margin: 0;
+  font-family: var(--font-en);
+  font-weight: 550;
+  white-space: nowrap;
+}
+.renewal-vehicle-exhibition-slogan .renewal-vehicle-exhibition-shared-title {
+  position: relative;
+  font-size: clamp(48px, 3.64583vw, 70px);
+  line-height: 1.2;
+}
+.renewal-vehicle-exhibition-title-handoff-layer {
+  position: fixed;
+  z-index: 5;
+  inset: 0;
+  pointer-events: none;
+}
+.renewal-vehicle-exhibition-shared-title span,
+.renewal-vehicle-exhibition-card-list__header h2 span {
+  display: block;
+}
+.renewal-current,
+.renewal-story-title {
+  display: flex;
+  height: 900px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.renewal-vehicle-exhibition-card-list {
+  position: relative;
+  height: min(211.40625vw, 4059px);
+  background: #fff;
+  color: #111;
+}
+.renewal-vehicle-exhibition-card-list__header {
+  position: absolute;
+  top: min(4.53125vw, 87px);
+  left: max(calc((100% - 1920px) / 2 + 100px), 5.20833vw);
+  z-index: 2;
+}
+.renewal-vehicle-exhibition-card-list__title-slot {
+  position: relative;
+  width: min(50.72917vw, 974px);
+  height: min(9.16667vw, 176px);
+}
+.renewal-vehicle-exhibition-card-list__header h2 {
+  margin: 0;
+  font: 550 min(4.16667vw, 80px)/1.1 var(--font-en);
+  text-align: left;
+  white-space: nowrap;
+}
+.renewal-vehicle-exhibition-card-list__header p {
+  width: min(30.46875vw, 585px);
+  margin: 30px 0 0;
+  font-size: min(0.9375vw, 18px);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.renewal-vehicle-exhibition-card-list__items {
+  position: relative;
+  height: 100%;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+.renewal-vehicle-exhibition-card-list__item {
+  position: absolute;
+  width: min(30.46875vw, 585px);
+}
+.renewal-vehicle-exhibition-card-list__item.is-avante-n {
+  top: min(17.23958vw, 331px);
+  left: calc(50% + min(8.33333vw, 160px));
+}
+.renewal-vehicle-exhibition-card-list__item.is-grandeur {
+  top: min(35.46875vw, 681px);
+  left: min(5.20833vw, 100px);
+}
+.renewal-vehicle-exhibition-card-list__item.is-ioniq-9 {
+  top: min(70.625vw, 1356px);
+  left: calc(62.5% + min(1.82292vw, 35px));
+}
+.renewal-vehicle-exhibition-card-list__item.is-ioniq-5 {
+  top: min(91.77083vw, 1762px);
+  left: calc(12.5% + min(9.84375vw, 189px));
+}
+.renewal-vehicle-exhibition-card-list__item.is-gv80 {
+  top: min(143.59375vw, 2757px);
+  left: calc(18.75% + min(5.20833vw, 100px));
+  transform: translateX(-50%);
+}
+.renewal-vehicle-exhibition-card-list__item.is-elantra {
+  top: min(159.94792vw, 3071px);
+  left: calc(50% + min(10.52083vw, 202px));
+}
+.renewal-vehicle-exhibition-card-list__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 585/675;
+  object-fit: cover;
+}
+.renewal-vehicle-exhibition-card-list__item h3 {
+  margin-top: 29px;
+  font: 645 min(1.5625vw, 30px)/1.1 var(--font-en);
+}
+.renewal-vehicle-exhibition-card-list__item dl {
+  display: grid;
+  margin: 26px 0 0;
+  gap: 9px;
+}
+.renewal-vehicle-exhibition-card-list__item dl div {
+  display: grid;
+  grid-template-columns: min(7.8125vw, 150px) 1fr;
+  font: 400 min(0.9375vw, 18px)/1.2 var(--font-en);
+}
+.renewal-vehicle-exhibition-card-list__item dd {
+  margin: 0;
+}
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .renewal-vehicle-exhibition-slogan-entry {
+    position: relative;
+    z-index: 2;
+    padding-top: 30svh;
+  }
+  .renewal-vehicle-exhibition-card-list__mobile-title {
+    display: none;
+  }
+}
+.renewal-current {
+  position: relative;
+  width: max(100vw, 177.7778svh);
+  height: max(100svh, 56.25vw);
+  margin-inline: auto;
+  container-type: inline-size;
+  background: #fff;
+  color: #111;
+  overflow: hidden;
+}
+.renewal-current__content {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 35.26042cqw;
+  align-items: center;
+  flex-direction: column;
+  gap: 1.97917cqw;
+  transform: translate(-50%, -50%);
+}
+.renewal-current__heading {
+  display: flex;
+  width: 29.84375cqw;
+  align-items: center;
+  flex-direction: column;
+  gap: 1.92708cqw;
+}
+.renewal-current h2 {
+  font: 550 6.25cqw/1.3 var(--font-en);
+  white-space: nowrap;
+}
+.renewal-current p {
+  margin: 0;
+  font: 645 1.30208cqw/1.1 var(--font-en);
+  text-align: center;
+  white-space: nowrap;
+}
+.renewal-current__title,
+.renewal-current__copy {
+  visibility: hidden;
+}
+.renewal-program {
+  position: relative;
+  display: block;
+  height: 1080px;
+  color: #fff;
+  overflow: hidden;
+}
+.renewal-program > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.renewal-program > div {
+  position: absolute;
+  bottom: 9.4%;
+  left: 5.208%;
+}
+.renewal-program span {
+  font: 550 18px var(--font-en);
+}
+.renewal-program h2 {
+  margin-top: 7px;
+  font-size: 60px;
+  letter-spacing: -2px;
+}
+.renewal-program p {
+  margin-top: 26px;
+  font-size: 20px;
+  line-height: 1.4;
+}
+.renewal-story-title {
+  position: relative;
+  height: min(52.083333vw, 1000px);
+  flex-direction: column;
+}
+.renewal-story-title h2 {
+  font: 550 clamp(50px, 3.65vw, 70px)/1.2 var(--font-en);
+}
+.renewal-story-title p {
+  margin-top: 30px;
+  font-size: 20px;
+}
+.renewal-story-title__line-track {
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  display: block;
+  width: 4px;
+  height: min(17.1875vw, 330px);
+  max-width: none;
+  transform: translateX(-50%);
+}
+.renewal-story-title__line-track > img,
+.renewal-story-title__line-fill img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+.renewal-story-title__line-base {
+  opacity: 0.32;
+}
+.renewal-story-title__line-fill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 0 100% 0);
+}
+.renewal-story-title__line-fill img {
+  position: absolute;
+  inset: 0;
+}
+.renewal-stories {
+  position: relative;
+  display: flex;
+  min-height: min(151.041667vw, 2900px);
+  box-sizing: border-box;
+  flex-direction: column;
+  padding: min(7.447917vw, 143px) 0 min(14.6875vw, 282px);
+}
+.renewal-stories__center-line {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 4px);
+  z-index: 1;
+  display: block;
+  width: 8px;
+  max-width: none;
+  overflow: visible;
+  pointer-events: none;
+}
+.renewal-stories__center-line path {
+  fill: none;
+  stroke: #d1d1d1;
+  stroke-width: 4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.renewal-stories__center-line circle {
+  fill: #d1d1d1;
+}
+.renewal-stories__line-progress path {
+  stroke: #848484;
+}
+.renewal-stories__line-progress circle {
+  fill: #848484;
+}
+.renewal-story {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: 100%;
+  min-height: min(25vw, 480px);
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+.renewal-story img {
+  display: block;
+  width: min(36.458333vw, 700px);
+  height: auto;
+  aspect-ratio: 700/480;
+  object-fit: cover;
+}
+.renewal-story__copy {
+  grid-row: 1;
+}
+.renewal-story h3 {
+  font: 645 clamp(24px, 1.5625vw, 30px)/1.1 var(--font-en);
+}
+.renewal-story h3 span {
+  display: block;
+}
+.renewal-story strong {
+  display: block;
+  margin-top: 32px;
+  font-size: 24px;
+}
+.renewal-story p {
+  margin-top: 6px;
+  font-size: 20px;
+  line-height: 1.4;
+}
+.renewal-story--1 img,
+.renewal-story--3 img {
+  grid-column: 2;
+  margin-left: min(6.875vw, 132px);
+}
+.renewal-story--2 img,
+.renewal-story--4 img {
+  grid-column: 1;
+  margin-left: min(6.666667vw, 128px);
+}
+.renewal-story--1 .renewal-story__copy {
+  width: min(27.5vw, 528px);
+  margin-top: min(4.322917vw, 83px);
+  margin-right: min(6.979167vw, 134px);
+  justify-self: end;
+  text-align: right;
+}
+.renewal-story--2 {
+  margin-top: min(6.5625vw, 126px);
+}
+.renewal-story--2 .renewal-story__copy {
+  width: min(26.302083vw, 505px);
+  margin-top: min(2.5vw, 48px);
+  margin-left: min(6.979167vw, 134px);
+  grid-column: 2;
+}
+.renewal-story--3 {
+  margin-top: min(7.1875vw, 138px);
+}
+.renewal-story--3 .renewal-story__copy {
+  width: min(31.09375vw, 597px);
+  margin-top: min(2.8125vw, 54px);
+  margin-right: min(6.875vw, 132px);
+  justify-self: end;
+  text-align: right;
+}
+.renewal-story--4 {
+  margin-top: min(15.15625vw, 291px);
+}
+.renewal-story--4 .renewal-story__copy {
+  width: min(28.385417vw, 545px);
+  margin-top: min(2.604167vw, 50px);
+  margin-left: min(6.875vw, 132px);
+  grid-column: 2;
+}
+.renewal-guide {
+  position: relative;
+  background: #111;
+  color: #fff;
+}
+.renewal-guide__stage {
+  position: relative;
+  box-sizing: border-box;
+  padding: clamp(104px, 11.5svh, 140px) clamp(24px, 5.208vw, 100px)
+    clamp(90px, 10svh, 108px);
+  overflow: visible;
+}
+.renewal-guide__stage > header {
+  position: relative;
+  z-index: 3;
+  width: max-content;
+  max-width: 100%;
+  background: #111;
+}
+.renewal-guide header h2 {
+  font: 550 clamp(48px, 3.333vw, 64px)/1.03 var(--font-en);
+}
+.renewal-guide header p {
+  margin: 12px 0 0;
+  font-size: 18px;
+  line-height: 1.4;
+}
+.renewal-guide__visuals {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100svh;
+  z-index: 2;
+  pointer-events: none;
+}
+.renewal-guide__visual {
+  position: absolute;
+  top: 0;
+  width: 327px;
+  height: 371px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.92);
+  transform-origin: center;
+  transition:
+    opacity 0.2s ease,
+    transform 0.28s cubic-bezier(0.2, 0.75, 0.25, 1),
+    visibility 0s linear 0.2s;
+}
+.renewal-guide__visual.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition-delay: 0s;
+}
+.renewal-guide__visual img {
+  display: block;
+  max-width: none;
+}
+.renewal-guide__visual--1,
+.renewal-guide__visual--3,
+.renewal-guide__visual--5 {
+  right: 9.1%;
+}
+.renewal-guide__visual--2,
+.renewal-guide__visual--4 {
+  left: 9.1%;
+}
+.renewal-guide__viewport {
+  position: relative;
+  z-index: 1;
+  width: min(1325px, 82%);
+  margin: clamp(86px, 10svh, 110px) auto 0;
+  overflow: visible;
+}
+.renewal-guide__links {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  width: 100%;
+  margin: 0;
+  will-change: transform;
+}
+.renewal-guide__links a {
+  --scroll-emphasis: 0.22;
+  box-sizing: border-box;
+  display: flex;
+  height: clamp(220px, 23svh, 250px);
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 clamp(12px, 2vw, 24px);
+  border-bottom: 1px solid #363636;
+  text-align: center;
+}
+.renewal-guide__links a:first-child {
+  border-top: 1px solid #363636;
+}
+.renewal-guide__links a.is-hovered {
+  --scroll-emphasis: 1 !important;
+  --description-emphasis: 1 !important;
+}
+.renewal-guide__links span {
+  color: #dd0000;
+  font: 550 18px/1.2 var(--font-en);
+  opacity: calc(0.4 + var(--scroll-emphasis) * 0.6);
+  transform: translateY(4px);
+  transition:
+    opacity 0.22s linear,
+    transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.renewal-guide__links strong {
+  margin-top: 20px;
+  color: #fff;
+  font: 300 clamp(36px, 2.34vw, 45px)/1.1 var(--font-en);
+  font-weight: calc(300 + var(--scroll-emphasis) * 250);
+  opacity: calc(0.28 + var(--scroll-emphasis) * 0.72);
+  transform: translateY(7px);
+  transition:
+    opacity 0.22s linear,
+    transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1),
+    font-weight 0.2s ease;
+}
+.renewal-guide__links a.is-active span,
+.renewal-guide__links a.is-hovered span,
+.renewal-guide__links a.is-active strong,
+.renewal-guide__links a.is-hovered strong {
+  transform: translateY(0);
+}
+.renewal-guide__links small {
+  max-width: 90%;
+  margin-top: clamp(24px, 2.7svh, 29px);
+  font-size: 14px;
+  font-weight: 200;
+  line-height: 1.3;
+  opacity: var(--description-emphasis, 0);
+  transform: translateY(9px);
+  transition:
+    opacity 0.24s linear,
+    transform 0.34s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.renewal-guide__links a.is-active small,
+.renewal-guide__links a.is-hovered small {
+  transform: translateY(0);
+}
+@media (max-width: 900px) {
+  .renewal-hero {
+    min-height: 620px;
+  }
+  .renewal-intro {
+    height: 800px;
+  }
+  .renewal-intro__title {
+    top: 100px;
+    left: 24px;
+  }
+  .renewal-intro__description {
+    top: 290px;
+    right: 24px;
+    left: 24px;
+    font-size: 17px;
+    white-space: normal;
+  }
+  .renewal-intro__description br {
+    display: none;
+  }
+  .renewal-top {
+    top: auto;
+    right: 24px;
+    bottom: 32px;
+  }
+  .renewal-location {
+    height: auto;
+    padding: 90px 24px;
+  }
+  .renewal-location__list {
+    position: static;
+    width: auto;
+    transform: none;
+  }
+  .renewal-location__rail {
+    display: none;
+  }
+  .renewal-location__detail {
+    position: static;
+    width: 100%;
+    margin-top: 60px;
+  }
+  .renewal-location__detail img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 580/320;
+  }
+  .renewal-location__detail > div {
+    width: 100%;
+  }
+  .renewal-location__list button {
+    font-size: 42px;
+  }
+  .renewal-slogan {
+    height: 800px;
+  }
+  .renewal-drive {
+    height: 800px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  .renewal-drive__track {
+    width: max-content;
+  }
+  .renewal-drive__slide {
+    --drive-content-offset: 0px;
+    flex-basis: 100vw;
+    height: 800px;
+    scroll-snap-align: start;
+  }
+  .renewal-drive__slide h2 {
+    top: 100px;
+    font-size: 90px;
+  }
+  .renewal-drive__vehicle-frame {
+    top: 22%;
+    width: 95%;
+    height: 48%;
+  }
+  .renewal-drive__vehicle {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .renewal-drive__vehicle-frame.is-ioniq5n,
+  .renewal-drive__vehicle-frame.is-casper,
+  .renewal-drive__vehicle-frame.is-g90 {
+    top: 22%;
+    width: 95%;
+    height: 48%;
+  }
+  .renewal-drive__vehicle-frame.is-ioniq5n .renewal-drive__vehicle,
+  .renewal-drive__vehicle-frame.is-casper .renewal-drive__vehicle,
+  .renewal-drive__vehicle-frame.is-g90 .renewal-drive__vehicle {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .renewal-drive__shadow {
+    top: 70%;
+    width: 82%;
+  }
+  .renewal-drive__shadow.is-casper {
+    width: 72%;
+  }
+  .renewal-drive__copy {
+    top: auto;
+    right: 24px;
+    bottom: 7%;
+    left: 24px;
+  }
+  .renewal-experience {
+    height: 100svh;
+    min-height: 600px;
+  }
+  .renewal-program {
+    height: 70vh;
+    min-height: 600px;
+  }
+  .renewal-vehicle-exhibition-slogan {
+    height: 650px;
+  }
+  .renewal-current {
+    display: flex;
+    width: 100%;
+    height: auto;
+    min-height: 650px;
+    padding: 90px 24px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .renewal-current__content {
+    position: static;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 32px;
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+  .renewal-current__heading {
+    width: 100%;
+    gap: 28px;
+  }
+  .renewal-current__title,
+  .renewal-current__copy {
+    visibility: visible;
+  }
+  .renewal-vehicle-exhibition-card-list {
+    height: auto;
+    padding: 90px 24px;
+  }
+  .renewal-vehicle-exhibition-card-list__header {
+    position: static;
+  }
+  .renewal-vehicle-exhibition-card-list__title-slot {
+    width: auto;
+    height: auto;
+  }
+  .renewal-vehicle-exhibition-card-list__header h2 {
+    font-size: clamp(38px, 10vw, 56px);
+  }
+  .renewal-vehicle-exhibition-card-list__header p {
+    width: auto;
+    margin-top: 30px;
+    font-size: 16px;
+  }
+  .renewal-vehicle-exhibition-card-list__items {
+    display: grid;
+    height: auto;
+    margin-top: 70px;
+    gap: 70px;
+  }
+  .renewal-vehicle-exhibition-card-list__item,
+  .renewal-vehicle-exhibition-card-list__item.is-gv80 {
+    position: static;
+    width: 100%;
+    transform: none;
+  }
+  .renewal-vehicle-exhibition-card-list__item img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 585/675;
+  }
+  .renewal-story-title {
+    height: 700px;
+  }
+  .renewal-story-title__line-track {
+    bottom: 0;
+    width: 1px;
+    height: 180px;
+  }
+  .renewal-stories {
+    height: auto;
+    padding: 70px 24px;
+    background: #fff;
+  }
+  .renewal-stories__center-line {
+    display: none;
+  }
+  .renewal-story {
+    position: relative !important;
+    inset: auto !important;
+    display: block;
+    width: 100%;
+    min-height: 0;
+    margin: 0 0 90px;
+  }
+  .renewal-story img {
+    width: 100%;
+    height: auto;
+    margin-left: 0;
+  }
+  .renewal-story .renewal-story__copy {
+    width: 100%;
+    margin: 25px 0 0;
+    text-align: left !important;
+  }
+  .renewal-story h3 span {
+    display: inline;
+  }
+  .renewal-story h3 span + span::before {
+    content: " ";
+  }
+  .renewal-guide {
+    height: auto;
+    min-height: auto;
+    padding: 90px 24px;
+  }
+  .renewal-guide__stage {
+    position: relative;
+    top: auto;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    overflow: visible;
+  }
+  .renewal-guide header h2 {
+    font-size: 48px;
+  }
+  .renewal-guide > img {
+    display: none;
+  }
+  .renewal-guide__visuals {
+    display: none;
+  }
+  .renewal-guide__viewport {
+    width: 100%;
+    margin: 80px auto 0;
+  }
+  .renewal-guide__links {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: 100%;
+    margin: 0;
+    transform: none !important;
+  }
+  .renewal-guide__links a,
+  .renewal-guide__links a.is-active {
+    height: auto;
+    min-height: 150px;
+    margin-bottom: 0;
+    padding: 24px 8px;
+  }
+  .renewal-guide__links strong,
+  .renewal-guide__links .is-active strong {
+    font-size: 28px;
+  }
+  .renewal-guide__links small {
+    padding-inline: 15px;
+    font-size: 15px;
+  }
+  .renewal-program > div {
+    right: 24px;
+    left: 24px;
+  }
+  .renewal-program h2 {
+    font-size: 42px;
+  }
+  .renewal-program p br {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .renewal-intro__title {
+    font-size: 42px;
+  }
+  .renewal-intro__description {
+    font-size: 16px;
+  }
+  .renewal-location__list button {
+    font-size: 34px;
+  }
+  .renewal-slogan strong {
+    font-size: 58px;
+  }
+  .renewal-drive h2 {
+    font-size: 66px;
+  }
+  .renewal-drive__copy h3 {
+    font-size: 23px;
+  }
+  .renewal-drive__copy p {
+    font-size: 14px;
+  }
+  .renewal-experience p {
+    font-size: 42px;
+  }
+  .renewal-vehicle-exhibition-slogan h2,
+  .renewal-vehicle-exhibition-card-list__header h2 {
+    font-size: min(8vw, 38px);
+  }
+  .renewal-current h2 {
+    font-size: 58px;
+  }
+  .renewal-current p {
+    font-size: 18px;
+  }
+  .renewal-story-title h2 {
+    font-size: 38px;
+  }
+  .renewal-guide header h2 {
+    font-size: 42px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .renewal-hero video {
+    object-position: center;
+  }
+  .renewal-story-title__line-fill {
+    clip-path: inset(0) !important;
+  }
+}
+@media (max-width: 900px) {
+  .renewal-location-transition__image {
+    display: none;
+  }
+  .renewal-intro {
+    position: relative;
+    margin-bottom: 0;
+  }
+  .renewal-intro__static-background {
+    display: block;
+  }
+  .renewal-location__detail img.is-goyang {
+    visibility: visible;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .renewal-location-transition__image {
+    display: none;
+  }
+  .renewal-intro {
+    position: relative;
+    margin-bottom: 0;
+  }
+  .renewal-intro__static-background {
+    display: block;
+  }
+  .renewal-location__detail img.is-goyang {
+    visibility: visible;
+  }
 }
 /* Home component styles. */
-@media(prefers-reduced-motion:reduce){
-    .renewal-current{width:100%;height:auto;min-height:650px;padding:90px 24px;flex-direction:column}
-    .renewal-current__content{position:static;width:100%;gap:32px;transform:none}
-    .renewal-current__title,.renewal-current__copy{visibility:visible;opacity:1}
+@media (prefers-reduced-motion: reduce) {
+  .renewal-current {
+    width: 100%;
+    height: auto;
+    min-height: 650px;
+    padding: 90px 24px;
+    flex-direction: column;
+  }
+  .renewal-current__content {
+    position: static;
+    width: 100%;
+    gap: 32px;
+    transform: none;
+  }
+  .renewal-current__title,
+  .renewal-current__copy {
+    visibility: visible;
+    opacity: 1;
+  }
 }

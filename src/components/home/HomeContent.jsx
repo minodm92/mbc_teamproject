@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
+import { Observer } from 'gsap/Observer';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { locations } from '../../common/data/content';
@@ -11,7 +12,7 @@ import { createSpiralPath, spiralStripPose } from './spiralPath';
 import { homeAsset as asset } from './homeAssets';
 import './HomeContent.css';
 
-gsap.registerPlugin(ScrollTrigger, TextPlugin);
+gsap.registerPlugin(Observer, ScrollTrigger, TextPlugin);
 
 const driveModels = [
     {
@@ -50,28 +51,136 @@ const driveModels = [
     },
 ];
 const exhibitionVehicles = [
-    { name: 'AVANTE N', powertrain: 'GASOLINE 2.0 TURBO', color: 'PERFORMANCE BLUE', image: 'vehicle-1.svg', position: 'is-avante-n' },
-    { name: 'THE NEW GRANDEUR', powertrain: '3.5 GASOLINE CALLIGRAPHY', color: 'ABYSS BLACK PEARL', image: 'vehicle-2.svg', position: 'is-grandeur' },
-    { name: 'IONIQ 9', powertrain: 'CALLIGRAPHY AWD', color: 'IONOSPHERE GREEN PEARL', image: 'vehicle-3.svg', position: 'is-ioniq-9' },
-    { name: 'IONIQ 5', powertrain: 'PRESTIGE 2WD', color: 'DIGITAL TEAL GREEN PEARL', image: 'vehicle-4.svg', position: 'is-ioniq-5' },
-    { name: 'GV80', powertrain: '3.5T GASOLINE AWD', color: 'VEARING BLUE', image: 'vehicle-5.svg', position: 'is-gv80' },
-    { name: 'ELANTRA', powertrain: '1ST GENERATION AVANTE', color: 'DARK RED', image: 'vehicle-6.svg', position: 'is-elantra' },
+    {
+        name: 'AVANTE N',
+        powertrain: 'GASOLINE 2.0 TURBO',
+        color: 'PERFORMANCE BLUE',
+        image: 'vehicle-1.svg',
+        position: 'is-avante-n',
+    },
+    {
+        name: 'THE NEW GRANDEUR',
+        powertrain: '3.5 GASOLINE CALLIGRAPHY',
+        color: 'ABYSS BLACK PEARL',
+        image: 'vehicle-2.svg',
+        position: 'is-grandeur',
+    },
+    {
+        name: 'IONIQ 9',
+        powertrain: 'CALLIGRAPHY AWD',
+        color: 'IONOSPHERE GREEN PEARL',
+        image: 'vehicle-3.svg',
+        position: 'is-ioniq-9',
+    },
+    {
+        name: 'IONIQ 5',
+        powertrain: 'PRESTIGE 2WD',
+        color: 'DIGITAL TEAL GREEN PEARL',
+        image: 'vehicle-4.svg',
+        position: 'is-ioniq-5',
+    },
+    {
+        name: 'GV80',
+        powertrain: '3.5T GASOLINE AWD',
+        color: 'VEARING BLUE',
+        image: 'vehicle-5.svg',
+        position: 'is-gv80',
+    },
+    {
+        name: 'ELANTRA',
+        powertrain: '1ST GENERATION AVANTE',
+        color: 'DARK RED',
+        image: 'vehicle-6.svg',
+        position: 'is-elantra',
+    },
 ];
 const experienceRing = [
-    { image: 'experience-ring-1.png', x: 73.49, y: 26.3, rotate: 0 },
-    { image: 'experience-ring-2.png', x: 82.83, y: 44.59, rotate: 36.05 },
-    { image: 'experience-ring-3.png', x: 35.04, y: 20.31, rotate: -72.03 },
-    { image: 'experience-ring-4.png', x: 55.19, y: 17.08, rotate: -36.05 },
-    { image: 'experience-ring-5.png', x: 65.23, y: 79.43, rotate: 107.97 },
-    { image: 'experience-ring-6.png', x: 79.7, y: 64.86, rotate: 72.03 },
-    { image: 'experience-ring-7.png', x: 45, y: 82.67, rotate: 143.95 },
-    { image: 'experience-ring-8.png', x: 26.75, y: 73.41, rotate: 180 },
-    { image: 'experience-ring-9.png', x: 17.17, y: 55.16, rotate: -143.95 },
-    { image: 'experience-ring-10.png', x: 20.58, y: 34.89, rotate: -107.97 },
+    {
+        image: 'experience-source-1.png',
+        preview: 'vehicle-exhibition.png',
+        name: 'IONIQ 5',
+        x: 73.49,
+        y: 26.3,
+        rotate: 0,
+    },
+    {
+        image: 'experience-source-2.png',
+        preview: 'story-seoul.svg',
+        name: 'AVANTE N',
+        x: 82.83,
+        y: 44.59,
+        rotate: 36.05,
+    },
+    {
+        image: 'experience-source-3.png',
+        preview: 'story-hanam.svg',
+        name: 'ELANTRA',
+        x: 35.04,
+        y: 20.31,
+        rotate: -72.03,
+    },
+    {
+        image: 'experience-source-4.png',
+        preview: 'story-first-step.svg',
+        name: 'GV80',
+        x: 55.19,
+        y: 17.08,
+        rotate: -36.05,
+    },
+    {
+        image: 'experience-source-5.png',
+        preview: 'story-plastic.svg',
+        name: 'IONIQ 9',
+        x: 65.23,
+        y: 79.43,
+        rotate: 107.97,
+    },
+    {
+        image: 'experience-source-6.png',
+        preview: 'location-seoul.svg',
+        name: 'GRANDEUR',
+        x: 79.7,
+        y: 64.86,
+        rotate: 72.03,
+    },
+    {
+        image: 'experience-source-7.png',
+        preview: 'location-hanam.svg',
+        name: 'ELANTRA N TCR',
+        x: 45,
+        y: 82.67,
+        rotate: 143.95,
+    },
+    {
+        image: 'experience-source-8.png',
+        preview: 'location-busan.svg',
+        name: 'G90',
+        x: 26.75,
+        y: 73.41,
+        rotate: 180,
+    },
+    {
+        image: 'experience-source-9.png',
+        preview: 'location-beijing.svg',
+        name: 'IONIQ 6 N',
+        x: 17.17,
+        y: 55.16,
+        rotate: -143.95,
+    },
+    {
+        image: 'experience-source-10.png',
+        preview: 'vehicle-exhibition.png',
+        name: 'SANTA FE',
+        x: 20.58,
+        y: 34.89,
+        rotate: -107.97,
+    },
 ];
+const experienceSelectionOrder = [0, 1, 5, 4, 6, 7, 8, 9, 2, 3];
 const stories = [
     {
         title: 'SEOUL, REBORN FOR CAR CULTURE',
+        titleLines: ['SEOUL, REBORN', 'FOR CAR CULTURE'],
         place: '현대 모터스튜디오 서울',
         copy: '자동차 마니아들의 놀이터로 새롭게 돌아온 현대 모터스튜디오 서울. 자동차 문화와 취향을 공유하는 새로운 공간을 만나보세요.',
         image: 'story-seoul.svg',
@@ -79,6 +188,7 @@ const stories = [
     },
     {
         title: 'A NEW EXPERIENCE IN HANAM',
+        titleLines: ['A NEW EXPERIENCE', 'IN HANAM'],
         place: '현대 모터스튜디오 하남',
         copy: '새롭게 리뉴얼된 현대 모터스튜디오 하남에서 차량 전시와 미디어 콘텐츠를 통해 더욱 몰입감 있는 모빌리티 경험을 제공합니다.',
         image: 'story-hanam.svg',
@@ -131,7 +241,7 @@ const locationDetails = {
         description:
             '감각적인 아트 전시와 창의적인 프로그램을 통해 모빌리티를 바라보는 새로운 시각과 다양한 영감을 경험할 수 있습니다. 예술과 기술이 어우러진 콘텐츠를 통해 미래 모빌리티의 새로운 가능성을 만나보세요.',
     },
-    'snow-park': {
+    'senayan-park': {
         image: asset('location-snow-park.svg'),
         tagline: '다채로운 모빌리티 라이프스타일을 발견하는 플랫폼.',
         description:
@@ -147,20 +257,28 @@ const locationDetails = {
 
 export default function HomeContent() {
     const [selectedLocation, setSelectedLocation] = useState(0);
+    const previousLocationRef = useRef(selectedLocation);
     const locationTransitionRef = useRef(null);
     const locationScrollRef = useRef(null);
+    const locationImageRef = useRef(null);
+    const locationCopyRef = useRef(null);
     const sloganRef = useRef(null);
     const sloganTextRef = useRef(null);
+    const sloganCursorRef = useRef(null);
     const driveRef = useRef(null);
     const experienceRef = useRef(null);
     const experienceRingRef = useRef(null);
-    const experienceRingPositionRef = useRef(null);
-    const experienceOutlineRef = useRef(null);
+    const experienceIndicatorRef = useRef(null);
+    const experienceTitleRef = useRef(null);
+    const vehicleExhibitionSloganRef = useRef(null);
+    const vehicleExhibitionSloganTitleRef = useRef(null);
+    const vehicleExhibitionTitleSlotRef = useRef(null);
+    const vehicleExhibitionTitleLayerRef = useRef(null);
+    const vehicleExhibitionCardListRef = useRef(null);
     const currentExhibitionRef = useRef(null);
     const currentExhibitionTopRef = useRef(null);
     const currentExhibitionBottomRef = useRef(null);
     const currentExhibitionCopyRef = useRef(null);
-    const ringDragRef = useRef({ pointerId: null, angle: 0, rotation: 0 });
     const location = locations[selectedLocation];
     const locationDetail = locationDetails[location.slug] ?? location;
     const selectLocation = (index) => {
@@ -173,65 +291,59 @@ export default function HomeContent() {
             ScrollTrigger.update();
         }
     };
-    useEffect(() => {
+    useLayoutEffect(() => {
+        if (previousLocationRef.current === selectedLocation) return undefined;
+        previousLocationRef.current = selectedLocation;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+        const image = locationImageRef.current;
+        const copy = locationCopyRef.current;
+        if (!image || !copy) return undefined;
+
+        const context = gsap.context(() => {
+            gsap.fromTo(
+                image,
+                { autoAlpha: 0, y: -20 },
+                { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out', overwrite: true }
+            );
+            gsap.fromTo(
+                copy,
+                { autoAlpha: 0, y: 20 },
+                { autoAlpha: 1, y: 0, duration: 0.3, ease: 'power2.out', overwrite: true }
+            );
+        });
+
+        return () => context.revert();
+    }, [selectedLocation]);
+    useLayoutEffect(() => {
         const transition = locationTransitionRef.current;
         if (!transition) return undefined;
-        const media = gsap.matchMedia();
-        const ringElement = experienceRingPositionRef.current;
-        const ring = experienceRingRef.current;
-        const ringOutline = experienceOutlineRef.current;
-        const getRingAngle = (event) => {
-            const bounds = ringElement.getBoundingClientRect();
-            return Math.atan2(
-                event.clientY - bounds.top - bounds.height / 2,
-                event.clientX - bounds.left - bounds.width / 2,
-            ) * 180 / Math.PI;
-        };
-        const startRingRotation = (event) => {
-            event.preventDefault();
-            ringElement.setPointerCapture(event.pointerId);
-            ringDragRef.current = {
-                pointerId: event.pointerId,
-                angle: getRingAngle(event),
-                rotation: Number(gsap.getProperty(ring, 'rotation')) || 0,
-            };
-        };
-        const rotateRing = (event) => {
-            const drag = ringDragRef.current;
-            if (drag.pointerId !== event.pointerId) return;
-            const angle = getRingAngle(event);
-            let difference = angle - drag.angle;
-            if (difference > 180) difference -= 360;
-            if (difference < -180) difference += 360;
-            drag.rotation += difference;
-            drag.angle = angle;
-            gsap.set(ring, {
-                rotation: drag.rotation,
-                '--ring-rotation': `${drag.rotation}deg`,
-            });
-            gsap.set(ringOutline, { rotation: drag.rotation });
-        };
-        const endRingRotation = (event) => {
-            if (ringDragRef.current.pointerId === event.pointerId) {
-                if (ringElement.hasPointerCapture(event.pointerId)) {
-                    ringElement.releasePointerCapture(event.pointerId);
-                }
-                ringDragRef.current.pointerId = null;
-            }
-        };
-        if (ringElement && ring && ringOutline) {
-            ringElement.addEventListener('pointerdown', startRingRotation, { passive: false });
-            ringElement.addEventListener('pointermove', rotateRing, { passive: false });
-            ringElement.addEventListener('pointerup', endRingRotation);
-            ringElement.addEventListener('pointercancel', endRingRotation);
+        const navigationEntry = performance.getEntriesByType('navigation')[0];
+        if (navigationEntry?.type === 'reload' && window.scrollY > 0) {
+            window.scrollTo(0, 0);
         }
+        const media = gsap.matchMedia();
+        let refreshFrame;
+        let disposed = false;
+        const refreshScrollLayout = () => {
+            cancelAnimationFrame(refreshFrame);
+            refreshFrame = requestAnimationFrame(() => {
+                if (!disposed && window.scrollY === 0) ScrollTrigger.refresh();
+            });
+        };
         media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
+            let sloganReset;
+            let typingSequence;
+            let sloganInputObserver;
+            let cleanupSloganKeyboard;
+            let cleanupExperienceWheel;
+            let cleanupVehicleExhibitionTransition;
             const image = transition.querySelector('.renewal-location-transition__image');
             const intro = transition.querySelector('.renewal-intro');
             const locationSection = transition.querySelector('.renewal-location');
             const target = transition.querySelector('.renewal-location__detail img');
             // Reserve the later pin's space before the parent intro pin caches its height.
-            gsap.set(transition, { '--location-scroll-distance': `${locations.length * 65}vh` });
+            gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
             const bounds = () => {
                 const container = transition.getBoundingClientRect();
                 const destination = target.getBoundingClientRect();
@@ -322,7 +434,7 @@ export default function HomeContent() {
             locationScrollRef.current = ScrollTrigger.create({
                 trigger: locationSection,
                 start: () => timeline.scrollTrigger.end,
-                end: () => `+=${locations.length * window.innerHeight * 0.65}`,
+                end: () => `+=${locations.length * window.innerHeight * 1.2}`,
                 pin: locationSection,
                 // Reparent while pinned so the intro pin's transformed wrapper cannot
                 // change the location section's viewport coordinates.
@@ -333,24 +445,90 @@ export default function HomeContent() {
             });
             const slogan = sloganRef.current;
             const sloganText = sloganTextRef.current;
-            if (slogan && sloganText) {
-                gsap.set(sloganText, { text: '' });
-                const typing = gsap.to(sloganText, {
-                    duration: 1.2,
-                    ease: 'none',
-                    text: 'EXPERIENCE',
-                    paused: true,
+            const sloganCursor = sloganCursorRef.current;
+            if (slogan && sloganText && sloganCursor) {
+                const typingDuration = 1.2;
+                const scrollKeys = new Set([
+                    'ArrowDown',
+                    'ArrowUp',
+                    'PageDown',
+                    'PageUp',
+                    'Home',
+                    'End',
+                    ' ',
+                ]);
+                sloganInputObserver = Observer.create({
+                    allowClicks: true,
+                    preventDefault: true,
+                    target: window,
+                    type: 'wheel,touch,scroll',
                 });
+                sloganInputObserver.disable();
+                const holdSloganInput = () => sloganInputObserver.enable();
+                const releaseSloganInput = () => sloganInputObserver.disable();
+                const preventKeyboardScroll = (event) => {
+                    const targetTag = event.target?.tagName;
+                    const isEditable =
+                        event.target?.isContentEditable ||
+                        targetTag === 'INPUT' ||
+                        targetTag === 'TEXTAREA' ||
+                        targetTag === 'SELECT';
+                    if (
+                        sloganInputObserver.isEnabled &&
+                        !isEditable &&
+                        scrollKeys.has(event.key)
+                    ) {
+                        event.preventDefault();
+                    }
+                };
+                window.addEventListener('keydown', preventKeyboardScroll, { passive: false });
+                cleanupSloganKeyboard = () =>
+                    window.removeEventListener('keydown', preventKeyboardScroll);
+                gsap.set(sloganText, { text: '' });
+                gsap.set(sloganCursor, { opacity: 0 });
+                typingSequence = gsap
+                    .timeline({
+                        defaults: { ease: 'steps(1)' },
+                        paused: true,
+                        onComplete: releaseSloganInput,
+                    })
+                    .set(sloganCursor, { opacity: 1 })
+                    .to(sloganCursor, { duration: 0.25, opacity: 0 })
+                    .to(sloganCursor, { duration: 0.25, opacity: 1 })
+                    .to(sloganCursor, { duration: 0.25, opacity: 0 })
+                    .to(sloganCursor, { duration: 0.25, opacity: 1 })
+                    .to(sloganText, {
+                        duration: typingDuration,
+                        ease: 'none',
+                        text: 'EXPERIENCE',
+                    })
+                    .to(sloganCursor, { duration: 0.25, opacity: 0 })
+                    .to(sloganCursor, { duration: 0.25, opacity: 1 })
+                    .set(sloganCursor, { opacity: 0 });
                 ScrollTrigger.create({
                     trigger: slogan,
-                    start: 'top top',
-                    end: () => `+=${window.innerHeight * 0.7}`,
+                    start: 'center center',
+                    end: () => `+=${window.innerHeight * 1.8}`,
                     pin: slogan,
                     pinReparent: true,
+                    anticipatePin: 1,
                     invalidateOnRefresh: true,
-                    onEnter: () => typing.restart(),
-                    onEnterBack: () => typing.restart(),
-                    onLeaveBack: () => typing.pause(0),
+                    onEnter: (self) => {
+                        sloganReset?.kill();
+                        self.scroll(self.start + 1);
+                        holdSloganInput();
+                        typingSequence.restart();
+                    },
+                    onLeaveBack: () => {
+                        sloganReset?.kill();
+                        releaseSloganInput();
+                        typingSequence.pause(0);
+                        gsap.set(sloganText, { text: 'EXPERIENCE' });
+                        gsap.set(sloganCursor, { opacity: 0 });
+                        sloganReset = gsap.delayedCall(typingDuration, () => {
+                            gsap.set(sloganText, { text: '' });
+                        });
+                    },
                 });
             }
             const driveSection = driveRef.current;
@@ -363,32 +541,270 @@ export default function HomeContent() {
                         driveSection.clientWidth * (driveModels.length - 1),
                         window.innerHeight * driveModels.length * 2
                     );
+                const driveEntryDelay = () => window.innerHeight * 0.6;
+                const driveExitDelay = () => window.innerHeight * 1.2;
+                const drivePin = ScrollTrigger.create({
+                    trigger: driveSection,
+                    start: 'center center',
+                    end: () => `+=${driveEntryDelay() + driveScrollDistance() + driveExitDelay()}`,
+                    pin: driveSection,
+                    pinReparent: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                });
                 gsap.to(driveTrack, {
                     x: () => -(driveTrack.scrollWidth - driveSection.clientWidth),
                     ease: 'none',
                     scrollTrigger: {
-                        trigger: driveSection,
-                        start: 'top top',
-                        end: () => `+=${driveScrollDistance()}`,
-                        pin: driveSection,
-                        pinReparent: true,
-                        anticipatePin: 1,
+                        start: () => drivePin.start + driveEntryDelay(),
+                        end: () => drivePin.end - driveExitDelay(),
                         scrub: true,
                         invalidateOnRefresh: true,
                     },
                 });
             }
             const experienceSection = experienceRef.current;
-            if (experienceSection) {
-                ScrollTrigger.create({
+            const experienceRingElement = experienceRingRef.current;
+            const experienceIndicator = experienceIndicatorRef.current;
+            const experienceTitle = experienceTitleRef.current;
+            if (
+                experienceSection &&
+                experienceRingElement &&
+                experienceIndicator &&
+                experienceTitle
+            ) {
+                const wheelDegreesPerScrollPixel = 0.05;
+                const fullWheelRotationDistance = 360 / wheelDegreesPerScrollPixel;
+                const previews = [
+                    ...experienceSection.querySelectorAll('[data-experience-preview]'),
+                ];
+                let currentIndicatorRotation = 0;
+                let targetIndicatorRotation = 0;
+                let currentSpinnerRotation = 0;
+                let targetSpinnerRotation = 0;
+                let scrollRotation = 0;
+                let automaticIndicatorRotation = 0;
+                let automaticSpinnerRotation = 0;
+                let lastSegmentIndex = -1;
+                let isActive = false;
+                gsap.set(previews, { autoAlpha: 0 });
+                gsap.set(previews[0], { autoAlpha: 1 });
+                const updateExperienceContent = () => {
+                    const relativeRotation =
+                        (((currentIndicatorRotation - currentSpinnerRotation) % 360) + 360) % 360;
+                    const orderIndex = Math.floor(relativeRotation / 36) % experienceRing.length;
+                    const segmentIndex = experienceSelectionOrder[orderIndex];
+                    if (segmentIndex === lastSegmentIndex) return;
+                    lastSegmentIndex = segmentIndex;
+                    experienceTitle.textContent = experienceRing[segmentIndex].name;
+                    gsap.to(previews, { autoAlpha: 0, duration: 0.1, overwrite: true });
+                    gsap.to(previews[segmentIndex], {
+                        autoAlpha: 1,
+                        duration: 0.1,
+                        ease: 'power2.out',
+                        overwrite: true,
+                    });
+                };
+                const updateExperienceWheel = (_, deltaTime) => {
+                    const seconds = Math.min(deltaTime / 1000, 0.1);
+                    if (isActive) {
+                        automaticIndicatorRotation += 18 * seconds;
+                        automaticSpinnerRotation -= 18 * 0.25 * seconds;
+                    }
+                    targetIndicatorRotation = automaticIndicatorRotation + scrollRotation;
+                    targetSpinnerRotation = automaticSpinnerRotation - scrollRotation;
+                    currentIndicatorRotation +=
+                        (targetIndicatorRotation - currentIndicatorRotation) * 0.1;
+                    currentSpinnerRotation +=
+                        (targetSpinnerRotation - currentSpinnerRotation) * 0.1;
+                    gsap.set(experienceIndicator, { rotation: currentIndicatorRotation });
+                    gsap.set(experienceRingElement, {
+                        rotation: currentSpinnerRotation,
+                        '--ring-rotation': `${currentSpinnerRotation}deg`,
+                    });
+                    updateExperienceContent();
+                };
+                const experienceTrigger = ScrollTrigger.create({
                     trigger: experienceSection,
-                    start: 'top top',
-                    end: () => `+=${window.innerHeight}`,
+                    start: 'center center',
+                    end: () => `+=${fullWheelRotationDistance}`,
                     pin: experienceSection,
                     pinReparent: true,
                     anticipatePin: 1,
                     invalidateOnRefresh: true,
+                    onToggle: (self) => {
+                        isActive = self.isActive;
+                    },
+                    onUpdate: (self) => {
+                        scrollRotation = self.progress * 360;
+                    },
                 });
+                gsap.ticker.add(updateExperienceWheel);
+                updateExperienceContent();
+                cleanupExperienceWheel = () => {
+                    isActive = false;
+                    experienceTrigger.kill();
+                    gsap.ticker.remove(updateExperienceWheel);
+                    gsap.killTweensOf(previews);
+                };
+            }
+            const vehicleExhibitionSlogan = vehicleExhibitionSloganRef.current;
+            const vehicleExhibitionSloganTitle = vehicleExhibitionSloganTitleRef.current;
+            const vehicleExhibitionTitleSlot = vehicleExhibitionTitleSlotRef.current;
+            const vehicleExhibitionTitleLayer = vehicleExhibitionTitleLayerRef.current;
+            const vehicleExhibitionCardList = vehicleExhibitionCardListRef.current;
+            if (
+                vehicleExhibitionSlogan &&
+                vehicleExhibitionSloganTitle &&
+                vehicleExhibitionTitleSlot &&
+                vehicleExhibitionTitleLayer &&
+                vehicleExhibitionCardList
+            ) {
+                const vehicleExhibitionInputObserver = Observer.create({
+                    allowClicks: true,
+                    preventDefault: true,
+                    target: window,
+                    type: 'wheel,touch,scroll',
+                });
+                vehicleExhibitionInputObserver.disable();
+                const holdVehicleExhibitionInput = () => vehicleExhibitionInputObserver.enable();
+                const releaseVehicleExhibitionInput = () =>
+                    vehicleExhibitionInputObserver.disable();
+                const vehicleExhibitionSloganPin = ScrollTrigger.create({
+                    trigger: vehicleExhibitionSlogan,
+                    start: 'center center',
+                    end: () => `+=${window.innerHeight * 0.6}`,
+                    pin: vehicleExhibitionSlogan,
+                    pinSpacing: true,
+                    anticipatePin: 1,
+                    invalidateOnRefresh: true,
+                });
+                const vehicleExhibitionTitleReveal = gsap.fromTo(
+                    vehicleExhibitionSloganTitle,
+                    { autoAlpha: 0, y: -35 },
+                    {
+                        autoAlpha: 1,
+                        y: 0,
+                        duration: 0.8,
+                        ease: 'power2.out',
+                        onStart: holdVehicleExhibitionInput,
+                        onComplete: releaseVehicleExhibitionInput,
+                        onReverseComplete: releaseVehicleExhibitionInput,
+                        scrollTrigger: {
+                            trigger: vehicleExhibitionSlogan,
+                            start: () =>
+                                vehicleExhibitionSloganPin.start + window.innerHeight * 0.3,
+                            toggleActions: 'play none none reverse',
+                            invalidateOnRefresh: true,
+                        },
+                    }
+                );
+                const titleLines = vehicleExhibitionSloganTitle.querySelectorAll('span');
+                const clearTitleHandoffStyles = () => {
+                    gsap.set(vehicleExhibitionSloganTitle, {
+                        clearProps:
+                            'position,top,left,width,margin,fontSize,lineHeight,textAlign,whiteSpace',
+                    });
+                    gsap.set(titleLines, { clearProps: 'x' });
+                };
+                const measureSourceTitle = () => {
+                    const computedTitle = getComputedStyle(vehicleExhibitionSloganTitle);
+                    const currentFontSize = parseFloat(computedTitle.fontSize) || 70;
+                    const sourceFontSize = Math.max(
+                        48,
+                        Math.min(70, window.innerWidth * 0.0364583)
+                    );
+                    const scale = sourceFontSize / currentFontSize;
+                    const measureLineText = (line) => {
+                        const range = document.createRange();
+                        range.selectNodeContents(line);
+                        const width = range.getBoundingClientRect().width;
+                        range.detach();
+                        return width;
+                    };
+                    const firstLineWidth = measureLineText(titleLines[0]) * scale;
+                    const secondLineWidth = measureLineText(titleLines[1]) * scale;
+                    const width = Math.max(firstLineWidth, secondLineWidth);
+                    const height = sourceFontSize * 1.2 * titleLines.length;
+
+                    return {
+                        fontSize: sourceFontSize,
+                        left: (window.innerWidth - width) / 2,
+                        lineHeight: 1.2,
+                        secondLineOffset: (firstLineWidth - secondLineWidth) / 2,
+                        top: (window.innerHeight - height) / 2,
+                        width,
+                    };
+                };
+                let sourceTitleMetrics = measureSourceTitle();
+                const renderVehicleExhibitionTitleHandoff = (progress) => {
+                    if (progress <= 0) {
+                        if (
+                            vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionSlogan
+                        ) {
+                            vehicleExhibitionSlogan.append(vehicleExhibitionSloganTitle);
+                        }
+                        clearTitleHandoffStyles();
+                        sourceTitleMetrics = measureSourceTitle();
+                        return;
+                    }
+                    if (progress >= 1) {
+                        if (
+                            vehicleExhibitionSloganTitle.parentElement !==
+                            vehicleExhibitionTitleSlot
+                        ) {
+                            vehicleExhibitionTitleSlot.prepend(vehicleExhibitionSloganTitle);
+                        }
+                        clearTitleHandoffStyles();
+                        return;
+                    }
+
+                    const source = sourceTitleMetrics;
+                    const target = vehicleExhibitionTitleSlot.getBoundingClientRect();
+                    const targetFontSize = Math.min(80, window.innerWidth * 0.0416667);
+                    const easedProgress = progress * progress * (3 - 2 * progress);
+                    const interpolate = (from, to) => from + (to - from) * easedProgress;
+
+                    if (
+                        vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionTitleLayer
+                    ) {
+                        vehicleExhibitionTitleLayer.append(vehicleExhibitionSloganTitle);
+                    }
+                    gsap.set(vehicleExhibitionSloganTitle, {
+                        position: 'absolute',
+                        top: interpolate(source.top, target.top),
+                        left: interpolate(source.left, target.left),
+                        width: interpolate(source.width, target.width),
+                        margin: 0,
+                        fontSize: interpolate(source.fontSize, targetFontSize),
+                        lineHeight: interpolate(source.lineHeight, 1.1),
+                        textAlign: 'left',
+                        whiteSpace: 'nowrap',
+                    });
+                    gsap.set(titleLines[1], {
+                        x: interpolate(source.secondLineOffset, 0),
+                    });
+                };
+                const vehicleExhibitionTitleHandoff = ScrollTrigger.create({
+                    trigger: vehicleExhibitionCardList,
+                    start: () => vehicleExhibitionSloganPin.end,
+                    end: 'top top',
+                    scrub: true,
+                    onUpdate: ({ progress }) => renderVehicleExhibitionTitleHandoff(progress),
+                    onRefresh: ({ progress }) => renderVehicleExhibitionTitleHandoff(progress),
+                    invalidateOnRefresh: true,
+                });
+                cleanupVehicleExhibitionTransition = () => {
+                    vehicleExhibitionTitleHandoff.kill();
+                    vehicleExhibitionTitleReveal.kill();
+                    releaseVehicleExhibitionInput();
+                    vehicleExhibitionInputObserver.kill();
+                    if (vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionSlogan) {
+                        vehicleExhibitionSlogan.append(vehicleExhibitionSloganTitle);
+                    }
+                    gsap.set(vehicleExhibitionSloganTitle, { clearProps: 'all' });
+                    gsap.set(titleLines, { clearProps: 'all' });
+                };
             }
             const currentExhibition = currentExhibitionRef.current;
             const currentTop = currentExhibitionTopRef.current;
@@ -397,18 +813,26 @@ export default function HomeContent() {
             if (currentExhibition && currentTop && currentBottom && currentCopy) {
                 const gallery = currentExhibition.querySelector('.spiral-gallery');
                 const stage = gallery.querySelector('.spiral-gallery__stage');
-                const strips = [...gallery.querySelectorAll('.spiral-gallery__slice')].map((element) => ({
-                    element, card: Number(element.dataset.card), slice: Number(element.dataset.slice),
-                }));
+                const strips = [...gallery.querySelectorAll('.spiral-gallery__slice')].map(
+                    (element) => ({
+                        element,
+                        card: Number(element.dataset.card),
+                        slice: Number(element.dataset.slice),
+                    })
+                );
                 const helixState = { progress: 0 };
                 let path;
                 const measureHelix = () => {
-                    path = createSpiralPath(window.innerWidth, window.innerHeight,
+                    path = createSpiralPath(
+                        window.innerWidth,
+                        window.innerHeight,
                         Math.max(...strips.map(({ card }) => card)) + 1,
-                        Number(strips[0].element.dataset.slices));
+                        Number(strips[0].element.dataset.slices)
+                    );
                     gsap.set(gallery, {
                         perspective: path.perspective,
-                        left: window.innerWidth / 2 - currentExhibition.getBoundingClientRect().left,
+                        left:
+                            window.innerWidth / 2 - currentExhibition.getBoundingClientRect().left,
                     });
                     const stripWidth = path.cardWidth / path.slices;
                     strips.forEach(({ element, slice }) => {
@@ -421,7 +845,10 @@ export default function HomeContent() {
                     });
                 };
                 measureHelix();
-                gsap.set(strips.map(({ element }) => element), { transform: 'none' });
+                gsap.set(
+                    strips.map(({ element }) => element),
+                    { transform: 'none' }
+                );
                 gsap.set(stage, { visibility: 'hidden' });
                 const updateHelix = (progress) => {
                     stage.style.visibility = progress <= 0 ? 'hidden' : 'visible';
@@ -480,16 +907,25 @@ export default function HomeContent() {
                 currentTimeline.to(currentBottom, { x: outsideLeft, duration: 1 }, 3.05);
             }
             return () => {
+                sloganReset?.kill();
+                sloganInputObserver?.disable();
+                sloganInputObserver?.kill();
+                cleanupSloganKeyboard?.();
+                typingSequence?.kill();
+                cleanupExperienceWheel?.();
+                cleanupVehicleExhibitionTransition?.();
                 locationScrollRef.current = null;
             };
         });
+        window.addEventListener('load', refreshScrollLayout);
+        if (document.readyState === 'complete') refreshScrollLayout();
+        document.fonts?.ready.then(() => {
+            if (!disposed) refreshScrollLayout();
+        });
         return () => {
-            if (ringElement && ring && ringOutline) {
-                ringElement.removeEventListener('pointerdown', startRingRotation);
-                ringElement.removeEventListener('pointermove', rotateRing);
-                ringElement.removeEventListener('pointerup', endRingRotation);
-                ringElement.removeEventListener('pointercancel', endRingRotation);
-            }
+            disposed = true;
+            cancelAnimationFrame(refreshFrame);
+            window.removeEventListener('load', refreshScrollLayout);
             media.revert();
         };
     }, []);
@@ -540,7 +976,7 @@ export default function HomeContent() {
                                 className={selectedLocation === index ? 'is-active' : ''}
                                 onClick={() => selectLocation(index)}
                             >
-                                {item.english}
+                                {item.slug === 'senayan-park' ? 'SNOW PARK' : item.english}
                             </button>
                         ))}
                     </div>
@@ -553,27 +989,37 @@ export default function HomeContent() {
                         to={paths.location(location.slug)}
                     >
                         <img
+                            ref={locationImageRef}
                             className={selectedLocation === 0 ? 'is-goyang' : ''}
                             src={locationDetail.image ?? location.image}
                             alt={`${location.name} 공간`}
                         />
-                        <div>
+                        <div ref={locationCopyRef}>
                             <strong>{locationDetail.tagline}</strong>
                             <p>{locationDetail.description}</p>
                         </div>
                     </Link>
                 </section>
             </div>
-            <section className="renewal-slogan" ref={sloganRef} aria-label="브랜드 슬로건">
-                <p>
-                    WHAT YOU FIND
-                    <br />
-                    WHEN MOTION
-                    <br />
-                    MEETS
-                </p>
-                <strong ref={sloganTextRef} aria-label="EXPERIENCE" />
-            </section>
+            <div className="renewal-slogan-entry">
+                <section className="renewal-slogan" ref={sloganRef} aria-label="브랜드 슬로건">
+                    <p>
+                        WHAT YOU FIND
+                        <br />
+                        WHEN MOTION
+                        <br />
+                        MEETS
+                    </p>
+                    <strong aria-label="EXPERIENCE">
+                        <span ref={sloganTextRef} />
+                        <span
+                            className="renewal-slogan__cursor"
+                            ref={sloganCursorRef}
+                            aria-hidden="true"
+                        />
+                    </strong>
+                </section>
+            </div>
             <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
                 <div className="renewal-drive__track">
                     {driveModels.map((item) => (
@@ -605,20 +1051,21 @@ export default function HomeContent() {
             <section
                 className="renewal-experience"
                 ref={experienceRef}
-                aria-label="IONIQ 5 N 차량 전시"
+                aria-label="휠로 탐색하는 차량 전시"
             >
-                <img
-                    className="renewal-experience__background"
-                    src={asset('vehicle-exhibition.png')}
-                    alt="도심을 달리는 IONIQ 5 N"
-                />
+                <div className="renewal-experience__previews" aria-hidden="true">
+                    {experienceRing.map((item) => (
+                        <img
+                            data-experience-preview
+                            key={`${item.image}-${item.preview}`}
+                            src={asset(item.preview)}
+                            alt=""
+                        />
+                    ))}
+                </div>
                 <div className="renewal-experience__shade" aria-hidden="true" />
-                <div className="renewal-experience__blur" aria-hidden="true" />
-                <div className="renewal-experience__ring-position" ref={experienceRingPositionRef}>
-                    <div
-                        className="renewal-experience__ring"
-                        ref={experienceRingRef}
-                    >
+                <div className="renewal-experience__ring-position">
+                    <div className="renewal-experience__ring" ref={experienceRingRef}>
                         {experienceRing.map((item) => (
                             <span
                                 className="renewal-experience__ring-item"
@@ -627,12 +1074,13 @@ export default function HomeContent() {
                                     '--x': `${item.x}%`,
                                     '--y': `${item.y}%`,
                                     '--rotate': `${item.rotate}deg`,
-                                    '--mask-image': `url(${asset(item.image)})`,
                                 }}
                             >
                                 <img src={asset(item.image)} alt="" draggable={false} />
                             </span>
                         ))}
+                    </div>
+                    <div className="renewal-experience__indicator" ref={experienceIndicatorRef}>
                         <img
                             className="renewal-experience__pointer"
                             src={asset('experience-pointer.svg')}
@@ -640,28 +1088,43 @@ export default function HomeContent() {
                             draggable={false}
                         />
                     </div>
-                    <div
-                        className="renewal-experience__ring-outline"
-                        ref={experienceOutlineRef}
-                        aria-label="드래그해서 회전하는 도넛 링 테두리"
-                    />
                 </div>
-                <p>IONIQ5N</p>
+                <p ref={experienceTitleRef} aria-live="polite">
+                    IONIQ5N
+                </p>
             </section>
-            <section className="renewal-vehicle-exhibition-title">
-                <h2>
-                    HYUNDAI MOTORSTUDIO
-                    <br />
-                    VEHICLE EXHIBITION
-                </h2>
-            </section>
-            <section className="renewal-vehicle-exhibition">
-                <header className="renewal-vehicle-exhibition__header">
-                    <h2>
-                        HYUNDAI MOTORSTUDIO
-                        <br />
-                        VEHICLE EXHIBITION
+            <div className="renewal-vehicle-exhibition-slogan-entry">
+                <section
+                    className="renewal-vehicle-exhibition-slogan"
+                    ref={vehicleExhibitionSloganRef}
+                >
+                    <h2
+                        className="renewal-vehicle-exhibition-shared-title"
+                        ref={vehicleExhibitionSloganTitleRef}
+                    >
+                        <span>HYUNDAI MOTORSTUDIO</span>
+                        <span>VEHICLE EXHIBITION</span>
                     </h2>
+                </section>
+            </div>
+            <div
+                className="renewal-vehicle-exhibition-title-handoff-layer"
+                ref={vehicleExhibitionTitleLayerRef}
+            />
+            <section
+                className="renewal-vehicle-exhibition-card-list"
+                ref={vehicleExhibitionCardListRef}
+            >
+                <header className="renewal-vehicle-exhibition-card-list__header">
+                    <div
+                        className="renewal-vehicle-exhibition-card-list__title-slot"
+                        ref={vehicleExhibitionTitleSlotRef}
+                    >
+                        <h2 className="renewal-vehicle-exhibition-card-list__mobile-title">
+                            <span>HYUNDAI MOTORSTUDIO</span>
+                            <span>VEHICLE EXHIBITION</span>
+                        </h2>
+                    </div>
                     <p>
                         직접 달리며 만나는 현대자동차의 새로운 가능성. 보고, 듣고, 느끼는 것에서 한
                         걸음 더 나아가
@@ -669,9 +1132,12 @@ export default function HomeContent() {
                         현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
                     </p>
                 </header>
-                <div className="renewal-vehicle-exhibition__cards">
+                <div className="renewal-vehicle-exhibition-card-list__items">
                     {exhibitionVehicles.map(({ name, powertrain, color, image, position }) => (
-                        <article className={`renewal-vehicle-exhibition__card ${position}`} key={name}>
+                        <article
+                            className={`renewal-vehicle-exhibition-card-list__item ${position}`}
+                            key={name}
+                        >
                             <img src={asset(image)} alt={name} />
                             <h3>{name}</h3>
                             <dl>
@@ -691,14 +1157,18 @@ export default function HomeContent() {
             <section className="renewal-current" ref={currentExhibitionRef}>
                 <div className="renewal-current__content">
                     <div className="renewal-current__heading">
-                        <h2 className="renewal-current__title" ref={currentExhibitionTopRef}>CURRENT</h2>
+                        <h2 className="renewal-current__title" ref={currentExhibitionTopRef}>
+                            CURRENT
+                        </h2>
                         <p className="renewal-current__copy" ref={currentExhibitionCopyRef}>
                             DISCOVER OUR
                             <br />
                             CURRENT EXHIBITIONS
                         </p>
                     </div>
-                    <h2 className="renewal-current__title" ref={currentExhibitionBottomRef}>EXHIBITION</h2>
+                    <h2 className="renewal-current__title" ref={currentExhibitionBottomRef}>
+                        EXHIBITION
+                    </h2>
                 </div>
                 <SpiralGallery />
             </section>
@@ -721,7 +1191,12 @@ export default function HomeContent() {
                     HYUNDAI MOTORSTUDIO
                 </h2>
                 <p>현대 모터스튜디오의 새로운 이야기를 만나보세요.</p>
-                <i />
+                <span className="renewal-story-title__line-track" aria-hidden="true">
+                    <img className="renewal-story-title__line-base" src={asset('title-center-line.svg')} alt="" />
+                    <span className="renewal-story-title__line-fill">
+                        <img src={asset('title-center-line.svg')} alt="" />
+                    </span>
+                </span>
             </section>
             <HomeStories stories={stories} />
             <VisitorGuide links={guideLinks} />
