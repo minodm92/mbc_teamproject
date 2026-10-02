@@ -201,7 +201,7 @@ export default function ProgramContent() {
                     gsap.set([track, visual], { clearProps: 'transform,opacity,clipPath,transformOrigin' });
                 };
             }
-            const marqueeSpeed = () => window.matchMedia('(max-width: 1024px)').matches ? 66 : 90;
+            const marqueeSpeed = () => window.matchMedia('(max-width: 1024px)').matches ? 54 : 72;
             const loopDistance = () => group.offsetWidth + parseFloat(getComputedStyle(group).columnGap);
             const marquee = gsap.to(track, {
                 x: () => -loopDistance(),
@@ -237,7 +237,7 @@ export default function ProgramContent() {
                     start: () => `top+=${visual.offsetTop} 30%`,
                     endTrigger: manifesto,
                     end: 'top top',
-                    scrub: 0.9,
+                    scrub: 1.25,
                     invalidateOnRefresh: true,
                     onRefresh: () => {
                         marquee.invalidate().duration(loopDistance() / marqueeSpeed());
@@ -341,7 +341,7 @@ export default function ProgramContent() {
                         trigger: collage,
                         start: 'top 82%',
                         end: 'bottom 48%',
-                        scrub: 0.65,
+                        scrub: 0.9,
                         invalidateOnRefresh: true,
                     },
                 });
@@ -369,7 +369,7 @@ export default function ProgramContent() {
                     trigger: section,
                     start: 'top 75%',
                     end: 'center 45%',
-                    scrub: 0.7,
+                    scrub: 1,
                     invalidateOnRefresh: true,
                 },
             });
@@ -397,6 +397,31 @@ export default function ProgramContent() {
     }, []);
 
     useLayoutEffect(() => {
+        const monthly = pageRef.current?.querySelector('.program-monthly');
+        const media = gsap.matchMedia();
+
+        media.add({
+            desktop: '(min-width: 1025px)',
+        }, (context) => {
+            if (!monthly || !context.conditions.desktop) return undefined;
+
+            const trigger = ScrollTrigger.create({
+                trigger: monthly,
+                start: 'center center',
+                end: () => `+=${window.innerHeight}`,
+                pin: true,
+                pinSpacing: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+            });
+
+            return () => trigger.kill();
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
         const page = pageRef.current;
         const visual = page.querySelector('.program-feature__visual');
         const image = visual?.querySelector('.program-image-reveal__source');
@@ -417,9 +442,9 @@ export default function ProgramContent() {
                 ease: 'none',
                 scrollTrigger: {
                     trigger: visual,
-                    start: 'top 85%',
-                    end: 'top 55%',
-                    scrub: true,
+                    start: 'top 88%',
+                    end: 'top 45%',
+                    scrub: 0.9,
                     invalidateOnRefresh: true,
                 },
             });
@@ -459,12 +484,17 @@ export default function ProgramContent() {
             gsap.set(secondLine, { y: 24, autoAlpha: 0 });
             gsap.set(description, { y: 18, autoAlpha: 0 });
 
+            const isDesktop = context.conditions.desktop;
             const timeline = gsap.timeline({
                 scrollTrigger: {
                     trigger: section,
-                    start: 'top 85%',
-                    end: 'bottom 20%',
-                    scrub: 0.7,
+                    start: isDesktop ? 'top top' : 'top 85%',
+                    end: isDesktop
+                        ? () => `+=${window.innerHeight * 4.6}`
+                        : 'bottom 20%',
+                    pin: isDesktop,
+                    anticipatePin: isDesktop ? 1 : 0,
+                    scrub: 1,
                     refreshPriority: -1,
                     invalidateOnRefresh: true,
                 },
@@ -475,10 +505,12 @@ export default function ProgramContent() {
             timeline
                 // Keep the section intentionally blank through the first part
                 // of its scroll range, then reveal the copy sequentially.
-                .to({}, { duration: 2 })
+                .to({}, { duration: isDesktop ? 0.6 : 2 })
                 .to(firstLine, { xPercent: 0, autoAlpha: 1, duration: 1.1, ease: 'none' })
                 .to(secondLine, { y: 0, autoAlpha: 1, duration: 1, ease: 'none' })
                 .to(description, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'none' });
+
+            if (isDesktop) timeline.to({}, { duration: 1 });
 
             const refreshFrame = requestAnimationFrame(() => ScrollTrigger.refresh());
             return () => {
@@ -553,9 +585,9 @@ export default function ProgramContent() {
                 scrollTrigger: {
                     trigger: section,
                     start: 'top top',
-                    end: () => `+=${Math.max(1, distance()) * 1.06}`,
+                    end: () => `+=${Math.max(1, distance()) * 1.25}`,
                     pin: true,
-                    scrub: true,
+                    scrub: 0.85,
                     invalidateOnRefresh: true,
                     onRefreshInit: fitCanvas,
                     onRefresh: revealCards,
@@ -592,7 +624,7 @@ export default function ProgramContent() {
                 gsap.fromTo(calendar, { autoAlpha: 0, y: 20 }, {
                     autoAlpha: 1,
                     y: 0,
-                    duration: 0.55,
+                    duration: 0.8,
                     ease: 'power2.out',
                     scrollTrigger: {
                         trigger: calendar,
@@ -607,8 +639,8 @@ export default function ProgramContent() {
                 gsap.fromTo(scheduleRows, { autoAlpha: 0, y: 16 }, {
                     autoAlpha: 1,
                     y: 0,
-                    duration: 0.45,
-                    stagger: 0.08,
+                    duration: 0.7,
+                    stagger: 0.12,
                     ease: 'power2.out',
                     scrollTrigger: {
                         trigger: scheduleRows[0].parentElement,
@@ -628,8 +660,8 @@ export default function ProgramContent() {
                 gsap.fromTo(targets, { autoAlpha: 0, y: 20 }, {
                     autoAlpha: 1,
                     y: 0,
-                    duration: 0.55,
-                    stagger: 0.08,
+                    duration: 0.8,
+                    stagger: 0.12,
                     ease: 'power2.out',
                     scrollTrigger: {
                         trigger: group,
@@ -663,7 +695,7 @@ export default function ProgramContent() {
 
             const marquee = gsap.to(track, {
                 xPercent: -50,
-                duration: context.conditions.mobile || context.conditions.tablet ? 38 : 28,
+                duration: context.conditions.mobile || context.conditions.tablet ? 46 : 36,
                 ease: 'none',
                 repeat: -1,
             });
@@ -714,7 +746,7 @@ export default function ProgramContent() {
                     gsap.fromTo(text, { y: -28, autoAlpha: 0 }, {
                         y: 0,
                         autoAlpha: 1,
-                        duration: 0.75,
+                        duration: 1.05,
                         ease: 'power2.out',
                         scrollTrigger: {
                             trigger: text,
@@ -748,10 +780,10 @@ export default function ProgramContent() {
                     },
                 }).to(strips, {
                     clipPath: 'inset(0 0 0% 0)',
-                    duration: 1.25,
+                    duration: 1.65,
                     ease: 'power2.out',
                     stagger: {
-                        amount: 0.18,
+                        amount: 0.28,
                         from: 'start',
                     },
                 });

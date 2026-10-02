@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Header from './common/layout/Header';
+import { getHeaderVariant } from './common/router/headerVariant';
 import Footer from './common/layout/Footer';
 import PageLoader from './common/layout/PageLoader';
 import {
@@ -52,6 +53,7 @@ export default function App() {
     );
     const [loaderProgress, setLoaderProgress] = useState(0);
     const standaloneAuth = ['/login', '/signup'].includes(pathname.replace(/\/+$/, ''));
+    const headerVariant = getHeaderVariant(pathname);
 
     useEffect(() => {
         document.documentElement.classList.toggle('is-home-page', pathname === '/');
@@ -115,7 +117,7 @@ export default function App() {
         <>
             <PageLoader phase={loaderPhase} progress={loaderProgress} />
             <ScrollToTop />
-            {showPage && !standaloneAuth && <Header />}
+            {showPage && !standaloneAuth && <Header key={pathname} variant={headerVariant} />}
             {showPage && <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/motorstudio" element={<MotorstudioPage />} />

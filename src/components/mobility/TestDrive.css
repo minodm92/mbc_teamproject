@@ -79,7 +79,6 @@
 .booking-summary__action button{width:210px;height:52px;border:0;background:#fff;color:#111;font-weight:800}
 .booking-summary__action button:disabled{background:#343638;color:#74787b;cursor:not-allowed}
 .booking-page~.site-footer{display:none}
-body:has(.booking-page) .site-header{position:absolute;background:#050505}
 .reservation-list{max-width:900px;margin:auto}
 .reservation-card{display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:1px solid #aaa;padding:25px 0}
 .reservation-card span{color:var(--color-point-2);font-weight:700}
