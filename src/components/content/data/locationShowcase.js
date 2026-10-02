@@ -11,7 +11,7 @@ export const locationShowcase = [
   {
     id: 'seoul', title: 'SEOUL', name: '서울',
     keywords: ['BRAND SHOWCASE', 'VEHICLE DISPLAY', 'TEST DRIVE', 'CULTURE & LIFESTYLE'],
-    image: '/images/locations/figma/seoul.svg', background: '#2668d3', color: '#111111',
+    image: '/images/locations/figma/seoul.svg', background: '#2668d3', color: '#ffffff',
     hours: '09:00–21:00 / 매주 월요일 휴무(시설별 운영일 상이)',
     closed: '매월 첫째 주 월요일·신정, 설날/추석 당일 및 익일 휴관',
     address: '서울특별시 강남구 언주로 738', price: '무료 관람',
@@ -19,7 +19,7 @@ export const locationShowcase = [
   {
     id: 'hanam', title: 'HANAM', name: '하남',
     keywords: ['MOBILITY EXPERIENCE', 'VEHICLE DISPLAY', 'TEST DRIVE', 'LIFESTYLE PROGRAM'],
-    image: '/images/locations/figma/hanam.svg', background: '#2c5e8a', color: '#111111',
+    image: '/images/locations/figma/hanam.svg', background: '#2c5e8a', color: '#ffffff',
     hours: '10:00 – 22:00', closed: '연중무휴',
     address: '경기도 하남시 미사대로 750, 스타필드 하남 1층', price: '무료 관람',
   },

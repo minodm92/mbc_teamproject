@@ -282,8 +282,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .exhibition-sequence { height: auto; }
+  .exhibition-sequence { height: auto; margin-top: 0; }
   .exhibition-sequence__viewport { position: relative; height: auto; overflow: visible; }
   .exhibition-sequence__track { display: block; height: auto; transform: none !important; }
-  .exhibition-scene { width: 100%; height: 100vh; min-height: 700px; }
+  .exhibition-scene,
+  .exhibition-scene:first-child {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 700px;
+    visibility: visible;
+  }
 }

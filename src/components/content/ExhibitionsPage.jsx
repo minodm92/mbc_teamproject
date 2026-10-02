@@ -146,8 +146,13 @@ export default function ExhibitionsPage() {
         previewExpandedImage.style.opacity = '1';
         previewExpandedImage.style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
         sequenceTrack.style.transform = 'none';
-        sceneParts.forEach(({ scene, title, description }) => {
+        previewTitle.style.opacity = '0';
+        sceneParts.forEach(({ scene, image, shade, title, description }) => {
           scene.style.visibility = 'visible';
+          image.style.clipPath = 'none';
+          image.style.transform = 'none';
+          shade.style.clipPath = 'none';
+          shade.style.transform = 'none';
           title.style.opacity = '1';
           title.style.transform = 'none';
           description.style.opacity = '1';

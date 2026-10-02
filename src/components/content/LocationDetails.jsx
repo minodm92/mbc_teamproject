@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { studioPrograms, studioVehicles } from '../../common/data/locationShowcase';
+import { studioPrograms, studioVehicles } from './data/locationShowcase';
 import { paths } from '../../common/router/routePaths';
 
 const asset = (name, type = 'png') => `/images/locations/figma/${name}.${type}`;
