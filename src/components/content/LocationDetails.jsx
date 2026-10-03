@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { studioPrograms, studioVehicles } from "./data/locationShowcase";
 import { paths } from "../../common/router/routePaths";
-import driveBasicImage from "../../assets/images/locations/figma/drive-basic.png";
-import highPerformanceImage from "../../assets/images/locations/figma/high-performance.png";
 
 const asset = (name, type = "png") => `/images/locations/figma/${name}.${type}`;
 const driveTabs = [
@@ -18,7 +16,7 @@ const driveTabs = [
   {
     id: "high-performance",
     label: "HIGH PERFORMANCE",
-    image: highPerformanceImage,
+    image: asset("high-performance"),
     alt: "차량 내부에서 주행을 경험하는 모습",
     location: "GOYANG · HANAM",
     service: "UNTACT",
@@ -26,7 +24,7 @@ const driveTabs = [
   {
     id: "basic-drive",
     label: "BASIC DRIVE",
-    image: driveBasicImage,
+    image: asset("drive-basic"),
     alt: "주차장에 전시된 차량들",
     location: "SEOUL",
     service: "UNTACT",
@@ -36,7 +34,45 @@ const driveTabs = [
 export default function LocationDetails() {
   const [activeView, setActiveView] = useState(0);
   const [activeDriveIndex, setActiveDriveIndex] = useState(0);
-  const activeDrive = driveTabs[activeDriveIndex];
+  const driveWrapperRef = useRef(null);
+  const displayDrive = driveTabs[activeDriveIndex];
+  useEffect(() => {
+    let frame = 0;
+    // Scroll progress through the DRIVE TEST wrapper (0 at its top, 1 at its end) picks the active item.
+    const update = () => {
+      frame = 0;
+      const wrapper = driveWrapperRef.current;
+      if (!wrapper || wrapper.offsetParent === null) return;
+      const travel = wrapper.offsetHeight - window.innerHeight;
+      const passed = -wrapper.getBoundingClientRect().top;
+      const progress = travel > 0 ? Math.min(1, Math.max(0, passed / travel)) : 0;
+      setActiveDriveIndex(
+        Math.min(driveTabs.length - 1, Math.floor(progress * driveTabs.length)),
+      );
+    };
+    const onScroll = () => {
+      if (!frame) frame = window.requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+  // Clicking a item scrolls to the middle of its third of the DRIVE TEST wrapper.
+  const scrollToDrive = (index) => {
+    const wrapper = driveWrapperRef.current;
+    if (!wrapper) return;
+    const travel = wrapper.offsetHeight - window.innerHeight;
+    const top =
+      wrapper.getBoundingClientRect().top +
+      window.scrollY +
+      travel * ((index + 0.5) / driveTabs.length);
+    window.scrollTo({ top, behavior: "smooth" });
+  };
   const views = ["avante", "avante-1", "avante-2", "avante-3"];
   return (
     <div className="studio-details studio-desktop">
@@ -104,12 +140,13 @@ export default function LocationDetails() {
           ))}
         </div>
       </section>
+      <div className="studio-drive-scroll" ref={driveWrapperRef}>
       <section className="studio-drive" aria-labelledby="studio-drive-title">
         <div
           className="studio-drive__image studio-mask"
           id="studio-drive-image"
         >
-          <img src={activeDrive.image} alt={activeDrive.alt} />
+          <img src={displayDrive.image} alt={displayDrive.alt} />
         </div>
         <div className="studio-drive__copy">
           <h2
@@ -133,7 +170,7 @@ export default function LocationDetails() {
                   role="tab"
                   aria-selected={isActive}
                   aria-controls="studio-drive-image"
-                  onClick={() => setActiveDriveIndex(index)}
+                  onClick={() => scrollToDrive(index)}
                 >
                   <div
                     className={`studio-drive__metadata-wrap${isActive ? " is-active" : ""}`}
@@ -152,6 +189,7 @@ export default function LocationDetails() {
           </div>
         </div>
       </section>
+      </div>
       <section
         className="studio-programs"
         aria-labelledby="studio-programs-title"

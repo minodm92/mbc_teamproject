@@ -27,29 +27,37 @@
 }
 .location-showcase--intro .location-hero {
   position: relative;
-  background: var(--color-main-2);
+  background: #0f0f0f;
 }
 .location-showcase--intro .location-hero__wordmark {
   position: absolute;
   z-index: 2;
-  top: 50svh;
+  /* The containing block is the hero, starting at the top of the viewport. top 52.7svh with translate(-50%, -50%)
+     centres the logo at 52.7% of the viewport height. Width is 55.1042% of the hero (clientWidth); ratio 1880:113. */
+  top: 52.7svh;
   left: 50%;
-  width: min(55.1042vw, 1058px);
+  width: 55.1042%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 1880 / 113;
   margin: 0;
   transform: translate(-50%, -50%);
 }
 .location-showcase--intro .location-hero__wordmark img {
   filter: brightness(0) invert(1);
 }
-.location-showcase--intro .location-hero__visual {
-  position: absolute;
-  z-index: 1;
-  right: 0;
-  bottom: 0;
-  width: min(13.9583vw, 268px);
-  height: min(14.1667svh, 153px);
-  opacity: 1;
-  visibility: visible;
+/* Below 1440px only. From 1440px the photo rule is shared by the intro and the second scene (see /motorstudio below). */
+@media (max-width: 1439px) {
+  .location-showcase--intro .location-hero__visual {
+    position: absolute;
+    z-index: 1;
+    right: 20px;
+    bottom: 0;
+    width: 268px;
+    height: 153px;
+    opacity: 1;
+    visibility: visible;
+  }
 }
 .location-showcase--studio-intro .location-hero__visual {
   position: absolute;
@@ -471,11 +479,6 @@ body:has(.location-showcase--intro) .site-header {
     margin: 0;
     white-space: nowrap;
   }
-  .studio-drive__links button:not(.is-active):hover h3,
-  .studio-drive__links button:not(.is-active):focus-visible h3 {
-    color: var(--color-point-3);
-    transition: color 200ms ease;
-  }
   .studio-programs {
     height: calc(555 * var(--u));
     padding: calc(60 * var(--u)) calc(60 * var(--u)) 0;
@@ -494,6 +497,15 @@ body:has(.location-showcase--intro) .site-header {
     font-weight: 600;
     line-height: 1.4;
     margin: calc(12 * var(--u)) 0 0;
+  }
+  /* Senayan pin: the last card scrolls normally into its pin start (no sticky offset), and the avante photo
+     sits above the pinned card while it rises in. Scoped to the class set by LocationShowcase.jsx. */
+  .location-showcase--senayan-pin .loc.is-last {
+    position: relative;
+  }
+  .location-showcase--senayan-pin .studio-avante__media {
+    position: relative;
+    z-index: 7;
   }
   .location-legacy-detail {
     display: none;
@@ -620,19 +632,14 @@ body:has(.location-showcase--intro) .site-header {
        to whole pixels keeps cumulative per-card offsets (index * value) exact
        integers so adjacent stuck cards tile without a sub-pixel seam. */
     --bar: round(calc(86 * var(--u)), 1px);
-    --stack-step: round(calc(88 * var(--u)), 1px);
-    --panel-height: round(calc(569 * var(--u)), 1px);
-    --image-block-gap: calc(20 * var(--u));
+    /* Stacked cards step by the bar height, so the card below covers the one above exactly
+       and no strip of the previous card's photo shows under its title bar. */
+    --stack-step: var(--bar);
   }
   .locations__title {
     padding: 0;
     margin: 0 0 calc(40 * var(--u)) calc(60 * var(--u));
     font: 550 calc(80 * var(--u))/1 var(--font-en);
-  }
-  .loc,
-  .loc.is-last {
-    height: var(--panel-height);
-    min-height: 0;
   }
   .loc__bar {
     transform: none;
@@ -685,28 +692,92 @@ body:has(.location-showcase--intro) .site-header {
     max-width: calc(352 * var(--u));
     white-space: pre-line;
   }
+}
+
+/* Tablet and desktop (768px+). Figma 1907:14123 on a 1920px canvas: the card is 569px tall and the photo is
+   714 x 529 with 20px from its top, right and bottom edges. Every length is --u (viewport width / 1920), so the
+   layout scales with the width. Below 768px the mobile layout is unchanged. The sticky stack (top, --stack-step)
+   is not touched here. */
+@media (min-width: 768px) {
+  .locations {
+    --u: min(0.0520833333vw, 1px);
+    --image-block-gap: calc(20 * var(--u));
+    --panel-height: round(calc(569 * var(--u)), 1px);
+  }
+  .loc,
+  .loc.is-last {
+    height: var(--panel-height);
+    min-height: 0;
+  }
   .loc__image {
     position: absolute;
     top: var(--image-block-gap);
     right: var(--image-block-gap);
-    bottom: var(--image-block-gap);
-    left: auto;
-    width: calc(714 * var(--u));
-    height: auto;
-    margin: 0;
-    aspect-ratio: auto;
-  }
-  .loc[data-location="seoul"] .loc__image {
-    top: calc(20 * var(--u));
-    right: calc(20 * var(--u));
     bottom: auto;
     left: auto;
     width: calc(714 * var(--u));
     height: calc(529 * var(--u));
     margin: 0;
+    aspect-ratio: auto;
   }
-  /* Figma 1907:14123: GOYANG's image is 712px wide (2px narrower than the other cards), same right edge. */
+  .loc__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  /* GOYANG's photo is 712px wide (2px narrower than the others), same right edge. */
   .loc[data-location="goyang"] .loc__image {
     width: calc(712 * var(--u));
+  }
+}
+
+/* DRIVE TEST scroll sequence (1440px+; the section is desktop-only). The wrapper is three viewport heights, and the
+   section sticks to the top while the page scrolls through it. The active item follows the scroll progress. */
+@media (min-width: 1440px) {
+  .studio-drive-scroll {
+    position: relative;
+    height: 300vh;
+  }
+  .studio-drive-scroll .studio-drive {
+    position: sticky;
+    top: 0;
+    /* The full Figma section (1233 units), so the photo (118 + 997) and the space below it (118) stay inside the box. */
+    height: calc(1233 * var(--u));
+  }
+}
+
+/* /motorstudio: the page is full width, so the hero reaches both viewport edges (no 100vw breakout, so no
+   scrollbar offset). Hero units stay capped at the 1920 canvas, so the photo and logo keep their Figma sizes. */
+@media (min-width: 1440px) {
+  .location-showcase--motorstudio {
+    max-width: none;
+  }
+  .location-showcase--motorstudio .location-hero {
+    width: 100%;
+    /* The hero height comes from JS (the visible viewport height). min-height: 100svh could be taller than that and push the bottom off screen. */
+    min-height: 0;
+    --u: min(0.0520833333cqw, 1px);
+  }
+  /* Photo: one rule for the intro and the second scene. 268 x 153 px, 20px from the right, flush with the hero bottom. */
+  .location-showcase--motorstudio .location-hero__visual {
+    position: absolute;
+    z-index: 1;
+    top: auto;
+    left: auto;
+    right: 20px;
+    bottom: 0;
+    width: 268px;
+    height: 153px;
+    max-width: none;
+    opacity: 1;
+    visibility: visible;
+  }
+  /* Large logo (second scene onward): left 20px, width clientWidth - 40px, ratio 1880:113, top 101px at every width. */
+  .location-showcase--motorstudio:not(.location-showcase--intro) .location-hero__wordmark {
+    margin: 0;
+    max-width: none;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1880 / 113;
   }
 }
