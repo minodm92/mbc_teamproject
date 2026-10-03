@@ -734,7 +734,10 @@
 .membership-page--tabs .membership-hero {
     min-height: 460px;
     padding: 150px max(24px, calc((100% - 1120px) / 2)) 80px;
-    background: linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.12)), url('./assets/membership-hero.png') center center / cover;
+    background-color: #111;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 .membership-page--tabs .membership-hero::after,
 .membership-page--tabs .membership-hero__index,

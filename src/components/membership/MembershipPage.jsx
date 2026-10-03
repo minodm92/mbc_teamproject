@@ -2,6 +2,7 @@
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
+import membershipHeroImage from './assets/membership-hero.png';
 import membershipBenefitsImage from './assets/membership-benefits.png';
 import membershipJoinImage from './assets/membership-join.png';
 import membershipLocationsImage from './assets/membership-locations.png';
@@ -114,7 +115,11 @@ export default function MembershipPage() {
     }
     return (
         <main className="membership-page membership-page--tabs">
-            <section className="membership-hero" aria-labelledby="membership-title">
+            <section
+                className="membership-hero"
+                aria-labelledby="membership-title"
+                style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.12)), url("${membershipHeroImage}")` }}
+            >
                 <div className="membership-hero__copy">
                     <p>HYUNDAI MOTORSTUDIO MEMBERSHIP</p>
                     <h1 id="membership-title">멤버십 소개</h1>
