@@ -698,6 +698,7 @@ export default function LocationShowcase({ intro = false }) {
     const cards = [...root.querySelectorAll(".loc")];
     let metrics = [];
     let firstCardHeight = 0;
+    let barHeight = 0;
     let frame = 0;
     let previousScrollY = -1;
 
@@ -727,6 +728,7 @@ export default function LocationShowcase({ intro = false }) {
         cardsContainer.getBoundingClientRect().top + window.scrollY;
       let naturalTop = cardsTop;
       firstCardHeight = cards[0]?.offsetHeight || window.innerHeight;
+      barHeight = bar;
       metrics = cards.map((card, index) => {
         const result = { naturalTop, stick: index * stackStep };
         naturalTop += card.offsetHeight;
@@ -744,10 +746,23 @@ export default function LocationShowcase({ intro = false }) {
       const scrollY = window.scrollY;
       if (scrollY === previousScrollY || !metrics.length) return;
       previousScrollY = scrollY;
+      const actives = metrics.map(
+        ({ naturalTop, stick }) => scrollY >= naturalTop - stick - 1,
+      );
+      // Viewport top of each card (sticky position). The stack step equals the bar height, so a stuck
+      // next card never rises above this card's bar: its top stops at +bar, not at the photo top.
+      const tops = metrics.map(({ naturalTop, stick }) =>
+        Math.max(naturalTop - scrollY, stick),
+      );
       cards.forEach((card, index) => {
-        const { naturalTop, stick } = metrics[index];
-        const active = scrollY >= naturalTop - stick - 1;
+        const active = actives[index];
         card.classList.toggle("is-active", active);
+        // Hide the photo only once this card is folded to its title bar: the next card's top sits one bar below this card's top.
+        // Before that the next card slides over the photo, and scrolling back up clears the class again.
+        const nextTop = tops[index + 1];
+        const covered =
+          nextTop !== undefined && nextTop - tops[index] <= barHeight + 2;
+        card.classList.toggle("is-covered", covered);
         let cover = 0;
         if (metrics[index + 1]) {
           const nextStart = metrics[index + 1].naturalTop - firstCardHeight;

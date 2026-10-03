@@ -195,6 +195,11 @@ body:has(.location-showcase--intro) .site-header {
   margin: 20px 0;
   aspect-ratio: 714/529;
   overflow: hidden;
+  transition: opacity 0.07s ease-in-out, visibility 0.07s ease-in-out;
+}
+.loc.is-covered .loc__image {
+  opacity: 0;
+  visibility: hidden;
 }
 .loc__image img {
   display: block;
@@ -708,6 +713,10 @@ body:has(.location-showcase--intro) .site-header {
   .loc.is-last {
     height: var(--panel-height);
     min-height: 0;
+  }
+  /* Stop the title bar at the photo's left edge (714u photo + 40u clearance) so it never paints over the photo's top. */
+  .loc__bar {
+    width: calc(100% - 714 * var(--u) - 40 * var(--u));
   }
   .loc__image {
     position: absolute;
