@@ -1,7 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
-import { Observer } from 'gsap/Observer';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { locations } from '../../common/data/content';
@@ -10,21 +9,36 @@ import { HomeHero, HomeStories, VisitorGuide } from '../../components/home/HomeS
 import SpiralGallery from './SpiralGallery';
 import HomeProgramSequence from './HomeProgramSequence';
 import { homeAsset as asset } from './homeAssets';
+import {
+    setHomeScrollLocked,
+    setHomeWheelDistanceRatio,
+    setupHomeScrollSmoothing,
+} from './homeScrollSmoothing';
 import './HomeContent.css';
 
-gsap.registerPlugin(Observer, ScrollTrigger, TextPlugin);
+gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 const driveModels = [
     {
         name: 'GV80',
-        image: asset('drive-gv80.png'),
+        body: asset('drive-gv80-body.png'),
+        wheel: asset('drive-gv80-wheel.png'),
+        wheels: [
+            { left: 9.05, top: 58.25, width: 16.16, height: 41.75, rotation: 0 },
+            { left: 70.19, top: 58.25, width: 16.16, height: 41.75, rotation: 0 },
+        ],
         shadow: asset('drive-shadow-standard.svg'),
         title: '아웃도어 라이프_데이트립 드라이브',
         copy: '넉넉한 시간과 자유로운 코스로 차량의 주행감과 편의성을 경험해보세요.\n일상 속에서 차량의 매력을 더욱 깊이 느낄 수 있습니다.',
     },
     {
         name: 'IONIQ5N',
-        image: asset('drive-ioniq5n.png'),
+        body: asset('drive-ioniq5n-body.png'),
+        wheel: asset('drive-ioniq5n-wheel.png'),
+        wheels: [
+            { left: 8.773, top: 53.411, width: 15.97, height: 39.382, rotation: 0 },
+            { left: 81.915, top: 46.203, width: 15.97, height: 39.382, rotation: 60 },
+        ],
         shadow: asset('drive-shadow-ioniq5n.svg'),
         vehicleClass: 'is-ioniq5n',
         shadowClass: 'is-ioniq5n',
@@ -33,7 +47,12 @@ const driveModels = [
     },
     {
         name: 'CASPER',
-        image: asset('drive-casper.png'),
+        body: asset('drive-casper-body.png'),
+        wheel: asset('drive-casper-wheel.png'),
+        wheels: [
+            { left: 7.899, top: 62.697, width: 17.345, height: 37.303, rotation: 0 },
+            { left: 92.59, top: 62.522, width: 17.345, height: 37.303, rotation: 90 },
+        ],
         shadow: asset('drive-shadow-casper.svg'),
         vehicleClass: 'is-casper',
         shadowClass: 'is-casper',
@@ -42,7 +61,12 @@ const driveModels = [
     },
     {
         name: 'G90',
-        image: asset('drive-g90.png'),
+        body: asset('drive-g90-body.png'),
+        wheel: asset('drive-g90-wheel.png'),
+        wheels: [
+            { left: 7.82, top: 51.667, width: 15.363, height: 40.756, rotation: 0 },
+            { left: 80.312, top: 45.242, width: 15.363, height: 40.756, rotation: 67.739 },
+        ],
         shadow: asset('drive-shadow-g90.svg'),
         vehicleClass: 'is-g90',
         shadowClass: 'is-g90',
@@ -333,10 +357,10 @@ export default function HomeContent() {
             });
         };
         media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
-            let sloganReset;
             let typingSequence;
-            let sloganInputObserver;
-            let cleanupSloganKeyboard;
+            let sloganPin;
+            let isSloganTyping = false;
+            let cleanupDriveInteraction;
             let cleanupExperienceWheel;
             let cleanupVehicleExhibitionTransition;
             let cleanupCurrentExhibition;
@@ -390,6 +414,11 @@ export default function HomeContent() {
                         ),
                     scrub: true,
                     invalidateOnRefresh: true,
+                    onUpdate: (self) => {
+                        const hasArrived = self.progress >= 0.999;
+                        gsap.set(target, { autoAlpha: hasArrived ? 1 : 0 });
+                        gsap.set(image, { autoAlpha: hasArrived ? 0 : 1 });
+                    },
                 },
             });
             timeline.fromTo(
@@ -436,7 +465,7 @@ export default function HomeContent() {
             locationScrollRef.current = ScrollTrigger.create({
                 trigger: locationSection,
                 start: () => timeline.scrollTrigger.end,
-                end: () => `+=${locations.length * window.innerHeight * 1.2}`,
+                end: () => `+=${locations.length * window.innerHeight}`,
                 pin: locationSection,
                 // Reparent while pinned so the intro pin's transformed wrapper cannot
                 // change the location section's viewport coordinates.
@@ -450,116 +479,230 @@ export default function HomeContent() {
             const sloganCursor = sloganCursorRef.current;
             if (slogan && sloganText && sloganCursor) {
                 const typingDuration = 1.2;
-                const scrollKeys = new Set([
-                    'ArrowDown',
-                    'ArrowUp',
-                    'PageDown',
-                    'PageUp',
-                    'Home',
-                    'End',
-                    ' ',
-                ]);
-                sloganInputObserver = Observer.create({
-                    allowClicks: true,
-                    preventDefault: true,
-                    target: window,
-                    type: 'wheel,touch,scroll',
-                });
-                sloganInputObserver.disable();
-                const holdSloganInput = () => sloganInputObserver.enable();
-                const releaseSloganInput = () => sloganInputObserver.disable();
-                const preventKeyboardScroll = (event) => {
-                    const targetTag = event.target?.tagName;
-                    const isEditable =
-                        event.target?.isContentEditable ||
-                        targetTag === 'INPUT' ||
-                        targetTag === 'TEXTAREA' ||
-                        targetTag === 'SELECT';
-                    if (sloganInputObserver.isEnabled && !isEditable && scrollKeys.has(event.key)) {
-                        event.preventDefault();
-                    }
-                };
-                window.addEventListener('keydown', preventKeyboardScroll, { passive: false });
-                cleanupSloganKeyboard = () =>
-                    window.removeEventListener('keydown', preventKeyboardScroll);
                 gsap.set(sloganText, { text: '' });
                 gsap.set(sloganCursor, { opacity: 0 });
                 typingSequence = gsap
                     .timeline({
                         defaults: { ease: 'steps(1)' },
                         paused: true,
-                        onComplete: releaseSloganInput,
+                        onComplete: () => {
+                            isSloganTyping = false;
+                            setHomeScrollLocked(false);
+                            requestAnimationFrame(() => sloganPin?.scroll(sloganPin.end + 1));
+                        },
                     })
+                    .to({}, { duration: 0.4 })
                     .set(sloganCursor, { opacity: 1 })
-                    .to(sloganCursor, { duration: 0.25, opacity: 0 })
-                    .to(sloganCursor, { duration: 0.25, opacity: 1 })
-                    .to(sloganCursor, { duration: 0.25, opacity: 0 })
-                    .to(sloganCursor, { duration: 0.25, opacity: 1 })
+                    .to(sloganCursor, { duration: 0.2, opacity: 0 })
+                    .to(sloganCursor, { duration: 0.2, opacity: 1 })
+                    .to(sloganCursor, { duration: 0.2, opacity: 0 })
+                    .to(sloganCursor, { duration: 0.2, opacity: 1 })
                     .to(sloganText, {
                         duration: typingDuration,
                         ease: 'none',
                         text: 'EXPERIENCE',
                     })
-                    .to(sloganCursor, { duration: 0.25, opacity: 0 })
-                    .to(sloganCursor, { duration: 0.25, opacity: 1 })
-                    .set(sloganCursor, { opacity: 0 });
-                ScrollTrigger.create({
+                    .to(sloganCursor, { duration: 0.2, opacity: 0 })
+                    .to(sloganCursor, { duration: 0.2, opacity: 1 })
+                    .to(sloganCursor, { duration: 0.2, opacity: 0 })
+                    .to({}, { duration: 0.4 });
+                sloganPin = ScrollTrigger.create({
                     trigger: slogan,
-                    start: 'center center',
-                    end: () => `+=${window.innerHeight * 1.8}`,
+                    start: 'top top',
+                    end: () => `+=${window.innerHeight}`,
                     pin: slogan,
                     pinReparent: true,
                     anticipatePin: 1,
                     invalidateOnRefresh: true,
-                    onEnter: (self) => {
-                        sloganReset?.kill();
-                        self.scroll(self.start + 1);
-                        holdSloganInput();
+                    onEnter: () => {
+                        if (isSloganTyping) return;
+                        isSloganTyping = true;
+                        setHomeScrollLocked(true);
                         typingSequence.restart();
                     },
                     onLeaveBack: () => {
-                        sloganReset?.kill();
-                        releaseSloganInput();
+                        isSloganTyping = false;
+                        setHomeScrollLocked(false);
                         typingSequence.pause(0);
-                        gsap.set(sloganText, { text: 'EXPERIENCE' });
+                        gsap.set(sloganText, { text: '' });
                         gsap.set(sloganCursor, { opacity: 0 });
-                        sloganReset = gsap.delayedCall(typingDuration, () => {
-                            gsap.set(sloganText, { text: '' });
-                        });
                     },
                 });
             }
             const driveSection = driveRef.current;
             const driveTrack = driveSection?.querySelector('.renewal-drive__track');
             if (driveSection && driveTrack) {
-                // Keep each vehicle on screen long enough for the next one to enter,
-                // matching the slow, continuous horizontal vehicle movement in Rivian's section.
+                const driveSlides = [...driveTrack.querySelectorAll('.renewal-drive__slide')];
+                const driveFrames = driveSlides.map((slide) =>
+                    slide.querySelector('.renewal-drive__vehicle-frame')
+                );
+                const driveWheels = driveSlides.map((slide) => [
+                    ...slide.querySelectorAll('.renewal-drive__wheel'),
+                ]);
+                const driveCopies = driveSlides.map((slide) => [
+                    slide.querySelector('h2'),
+                    slide.querySelector('.renewal-drive__copy'),
+                ]);
+                const revealStart = 0.25;
+                const driveCopyVisibility = driveSlides.map((_, index) => index === 0);
+                let driveMotionDirection = -1;
+                let previousTrackX = 0;
+                const centeredHold = 0.5;
+                const driveTargets = [];
+                const measureDriveLayout = () => {
+                    const viewportWidth = driveSection.clientWidth;
+                    const blankGap = viewportWidth * 0.04;
+                    const frameWidths = driveFrames.map((frame) => frame?.offsetWidth ?? 0);
+                    const vehicleCenters = [viewportWidth / 2];
+                    driveSlides.forEach((slide, index) => {
+                        if (index > 0) {
+                            vehicleCenters[index] =
+                                vehicleCenters[index - 1] +
+                                viewportWidth +
+                                frameWidths[index - 1] / 2 +
+                                frameWidths[index] / 2 +
+                                blankGap;
+                        }
+                        const defaultCenter = slide.offsetLeft + viewportWidth / 2;
+                        slide.style.setProperty(
+                            '--drive-vehicle-offset',
+                            `${vehicleCenters[index] - defaultCenter}px`
+                        );
+                        driveTargets[index] = viewportWidth / 2 - vehicleCenters[index];
+                    });
+                };
+                measureDriveLayout();
                 const driveScrollDistance = () =>
                     Math.max(
-                        driveSection.clientWidth * (driveModels.length - 1),
+                        Math.abs(driveTargets.at(-1) ?? 0),
                         window.innerHeight * driveModels.length * 2
                     );
-                const driveEntryDelay = () => window.innerHeight * 0.6;
-                const driveExitDelay = () => window.innerHeight * 1.2;
-                const drivePin = ScrollTrigger.create({
-                    trigger: driveSection,
-                    start: 'center center',
-                    end: () => `+=${driveEntryDelay() + driveScrollDistance() + driveExitDelay()}`,
-                    pin: driveSection,
-                    pinReparent: true,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true,
+                const setDriveCopyVisibility = (index, shouldShow, motionDirection) => {
+                    if (driveCopyVisibility[index] === shouldShow) return;
+                    driveCopyVisibility[index] = shouldShow;
+                    const targets = driveCopies[index];
+                    gsap.killTweensOf(targets);
+
+                    if (shouldShow) {
+                        gsap.set(targets, {
+                            opacity: 1,
+                            visibility: 'visible',
+                        });
+                        gsap.fromTo(
+                            targets,
+                            {
+                                clipPath:
+                                    motionDirection < 0
+                                        ? 'inset(-4px 0% -4px 100%)'
+                                        : 'inset(-4px 100% -4px 0%)',
+                            },
+                            {
+                                clipPath: 'inset(-4px 0% -4px 0%)',
+                                duration: 0.35,
+                                ease: 'power1.out',
+                            }
+                        );
+                        return;
+                    }
+
+                    gsap.to(targets, {
+                        clipPath:
+                            motionDirection < 0
+                                ? 'inset(-4px 100% -4px 0%)'
+                                : 'inset(-4px 0% -4px 100%)',
+                        duration: 0.28,
+                        ease: 'power1.in',
+                        onComplete: () => {
+                            if (!driveCopyVisibility[index]) {
+                                gsap.set(targets, { visibility: 'hidden' });
+                            }
+                        },
+                    });
+                };
+                const updateDriveCopy = () => {
+                    const viewportWidth = window.innerWidth;
+                    const trackX = Number(gsap.getProperty(driveTrack, 'x')) || 0;
+                    if (Math.abs(trackX - previousTrackX) > 0.1) {
+                        driveMotionDirection = trackX < previousTrackX ? -1 : 1;
+                    }
+                    previousTrackX = trackX;
+                    driveWheels.forEach((wheels) => {
+                        wheels.forEach((wheel) => {
+                            const wheelDiameter = wheel.offsetWidth * 0.9;
+                            const rotation = wheelDiameter
+                                ? (trackX / (Math.PI * wheelDiameter)) * 360
+                                : 0;
+                            wheel.style.setProperty('--wheel-roll', `${rotation}deg`);
+                        });
+                    });
+                    driveFrames.forEach((frame, index) => {
+                        if (!frame) return;
+                        driveSlides[index].style.setProperty(
+                            '--drive-copy-offset',
+                            `${-driveSlides[index].offsetLeft - trackX}px`
+                        );
+                        const bounds = frame.getBoundingClientRect();
+                        const visibleWidth = Math.max(
+                            0,
+                            Math.min(bounds.right, viewportWidth) - Math.max(bounds.left, 0)
+                        );
+                        const visibleRatio = Math.min(1, visibleWidth / bounds.width);
+                        const isEntering = bounds.left + bounds.width / 2 >= viewportWidth / 2;
+                        const shouldShow = isEntering
+                            ? visibleRatio >= revealStart
+                            : visibleRatio > revealStart;
+                        setDriveCopyVisibility(index, shouldShow, driveMotionDirection);
+                    });
+                };
+                gsap.set(driveCopies.slice(1).flat(), {
+                    autoAlpha: 0,
+                    clipPath: 'inset(-4px 0% -4px 100%)',
                 });
-                gsap.to(driveTrack, {
-                    x: () => -(driveTrack.scrollWidth - driveSection.clientWidth),
-                    ease: 'none',
+                gsap.set(driveCopies[0], {
+                    autoAlpha: 1,
+                    clipPath: 'inset(-4px 0% -4px 0%)',
+                });
+                const driveTimeline = gsap.timeline({
                     scrollTrigger: {
-                        start: () => drivePin.start + driveEntryDelay(),
-                        end: () => drivePin.end - driveExitDelay(),
+                        trigger: driveSection,
+                        start: 'center center',
+                        end: () => `+=${driveScrollDistance()}`,
+                        pin: driveSection,
+                        pinReparent: true,
+                        anticipatePin: 1,
                         scrub: true,
                         invalidateOnRefresh: true,
+                        onRefreshInit: measureDriveLayout,
+                        onRefresh: updateDriveCopy,
+                        onToggle: (self) => setHomeWheelDistanceRatio(self.isActive ? 0.8 : 1),
                     },
+                    onUpdate: updateDriveCopy,
                 });
+                driveTimeline.to({}, { duration: centeredHold });
+                driveSlides.slice(1).forEach((_, index) => {
+                    driveTimeline
+                        .to(driveTrack, {
+                            x: () => driveTargets[index + 1],
+                            duration: 1,
+                            ease: 'none',
+                        })
+                        .to({}, { duration: centeredHold });
+                });
+                updateDriveCopy();
+                cleanupDriveInteraction = () => {
+                    setHomeWheelDistanceRatio(1);
+                    driveTimeline.scrollTrigger?.kill();
+                    driveTimeline.kill();
+                    driveSlides.forEach((slide) => {
+                        slide.style.removeProperty('--drive-copy-offset');
+                        slide.style.removeProperty('--drive-vehicle-offset');
+                    });
+                    driveWheels.flat().forEach((wheel) => {
+                        wheel.style.removeProperty('--wheel-roll');
+                    });
+                    gsap.killTweensOf(driveCopies.flat());
+                    gsap.set(driveCopies.flat(), { clearProps: 'clipPath,opacity,visibility' });
+                };
             }
             const experienceSection = experienceRef.current;
             const experienceRingElement = experienceRingRef.current;
@@ -571,8 +714,10 @@ export default function HomeContent() {
                 experienceIndicator &&
                 experienceTitle
             ) {
+                const experienceRotationAmount = 360;
                 const wheelDegreesPerScrollPixel = 0.05;
-                const fullWheelRotationDistance = 360 / wheelDegreesPerScrollPixel;
+                const experienceRotationDistance =
+                    experienceRotationAmount / wheelDegreesPerScrollPixel;
                 const previews = [
                     ...experienceSection.querySelectorAll('[data-experience-preview]'),
                 ];
@@ -625,7 +770,7 @@ export default function HomeContent() {
                 const experienceTrigger = ScrollTrigger.create({
                     trigger: experienceSection,
                     start: 'center center',
-                    end: () => `+=${fullWheelRotationDistance}`,
+                    end: () => `+=${experienceRotationDistance}`,
                     pin: experienceSection,
                     pinReparent: true,
                     anticipatePin: 1,
@@ -634,7 +779,7 @@ export default function HomeContent() {
                         isActive = self.isActive;
                     },
                     onUpdate: (self) => {
-                        scrollRotation = self.progress * 360;
+                        scrollRotation = self.progress * experienceRotationAmount;
                     },
                 });
                 gsap.ticker.add(updateExperienceWheel);
@@ -658,16 +803,6 @@ export default function HomeContent() {
                 vehicleExhibitionTitleLayer &&
                 vehicleExhibitionCardList
             ) {
-                const vehicleExhibitionInputObserver = Observer.create({
-                    allowClicks: true,
-                    preventDefault: true,
-                    target: window,
-                    type: 'wheel,touch,scroll',
-                });
-                vehicleExhibitionInputObserver.disable();
-                const holdVehicleExhibitionInput = () => vehicleExhibitionInputObserver.enable();
-                const releaseVehicleExhibitionInput = () =>
-                    vehicleExhibitionInputObserver.disable();
                 const vehicleExhibitionSloganPin = ScrollTrigger.create({
                     trigger: vehicleExhibitionSlogan,
                     start: 'center center',
@@ -685,9 +820,6 @@ export default function HomeContent() {
                         y: 0,
                         duration: 0.8,
                         ease: 'power2.out',
-                        onStart: holdVehicleExhibitionInput,
-                        onComplete: releaseVehicleExhibitionInput,
-                        onReverseComplete: releaseVehicleExhibitionInput,
                         scrollTrigger: {
                             trigger: vehicleExhibitionSlogan,
                             start: () =>
@@ -832,17 +964,6 @@ export default function HomeContent() {
                 const vehicleExhibitionDescription = vehicleExhibitionCardList.querySelector(
                     '.renewal-vehicle-exhibition-card-list__header p'
                 );
-                let vehicleExhibitionReleaseDelay;
-                const completeVehicleExhibitionDescription = () => {
-                    releaseVehicleExhibitionInput();
-                };
-                const scheduleVehicleExhibitionRelease = () => {
-                    vehicleExhibitionReleaseDelay?.kill();
-                    vehicleExhibitionReleaseDelay = gsap.delayedCall(
-                        1,
-                        completeVehicleExhibitionDescription
-                    );
-                };
                 const vehicleExhibitionDescriptionReveal = vehicleExhibitionDescription
                     ? gsap.fromTo(
                           vehicleExhibitionDescription,
@@ -863,9 +984,6 @@ export default function HomeContent() {
                               webkitMaskPosition: '0% 0',
                               duration: 1.2,
                               ease: 'power2.out',
-                              onStart: holdVehicleExhibitionInput,
-                              onComplete: scheduleVehicleExhibitionRelease,
-                              onReverseComplete: releaseVehicleExhibitionInput,
                               scrollTrigger: {
                                   trigger: vehicleExhibitionCardList,
                                   start: () => vehicleExhibitionSectionPin.start,
@@ -909,7 +1027,6 @@ export default function HomeContent() {
                     );
                 });
                 cleanupVehicleExhibitionTransition = () => {
-                    vehicleExhibitionReleaseDelay?.kill();
                     vehicleExhibitionDescriptionReveal?.kill();
                     if (vehicleExhibitionDescription) {
                         gsap.set(vehicleExhibitionDescription, {
@@ -924,8 +1041,6 @@ export default function HomeContent() {
                     vehicleExhibitionSectionPin.kill();
                     vehicleExhibitionTitleHandoff.kill();
                     vehicleExhibitionTitleReveal.kill();
-                    releaseVehicleExhibitionInput();
-                    vehicleExhibitionInputObserver.kill();
                     if (vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionSlogan) {
                         vehicleExhibitionSlogan.append(vehicleExhibitionSloganTitle);
                     }
@@ -1023,11 +1138,12 @@ export default function HomeContent() {
                 };
             }
             return () => {
-                sloganReset?.kill();
-                sloganInputObserver?.disable();
-                sloganInputObserver?.kill();
-                cleanupSloganKeyboard?.();
+                isSloganTyping = false;
+                setHomeScrollLocked(false);
+                sloganPin?.kill();
+                sloganPin = null;
                 typingSequence?.kill();
+                cleanupDriveInteraction?.();
                 cleanupExperienceWheel?.();
                 cleanupVehicleExhibitionTransition?.();
                 cleanupCurrentExhibition?.();
@@ -1046,6 +1162,8 @@ export default function HomeContent() {
             media.revert();
         };
     }, []);
+    useLayoutEffect(() => setupHomeScrollSmoothing(), []);
+
     return (
         <main className="renewal-home" id="top">
             <HomeHero />
@@ -1093,7 +1211,7 @@ export default function HomeContent() {
                                 className={selectedLocation === index ? 'is-active' : ''}
                                 onClick={() => selectLocation(index)}
                             >
-                                {item.slug === 'senayan-park' ? 'SNOW PARK' : item.english}
+                                {item.slug === 'senayan-park' ? 'SENAYAN PARK' : item.english}
                             </button>
                         ))}
                     </div>
@@ -1140,16 +1258,41 @@ export default function HomeContent() {
             <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
                 <div className="renewal-drive__track">
                     {driveModels.map((item) => (
-                        <article className="renewal-drive__slide" key={item.name}>
+                        <article
+                            className={`renewal-drive__slide ${item.shadowClass ?? ''}`}
+                            key={item.name}
+                        >
                             <h2>{item.name}</h2>
                             <div
                                 className={`renewal-drive__vehicle-frame ${item.vehicleClass ?? ''}`}
                             >
-                                <img
-                                    className="renewal-drive__vehicle"
-                                    src={item.image}
-                                    alt={`${item.name} 시승 차량`}
-                                />
+                                <div className="renewal-drive__vehicle-body-frame">
+                                    <img
+                                        className="renewal-drive__vehicle-body"
+                                        src={item.body}
+                                        alt={`${item.name} 시승 차량`}
+                                    />
+                                </div>
+                                {item.wheels.map((wheel, wheelIndex) => (
+                                    <span
+                                        className="renewal-drive__wheel-position"
+                                        key={`${item.name}-wheel-${wheelIndex}`}
+                                        style={{
+                                            '--wheel-left': `${wheel.left}%`,
+                                            '--wheel-top': `${wheel.top}%`,
+                                            '--wheel-width': `${wheel.width}%`,
+                                            '--wheel-height': `${wheel.height}%`,
+                                            '--wheel-rotation': `${wheel.rotation}deg`,
+                                        }}
+                                    >
+                                        <img
+                                            className="renewal-drive__wheel"
+                                            src={item.wheel}
+                                            alt=""
+                                            aria-hidden="true"
+                                        />
+                                    </span>
+                                ))}
                             </div>
                             <img
                                 className={`renewal-drive__shadow ${item.shadowClass ?? ''}`}
