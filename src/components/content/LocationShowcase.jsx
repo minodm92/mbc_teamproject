@@ -66,9 +66,6 @@ export default function LocationShowcase({ intro = false }) {
   useLayoutEffect(() => {
     const root = rootRef.current;
     const media = gsap.matchMedia();
-    const introMotionEnabled =
-      intro &&
-      window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
     if (intro) {
       // Reloads must not restore a scroll position: the intro always starts at the top.
@@ -105,9 +102,7 @@ export default function LocationShowcase({ intro = false }) {
               document.documentElement.style.background = ""; // back to the normal page background
               root.classList.remove("location-showcase--intro");
               setIntroVisible(false);
-              const expansion = ScrollTrigger.getById("studio-hero-expansion");
-              expansion?.enable(false, true);
-              ScrollTrigger.refresh();
+              detachIntroInput();
             };
             const timeline = gsap.timeline({
               paused: true,
@@ -180,11 +175,15 @@ export default function LocationShowcase({ intro = false }) {
             });
 
             // Only real user input skips the intro: wheel, touch move, and scroll keys. Scroll events from the browser's
-            // scroll restoration or from ScrollTrigger do not count.
+            // scroll restoration or from ScrollTrigger do not count. The pinned hero is live from load, so while it is
+            // pinned that input is cancelled and any scroll is put back to the top: the expansion progress stays at 0
+            // until the intro ends. Those listeners are removed in finish(); the page layout never changes there.
             const skipEvents = ["wheel", "touchmove"];
             const skipKeys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", "End", "Home", " "];
+            const isPinned = () => Boolean(ScrollTrigger.getById("studio-hero-expansion"));
             const skip = (event) => {
               console.log(`[intro] skipped by ${event.type}${event.key ? ` (${event.key})` : ""}`);
+              if (isPinned()) event.preventDefault();
               window.clearTimeout(startTimer);
               timeline.progress(1);
               timeline.kill();
@@ -193,14 +192,22 @@ export default function LocationShowcase({ intro = false }) {
             const onKey = (event) => {
               if (skipKeys.includes(event.key)) skip(event);
             };
-            skipEvents.forEach((e) => window.addEventListener(e, skip, { once: true, passive: true }));
+            const keepAtTop = () => {
+              if (isPinned() && window.scrollY !== 0) window.scrollTo(0, 0);
+            };
+            const detachIntroInput = () => {
+              skipEvents.forEach((e) => window.removeEventListener(e, skip));
+              window.removeEventListener("keydown", onKey);
+              window.removeEventListener("scroll", keepAtTop);
+            };
+            skipEvents.forEach((e) => window.addEventListener(e, skip, { passive: false }));
             window.addEventListener("keydown", onKey);
+            window.addEventListener("scroll", keepAtTop, { passive: true });
 
             return () => {
               disposed = true;
               window.clearTimeout(startTimer);
-              skipEvents.forEach((e) => window.removeEventListener(e, skip));
-              window.removeEventListener("keydown", onKey);
+              detachIntroInput();
               timeline.kill();
               if (header)
                 gsap.set(header, { clearProps: "opacity,visibility" });
@@ -440,7 +447,6 @@ export default function LocationShowcase({ intro = false }) {
                 }),
           },
         });
-        if (introMotionEnabled) expansion.scrollTrigger.disable(false);
         if (!sequence) applyIntroCard(0); // start the intro photo at its bottom-right card
         if (sequence) {
           expansion
