@@ -294,10 +294,6 @@ export default function HomeContent() {
     const experienceRingRef = useRef(null);
     const experienceIndicatorRef = useRef(null);
     const experienceTitleRef = useRef(null);
-    const vehicleExhibitionSloganRef = useRef(null);
-    const vehicleExhibitionSloganTitleRef = useRef(null);
-    const vehicleExhibitionTitleSlotRef = useRef(null);
-    const vehicleExhibitionTitleLayerRef = useRef(null);
     const vehicleExhibitionCardListRef = useRef(null);
     const currentExhibitionRef = useRef(null);
     const currentExhibitionTopRef = useRef(null);
@@ -791,234 +787,107 @@ export default function HomeContent() {
                     gsap.killTweensOf(previews);
                 };
             }
-            const vehicleExhibitionSlogan = vehicleExhibitionSloganRef.current;
-            const vehicleExhibitionSloganTitle = vehicleExhibitionSloganTitleRef.current;
-            const vehicleExhibitionTitleSlot = vehicleExhibitionTitleSlotRef.current;
-            const vehicleExhibitionTitleLayer = vehicleExhibitionTitleLayerRef.current;
             const vehicleExhibitionCardList = vehicleExhibitionCardListRef.current;
-            if (
-                vehicleExhibitionSlogan &&
-                vehicleExhibitionSloganTitle &&
-                vehicleExhibitionTitleSlot &&
-                vehicleExhibitionTitleLayer &&
-                vehicleExhibitionCardList
-            ) {
-                const vehicleExhibitionSloganPin = ScrollTrigger.create({
-                    trigger: vehicleExhibitionSlogan,
-                    start: 'center center',
-                    end: () => `+=${window.innerHeight * 0.6}`,
-                    pin: vehicleExhibitionSlogan,
-                    pinSpacing: true,
-                    anticipatePin: 1,
-                    invalidateOnRefresh: true,
-                });
-                const vehicleExhibitionTitleReveal = gsap.fromTo(
-                    vehicleExhibitionSloganTitle,
-                    { autoAlpha: 0, y: -35 },
-                    {
-                        autoAlpha: 1,
-                        y: 0,
-                        duration: 0.8,
-                        ease: 'power2.out',
-                        scrollTrigger: {
-                            trigger: vehicleExhibitionSlogan,
-                            start: () =>
-                                vehicleExhibitionSloganPin.start + window.innerHeight * 0.3,
-                            toggleActions: 'play none none reverse',
-                            invalidateOnRefresh: true,
-                        },
-                    }
-                );
-                const titleLines = vehicleExhibitionSloganTitle.querySelectorAll('span');
-                const clearTitleHandoffStyles = () => {
-                    gsap.set(vehicleExhibitionSloganTitle, {
-                        clearProps:
-                            'position,top,left,width,margin,fontSize,lineHeight,textAlign,whiteSpace',
-                    });
-                    gsap.set(titleLines, { clearProps: 'x' });
-                };
-                const measureSourceTitle = () => {
-                    const computedTitle = getComputedStyle(vehicleExhibitionSloganTitle);
-                    const currentFontSize = parseFloat(computedTitle.fontSize) || 70;
-                    const sourceFontSize = Math.max(
-                        48,
-                        Math.min(70, window.innerWidth * 0.0364583)
-                    );
-                    const scale = sourceFontSize / currentFontSize;
-                    const measureLineText = (line) => {
-                        const range = document.createRange();
-                        range.selectNodeContents(line);
-                        const width = range.getBoundingClientRect().width;
-                        range.detach();
-                        return width;
-                    };
-                    const firstLineWidth = measureLineText(titleLines[0]) * scale;
-                    const secondLineWidth = measureLineText(titleLines[1]) * scale;
-                    const width = Math.max(firstLineWidth, secondLineWidth);
-                    const height = sourceFontSize * 1.2 * titleLines.length;
-
-                    return {
-                        fontSize: sourceFontSize,
-                        left: (window.innerWidth - width) / 2,
-                        lineHeight: 1.2,
-                        secondLineOffset: (firstLineWidth - secondLineWidth) / 2,
-                        top: (window.innerHeight - height) / 2,
-                        width,
-                    };
-                };
-                const measureTargetTitle = () => {
-                    const cardListBounds = vehicleExhibitionCardList.getBoundingClientRect();
-                    const slotBounds = vehicleExhibitionTitleSlot.getBoundingClientRect();
-
-                    // Finish the handoff while the card list is still 30% below the
-                    // viewport top. Once reparented, the title follows the section
-                    // upward through that extra scroll space into its final slot.
-                    return {
-                        top:
-                            slotBounds.top -
-                            cardListBounds.top +
-                            window.innerHeight * 0.3,
-                        left: slotBounds.left,
-                        width: slotBounds.width,
-                    };
-                };
-                let sourceTitleMetrics = measureSourceTitle();
-                let targetTitleMetrics = measureTargetTitle();
-                const renderVehicleExhibitionTitleHandoff = (progress) => {
-                    if (
-                        vehicleExhibitionSloganTitle.parentElement ===
-                            vehicleExhibitionTitleSlot &&
-                        progress >= 0.995
-                    ) {
-                        return;
-                    }
-                    if (progress <= 0) {
-                        if (
-                            vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionSlogan
-                        ) {
-                            vehicleExhibitionSlogan.append(vehicleExhibitionSloganTitle);
-                        }
-                        clearTitleHandoffStyles();
-                        sourceTitleMetrics = measureSourceTitle();
-                        targetTitleMetrics = measureTargetTitle();
-                        return;
-                    }
-                    if (progress >= 1) {
-                        if (
-                            vehicleExhibitionSloganTitle.parentElement !==
-                            vehicleExhibitionTitleSlot
-                        ) {
-                            vehicleExhibitionTitleSlot.prepend(vehicleExhibitionSloganTitle);
-                        }
-                        clearTitleHandoffStyles();
-                        return;
-                    }
-
-                    const source = sourceTitleMetrics;
-                    const target = targetTitleMetrics;
-                    const targetFontSize = Math.min(80, window.innerWidth * 0.0416667);
-                    const easedProgress = progress * progress * (3 - 2 * progress);
-                    const interpolate = (from, to) => from + (to - from) * easedProgress;
-
-                    if (
-                        vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionTitleLayer
-                    ) {
-                        vehicleExhibitionTitleLayer.append(vehicleExhibitionSloganTitle);
-                    }
-                    gsap.set(vehicleExhibitionSloganTitle, {
-                        position: 'absolute',
-                        top: interpolate(source.top, target.top),
-                        left: interpolate(source.left, target.left),
-                        width: interpolate(source.width, target.width),
-                        margin: 0,
-                        fontSize: interpolate(source.fontSize, targetFontSize),
-                        lineHeight: interpolate(source.lineHeight, 1.1),
-                        textAlign: 'left',
-                        whiteSpace: 'nowrap',
-                    });
-                    gsap.set(titleLines[1], {
-                        x: interpolate(source.secondLineOffset, 0),
-                    });
-                };
-                const vehicleExhibitionTitleHandoff = ScrollTrigger.create({
+            if (vehicleExhibitionCardList) {
+                const vehicleExhibitionScrollSmoothing = ScrollTrigger.create({
                     trigger: vehicleExhibitionCardList,
-                    start: () => vehicleExhibitionSloganPin.end,
-                    end: 'top 30%',
-                    scrub: 1,
-                    onUpdate: ({ progress }) => renderVehicleExhibitionTitleHandoff(progress),
-                    onRefresh: ({ progress }) => {
-                        targetTitleMetrics = measureTargetTitle();
-                        renderVehicleExhibitionTitleHandoff(progress);
-                    },
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    onToggle: (self) => setHomeWheelDistanceRatio(self.isActive ? 0.8 : 1),
                     invalidateOnRefresh: true,
                 });
                 const vehicleExhibitionSectionPin = ScrollTrigger.create({
                     trigger: vehicleExhibitionCardList,
                     start: 'top top',
-                    end: () => `+=${window.innerHeight * 1.3}`,
+                    end: () => `+=${window.innerHeight}`,
                     pin: vehicleExhibitionCardList,
                     pinSpacing: true,
                     anticipatePin: 1,
                     invalidateOnRefresh: true,
                 });
-                const vehicleExhibitionDescription = vehicleExhibitionCardList.querySelector(
-                    '.renewal-vehicle-exhibition-card-list__header p'
+                const vehicleExhibitionHeaderContent = vehicleExhibitionCardList.querySelector(
+                    '.renewal-vehicle-exhibition-card-list__header-content'
                 );
-                const vehicleExhibitionDescriptionReveal = vehicleExhibitionDescription
+                let vehicleExhibitionDescriptionTrigger = null;
+                let isDescriptionExitLocked = false;
+                let allowDescriptionExit = false;
+                const vehicleExhibitionHeaderReveal = vehicleExhibitionHeaderContent
                     ? gsap.fromTo(
-                          vehicleExhibitionDescription,
+                          vehicleExhibitionHeaderContent,
                           {
                               autoAlpha: 1,
-                              maskImage:
-                                  'linear-gradient(90deg, #000 0%, #000 45%, transparent 50%, transparent 100%)',
-                              maskPosition: '100% 0',
-                              maskSize: '240% 100%',
-                              webkitMaskImage:
-                                  'linear-gradient(90deg, #000 0%, #000 45%, transparent 50%, transparent 100%)',
-                              webkitMaskPosition: '100% 0',
-                              webkitMaskSize: '240% 100%',
-                              willChange: 'mask-position',
+                              clipPath: 'inset(0 0 100% 0)',
+                              willChange: 'clip-path',
                           },
                           {
-                              maskPosition: '0% 0',
-                              webkitMaskPosition: '0% 0',
+                              clipPath: 'inset(0 0 0% 0)',
                               duration: 1.2,
-                              ease: 'power2.out',
-                              scrollTrigger: {
-                                  trigger: vehicleExhibitionCardList,
-                                  start: () => vehicleExhibitionSectionPin.start,
-                                  toggleActions: 'play none none reverse',
-                                  invalidateOnRefresh: true,
+                              ease: 'power2.inOut',
+                              paused: true,
+                              onComplete: () => setHomeScrollLocked(false),
+                              onReverseComplete: () => {
+                                  if (!isDescriptionExitLocked) return;
+                                  isDescriptionExitLocked = false;
+                                  allowDescriptionExit = true;
+                                  setHomeScrollLocked(false);
                               },
                           }
                       )
                     : null;
+                if (vehicleExhibitionHeaderReveal) {
+                    vehicleExhibitionDescriptionTrigger = ScrollTrigger.create({
+                        trigger: vehicleExhibitionCardList,
+                        start: () => vehicleExhibitionSectionPin.start,
+                        onEnter: () => {
+                            allowDescriptionExit = false;
+                            if (!isDescriptionExitLocked) {
+                                setHomeScrollLocked(true);
+                                vehicleExhibitionHeaderReveal.play();
+                            }
+                        },
+                        onLeaveBack: (self) => {
+                            if (allowDescriptionExit) {
+                                allowDescriptionExit = false;
+                                return;
+                            }
+                            if (isDescriptionExitLocked) return;
+                            isDescriptionExitLocked = true;
+                            setHomeScrollLocked(true);
+                            self.scroll(self.start + 1);
+                            vehicleExhibitionHeaderReveal.reverse();
+                        },
+                        invalidateOnRefresh: true,
+                    });
+                }
                 const vehicleExhibitionCards = gsap.utils.toArray(
                     '.renewal-vehicle-exhibition-card-list__item',
                     vehicleExhibitionCardList
                 );
                 const cardRevealTweens = vehicleExhibitionCards.map((card) => {
                     const cardImage = card.querySelector('img');
-
+                    gsap.set(card, { autoAlpha: 0 });
                     return gsap.fromTo(
                         card,
                         {
-                            autoAlpha: 0,
-                            clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',
+                            autoAlpha: 1,
+                            clipPath: 'inset(0 0 100% 0)',
                         },
                         {
                             autoAlpha: 1,
-                            clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+                            clipPath: 'inset(0 0 0% 0)',
                             duration: 1,
                             ease: 'power2.out',
+                            immediateRender: false,
                             scrollTrigger: {
                                 trigger: cardImage ?? card,
                                 start: () =>
                                     Math.max(
                                         vehicleExhibitionSectionPin.end + 1,
                                         vehicleExhibitionSectionPin.end +
-                                            card.offsetTop -
-                                            window.innerHeight * 0.7
+                                            card.offsetTop +
+                                            (cardImage?.offsetTop ?? 0) +
+                                            (cardImage?.offsetHeight ?? card.offsetHeight) * 0.3 -
+                                            window.innerHeight * 0.6
                                     ),
                                 toggleActions: 'play none none reverse',
                                 invalidateOnRefresh: true,
@@ -1027,11 +896,14 @@ export default function HomeContent() {
                     );
                 });
                 cleanupVehicleExhibitionTransition = () => {
-                    vehicleExhibitionDescriptionReveal?.kill();
-                    if (vehicleExhibitionDescription) {
-                        gsap.set(vehicleExhibitionDescription, {
-                            clearProps:
-                                'opacity,visibility,maskImage,maskPosition,maskSize,webkitMaskImage,webkitMaskPosition,webkitMaskSize,willChange',
+                    setHomeScrollLocked(false);
+                    isDescriptionExitLocked = false;
+                    allowDescriptionExit = false;
+                    vehicleExhibitionDescriptionTrigger?.kill();
+                    vehicleExhibitionHeaderReveal?.kill();
+                    if (vehicleExhibitionHeaderContent) {
+                        gsap.set(vehicleExhibitionHeaderContent, {
+                            clearProps: 'opacity,visibility,clipPath,transform,willChange',
                         });
                     }
                     cardRevealTweens.forEach((tween) => tween.kill());
@@ -1039,13 +911,8 @@ export default function HomeContent() {
                         clearProps: 'opacity,visibility,clipPath',
                     });
                     vehicleExhibitionSectionPin.kill();
-                    vehicleExhibitionTitleHandoff.kill();
-                    vehicleExhibitionTitleReveal.kill();
-                    if (vehicleExhibitionSloganTitle.parentElement !== vehicleExhibitionSlogan) {
-                        vehicleExhibitionSlogan.append(vehicleExhibitionSloganTitle);
-                    }
-                    gsap.set(vehicleExhibitionSloganTitle, { clearProps: 'all' });
-                    gsap.set(titleLines, { clearProps: 'all' });
+                    vehicleExhibitionScrollSmoothing.kill();
+                    setHomeWheelDistanceRatio(1);
                 };
             }
             const currentExhibition = currentExhibitionRef.current;
@@ -1057,7 +924,7 @@ export default function HomeContent() {
                 const renderHelix = () => spiralGalleryRef.current?.render(helixState.progress);
                 const outsideLeft = () => -(window.innerWidth + currentTop.offsetWidth);
                 const outsideRight = () => window.innerWidth + currentBottom.offsetWidth;
-                const animationScrollViewports = 7.5;
+                const animationScrollViewports = 7;
                 const finalHoldViewports = 0.6;
                 const animationDuration = 4.05;
                 const finalHoldDuration =
@@ -1353,43 +1220,24 @@ export default function HomeContent() {
                     IONIQ5N
                 </p>
             </section>
-            <div className="renewal-vehicle-exhibition-slogan-entry">
-                <section
-                    className="renewal-vehicle-exhibition-slogan"
-                    ref={vehicleExhibitionSloganRef}
-                >
-                    <h2
-                        className="renewal-vehicle-exhibition-shared-title"
-                        ref={vehicleExhibitionSloganTitleRef}
-                    >
-                        <span>HYUNDAI MOTORSTUDIO</span>
-                        <span>VEHICLE EXHIBITION</span>
-                    </h2>
-                </section>
-            </div>
-            <div
-                className="renewal-vehicle-exhibition-title-handoff-layer"
-                ref={vehicleExhibitionTitleLayerRef}
-            />
             <section
                 className="renewal-vehicle-exhibition-card-list"
                 ref={vehicleExhibitionCardListRef}
             >
                 <header className="renewal-vehicle-exhibition-card-list__header">
-                    <div
-                        className="renewal-vehicle-exhibition-card-list__title-slot"
-                        ref={vehicleExhibitionTitleSlotRef}
-                    >
-                        <h2 className="renewal-vehicle-exhibition-card-list__mobile-title">
-                            <span>HYUNDAI MOTORSTUDIO</span>
-                            <span>VEHICLE EXHIBITION</span>
-                        </h2>
+                    <div className="renewal-vehicle-exhibition-card-list__header-content">
+                        <div className="renewal-vehicle-exhibition-card-list__title-slot">
+                            <h2 className="renewal-vehicle-exhibition-card-list__mobile-title">
+                                <span>HYUNDAI MOTORSTUDIO</span>
+                                <span>VEHICLE EXHIBITION</span>
+                            </h2>
+                        </div>
+                        <p>
+                            직접 달리며 만나는 현대자동차의 새로운 가능성 보고, 듣고, 느끼는 것에서
+                            한 걸음
+                            <br />더 나아가 현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
+                        </p>
                     </div>
-                    <p>
-                        직접 달리며 만나는 현대자동차의 새로운 가능성 보고, 듣고, 느끼는 것에서 한 걸음
-                        <br />
-                        더 나아가 현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
-                    </p>
                 </header>
                 <div className="renewal-vehicle-exhibition-card-list__items">
                     {exhibitionVehicles.map(({ name, powertrain, color, image, position }) => (
