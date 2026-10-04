@@ -1,0 +1,28 @@
+﻿.notice-operating-page__inner { max-width: 1120px; margin: 0 auto; padding: 40px 24px 100px; }
+.notice-operating-page__breadcrumb { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 64px; color: #777; font-size: 12px; }
+.notice-operating-page__heading { padding: 0 0 24px; border-bottom: 1px solid #ddd; }
+.notice-operating-page__heading h1 { margin: 0; font-size: clamp(24px, 2.4vw, 34px); font-weight: 600; line-height: 1.5; word-break: keep-all; overflow-wrap: anywhere; }
+.notice-operating-page__metadata { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 24px; color: #848484; font-size: 14px; }
+.notice-operating-page__metadata time { font-family: var(--font-en); }
+.notice-operating-page__body { min-height: 380px; padding: 48px 0 72px; font-size: 16px; line-height: 1.8; word-break: keep-all; overflow-wrap: anywhere; }
+.notice-operating-page__body p { margin: 0 0 28px; }
+.notice-operating-page__body ul { margin: 36px 0; padding-left: 22px; }
+.notice-operating-page__actions { display: flex; justify-content: center; padding-top: 32px; border-top: 1px solid #ddd; }
+.notice-operating-page__actions a { display: inline-flex; align-items: center; justify-content: center; min-width: 150px; min-height: 48px; padding: 12px 24px; background: #111; color: #fff; font-size: 15px; }
+@media (max-width: 767px) {
+  .notice-operating-page__inner { padding-top: 24px; padding-bottom: 64px; }
+  .notice-operating-page__breadcrumb { margin-bottom: 40px; }
+  .notice-operating-page__body { padding-top: 32px; font-size: 15px; }
+}
+
+.notice-operating-page__table-wrap { max-width: 100%; margin: 36px 0; overflow-x: auto; }
+.notice-operating-page__table-wrap table { width: 100%; min-width: 480px; border-collapse: collapse; font-size: 15px; }
+.notice-operating-page__table-wrap caption { margin-bottom: 12px; text-align: left; font-weight: 600; }
+.notice-operating-page__table-wrap th,
+.notice-operating-page__table-wrap td { padding: 16px 20px; border: 1px solid #ccc; text-align: center; vertical-align: middle; }
+.notice-operating-page__table-wrap thead { background: #f5f5f5; }
+.notice-operating-page__table-wrap th { font-weight: 600; }
+@media (max-width: 767px) {
+  .notice-operating-page__table-wrap th,
+  .notice-operating-page__table-wrap td { padding: 12px; font-size: 14px; }
+}

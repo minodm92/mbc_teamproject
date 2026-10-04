@@ -5,6 +5,7 @@ import { paths } from '../../common/router/routePaths';
 import ContentCard from '../../ui/ContentCard';
 import PageShell from '../../common/layout/PageShell';
 import NoticesListing from './NoticesListing';
+import NoticeOperatingDetail from './NoticeOperatingDetail';
 import LocationShowcase from './LocationShowcase';
 import { locationShowcase } from '../../common/data/locationShowcase';
 import './ContentPages.css';
@@ -25,8 +26,12 @@ export function ProgramDetailPage() { const { programId } = useParams(); const i
 
 export function NoticesPage() { return <NoticesListing />; }
 
-export function NoticeDetailPage() { const { noticeId } = useParams(); const item = notices.find((row) => row.id === noticeId); if (!item) return <NotFoundPage />; return <PageShell eyebrow={`${item.category} / ${item.date}`} title={item.title}><article className="notice-detail"><p>{item.content || '상세 내용은 준비 중입니다.'}</p><Link className="action-link" to={paths.notices}><ArrowLeft size={18} /> 목록으로</Link></article></PageShell>; }
-
+export function NoticeDetailPage() {
+  const { noticeId } = useParams();
+  const item = notices.find((row) => row.id === noticeId);
+  if (!item) return <NotFoundPage />;
+  return <NoticeOperatingDetail notice={item} />;
+}
 export function NewsroomPage() { return <PageShell eyebrow="NEWSROOM" title="현대 모터스튜디오의 이야기" intro="공간과 사람, 모빌리티의 새로운 소식을 만나보세요."><div className="page-grid">{news.map((item) => <ContentCard key={item.id} image={item.image} eyebrow={item.subtitle} title={item.title} description={item.description} to={paths.location(item.location)} />)}</div></PageShell>; }
 
 export function NotFoundPage() { return <PageShell eyebrow="404 / NOT FOUND" title="페이지를 찾을 수 없습니다" intro="입력한 주소를 다시 확인해 주세요."><Link className="action-link" to={paths.home}>홈으로 돌아가기 <ArrowUpRight size={18} /></Link></PageShell>; }
