@@ -1,4 +1,6 @@
+import { useRef } from 'react';
 import heroNight from './assets/hero-night.png';
+import { useSearchParams } from 'react-router-dom';
 import { newsroomArticles } from './data/newsroomData';
 import FeaturedNewsCard from './components/FeaturedNewsCard';
 import NewsCard from './components/NewsCard';
@@ -7,6 +9,23 @@ import PromotionalVideo from './components/PromotionalVideo';
 import './NewsroomPage.css';
 
 export function NewsroomPage() {
+    const newsSection = useRef(null);
+    const pageArticles = [
+        newsroomArticles.slice(0, 9),
+        newsroomArticles.slice(9, 18),
+        newsroomArticles.slice(18, 27),
+    ];
+    const [searchParams, setSearchParams] = useSearchParams();
+    const requestedPage = Number(searchParams.get('page'));
+    const currentPage = Number.isInteger(requestedPage) && requestedPage >= 1 && requestedPage <= pageArticles.length
+        ? requestedPage
+        : 1;
+
+    const changePage = (page) => {
+        setSearchParams(page === 1 ? {} : { page: String(page) });
+        newsSection.current?.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    };
+
     return (
         <main className="newsroom-page">
             <section className="newsroom-intro" aria-label="뉴스룸">
@@ -32,16 +51,20 @@ export function NewsroomPage() {
 
             <PromotionalVideo />
 
-            <section className="newsroom-news" aria-labelledby="newsroom-news-title">
+            <section ref={newsSection} className="newsroom-news" aria-labelledby="newsroom-news-title">
                 <h2 className="newsroom-news__title" id="newsroom-news-title">
                     NEWS
                 </h2>
                 <div className="newsroom-news__grid">
-                    {newsroomArticles.map((article) => (
-                        <NewsCard key={article.id} article={article} />
+                    {pageArticles[currentPage - 1].map((article) => (
+                        <NewsCard key={`${article.id}-${currentPage}`} article={article} listPage={currentPage} />
                     ))}
                 </div>
-                <NewsroomPagination />
+                <NewsroomPagination
+                    currentPage={currentPage}
+                    pageCount={pageArticles.length}
+                    onPageChange={changePage}
+                />
             </section>
         </main>
     );

@@ -13,3 +13,5 @@ export {
 } from '../../components/content/ContentPages';
 
 export { default as NewsroomPage } from '../../components/newsroom/NewsroomPage';
+
+export { default as NewsroomDetailPage } from '../../components/newsroom/NewsroomDetailPage';
