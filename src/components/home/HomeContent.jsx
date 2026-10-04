@@ -332,7 +332,7 @@ export default function HomeContent() {
                 if (!disposed && window.scrollY === 0) ScrollTrigger.refresh();
             });
         };
-        media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => {
+        media.add('(min-width: 901px)', () => {
             let sloganReset;
             let typingSequence;
             let sloganInputObserver;
@@ -340,21 +340,181 @@ export default function HomeContent() {
             let cleanupExperienceWheel;
             let cleanupVehicleExhibitionTransition;
             let cleanupCurrentExhibition;
-            const image = transition.querySelector('.renewal-location-transition__image');
-            const intro = transition.querySelector('.renewal-intro');
-            const locationSection = transition.querySelector('.renewal-location');
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const image = transition.querySelector('.renewal-location-transition__image');
+                const intro = transition.previousElementSibling?.matches('.renewal-intro')
+                    ? transition.previousElementSibling
+                    : null;
+                const locationSection = transition.querySelector('.renewal-location');
             const target = transition.querySelector('.renewal-location__detail img');
+            const hero = intro?.previousElementSibling?.matches('.renewal-hero')
+                ? intro.previousElementSibling
+                : null;
+            let heroSequenceTrigger;
+            if (hero && intro) {
+                const heroDistance = () => window.innerHeight * 12;
+                const shade = hero.querySelector('.renewal-hero__shade-layer');
+                const copy = (step) => [...hero.querySelectorAll(`[data-hero-copy="${step}"]`)];
+                const shadeSubtract = hero.querySelector('.renewal-hero__shade-subtract');
+                const openingGeometry = hero.querySelector('.renewal-hero__opening-geometry');
+                const openingPath = openingGeometry.querySelector('path');
+                const heroCanvas = hero.querySelector('.renewal-hero__canvas');
+                if (prefersReducedMotion) {
+                    hero.dataset.heroStep = '4';
+                    copy(4).forEach((word) => { word.style.visibility = 'visible'; });
+                    gsap.set(shade, { autoAlpha: 1 });
+                    gsap.set(shadeSubtract, { attr: { x: 688, y: 355, width: 545, height: 319, opacity: 1 } });
+                    gsap.set(openingGeometry, { attr: { opacity: 1, transform: '' } });
+                    gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
+                } else {
+                    gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
+                    gsap.set(heroCanvas, { autoAlpha: 1 });
+                    gsap.set(shade, { autoAlpha: 0 });
+                    gsap.set(shadeSubtract, { attr: { x: 960.5, y: 515.5, width: 0, height: 0, opacity: 1 } });
+                    gsap.set([...copy(2), ...copy(3), ...copy(4)], { autoAlpha: 0 });
+                    gsap.set(openingGeometry, { attr: { opacity: 0, transform: '' } });
+                    const openingProgress = { value: 0 };
+                    const stepFourOpening = openingPath.getAttribute('d');
+                    const smootherstep = (value) => {
+                        const t = Math.min(1, Math.max(0, value));
+                        return t * t * t * (t * (t * 6 - 15) + 10);
+                    };
+                    const rectilinearUnion = (rectangles) => {
+                        const rects = rectangles.map(([left, top, right, bottom]) => [
+                            Math.max(0, left), Math.max(0, top),
+                            Math.min(1920, right), Math.min(1080, bottom),
+                        ]).filter(([left, top, right, bottom]) => left < right && top < bottom);
+                        const xs = [...new Set(rects.flatMap(([left, , right]) => [left, right]))].sort((a, b) => a - b);
+                        const ys = [...new Set(rects.flatMap(([, top, , bottom]) => [top, bottom]))].sort((a, b) => a - b);
+                        const cells = Array.from({ length: xs.length - 1 }, (_, x) =>
+                            Array.from({ length: ys.length - 1 }, (_, y) => {
+                                const midX = (xs[x] + xs[x + 1]) / 2;
+                                const midY = (ys[y] + ys[y + 1]) / 2;
+                                return rects.some(([left, top, right, bottom]) =>
+                                    left < midX && midX < right && top < midY && midY < bottom
+                                );
+                            })
+                        );
+                        const edges = [];
+                        const add = (fromX, fromY, toX, toY) => {
+                            edges.push({ from: `${fromX},${fromY}`, to: `${toX},${toY}`, x: fromX, y: fromY });
+                        };
+                        for (let x = 0; x < cells.length; x += 1) {
+                            for (let y = 0; y < cells[x].length; y += 1) {
+                                if (!cells[x][y]) continue;
+                                if (y === 0 || !cells[x][y - 1]) add(xs[x], ys[y], xs[x + 1], ys[y]);
+                                if (x === cells.length - 1 || !cells[x + 1][y]) add(xs[x + 1], ys[y], xs[x + 1], ys[y + 1]);
+                                if (y === cells[x].length - 1 || !cells[x][y + 1]) add(xs[x + 1], ys[y + 1], xs[x], ys[y + 1]);
+                                if (x === 0 || !cells[x - 1][y]) add(xs[x], ys[y + 1], xs[x], ys[y]);
+                            }
+                        }
+                        const byStart = new Map();
+                        edges.forEach((edge, index) => {
+                            if (!byStart.has(edge.from)) byStart.set(edge.from, []);
+                            byStart.get(edge.from).push(index);
+                        });
+                        const visited = new Set();
+                        const point = (edge) => `${Number(edge.x.toFixed(3))} ${Number(edge.y.toFixed(3))}`;
+                        const loops = [];
+                        edges.forEach((first, index) => {
+                            if (visited.has(index)) return;
+                            const parts = [`M ${point(first)}`];
+                            let next = index;
+                            do {
+                                visited.add(next);
+                                const edge = edges[next];
+                                const candidates = byStart.get(edge.to) ?? [];
+                                next = candidates.find((candidate) => !visited.has(candidate));
+                                if (next !== undefined) parts.push(`L ${point(edges[next])}`);
+                            } while (next !== undefined && edges[next].from !== first.from);
+                            loops.push(`${parts.join(' ')} Z`);
+                        });
+                        return loops.join(' ');
+                    };
+                    const updateOpeningGeometry = () => {
+                        const progress = openingProgress.value;
+                        if (progress <= 0) {
+                            openingPath.setAttribute('d', stepFourOpening);
+                            return;
+                        }
+                        const opened = smootherstep(progress);
+                        const finish = smootherstep((progress - 0.7) / 0.3);
+                        const vertical = 400 * opened + 550 * finish;
+                        const horizontal = 600 * opened + 350 * finish;
+                        const band = 320 * opened + 250 * finish;
+                        const stem = 140 * smootherstep(progress / 0.2);
+                        const postOffset = 47.9560036663611 * (1 - smootherstep(progress / 0.4));
+                        openingPath.setAttribute('d', rectilinearUnion([
+                            [924 - vertical, 0, 996 + vertical, 355 + stem],
+                            [924 - vertical, 674 - stem, 996 + vertical, 1080],
+                            [735.9560036663611 - horizontal - postOffset, 355, 735.9560036663611, 674],
+                            [1185.043996333639, 355, 1185.043996333639 + horizontal + postOffset, 674],
+                            [735.9560036663611 - horizontal, 490.7871674491393 - band,
+                                1185.043996333639 + horizontal, 532.2222222222222 + band],
+                        ]));
+                    };
+                    const heroTimeline = gsap.timeline({
+                        defaults: { ease: 'none' },
+                        scrollTrigger: {
+                            trigger: hero,
+                            start: 'top top',
+                            end: () => `+=${heroDistance()}`,
+                            pin: hero,
+                            pinSpacing: true,
+                            scrub: 1.2,
+                            anticipatePin: 1,
+                            invalidateOnRefresh: true,
+                            onLeave: () => {
+                                gsap.set(heroCanvas, { visibility: 'hidden' });
+                            },
+                            onEnterBack: () => gsap.set(heroCanvas, { visibility: 'visible' }),
+                        },
+                    });
+
+                    heroTimeline
+                        .addLabel('step-01', 0)
+                        .to(shade, { autoAlpha: 1, duration: 0.35 }, 1)
+                        .to(shadeSubtract, {
+                            attr: { x: 688, y: 355, width: 545, height: 321 },
+                            duration: 0.65,
+                        }, 1)
+                        .to(copy(2), { autoAlpha: 1, duration: 0.2 }, 1.75)
+                        .call(() => { hero.dataset.heroStep = '2'; }, [], 2)
+                        .addLabel('step-02-hold', 2)
+                        .to(copy(2), { autoAlpha: 0, duration: 0.2 }, 3)
+                        .to(copy(3), { autoAlpha: 1, duration: 0.2 }, 3)
+                        .call(() => { hero.dataset.heroStep = '3'; }, [], 4)
+                        .addLabel('step-03-hold', 4)
+                        .to(copy(3), { autoAlpha: 0, duration: 0.2 }, 5)
+                        .to(copy(4), { autoAlpha: 1, duration: 0.2 }, 5)
+                        .to(shadeSubtract, { attr: { height: 319 }, duration: 0.65 }, 5)
+                        .to(openingGeometry, { attr: { opacity: 1 }, duration: 0.65 }, 5.35)
+                        .call(() => { hero.dataset.heroStep = '4'; }, [], 6)
+                        .addLabel('step-04-hold', 6)
+                        .to(shade, { autoAlpha: 0, duration: 0.35 }, 7)
+                        .to(openingProgress, { value: 1, duration: 4, onUpdate: updateOpeningGeometry }, 7)
+                        .addLabel('intro-full', 11)
+                        .to({}, { duration: 1 }, 11)
+                        .addLabel('intro-hold', 12);
+                    heroSequenceTrigger = heroTimeline.scrollTrigger;
+                }
+            }
             // Reserve the later pin's space before the parent intro pin caches its height.
             gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
             const bounds = () => {
-                const container = transition.getBoundingClientRect();
                 const destination = target.getBoundingClientRect();
+                const section = locationSection.getBoundingClientRect();
                 return {
-                    x: destination.left - container.left,
-                    y: intro.offsetHeight + target.parentElement.offsetTop,
+                    x: locationSection.offsetLeft + destination.left - section.left,
+                    y: intro.offsetHeight + destination.top - section.top,
                     width: destination.width,
                     height: destination.height,
                 };
+            };
+            const syncSharedImage = (self) => {
+                const atLocation = self.progress >= 1;
+                gsap.set(image, { autoAlpha: atLocation ? 0 : 1 });
+                gsap.set(target, { autoAlpha: atLocation ? 1 : 0 });
             };
             // Hold the entire image/text group still until the intro copy has faded.
             // Animate the child, not the pinned container, to keep pin measurements stable.
@@ -366,11 +526,13 @@ export default function HomeContent() {
                     ease: 'none',
                     scrollTrigger: {
                         trigger: intro,
-                        start: 'top top',
+                        start: () => heroSequenceTrigger?.end ?? 'top top',
                         end: () => `+=${window.innerHeight * 0.25}`,
                         pin: transition,
                         scrub: true,
                         invalidateOnRefresh: true,
+                        onLeave: () => gsap.set(intro, { autoAlpha: 0 }),
+                        onEnterBack: () => gsap.set(intro, { autoAlpha: 1 }),
                     },
                 }
             );
@@ -390,6 +552,8 @@ export default function HomeContent() {
                         ),
                     scrub: true,
                     invalidateOnRefresh: true,
+                    onUpdate: syncSharedImage,
+                    onRefresh: syncSharedImage,
                 },
             });
             timeline.fromTo(
@@ -405,6 +569,7 @@ export default function HomeContent() {
                     y: () => bounds().y,
                     width: () => bounds().width,
                     height: () => bounds().height,
+                    autoRound: false,
                     duration: 1,
                 },
                 0
@@ -416,6 +581,11 @@ export default function HomeContent() {
             timeline.set(target, { autoAlpha: 0 }, 0);
             timeline.set(target, { autoAlpha: 1 }, 1);
             timeline.set(image, { autoAlpha: 0 }, 1);
+            const locationRail = locationSection.querySelector('.renewal-location__rail');
+            gsap.set(locationRail, { display: 'none' });
+            const syncLocationRail = (self) => {
+                gsap.set(locationRail, { display: self.scroll() >= self.start ? 'block' : 'none' });
+            };
             // Match the 580 × 320 location asset's lower-right diagonal cut.
             timeline.fromTo(
                 image,
@@ -443,8 +613,24 @@ export default function HomeContent() {
                 pinReparent: true,
                 invalidateOnRefresh: true,
                 onUpdate: updateLocation,
-                onRefresh: updateLocation,
+                onEnter: syncLocationRail,
+                onEnterBack: syncLocationRail,
+                onLeaveBack: syncLocationRail,
+                onRefresh: (self) => {
+                    updateLocation(self);
+                    syncLocationRail(self);
+                },
             });
+            // pinReparent moves the section outside React's delegated event root.
+            // Keep its existing tabs clickable while that pin is active.
+            const locationButtonHandlers = [...locationSection.querySelectorAll('.renewal-location__list button')]
+                .map((button, index) => {
+                    const handleClick = () => {
+                        if (locationSection.parentElement === document.body) selectLocation(index);
+                    };
+                    button.addEventListener('click', handleClick);
+                    return () => button.removeEventListener('click', handleClick);
+                });
             const slogan = sloganRef.current;
             const sloganText = sloganTextRef.current;
             const sloganCursor = sloganCursorRef.current;
@@ -1031,6 +1217,7 @@ export default function HomeContent() {
                 cleanupExperienceWheel?.();
                 cleanupVehicleExhibitionTransition?.();
                 cleanupCurrentExhibition?.();
+                locationButtonHandlers.forEach((removeHandler) => removeHandler());
                 locationScrollRef.current = null;
             };
         });
@@ -1049,6 +1236,32 @@ export default function HomeContent() {
     return (
         <main className="renewal-home" id="top">
             <HomeHero />
+            <section className="renewal-intro">
+                <img
+                    className="renewal-intro__static-background"
+                    src={asset('intro.svg')}
+                    alt="현대 모터스튜디오 공간"
+                />
+                <h1 className="renewal-intro__title">
+                    SHAPING THE
+                    <br />
+                    FUTURE OF <em>MOTION</em>
+                </h1>
+                <p className="renewal-intro__description">
+                    차량 전시부터 시승, 디자인 콘텐츠와 브랜드 컬렉션까지 모빌리티에 대한
+                    <br />
+                    이해와 취향을 넓힐 수 있는 다양한 경험을 제공합니다. 세심하게
+                    <br />
+                    구성된 전시와 프로그램을 통해 자동차는 물론 디자인과 예술까지 누구나
+                    자신만의
+                    <br />
+                    방식으로 몰입할 수 있는 특별한 순간을 만나보세요.
+                </p>
+                <a className="renewal-top" href="#top" aria-label="페이지 상단으로 이동">
+                    <img src={asset('top-arrow.svg')} alt="" />
+                    <span>TOP</span>
+                </a>
+            </section>
             <div className="renewal-location-transition" ref={locationTransitionRef}>
                 <img
                     className="renewal-location-transition__image"
@@ -1056,32 +1269,6 @@ export default function HomeContent() {
                     alt=""
                     aria-hidden="true"
                 />
-                <section className="renewal-intro">
-                    <img
-                        className="renewal-intro__static-background"
-                        src={asset('intro.svg')}
-                        alt="현대 모터스튜디오 공간"
-                    />
-                    <h1 className="renewal-intro__title">
-                        SHAPING THE
-                        <br />
-                        FUTURE OF <em>MOTION</em>
-                    </h1>
-                    <p className="renewal-intro__description">
-                        차량 전시부터 시승, 디자인 콘텐츠와 브랜드 컬렉션까지 모빌리티에 대한
-                        <br />
-                        이해와 취향을 넓힐 수 있는 다양한 경험을 제공합니다. 세심하게
-                        <br />
-                        구성된 전시와 프로그램을 통해 자동차는 물론 디자인과 예술까지 누구나
-                        자신만의
-                        <br />
-                        방식으로 몰입할 수 있는 특별한 순간을 만나보세요.
-                    </p>
-                    <a className="renewal-top" href="#top" aria-label="페이지 상단으로 이동">
-                        <img src={asset('top-arrow.svg')} alt="" />
-                        <span>TOP</span>
-                    </a>
-                </section>
                 <section className="renewal-location" aria-label="현대 모터스튜디오 지점">
                     <div className="renewal-location__list" role="tablist" aria-label="지점 선택">
                         {locations.map((item, index) => (
@@ -1108,7 +1295,7 @@ export default function HomeContent() {
                         <img
                             ref={locationImageRef}
                             className={selectedLocation === 0 ? 'is-goyang' : ''}
-                            src={locationDetail.image ?? location.image}
+                            src={selectedLocation === 0 ? asset('intro.svg') : locationDetail.image ?? location.image}
                             alt={`${location.name} 공간`}
                         />
                         <div ref={locationCopyRef}>

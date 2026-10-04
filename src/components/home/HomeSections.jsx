@@ -10,19 +10,67 @@ import './HomeSections.css';
 gsap.registerPlugin(ScrollTrigger);
 
 export function HomeHero() {
+  const id = `home-hero-${useId().replace(/:/g, '')}`;
+  const shadeMaskId = `${id}-shade`;
+  const foregroundMaskId = `${id}-foreground`;
+
   return (
-    <section className="renewal-hero" aria-label="현대 모터스튜디오 메인 비주얼">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster={heroPosterUrl}
-        aria-label="도심을 주행하는 현대자동차 영상"
-      >
-        <source src={heroVideoUrl} type="video/mp4" />
-      </video>
+    <section className="renewal-hero renewal-hero--step-1" data-hero-step="1" aria-label="현대 모터스튜디오 메인 비주얼">
+      <div className="renewal-hero__canvas" data-hero-canvas>
+        <svg className="renewal-hero__scene" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <mask id={foregroundMaskId} x="0" y="0" width="1920" height="1080" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" style={{ maskType: 'luminance' }}>
+              <rect width="1920" height="1080" fill="white" />
+              <g className="renewal-hero__opening-geometry" opacity="0" fill="black">
+                <path
+                  d="M 924 0 L 996 0 L 996 355 L 924 355 Z M 688 355 L 735.9560036663611 355 L 735.9560036663611 490.7871674491393 L 1185.043996333639 490.7871674491393 L 1185.043996333639 355 L 1233 355 L 1233 674 L 1185.043996333639 674 L 1185.043996333639 532.2222222222222 L 735.9560036663611 532.2222222222222 L 735.9560036663611 674 L 688 674 Z M 924 674 L 996 674 L 996 1080 L 924 1080 Z"
+                />
+              </g>
+            </mask>
+            <mask id={shadeMaskId} x="0" y="0" width="1920" height="1080" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" style={{ maskType: 'luminance' }}>
+              <rect width="1920" height="1080" fill="white" />
+              <rect className="renewal-hero__shade-subtract" x="960.5" y="515.5" width="0" height="0" fill="black" />
+            </mask>
+          </defs>
+          <g mask={`url(#${foregroundMaskId})`}>
+            <foreignObject x="0" y="0" width="1920" height="1080">
+              <div className="renewal-hero__video-frame" xmlns="http://www.w3.org/1999/xhtml">
+                <video
+                  className="renewal-hero__video"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  poster={heroPosterUrl}
+                  aria-label="도심을 주행하는 현대자동차 영상"
+                >
+                  <source src={heroVideoUrl} type="video/mp4" />
+                </video>
+              </div>
+            </foreignObject>
+            <rect className="renewal-hero__shade-layer" width="1920" height="1080" fill="rgba(0,0,0,.38)" mask={`url(#${shadeMaskId})`} />
+            <foreignObject className="renewal-hero__word-box renewal-hero__word-box--left" x="404" y="475" width="219" height="130">
+              <p className="renewal-hero__word renewal-hero__word--left" data-hero-copy="2" xmlns="http://www.w3.org/1999/xhtml">NEW</p>
+            </foreignObject>
+            <foreignObject className="renewal-hero__word-box" x="1298" y="475" width="390" height="130">
+              <p className="renewal-hero__word renewal-hero__word--right" data-hero-copy="2" xmlns="http://www.w3.org/1999/xhtml">MOTION</p>
+            </foreignObject>
+            <foreignObject className="renewal-hero__word-box renewal-hero__word-box--left" x="339" y="475" width="284" height="130">
+              <p className="renewal-hero__word renewal-hero__word--left" data-hero-copy="3" xmlns="http://www.w3.org/1999/xhtml">MOVE</p>
+            </foreignObject>
+            <foreignObject className="renewal-hero__word-box" x="1298" y="475" width="405" height="130">
+              <p className="renewal-hero__word renewal-hero__word--right" data-hero-copy="3" xmlns="http://www.w3.org/1999/xhtml">BEYOND</p>
+            </foreignObject>
+            <foreignObject className="renewal-hero__word-box renewal-hero__word-box--left" x="368" y="475" width="255" height="130">
+              <p className="renewal-hero__word renewal-hero__word--left" data-hero-copy="4" xmlns="http://www.w3.org/1999/xhtml">NEXT</p>
+            </foreignObject>
+            <foreignObject className="renewal-hero__word-box" x="1298" y="475" width="437" height="130">
+              <p className="renewal-hero__word renewal-hero__word--right" data-hero-copy="4" xmlns="http://www.w3.org/1999/xhtml">MOMENT</p>
+            </foreignObject>
+          </g>
+        </svg>
+      </div>
     </section>
   );
 }
