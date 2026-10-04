@@ -1,3 +1,5 @@
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { notices } from '../../common/data/content';
 ﻿import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
 import './NoticesPage.css';
@@ -51,6 +53,9 @@ function NoticeBody({ detail }) {
 }
 export default function NoticeOperatingDetail({ notice }) {
   const detail = detailedNotices[notice.id];
+  const noticeIndex = notices.findIndex((item) => item.id === notice.id);
+  const nextNotice = noticeIndex >= 0 ? notices[noticeIndex + 1] : undefined;
+  const previousNotice = noticeIndex > 0 ? notices[noticeIndex - 1] : undefined;
   return (
     <main className="notices-page notice-operating-page">
       <div className="notice-operating-page__inner">
@@ -75,7 +80,19 @@ export default function NoticeOperatingDetail({ notice }) {
             </> : <p>{notice.content || '상세 내용은 준비 중입니다.'}</p>}
           </div>
         </article>
-        <div className="notice-operating-page__actions"><Link to={paths.notices}>목록</Link></div>
+        <div className="notice-operating-page__actions">
+          {previousNotice ? <Link className="notice-operating-page__previous" to={paths.notice(previousNotice.id)} aria-label={'이전 공지사항: ' + previousNotice.title}>
+            <ArrowLeft size={20} strokeWidth={1.5} aria-hidden="true" />
+            <span className="notice-operating-page__previous-copy"><span className="notice-operating-page__next-label">PREV</span><span className="notice-operating-page__next-title">{previousNotice.title}</span></span>
+          </Link> : <span className="notice-operating-page__previous notice-operating-page__previous--disabled" aria-disabled="true">
+            <ArrowLeft size={20} strokeWidth={1.5} aria-hidden="true" /><span>PREV</span>
+          </span>}
+          <Link className="notice-operating-page__list-link" to={paths.notices}>목록</Link>
+          {nextNotice && <Link className="notice-operating-page__next" to={paths.notice(nextNotice.id)} aria-label={'다음 공지사항: ' + nextNotice.title}>
+            <span className="notice-operating-page__next-copy"><span className="notice-operating-page__next-label">NEXT</span><span className="notice-operating-page__next-title">{nextNotice.title}</span></span>
+            <ArrowRight size={20} strokeWidth={1.5} aria-hidden="true" />
+          </Link>}
+        </div>
       </div>
     </main>
   );

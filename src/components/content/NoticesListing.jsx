@@ -1,11 +1,28 @@
 ﻿import { useSearchParams, Link } from 'react-router-dom';
 import { notices } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
-import Pagination from '../../ui/Pagination';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './NoticesPage.css';
 
 const categories = ['전체', '알림', '보도기사'];
 const pageSize = 10;
+
+function NoticePagination({ page, count, onChange }) {
+    const start = Math.floor((page - 1) / 10) * 10 + 1;
+    return (
+        <nav className="notices-page__pagination" aria-label="공지사항 페이지">
+            <button type="button" aria-label="이전 페이지" disabled={page === 1} onClick={() => onChange(page - 1)}>
+                <ChevronLeft size={24} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+            {Array.from({ length: Math.min(10, count - start + 1) }, (_, index) => start + index).map((number) => (
+                <button key={number} type="button" aria-label={number + '페이지'} aria-current={page === number ? 'page' : undefined} aria-controls="notice-results" onClick={() => onChange(number)}>{number}</button>
+            ))}
+            <button type="button" aria-label="다음 페이지" disabled={page === count} onClick={() => onChange(page + 1)}>
+                <ChevronRight size={24} strokeWidth={1.5} aria-hidden="true" />
+            </button>
+        </nav>
+    );
+}
 
 export default function NoticesListing() {
     const [params, setParams] = useSearchParams();
@@ -162,8 +179,7 @@ export default function NoticesListing() {
                         <p className="notices-page__empty">검색 결과가 없습니다.</p>
                     )}
                     {visible.length > 0 && (
-                        <Pagination
-                            variant="notice"
+                        <NoticePagination
                             page={page}
                             count={pageCount}
                             onChange={(nextPage) => {
