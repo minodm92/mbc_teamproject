@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { paths } from '../../common/router/routePaths';
+import { programCalendar, getCalendarPrograms } from '../../common/data/programCalendar';
 import './ProgramContent.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -29,82 +30,49 @@ const discoverPrograms = [
     { image: 5, title: '아이오닉 5 충전 원리 체험 워크샵' },
 ];
 
-const scheduleData = {
-    16: [
-    {
-        location: '고양',
-        image: '/images/programs/program-monthly-01.svg',
-        title: '아이오닉 6 자율주행 기술 체험 워크샵',
-        description: '아이오닉 6를 직접 만들어 주행해 보며 현대자동차의 자율주행 자동차와\n지능형 안전 기술에 대해 배워보는 클래스입니다.',
-    },
-    {
-        location: '고양',
-        image: '/images/programs/program-monthly-02.svg',
-        title: '아이오닉 5 충전 원리 체험 워크샵',
-        description: '아이오닉 5와 현대 모터스튜디오 충전 스테이션을 직접 만들고, 충전과\n주행을 해보면서 전기자동차가 움직이는 모습을 체험하는 클래스입니다.',
-    },
-    {
-        location: '부산',
-        image: '/images/programs/program-monthly-03.svg',
-        title: '레고와 함께하는 SPOT 로봇 코딩 워크샵',
-        description: '사람을 대신하여 다양한 임무를 수행하는 SPOT 로봇을 코딩 교육을 통해 직접\n움직여 보면서 우리의 생활을 더 편리하게 해주는 미래 모빌리티를 직접 경험해 보세요.',
-    },
-    ],
-    17: [
-        {
-            location: '고양',
-            image: '/images/programs/program-monthly-17-01.svg',
-            title: '레고와 함께하는 미래자동차 코딩 워크샵 (새싹 Ver)',
-            description: '미래 자동차의 다양한 기술과 자율주행의 원리를 아이들이 쉽게 이해할 수 있는\n새싹 단계 코딩 교육을 통해 재미있게 체험하는 클래스입니다.',
-        },
-        {
-            location: '서울',
-            image: '/images/programs/program-monthly-17-02.svg',
-            title: '수소전기차와 오호볼 이야기',
-            description: "환경을 지키기 위한 현대자동차의 노력 '수소전기차'의 원리에 대해 배우고,\n오호볼을 만들어보며 환경과 미래 기술에 대해 생각해 보는 클래스입니다.",
-        },
-        {
-            location: '서울',
-            image: '/images/programs/program-monthly-17-03.svg',
-            title: '현대자동차 직업체험 워크샵 - 한국어',
-            description: '현대자동차 엔지니어, 연구원, 디자이너가 되어 Into The Car 전시를 색다르게\n경험하는 어린이 가이드 투어 프로그램입니다.',
-        },
-    ],
+const calendarToday = () => new Intl.DateTimeFormat('sv-SE', { timeZone: 'Asia/Seoul' }).format(new Date());
+const dateKey = (year, month, day) => `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+const initialCalendarDate = () => {
+    const today = calendarToday();
+    const dates = [...new Set(Object.values(programCalendar).flatMap(programs => programs.flatMap(program => program.sessions.map(session => session.date))))].filter(date => date >= today).sort();
+    return dates.find(date => getCalendarPrograms(date).length >= 2) || dates[0] || today;
 };
 
-function Calendar({ selectedDate, onSelectDate }) {
-    const days = ['', 31, ...Array.from({ length: 30 }, (_, index) => index + 1), '', '', ''];
-    return (
-        <div className="program-calendar">
-            <header>
-                <img src="/images/programs/program-calendar-arrow-left.svg" alt="이전 달" />
-                <strong>2026. 09</strong>
-                <img src="/images/programs/program-calendar-arrow-right.svg" alt="다음 달" />
-            </header>
-            <div className="program-calendar__week">{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((day) => <span key={day}>{day}</span>)}</div>
-            <div className="program-calendar__days">
-                {days.map((day, index) => (
-                    <span
-                        className={`${day && (day === 31 || day <= 15 || (day === 16 && selectedDate === 17)) ? 'is-muted' : ''}${day === selectedDate ? ' is-selected' : ''}${day === 16 || day === 17 ? ' is-selectable' : ''}`}
-                        key={`${day}-${index}`}
-                        role={day === 16 || day === 17 ? 'button' : undefined}
-                        tabIndex={day === 16 || day === 17 ? 0 : undefined}
-                        onClick={day === 16 || day === 17 ? () => onSelectDate(day) : undefined}
-                        onKeyDown={day === 16 || day === 17 ? (event) => {
-                            if (event.key === 'Enter' || event.key === ' ') {
-                                event.preventDefault();
-                                onSelectDate(day);
-                            }
-                        } : undefined}
-                    >
-                        {day === selectedDate && <img src="/images/programs/program-calendar-selected.svg" alt="" />}
-                        <b>{day}</b>
-                    </span>
-                ))}
-            </div>
-            <Link to={paths.programReservation}>Reservation</Link>
+function Calendar({ selectedDate, onSelectDate, month, onChangeMonth, reservationUrl }) {
+    const [year, monthNumber] = month.split('-').map(Number);
+    const firstWeekday = new Date(year, monthNumber - 1, 1).getDay();
+    const count = new Date(year, monthNumber, 0).getDate();
+    const previousCount = new Date(year, monthNumber - 1, 0).getDate();
+    const cellCount = Math.ceil((firstWeekday + count) / 7) * 7;
+    const days = Array.from({ length: cellCount }, (_, index) => {
+        const day = index - firstWeekday + 1;
+        return { day: day < 1 ? previousCount + day : day > count ? day - count : day, current: day >= 1 && day <= count };
+    });
+    const keyboardClick = (event, action) => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); action(); }
+    };
+    return <div className="program-calendar">
+        <header>
+            <img src="/images/programs/program-calendar-arrow-left.svg" alt="이전 달" role="button" tabIndex={0} onClick={() => onChangeMonth(-1)} onKeyDown={event => keyboardClick(event, () => onChangeMonth(-1))} />
+            <strong>{month.replace('-', '. ')}</strong>
+            <img src="/images/programs/program-calendar-arrow-right.svg" alt="다음 달" role="button" tabIndex={0} onClick={() => onChangeMonth(1)} onKeyDown={event => keyboardClick(event, () => onChangeMonth(1))} />
+        </header>
+        <div className="program-calendar__week">{['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => <span key={day}>{day}</span>)}</div>
+        <div className="program-calendar__days" style={{ '--calendar-rows': cellCount / 7 }}>
+            {days.map(({ day, current }, index) => {
+                const date = dateKey(year, monthNumber - 1, day);
+                const selectable = current && date >= calendarToday() && getCalendarPrograms(date).length > 0;
+                const selected = current && date === selectedDate;
+                return <span key={index} className={`${!selectable ? 'is-muted' : 'is-selectable'}${selected ? ' is-selected' : ''}`}
+                    role={current ? 'button' : undefined} aria-label={current ? date : undefined} aria-disabled={current ? !selectable : undefined} aria-pressed={current ? selected : undefined}
+                    tabIndex={selectable ? 0 : undefined} onClick={selectable ? () => onSelectDate(date) : undefined}
+                    onKeyDown={selectable ? event => keyboardClick(event, () => onSelectDate(date)) : undefined}>
+                    {selected && <img src="/images/programs/program-calendar-selected.svg" alt="" />}<b>{day}</b>
+                </span>;
+            })}
         </div>
-    );
+        <a href={reservationUrl}>Reservation</a>
+    </div>;
 }
 
 function StripRevealImage({ className, src, alt, stripCount = 8 }) {
@@ -132,8 +100,10 @@ export default function ProgramContent() {
     const aboutRef = useRef(null);
     const locationsRef = useRef(null);
     const [activeMarqueeItem, setActiveMarqueeItem] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(16);
-    const [displayedDate, setDisplayedDate] = useState(16);
+    const [selectedDate, setSelectedDate] = useState(initialCalendarDate);
+    const [calendarMonth, setCalendarMonth] = useState(() => initialCalendarDate().slice(0, 7));
+    const scheduledPrograms = getCalendarPrograms(selectedDate).slice(0, 3);
+    const calendarReservationUrl = scheduledPrograms[0]?.href || 'https://motorstudio.hyundai.com/itg/ri/bt/pgmGuide.do';
     const [isFeatureDetailsOpen, setIsFeatureDetailsOpen] = useState(false);
     const toggleMarqueeItem = (itemKey) => {
         if (!window.matchMedia('(hover: none)').matches) return;
@@ -142,7 +112,16 @@ export default function ProgramContent() {
     const selectScheduleDate = (date) => {
         if (date === selectedDate) return;
         setSelectedDate(date);
-        setDisplayedDate(date);
+
+    };
+
+    const changeCalendarMonth = (offset) => {
+        const [year, month] = calendarMonth.split('-').map(Number);
+        const next = new Date(year, month - 1 + offset, 1);
+        const key = dateKey(next.getFullYear(), next.getMonth(), 1).slice(0, 7);
+        setCalendarMonth(key);
+        const dates = [...new Set((programCalendar[key] || []).flatMap(program => program.sessions.map(session => session.date)))].filter(date => date >= calendarToday()).sort();
+        setSelectedDate(dates.find(date => getCalendarPrograms(date).length >= 2) || dates[0] || key + '-01');
     };
 
     useEffect(() => {
@@ -433,7 +412,7 @@ export default function ProgramContent() {
             mobile: '(max-width: 767px)',
             motion: '(prefers-reduced-motion: no-preference)',
         }, (context) => {
-            if (!image || !context.conditions.motion) return undefined;
+            if (!image || !context.conditions.motion || context.conditions.mobile) return undefined;
 
             const offset = context.conditions.desktop ? 110 : context.conditions.tablet ? 64 : 36;
             gsap.fromTo(image, { x: offset, autoAlpha: 0 }, {
@@ -467,7 +446,7 @@ export default function ProgramContent() {
             tablet: '(min-width: 768px) and (max-width: 1279px)',
             mobile: '(max-width: 767px)',
         }, (context) => {
-            if (!section || !heading || !description) return undefined;
+            if (!section || !heading || !description || context.conditions.mobile) return undefined;
 
             if (!heading.querySelector('.program-discover__line')) {
                 heading.replaceChildren(
@@ -518,6 +497,30 @@ export default function ProgramContent() {
                 timeline.kill();
                 gsap.set(lines, { clearProps: 'transform,opacity,visibility' });
             };
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const section = locationsRef.current;
+        const introText = section.querySelectorAll('.program-locations__intro h2, .program-locations__intro p');
+        const media = gsap.matchMedia();
+
+        media.add('(max-width: 1279px) and (prefers-reduced-motion: no-preference)', () => {
+            gsap.fromTo(introText, { y: -28, autoAlpha: 0 }, {
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.8,
+                stagger: 0.25,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'bottom bottom-=3000',
+                    toggleActions: 'play none none reverse',
+                    invalidateOnRefresh: true,
+                },
+            });
         });
 
         return () => media.revert();
@@ -580,24 +583,70 @@ export default function ProgramContent() {
             fitCanvas();
             revealCards();
 
+            const introReveal = gsap.fromTo(intro.querySelectorAll('h2, p'), {
+                y: -28,
+                autoAlpha: 0,
+            }, {
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.8,
+                stagger: 0.25,
+                ease: 'power2.out',
+                paused: true,
+            });
+
+            let wheelSteps = 0;
+            let introRevealScroll = null;
+            let lastWheelTime = -Infinity;
+
             const timeline = gsap.timeline({
                 onUpdate: revealCards,
                 scrollTrigger: {
                     trigger: section,
-                    start: 'top top',
-                    end: () => `+=${Math.max(1, distance()) * 1.25}`,
+                    start: 'bottom bottom',
+                    end: () => `+=${3080 + Math.max(1, distance()) * 1.25}`,
                     pin: true,
                     scrub: 0.85,
+                    onUpdate: self => {
+                        if (introRevealScroll === null) return;
+                        if (self.scroll() < introRevealScroll) introReveal.reverse();
+                        else introReveal.play();
+                    },
+                    onLeaveBack: () => {
+                        wheelSteps = 0;
+                        introRevealScroll = null;
+                        lastWheelTime = -Infinity;
+                        introReveal.reverse();
+                    },
                     invalidateOnRefresh: true,
                     onRefreshInit: fitCanvas,
                     onRefresh: revealCards,
                 },
             });
-            // Reserve the first part of the pinned scroll for the introduction.
-            timeline.to({}, { duration: 0.06 });
+            // Hold the blank screen for another 3000px of scrolling,
+            // then hold the revealed introduction
+            // for another 80px before moving toward the program cards.
+            timeline.to({}, { duration: 3080 / (Math.max(1, distance()) * 1.25) });
             timeline.to(canvas, { x: () => -distance(), duration: 1, ease: 'none' });
 
-            return () => section.classList.remove('program-locations--scrolling');
+            const revealAfterThreeScrolls = event => {
+                if (!timeline.scrollTrigger.isActive || event.deltaY <= 0 || wheelSteps >= 3) return;
+                // Group continuous trackpad events into one scroll gesture.
+                if (event.timeStamp - lastWheelTime > 180) {
+                    wheelSteps += 1;
+                    if (wheelSteps === 3) {
+                        introRevealScroll = window.scrollY;
+                        introReveal.play();
+                    }
+                }
+                lastWheelTime = event.timeStamp;
+            };
+            window.addEventListener('wheel', revealAfterThreeScrolls, { passive: true });
+
+            return () => {
+                window.removeEventListener('wheel', revealAfterThreeScrolls);
+                section.classList.remove('program-locations--scrolling');
+            };
         });
 
         return () => media.revert();
@@ -758,7 +807,7 @@ export default function ProgramContent() {
                 });
             });
 
-            page.querySelectorAll('.program-image-reveal:not(.program-feature__visual)').forEach((reveal) => {
+            page.querySelectorAll('.program-image-reveal:not(.program-feature__visual):not(.program-closing__visual)').forEach((reveal) => {
                 const source = reveal.querySelector('.program-image-reveal__source');
                 const stripLayer = reveal.querySelector('.program-image-reveal__strips');
                 const strips = reveal.querySelectorAll('.program-image-reveal__strip');
@@ -770,7 +819,7 @@ export default function ProgramContent() {
                 gsap.timeline({
                     scrollTrigger: {
                         trigger: reveal,
-                        start: 'top 88%',
+                        start: 'top 65%',
                         once: true,
                         invalidateOnRefresh: true,
                     },
@@ -787,6 +836,31 @@ export default function ProgramContent() {
                         from: 'start',
                     },
                 });
+            });
+        });
+
+        return () => media.revert();
+    }, []);
+
+    useLayoutEffect(() => {
+        const reveal = pageRef.current.querySelector('.program-closing__visual');
+        const source = reveal.querySelector('.program-image-reveal__source');
+        const stripLayer = reveal.querySelector('.program-image-reveal__strips');
+        const media = gsap.matchMedia();
+
+        media.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+            gsap.set(stripLayer, { display: 'none' });
+            gsap.fromTo(source, { autoAlpha: 1, clipPath: 'inset(0 0 100% 0)' }, {
+                clipPath: 'inset(0 0 0% 0)',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: reveal,
+                    start: 'top 80%',
+                    end: 'bottom 80%',
+                    refreshPriority: -10,
+                    scrub: 0.8,
+                    invalidateOnRefresh: true,
+                },
             });
         });
 
@@ -844,12 +918,12 @@ export default function ProgramContent() {
 
             <section className="program-monthly">
                 <div className="program-monthly__heading"><h2>MONTHLY CALENDAR</h2><p>이번 달 현대 모터스튜디오에서 진행되는<br />다양한 프로그램을 확인해 보세요.</p></div>
-                <Calendar selectedDate={selectedDate} onSelectDate={selectScheduleDate} />
-                <div className="program-monthly__programs" key={displayedDate}>
-                    {scheduleData[displayedDate].map((program) => (
-                        <div className="program-monthly__row" key={program.title}>
+                <Calendar selectedDate={selectedDate} onSelectDate={selectScheduleDate} month={calendarMonth} onChangeMonth={changeCalendarMonth} reservationUrl={calendarReservationUrl} />
+                <div className="program-monthly__programs" key={selectedDate}>
+                    {scheduledPrograms.map((program) => (
+                        <div className="program-monthly__row" key={program.bizCd + program.id}>
                             <span>{program.location}</span>
-                            <article>
+                            <article role="link" tabIndex={0} aria-label={program.title + ' 프로그램 안내'} onClick={() => window.location.assign(program.href)} onKeyDown={event => { if (event.key === 'Enter') window.location.assign(program.href); }}>
                                 <img src={program.image} alt="" />
                                 <div>
                                     <h3>{program.title}</h3>
@@ -858,6 +932,7 @@ export default function ProgramContent() {
                             </article>
                         </div>
                     ))}
+                    {!scheduledPrograms.length && <p>해당 날짜에 등록된 프로그램이 없습니다.</p>}
                 </div>
             </section>
 
@@ -899,8 +974,8 @@ export default function ProgramContent() {
             <section className="program-locations" ref={locationsRef} tabIndex={0} aria-label="지점별 프로그램">
                 <div className="program-locations__canvas">
                     <div className="program-locations__intro">
-                        <h2>PROGRAMS BY LOCATION</h2>
-                        <p>각 지점에서 만나볼 수 있는 다양한 체험 프로그램을 확인해보세요.</p>
+                        <h2><span className="program-locations__intro-line">PROGRAMS BY</span>{' '}<span className="program-locations__intro-line">LOCATION</span></h2>
+                        <p><span className="program-locations__intro-line">각 지점에서 만나볼 수 있는 다양한 체험</span>{' '}<span className="program-locations__intro-line">프로그램을 확인해보세요.</span></p>
                     </div>
                     <div className="program-locations__programs">
                         <div className="program-locations__group program-locations__group--seoul">
@@ -943,7 +1018,14 @@ export default function ProgramContent() {
                 </div>
             </section>
 
-            <section className="program-discover"><h2>DISCOVER HANDS-ON PROGRAMS<br />AT HYUNDAI MOTORSTUDIO.</h2><p>보고, 만들고, 경험하는 모빌리티 프로그램</p></section>
+            <section className="program-discover">
+                <h2>
+                    <span className="program-discover__line program-discover__desktop">DISCOVER HANDS-ON PROGRAMS</span>
+                    <span className="program-discover__line program-discover__desktop">AT HYUNDAI MOTORSTUDIO.</span>
+                    <span className="program-discover__mobile">DISCOVER HANDS-ON<br />PROGRAMS AT<br />HYUNDAI MOTORSTUDIO.</span>
+                </h2>
+                <p><span className="program-discover__desktop">보고, 만들고, 경험하는 모빌리티 프로그램</span><span className="program-discover__mobile">각 지점에서 만나볼 수 있는 다양한 체험 프로그램을 확인해보세요.</span></p>
+            </section>
             <section className="program-cards" aria-label="체험 프로그램 목록">
                 <div className="program-cards__track">
                     <div className="program-cards__group">
