@@ -140,14 +140,6 @@ export const vehicleSpecs = {
     MAX_TORQUE: "27.0 kgf·m",
   },
 
-  KONA_N_LINE: {
-    name: "코나 N Line",
-    ENGINE: "Gasoline 1.6 Turbo",
-    FUEL_ECONOMY: "12.2 km/L",
-    MAX_POWER: "198 PS",
-    MAX_TORQUE: "27.0 kgf·m",
-  },
-
   KONA_ELECTRIC: {
     name: "코나 Electric",
     ENGINE: "Electric motor",
@@ -355,7 +347,6 @@ export const drivePrograms = [
           "SANTA_FE_HYBRID",
           "TUCSON",
           "TUCSON_HYBRID",
-          "KONA_N_LINE",
           "KONA_ELECTRIC",
           "CASPER",
           "CASPER_ELECTRIC",
@@ -443,7 +434,6 @@ export const drivePrograms = [
           "SANTA_FE_HYBRID",
           "TUCSON",
           "TUCSON_HYBRID",
-          "KONA_N_LINE",
           "KONA_ELECTRIC",
           "CASPER",
           "CASPER_ELECTRIC",
@@ -595,7 +585,6 @@ export const drivePrograms = [
           "SANTA_FE_HYBRID",
           "TUCSON",
           "TUCSON_HYBRID",
-          "KONA_N_LINE",
           "CASPER",
           "CASPER_ELECTRIC",
           "STARIA_LIMOUSINE_EV",

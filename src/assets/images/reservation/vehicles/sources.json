@@ -1,0 +1,147 @@
+{
+  "SONATA_EDGE": {
+    "image": "/images/reservation/vehicles/sonata-edge.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/sonata-the-edge-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/sonata/intro"
+  },
+  "GRANDEUR": {
+    "image": "/images/reservation/vehicles/grandeur.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/grandeur-27fl-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/grandeur/intro"
+  },
+  "SONATA_HYBRID": {
+    "image": "/images/reservation/vehicles/sonata-hybrid.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/sonata-the-edge-hybrid-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/sonata-hybrid/intro"
+  },
+  "PALISADE_HYBRID": {
+    "image": "/images/reservation/vehicles/palisade-hybrid.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/palisade-hybrid-27my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/palisade-hybrid/intro"
+  },
+  "PALISADE": {
+    "image": "/images/reservation/vehicles/palisade.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/palisade-27my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/palisade/intro"
+  },
+  "AVANTE_N": {
+    "image": "/images/reservation/vehicles/avante-n.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/avante-n-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/avante-n/intro"
+  },
+  "SANTA_FE_HYBRID": {
+    "image": "/images/reservation/vehicles/santa-fe-hybrid.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/santafe-hybrid-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/santafe-hybrid/intro"
+  },
+  "TUCSON_HYBRID": {
+    "image": "/images/reservation/vehicles/tucson-hybrid.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/tucson-hybrid-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/tucson-hybrid/intro"
+  },
+  "SANTA_FE": {
+    "image": "/images/reservation/vehicles/santa-fe.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/santafe-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/santafe/intro"
+  },
+  "KONA_N_LINE": {
+    "image": "/images/reservation/vehicles/kona-n-line.jpg",
+    "url": "https://www.hyundai.com/content/dam/hyundai/au/en/models/kona-2023/petrol/exterior-hotspot/KONA-N-LINE-1920X620-N.jpg",
+    "page": "https://www.hyundai.com/au/en/cars/suvs/kona"
+  },
+  "IONIQ_5": {
+    "image": "/images/reservation/vehicles/ioniq-5.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/ioniq5-27my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/ioniq5/intro"
+  },
+  "KONA": {
+    "image": "/images/reservation/vehicles/kona.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/kona-27my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/kona/intro"
+  },
+  "KONA_ELECTRIC": {
+    "image": "/images/reservation/vehicles/kona-electric.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/kona-electric-25my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/kona-electric/intro"
+  },
+  "IONIQ_5_N": {
+    "image": "/images/reservation/vehicles/ioniq-5-n.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/ioniq5-n-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/ioniq5-n/intro"
+  },
+  "IONIQ_6": {
+    "image": "/images/reservation/vehicles/ioniq-6.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/ioniq6-25fl-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/ioniq6/intro"
+  },
+  "IONIQ_9": {
+    "image": "/images/reservation/vehicles/ioniq-9.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/ioniq9-27my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/ioniq9/intro"
+  },
+  "IONIQ_6_N": {
+    "image": "/images/reservation/vehicles/ioniq-6-n.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/ioniq6-n-25lc-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/ioniq6-n/intro"
+  },
+  "TUCSON": {
+    "image": "/images/reservation/vehicles/tucson.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/tucson-26my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/tucson/intro"
+  },
+  "GV80_COUPE": {
+    "image": "/images/reservation/vehicles/gv80-coupe.png",
+    "url": "https://dams.hyundai-autoever.com/v1/openapi/hmg-presigned-url/50534b313031303030303030303030303130363034/genesis-gv80-coupe-side-view-model-thumbnail.png",
+    "page": "https://www.genesis.com/kr/ko/main.html"
+  },
+  "ELECTRIFIED_GV70": {
+    "image": "/images/reservation/vehicles/electrified-gv70.png",
+    "url": "https://dams.hyundai-autoever.com/v1/openapi/hmg-presigned-url/50534b313031303030303030303030303130363136/genesis-electrified-gv70-side-view-model-thumbnail.png",
+    "page": "https://www.genesis.com/kr/ko/main.html"
+  },
+  "NEXO": {
+    "image": "/images/reservation/vehicles/nexo.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/nexo-27my-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/nexo/intro"
+  },
+  "G70": {
+    "image": "/images/reservation/vehicles/g70.png",
+    "url": "https://dams.hyundai-autoever.com/v1/openapi/hmg-presigned-url/50534b313031303030303030303030303133373937/thumbnail/genesis-g70-side-view-model-thumbnail.png",
+    "page": "https://www.genesis.com/kr/ko/main.html"
+  },
+  "GV60_MAGMA": {
+    "image": "/images/reservation/vehicles/gv60-magma.png",
+    "url": "https://dams.hyundai-autoever.com/v1/openapi/hmg-presigned-url/50534b313031303030303030303030303130363233/genesis-gv60-magma-side-view-model-thumbnail.png",
+    "page": "https://www.genesis.com/kr/ko/main.html"
+  },
+  "GV60": {
+    "image": "/images/reservation/vehicles/gv60.png",
+    "url": "https://dams.hyundai-autoever.com/v1/openapi/hmg-presigned-url/50534b313031303030303030303030303130363236/genesis-gv60-side-view-model-thumbnail.png",
+    "page": "https://www.genesis.com/kr/ko/main.html"
+  },
+  "AVANTE": {
+    "image": "/images/reservation/vehicles/avante.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/avante-27fc-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/avante/intro"
+  },
+  "GRANDEUR_HYBRID": {
+    "image": "/images/reservation/vehicles/grandeur-hybrid.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/grandeur-hybrid-27fl-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/grandeur-hybrid/intro"
+  },
+  "G80_BLACK": {
+    "image": "/images/reservation/vehicles/g80-black.png",
+    "url": "https://dams.hyundai-autoever.com/v1/openapi/hmg-presigned-url/50534b313031303030303030303030303132313038/thumbnail/genesis-g80-black-side-view-model-thumbnail.png",
+    "page": "https://www.genesis.com/kr/ko/models/luxury-sedan-genesis/g80-black/highlights.html"
+  },
+  "CASPER_ELECTRIC": {
+    "image": "/images/reservation/vehicles/casper-electric.png",
+    "url": "https://casper.hyundai.com/wstatic/images/pc/vehicles/electric/highlight/26lounge_lc/trim/cross-img-26my.png",
+    "page": "https://casper.hyundai.com/vehicles/electric/highlight"
+  },
+  "STARIA_LIMOUSINE_EV": {
+    "image": "/images/reservation/vehicles/staria-limousine-ev.png",
+    "url": "https://www.hyundai.com/contents/repn-car/side-45/the-new-staria-limousine-electric-27pe-45side.png",
+    "page": "https://www.hyundai.com/kr/ko/e/vehicles/the-new-staria-limousine-electric/intro"
+  }
+}
