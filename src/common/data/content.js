@@ -28,7 +28,7 @@ export const vehicles = [
 ];
 
 export const exhibitions = [
-  { id: 'vehicle-exhibition', title: 'HYUNDAI MOTORSTUDIO VEHICLE EXHIBITION', subtitle: '현대자동차의 현재를 만나는 전시', location: '고양', date: '상설 전시', image: '/images/exhibitions/vehicle.svg', description: '현대자동차의 다양한 모델과 디자인을 가까이서 살펴보세요.' },
+  { id: 'vehicle-exhibition', title: 'HYUNDAI MOTORSTUDIO VEHICLE EXHIBITION', subtitle: '현대자동차의 현재를 만나는 전시', location: '고양', date: '상설 전시', image: '/images/exhibitions/vehicle.webp', description: '현대자동차의 다양한 모델과 디자인을 가까이서 살펴보세요.' },
   { id: 'plastic-new-discovery', title: 'PLASTIC, A NEW DISCOVERY', subtitle: '플라스틱, 새로운 발견', location: '부산', date: '기획 전시', image: '/images/exhibitions/plastic.svg', description: '디자인과 지속가능성의 새로운 가능성을 탐구합니다.' },
   { id: 'retrace-first-step', title: 'RETRACING THE FIRST STEP', subtitle: '첫걸음을 돌아보다', location: '서울', date: '기획 전시', image: '/images/exhibitions/heritage.svg', description: '헤리티지를 통해 과거와 현재, 미래를 연결합니다.' },
 ];
