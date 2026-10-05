@@ -37,7 +37,7 @@ export default function SignUpPageView() {
       <Link className="signup-page__logo" to={paths.home} aria-label="현대 모터스튜디오 홈"><img src="/images/login/logo.png" width="220" height="50" alt="HYUNDAI MOTORSTUDIO" /></Link>
       <div className="signup-page__brand">
         <p>A NEW WAY TO EXPERIENCE</p>
-        <h2>START YOUR<br />EXPERIENCE<span>.</span></h2>
+        <h2>START YOUR<br />EXPERIENCE</h2>
         <p className="signup-page__brand-description">현대 모터스튜디오 회원이 되어<br />다양한 전시와 프로그램을 더욱 편리하게 경험해보세요.</p>
       </div>
       <div className="signup-page__locations"><span>HYUNDAI MOTORSTUDIO</span><span>SEOUL · GOYANG · HANAM · BUSAN</span></div>
@@ -47,7 +47,7 @@ export default function SignUpPageView() {
       <img className="signup-page__progress" src="/images/signup/progress.svg" width="780" height="16" alt="" aria-hidden="true" />
       <div className="signup-page__content">
         <p className="signup-page__eyebrow">MEMBERSHIP</p>
-        <h1 id="signup-heading">Create Account</h1>
+        <h1 id="signup-heading">CREATE ACCOUNT</h1>
         <p className="signup-page__intro">현대 모터스튜디오 서비스를 이용하기 위한<br />회원 정보를 입력해주세요.</p>
         <form className="signup-page__form" onSubmit={submit} aria-busy={isAuthLoading}>
           {fields.map(({ key, label, type, ...inputProps }) => <div className="signup-page__field" key={key}>
@@ -62,7 +62,7 @@ export default function SignUpPageView() {
           <button className="signup-page__submit" type="submit" disabled={isAuthLoading}>GET STARTED<img src="/images/login/login-arrow.svg" width="16" height="16" alt="" /></button>
         </form>
         <div className="signup-page__divider"><span>Or continue with</span></div>
-        <AuthSocialButtons className="signup-page__social" loading={isAuthLoading} onKakao={loginWithKakao} />
+        <AuthSocialButtons className="signup-page__social" loading={isAuthLoading} onKakao={loginWithKakao} kakaoOnly />
         <p className="signup-page__login">이미 회원이신가요?<Link to={paths.login}>Log In<img src="/images/signup/login-arrow.svg" width="9" height="9" alt="" /></Link></p>
       </div>
     </section>
