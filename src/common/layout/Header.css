@@ -101,7 +101,86 @@
 .site-header__account { position: relative; width: 24px; height: 24px; }
 .site-header__toggle { display: none; }
 
+#root .site-header.site-header--reservation {
+  position: fixed;
+  background: #0e0e0e;
+  color: #fff;
+  border-bottom: 1px solid #ffffff26;
+}
+.site-header--reservation .site-header__actions { gap: 23px; }
+.site-header__reservation-switch {
+  position: relative;
+  margin-left: 45px;
+  flex-shrink: 0;
+}
+.site-header__reservation-switch .reservation-select__trigger {
+  display: block;
+  width: 86px;
+  height: 40px;
+  padding: 0 28px 0 0;
+  appearance: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.site-header__reservation-switch .reservation-select__options {
+  position: absolute;
+  z-index: 50;
+  top: 100%;
+  left: -12px;
+  width: 180px;
+  padding: 6px 0;
+  border: 1px solid #dfe3e5;
+  background: #ffffff;
+  color: #111111;
+}
+#root .site-header__reservation-switch .reservation-select__options button {
+  display: block;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 20px;
+  border: 0;
+  background: #ffffff;
+  color: #111111;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+#root .site-header__reservation-switch .reservation-select__options button:is(:hover, :focus-visible) {
+  background: #f2f5f7;
+  color: #111111;
+  outline: none;
+}
+.site-header__reservation-switch--program .reservation-select__trigger { width: 114px; }
+.site-header__reservation-switch img {
+  position: absolute;
+  right: 3px;
+  top: 50%;
+  width: 18px;
+  height: 24px;
+  transform: translateY(-50%) rotate(-90deg);
+  pointer-events: none;
+}
+.site-header__reservation-switch .reservation-select__trigger:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+@media (min-width: 1001px) and (max-width: 1500px) {
+  .site-header--reservation .site-header__bar { gap: 24px; padding-inline: 30px; }
+  .site-header--reservation .site-header__reservation-switch { margin-left: 0; }
+  .site-header--reservation .site-header__nav { position: static; margin-left: auto; gap: 24px; transform: none; }
+  .site-header--reservation .site-header__actions { margin-left: 0; }
+  .site-header--reservation .site-header__link { font-size: 14px; }
+}
+
 @media (max-width: 1000px) {
+  .site-header__reservation-switch { margin-left: 24px; }
   .site-header,
   .site-header--expanded { height: 72px; }
   .site-header__bar { height: 72px; }
@@ -135,6 +214,9 @@
 }
 
 @media (max-width: 560px) {
+  .site-header__reservation-switch { margin-left: 12px; }
+  .site-header__reservation-switch .reservation-select__trigger { width: 82px; font-size: 14px; }
+  .site-header__reservation-switch--program .reservation-select__trigger { width: 108px; }
   .site-header__bar { padding-inline: 18px; }
   .site-header__logo { flex-basis: 132px; width: 132px; height: 30px; }
   .site-header__actions { gap: 12px; }

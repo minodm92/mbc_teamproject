@@ -211,6 +211,7 @@
     border-top: 1px solid #dfe3e5;
 }
 .course-card__head > span {
+    color: #111111;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0;
@@ -460,8 +461,8 @@
     display: none;
 }
 body:has(.booking-page) .site-header {
-    position: absolute;
-    background: #050505;
+    position: fixed;
+    background: #0e0e0e;
 }
 .reservation-list {
     max-width: 900px;
@@ -708,6 +709,7 @@ body:has(.booking-page) .site-header {
     width: 100%;
     height: 220px;
     object-fit: cover;
+    object-position: center top;
 }
 .program-list {
     margin-top: 14px;
@@ -738,6 +740,56 @@ body:has(.booking-page) .site-header {
     gap: 6px;
     color: #222;
     font-weight: 500;
+    min-width: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+.program-card > div > span {
+    flex-shrink: 0;
+}
+.drive-course-description {
+    padding: 12px 0;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+}
+.drive-course-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+.drive-course-tabs button {
+    padding: 8px 14px;
+    border: 1px solid #d8dcdf;
+    background: #fff;
+    color: #111;
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+.drive-course-tabs button[aria-pressed='true'] {
+    border-color: #111;
+    background: #111;
+    color: #fff;
+}
+.drive-course-tabs button:focus-visible {
+    outline: 2px solid #1769d1;
+    outline-offset: 2px;
+}
+.drive-course-map {
+    margin: 12px 0 0;
+}
+.drive-course-map img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.drive-course-map figcaption {
+    margin-top: 10px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
 }
 .course-card {
     margin-top: 8px;
@@ -809,6 +861,9 @@ body:has(.booking-page) .site-header {
         padding-right: 30px;
         padding-left: 30px;
     }
+    .booking-grid {
+        grid-template-columns: 1fr 1fr;
+    }
     .booking-page__heading h1 {
         font-size: 40px;
     }
@@ -854,24 +909,32 @@ body:has(.booking-page) .site-header {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
 }
-.vehicle-dropdowns label {
+.vehicle-dropdowns label,
+.vehicle-dropdowns .reservation-select {
     position: relative;
     min-width: 0;
 }
-.vehicle-dropdowns label:after {
-    content: '⌄';
+.vehicle-dropdowns label:after,
+.vehicle-dropdowns .reservation-select:after {
+    content: '';
     position: absolute;
     top: 50%;
     right: 12px;
-    translate: 0 -55%;
+    translate: 0 -50%;
+    width: 18px;
+    height: 24px;
+    background-color: currentColor;
+    mask: url('/images/reservation/dropdown-chevron.svg') center / 18px 24px no-repeat;
+    rotate: -90deg;
     pointer-events: none;
     color: #8a9298;
-    font-size: 14px;
 }
-.vehicle-dropdowns label.is-active:after {
+.vehicle-dropdowns label.is-active:after,
+.vehicle-dropdowns .reservation-select.is-active:after {
     color: #fff;
 }
-.vehicle-dropdowns select {
+.vehicle-dropdowns select,
+.vehicle-dropdowns .reservation-select__trigger {
     display: block;
     box-sizing: border-box;
     width: 100%;
@@ -890,13 +953,47 @@ body:has(.booking-page) .site-header {
     appearance: none;
     cursor: pointer;
 }
-.vehicle-dropdowns label.is-active select {
+.vehicle-dropdowns label.is-active select,
+.vehicle-dropdowns .reservation-select.is-active .reservation-select__trigger {
     background: #111;
     color: #fff;
 }
-.vehicle-dropdowns select:focus-visible {
+.vehicle-dropdowns select:focus-visible,
+.vehicle-dropdowns .reservation-select__trigger:focus-visible {
     outline: 2px solid #1769d1;
     outline-offset: 2px;
+}
+.reservation-select__options {
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 280px;
+    overflow-y: auto;
+    border: 1px solid #8a9298;
+    background: #fff;
+}
+.reservation-select__options button {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 0;
+    background: #fff;
+    color: #888;
+    font: inherit;
+    font-size: 15px;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+.reservation-select__options button:is([aria-selected='true'], :hover, :focus-visible) {
+    background: #1769d1;
+    color: #fff;
+    outline: none;
 }
 .vehicle-card__note {
     margin-top: 12px !important;
@@ -1075,3 +1172,127 @@ body:has(.booking-page) .site-header {
     }
 }
 /* Reservation component styles. */
+
+/* 시승 사진별 위치 조절
+   각 프로그램·지점의 숫자를 수정하세요.
+   0%는 사진 위쪽, 50%는 가운데, 100%는 아래쪽이 더 보입니다. */
+
+/* 고양 — 프라이빗 신차 드라이브_언택트 */
+.program-visual img[src$='/goyang-DFPNEWD.png'] {
+    object-position: center 21%;
+}
+
+/* 하남 — 프라이빗 신차 드라이브_언택트 */
+.program-visual img[src$='/hanam-DFPNEWD.png'] {
+    object-position: center 21%;
+}
+
+/* 고양 — 하이 퍼포먼스 드라이브_언택트 */
+.program-visual img[src$='/goyang-DFNDRAV.png'] {
+    object-position: center 55%;
+}
+
+/* 고양 — 베이직 드라이브 */
+.program-visual img[src$='/goyang-DFHMSD.png'] {
+    object-position: center 50%;
+}
+
+/* 서울 — 베이직 드라이브 */
+.program-visual img[src$='/seoul-DFANWEX.png'] {
+    object-position: center 50%;
+}
+
+/* 하남 — 베이직 드라이브 */
+.program-visual img[src$='/hanam-DFANWEX.png'] {
+    object-position: center 40%;
+}
+
+/* 고양 — 베이직 드라이브_언택트 */
+.program-visual img[src$='/goyang-DFSGTDV.png'] {
+    object-position: center 20%;
+}
+
+/* 서울 — 베이직 드라이브_언택트 */
+.program-visual img[src$='/seoul-DFSGTDV.png'] {
+    object-position: center 20%;
+}
+
+/* 하남 — 베이직 드라이브_언택트 */
+.program-visual img[src$='/hanam-DFRERFR.png'] {
+    object-position: center 50%;
+}
+
+/* 고양 — 비기너 드라이브 */
+.program-visual img[src$='/goyang-DFLSDRV.png'] {
+    object-position: center 0%;
+}
+
+/* 서울 — 비기너 드라이브 */
+.program-visual img[src$='/seoul-DFLSDRV.png'] {
+    object-position: center 0%;
+}
+
+/* 하남 — 비기너 드라이브 */
+.program-visual img[src$='/hanam-DFLSDRV.png'] {
+    object-position: center 20%;
+}
+
+/* 고양 — 아웃도어 라이프_차콕 */
+.program-visual img[src$='/goyang-DCACDVG.png'] {
+    object-position: center 50%;
+}
+
+/* 하남 — 아웃도어 라이프_차콕 */
+.program-visual img[src$='/hanam-DCACDVH.png'] {
+    object-position: center 50%;
+}
+
+/* 고양 — 아웃도어 라이프_데이트립 드라이브 */
+.program-visual img[src$='/goyang-DFUDDRV.png'] {
+    object-position: center 70%;
+}
+
+/* 하남 — 아웃도어 라이프_데이트립 드라이브 */
+.program-visual img[src$='/hanam-DFANWEK.png'] {
+    object-position: center 70%;
+}
+
+/* 고양 — 컴-페어 드라이브 */
+.program-visual img[src$='/goyang-DFCPDRV.png'] {
+    object-position: center 80%;
+}
+
+/* 고양 — 헤리티지 드라이브 */
+.program-visual img[src$='/goyang-DFHGDRV.png'] {
+    object-position: center 80%;
+}
+
+/* 서울 — 헤리티지 드라이브 */
+.program-visual img[src$='/seoul-DFHSDRV.png'] {
+    object-position: center 20%;
+}
+
+/* 서울 — 베이직 드라이브_장거리 시승 */
+.program-visual img[src$='/seoul-DFANVEX.png'] {
+    object-position: center 30%;
+}
+
+/* 서울 — 베이직 드라이브_언택트_장거리 시승 */
+.program-visual img[src$='/seoul-DFWFDER.jpg'] {
+    object-position: center 40%;
+}
+
+/* 서울 — 시티 나이트 드라이브 */
+.program-visual img[src$='/seoul-FDCNDRV.png'] {
+    object-position: center 40%;
+}
+
+/* 하남 — N 드라이브_언택트 */
+.program-visual img[src$='/hanam-DFNDRAV.png'] {
+    object-position: center 10%;
+}
+
+/* 하남 — 아웃도어 라이프_데이트립 드라이브 라이트 */
+.program-visual img[src$='/hanam-DFANWEL.png'] {
+    object-position: center 70%;
+}

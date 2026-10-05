@@ -55,7 +55,6 @@ export default function ReservationCheckoutPage() {
 
   return <main className="checkout-page">
     <div className="checkout-page__inner">
-      <p className="checkout-page__eyebrow">RESERVATION</p>
       <h1>예약 확인 및 결제</h1>
       <div className="checkout-layout">
         <div className="checkout-main">
@@ -95,7 +94,7 @@ export default function ReservationCheckoutPage() {
         </div>
 
         <aside className="checkout-summary">
-          <div className="checkout-summary__block"><div className="checkout-summary__heading"><h2>예약 정보</h2><button type="button" onClick={() => navigate(-1)}>변경하기</button></div><InfoTable rows={[["체험 프로그램", draft.programName], ["체험 대상", draft.targetName], ["체험 일자", draft.date.replaceAll('-', '.')], ["체험 시간", draft.time], ["체험 인원", `${draft.guests}명`]]} /></div>
+          <div className="checkout-summary__block"><div className="checkout-summary__heading"><h2>예약 정보</h2><button type="button" onClick={() => navigate(-1)}>변경하기</button></div><InfoTable rows={[["체험 프로그램", draft.programName], ["체험 대상", draft.targetName], ["체험 일자", draft.date.replaceAll('-', '.')], ["체험 시간", draft.time], ["체험 인원", `${draft.guests}${draft.payload.unit || '명'}`]]} /></div>
           <div className="checkout-summary__block"><h2>결제 금액</h2><InfoTable rows={[["프로그램 이용료", `${draft.price.toLocaleString()}원`], ["쿠폰 할인 금액", '0원'], ["할인 합계", '0원']]} /><div className="checkout-total"><span>결제 예정 금액</span><strong>{draft.price.toLocaleString()}원</strong></div></div>
           <Agreement checked={agreements.privacy} onChange={(privacy) => setAgreements({ ...agreements, privacy })}>개인정보 수집 및 이용 동의 (필수)</Agreement>
           <button className="checkout-pay" type="button" disabled={!canPay} onClick={confirmPayment}>{draft.price.toLocaleString()}원 결제하기</button>

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { paths } from '../router/routePaths';
 import { useAuthStore } from '../../store/useAuthStore';
+import ReservationSelect from '../../components/reservation/ReservationSelect';
 import './Header.css';
 
 const nav = [
@@ -13,11 +14,20 @@ const nav = [
   { label: '안내', to: paths.membership, children: [{ label: '멤버십', to: paths.membership }, { label: '공지사항', to: paths.notices }, { label: '뉴스룸', to: paths.newsroom }] },
 ];
 
+const reservationPages = [
+  { label: '시승 예약', to: paths.reservations },
+  { label: '프로그램 예약', to: paths.programReservation },
+  { label: '전시 예약', to: paths.exhibitionReservation },
+];
+
 export default function Header({ variant = 'light' }) {
   const [open, setOpen] = useState(false);
   const [subnavOpen, setSubnavOpen] = useState(false);
   const headerRef = useRef(null);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const isReservation = pathname === paths.reservations || pathname.startsWith(`${paths.reservations}/`);
+  const reservationPage = reservationPages.find((page) => page.to === pathname) || reservationPages[0];
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
@@ -39,18 +49,24 @@ export default function Header({ variant = 'light' }) {
     setOpen(false);
     setSubnavOpen(false);
   };
-  const renderAsset = (name, className) => variant === 'light'
+  const renderAsset = (name, className) => variant === 'light' || isReservation
     ? <img className={className} src={`/images/common/${name}.svg`} alt="" />
     : <>
       <img className={`${className} site-header__asset--dark`} src={`/images/common/${name}-black.svg`} alt="" />
       <img className={`${className} site-header__asset--light`} src={`/images/common/${name}.svg`} alt="" />
     </>;
 
-  return <header ref={headerRef} className={`site-header site-header--${variant}${subnavOpen ? ' site-header--expanded' : ''}`}>
+  return <header ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${subnavOpen ? ' site-header--expanded' : ''}`}>
     <div className="site-header__bar">
       <Link className="site-header__logo" to={paths.home} onClick={closeMenus} aria-label="현대 모터스튜디오 홈">
         {renderAsset('hyundai-motorstudio-logo', 'site-header__logo-image')}
       </Link>
+      {isReservation && <div className={`site-header__reservation-switch${reservationPage.to === paths.programReservation ? ' site-header__reservation-switch--program' : ''}`}>
+        <ReservationSelect label="예약 페이지 선택" value={reservationPage.to}
+          options={reservationPages.map((page) => ({ value: page.to, label: page.label }))}
+          onChange={(value) => { closeMenus(); navigate(value); }}/>
+        <img src="/images/reservation/dropdown-chevron.svg" alt="" aria-hidden="true" />
+      </div>}
       <nav className={`site-header__nav${open ? ' site-header__nav--open' : ''}`} aria-label="주 메뉴">
         {nav.map((item) => <div className="site-header__group" key={item.label}>
           {item.children

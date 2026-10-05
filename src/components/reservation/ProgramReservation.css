@@ -1,1 +1,37 @@
 @import './ExhibitionReservation.css';
+
+.program-booking__picker { position: relative; margin-top: 16px; }
+.program-booking__picker label { display: block; margin-bottom: 6px; color: #66717a; font-size: 13px; }
+.program-booking__picker select { width: 100%; min-width: 0; height: 42px; padding: 0 38px 0 10px; border: 1px solid #dfe3e5; appearance: none; background: #fff; color: #111; font: inherit; font-size: 14px; }
+.program-booking__picker::after { content: ''; position: absolute; right: 10px; bottom: 9px; width: 18px; height: 24px; background: #111; mask: url('/images/reservation/dropdown-chevron.svg') center / 18px 24px no-repeat; transform: rotate(-90deg); pointer-events: none; }
+.program-booking__visual { position: relative; }
+.program-booking__visual .exhibition-select__image { display: block; margin-top: 16px; }
+.program-booking__visual button { position: absolute; top: 50%; display: grid; place-items: center; width: 30px; height: 36px; padding: 0; border: 0; background: transparent; color: #fff; transform: translateY(-50%); cursor: pointer; }
+.program-booking__previous { left: 5px; }
+.program-booking__next { right: 5px; }
+.program-booking__dots { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; padding: 10px 0 14px; }
+.program-booking__dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: #bcbcbc; cursor: pointer; }
+.program-booking__dots button[aria-pressed='true'] { background: #111; }
+.program-booking__schedule { white-space: pre-line; }
+.program-booking .exhibition-select__copy { margin-top: 8px; padding-top: 30px; }
+.program-booking__notice { margin-top: 24px; padding: 14px; background: #f2f5f7; color: #66717a; font-size: 13px; line-height: 1.6; }
+.program-booking__notice a { color: #2668d3; text-decoration: underline; }
+.program-booking .exhibition-select__copy dl > div { align-items: start; margin-top: 5px; }
+.program-booking .exhibition-select__copy dt { flex-shrink: 0; }
+.program-booking .ticket-row > div:first-child { min-width: 0; padding-right: 12px; }
+.program-booking .ticket-row { min-height: 96px; padding: 16px 0 12px; }
+.program-booking .ticket-row > div:first-child { gap: 6px; }
+.program-booking .ticket-row strong { font-size: 16px; line-height: 1.5; }
+.program-booking .ticket-row span { font-size: 14px; line-height: 1.5; }
+.program-booking .ticket-counter b { font-size: 16px; }
+.program-booking .ticket-counter small { margin-top: 13px; font-size: 14px; }
+.program-booking .ticket-total { font-size: 15px; }
+.program-booking .ticket-counter { flex-shrink: 0; }
+.program-booking .booking-summary dl { flex: 1; min-width: 0; gap: 24px; }
+.program-booking .booking-summary dl > div { flex: 1; min-width: 0; }
+.program-booking .booking-summary dl > div:first-child { flex: 2; }
+.program-booking .booking-summary dt { flex-shrink: 0; white-space: nowrap; }
+.program-booking .booking-summary dd { min-width: 0; max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.program-booking .booking-summary__action { flex-shrink: 0; }
+.program-booking button:disabled { cursor: not-allowed; }
+.program-booking button:focus-visible { outline: 2px solid #1769d1; outline-offset: 2px; }
