@@ -407,7 +407,6 @@ export default function LocationShowcase({ intro = false }) {
             end: () =>
               `+=${document.documentElement.clientHeight * (sequence ? HERO_REVEAL.pinLength : 1.8)}`,
             pin: true,
-            pinType: "transform",
             scrub: sequence ? HERO_REVEAL.scrub : 1.5,
             anticipatePin: 1,
             invalidateOnRefresh: true,
@@ -598,7 +597,7 @@ export default function LocationShowcase({ intro = false }) {
               // Pin length is the gap itself, with a minimum, so the photo closes the gap as the page scrolls.
               end: () => `+=${Math.max(senayanGap, window.innerHeight * 0.5)}`,
               pin: true,
-              scrub: 0.5,
+              scrub: true,
               anticipatePin: 1,
               invalidateOnRefresh: true,
               onRefreshInit: measureSenayanGap,
