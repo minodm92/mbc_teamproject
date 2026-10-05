@@ -32,7 +32,7 @@ export function LoginPage() {
       <Link className="login-page__logo" to={paths.home} aria-label="현대 모터스튜디오 홈"><img src="/images/login/logo.png" width="220" height="50" alt="HYUNDAI MOTORSTUDIO" /></Link>
       <div className="login-page__brand">
         <p>A NEW WAY TO EXPERIENCE</p>
-        <h2>EXPERIENCE<br />BEYOND MOBILITY<span>.</span></h2>
+        <h2>EXPERIENCE<br />BEYOND MOBILITY</h2>
         <p className="login-page__brand-description">현대 모터스튜디오의 다양한 전시와 프로그램을<br />로그인 후 더 편리하게 이용해보세요.</p>
       </div>
       <div className="login-page__locations"><span>HYUNDAI MOTORSTUDIO</span><span>SEOUL · GOYANG · HANAM · BUSAN</span></div>
@@ -40,8 +40,7 @@ export function LoginPage() {
     <section className="login-page__panel" aria-labelledby="login-heading">
       <Link className="login-page__home" to={paths.home}>BACK TO HOME<img src="/images/login/home-arrow.svg" width="14" height="14" alt="" /></Link>
       <div className="login-page__content">
-        <p className="login-page__eyebrow">MEMBER LOGIN</p>
-        <h1 id="login-heading">WELCOME BACK.</h1>
+        <h1 id="login-heading">WELCOME BACK</h1>
         <p className="login-page__intro">현대 모터스튜디오 서비스를 계속 이용하려면 로그인해주세요.</p>
         <form className="login-page__form" aria-busy={isAuthLoading} onSubmit={(event) => {
           event.preventDefault();
@@ -66,7 +65,7 @@ export function LoginPage() {
           <button className="login-page__submit" type="submit" disabled={isAuthLoading}>LOGIN<span aria-hidden="true"><img src="/images/login/login-arrow.svg" width="16" height="16" alt="" /></span></button>
         </form>
         <div className="login-page__divider"><span>OR CONTINUE WITH</span></div>
-        <AuthSocialButtons className="login-page__social" loading={isAuthLoading} onKakao={loginWithKakao} />
+        <AuthSocialButtons className="login-page__social" loading={isAuthLoading} onKakao={loginWithKakao} kakaoOnly />
         <p className="login-page__signup">아직 회원이 아니신가요?<Link to={paths.signup}>SIGN UP<img src="/images/login/signup-arrow.svg" width="13" height="13" alt="" /></Link></p>
         <button className="login-page__demo" type="button" disabled={isAuthLoading} onClick={() => { setPersistence(rememberLogin); loginAsTestUser(); navigate(destination); }}>테스트 계정으로 로그인</button>
       </div>

@@ -1,8 +1,8 @@
-export function AuthSocialButtons({ className, loading, onKakao }) {
+export function AuthSocialButtons({ className, loading, onKakao, kakaoOnly = false }) {
   return <div className={className}>
-    <button type="button" disabled aria-label="Google 로그인 (미지원)"><img src="/images/login/google.png" width="15" height="16" alt="" />Google</button>
+    {!kakaoOnly && <button type="button" disabled aria-label="Google 로그인 (미지원)"><img src="/images/login/google.png" width="15" height="16" alt="" />Google</button>}
     <button type="button" disabled={loading} onClick={onKakao}><img src="/images/login/kakao.png" width="15" height="16" alt="" />Kakao</button>
-    <button type="button" disabled aria-label="Naver 로그인 (미지원)"><img src="/images/login/naver.png" width="15" height="16" alt="" />Naver</button>
+    {!kakaoOnly && <button type="button" disabled aria-label="Naver 로그인 (미지원)"><img src="/images/login/naver.png" width="15" height="16" alt="" />Naver</button>}
   </div>;
 }
 
