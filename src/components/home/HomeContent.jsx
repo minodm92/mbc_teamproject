@@ -1054,7 +1054,7 @@ export default function HomeContent() {
                         {
                             autoAlpha: 1,
                             clipPath: 'inset(0 0 0% 0)',
-                            duration: 1,
+                            duration: 0.6,
                             ease: 'power2.out',
                             immediateRender: false,
                             scrollTrigger: {
