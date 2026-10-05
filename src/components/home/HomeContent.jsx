@@ -1235,10 +1235,6 @@ export default function HomeContent() {
                     <br />
                     방식으로 몰입할 수 있는 특별한 순간을 만나보세요.
                 </p>
-                <a className="renewal-top" href="#top" aria-label="페이지 상단으로 이동">
-                    <img src={asset('top-arrow.svg')} alt="" />
-                    <span>TOP</span>
-                </a>
             </section>
             <div className="renewal-location-transition" ref={locationTransitionRef}>
                 <img

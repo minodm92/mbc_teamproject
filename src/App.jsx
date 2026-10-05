@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import Header from './common/layout/Header';
 import { getHeaderVariant } from './common/router/headerVariant';
 import Footer from './common/layout/Footer';
+import TopButton from './common/layout/TopButton';
 import PageLoader from './common/layout/PageLoader';
 import {
     areHomeAssetsPreloaded,
@@ -234,6 +235,7 @@ export default function App() {
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>}
             {showPage && !standaloneAuth && <Footer />}
+            {showPage && !standaloneAuth && <TopButton />}
         </>
     );
 }

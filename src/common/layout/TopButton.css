@@ -1,0 +1,25 @@
+.site-top-button {
+    position: fixed;
+    z-index: 50;
+    right: clamp(20px, 5.208333vw, 100px);
+    bottom: 53px;
+    width: 63px;
+    height: 63px;
+    padding: 0;
+    border: 0;
+    border-radius: 65px;
+    color: #fff;
+    font: 500 12px/1.4 var(--font-en);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: background-color .25s, opacity .2s, visibility .2s;
+}
+.site-top-button.is-visible { opacity: 1; visibility: visible; pointer-events: auto; }
+.site-top-button--light { background: rgba(218, 218, 218, 0.6); color: #fff; }
+.site-top-button--dark { background: rgba(185, 185, 185, 0.5); color: #fff; }
+.site-top-button img { position: absolute; top: 15px; left: 26px; width: 12px; height: 15px; }
+.site-top-button--light img { filter: brightness(0) invert(1); }
+.site-top-button span { position: absolute; top: 32px; left: 20px; }
+@media (max-width: 767px) { .site-top-button { right: 20px; bottom: 24px; } }
+@media (prefers-reduced-motion: reduce) { .site-top-button { transition: none; } }
