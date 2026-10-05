@@ -353,7 +353,6 @@ export default function HomeContent() {
             });
         };
         media.add('(min-width: 901px)', () => {
-            let sloganReset;
             let typingSequence;
             let sloganPin;
             let isSloganTyping = false;
@@ -362,11 +361,11 @@ export default function HomeContent() {
             let cleanupVehicleExhibitionTransition;
             let cleanupCurrentExhibition;
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-                const image = transition.querySelector('.renewal-location-transition__image');
-                const intro = transition.previousElementSibling?.matches('.renewal-intro')
-                    ? transition.previousElementSibling
-                    : null;
-                const locationSection = transition.querySelector('.renewal-location');
+            const image = transition.querySelector('.renewal-location-transition__image');
+            const intro = transition.previousElementSibling?.matches('.renewal-intro')
+                ? transition.previousElementSibling
+                : null;
+            const locationSection = transition.querySelector('.renewal-location');
             const target = transition.querySelector('.renewal-location__detail img');
             const hero = intro?.previousElementSibling?.matches('.renewal-hero')
                 ? intro.previousElementSibling
@@ -386,9 +385,7 @@ export default function HomeContent() {
                     gsap.set(shade, { autoAlpha: 1 });
                     gsap.set(shadeSubtract, { attr: { x: 688, y: 355, width: 545, height: 319, opacity: 1 } });
                     gsap.set(openingGeometry, { attr: { opacity: 1, transform: '' } });
-                    gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
                 } else {
-                    gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
                     gsap.set(heroCanvas, { autoAlpha: 1 });
                     gsap.set(shade, { autoAlpha: 0 });
                     gsap.set(shadeSubtract, { attr: { x: 960.5, y: 515.5, width: 0, height: 0, opacity: 1 } });
@@ -520,138 +517,138 @@ export default function HomeContent() {
                     heroSequenceTrigger = heroTimeline.scrollTrigger;
                 }
             }
-            // Reserve the later pin's space before the parent intro pin caches its height.
-            gsap.set(transition, { '--location-scroll-distance': `${locations.length * 120}vh` });
-            const bounds = () => {
-                const destination = target.getBoundingClientRect();
-                const section = locationSection.getBoundingClientRect();
-                return {
-                    x: locationSection.offsetLeft + destination.left - section.left,
-                    y: intro.offsetHeight + destination.top - section.top,
-                    width: destination.width,
-                    height: destination.height,
+            const locationButtonHandlers = [];
+            if (!prefersReducedMotion && intro && image && target && locationSection) {
+                // The shared image stays in viewport coordinates through H, FULL and travel.
+                // Only Location is pinned; its spacer also supplies the following sections' space.
+                const bounds = () => {
+                    const destination = target.getBoundingClientRect();
+                    const section = locationSection.getBoundingClientRect();
+                    return {
+                        x: locationSection.offsetLeft + destination.left - section.left,
+                        y: destination.top - section.top,
+                        width: destination.width,
+                        height: destination.height,
+                    };
                 };
-            };
-            const syncSharedImage = (self) => {
-                const atLocation = self.progress >= 1;
-                gsap.set(image, { autoAlpha: atLocation ? 0 : 1 });
-                gsap.set(target, { autoAlpha: atLocation ? 1 : 0 });
-            };
-            // Hold the entire image/text group still until the intro copy has faded.
-            // Animate the child, not the pinned container, to keep pin measurements stable.
-            const introFade = gsap.fromTo(
-                intro,
-                { '--intro-copy-opacity': 1 },
-                {
-                    '--intro-copy-opacity': 0,
-                    ease: 'none',
+                const syncSharedImage = (self) => {
+                    const atLocation = self.progress >= 1;
+                    gsap.set(image, { autoAlpha: atLocation ? 0 : 1 });
+                    gsap.set(target, { autoAlpha: atLocation ? 1 : 0 });
+                };
+                // Fade the copy without intercepting wheel input or pinning the image's parent.
+                const introFade = gsap.fromTo(
+                    intro,
+                    { '--intro-copy-opacity': 1 },
+                    {
+                        '--intro-copy-opacity': 0,
+                        ease: 'none',
+                        scrollTrigger: {
+                            trigger: intro,
+                            start: () => heroSequenceTrigger?.end ?? 'top top',
+                            end: () => `+=${window.innerHeight * 0.25}`,
+                            scrub: true,
+                            invalidateOnRefresh: true,
+                            onLeave: () => gsap.set(intro, { autoAlpha: 0 }),
+                            onEnterBack: () => gsap.set(intro, { autoAlpha: 1 }),
+                        },
+                    }
+                );
+                const timeline = gsap.timeline({
+                    defaults: { ease: 'none' },
                     scrollTrigger: {
-                        trigger: intro,
-                        start: () => heroSequenceTrigger?.end ?? 'top top',
-                        end: () => `+=${window.innerHeight * 0.25}`,
-                        pin: transition,
+                        trigger: transition,
+                        start: () => introFade.scrollTrigger.end,
+                        // The CSS entry space includes the copy fade, then one viewport of travel.
+                        end: () =>
+                            introFade.scrollTrigger.end +
+                            Math.max(
+                                1,
+                                intro.offsetHeight +
+                                    locationSection.offsetHeight / 2 -
+                                    window.innerHeight / 2
+                            ),
                         scrub: true,
                         invalidateOnRefresh: true,
-                        onLeave: () => gsap.set(intro, { autoAlpha: 0 }),
-                        onEnterBack: () => gsap.set(intro, { autoAlpha: 1 }),
+                        onUpdate: syncSharedImage,
+                        onRefresh: syncSharedImage,
                     },
-                }
-            );
-            const timeline = gsap.timeline({
-                defaults: { ease: 'none' },
-                scrollTrigger: {
-                    trigger: transition,
-                    start: () => introFade.scrollTrigger.end,
-                    // Include the pin's scroll distance while retaining center-to-center arrival.
-                    end: () =>
-                        introFade.scrollTrigger.end +
-                        Math.max(
-                            1,
-                            intro.offsetHeight +
-                                locationSection.offsetHeight / 2 -
-                                window.innerHeight / 2
-                        ),
-                    scrub: true,
-                    invalidateOnRefresh: true,
-                    onUpdate: syncSharedImage,
-                    onRefresh: syncSharedImage,
-                },
-            });
-            timeline.fromTo(
-                image,
-                {
-                    x: 0,
-                    y: 0,
-                    width: () => transition.clientWidth,
-                    height: () => intro.offsetHeight,
-                },
-                {
-                    x: () => bounds().x,
-                    y: () => bounds().y,
-                    width: () => bounds().width,
-                    height: () => bounds().height,
-                    autoRound: false,
-                    duration: 1,
-                },
-                0
-            );
-            // Cover the location rail/links only while travelling; restore on arrival.
-            // A positive start keeps the intro copy above the image before shrinking.
-            timeline.set(image, { zIndex: 3 }, 0.000001);
-            timeline.set(image, { zIndex: 1 }, 1);
-            timeline.set(target, { autoAlpha: 0 }, 0);
-            timeline.set(target, { autoAlpha: 1 }, 1);
-            timeline.set(image, { autoAlpha: 0 }, 1);
-            const locationRail = locationSection.querySelector('.renewal-location__rail');
-            gsap.set(locationRail, { display: 'none' });
-            const syncLocationRail = (self) => {
-                gsap.set(locationRail, { display: self.scroll() >= self.start ? 'block' : 'none' });
-            };
-            // Match the 580 × 320 location asset's lower-right diagonal cut.
-            timeline.fromTo(
-                image,
-                {
-                    clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)',
-                },
-                {
-                    clipPath: 'polygon(0% 0%, 100% 0%, 100% 85.07%, 91.7391% 100%, 0% 100%)',
-                    duration: 0.15,
-                },
-                0
-            );
-            const updateLocation = (self) => {
-                setSelectedLocation(
-                    Math.min(locations.length - 1, Math.floor(self.progress * locations.length))
-                );
-            };
-            locationScrollRef.current = ScrollTrigger.create({
-                trigger: locationSection,
-                start: () => timeline.scrollTrigger.end,
-                end: () => `+=${locations.length * window.innerHeight}`,
-                pin: locationSection,
-                // Reparent while pinned so the intro pin's transformed wrapper cannot
-                // change the location section's viewport coordinates.
-                pinReparent: true,
-                invalidateOnRefresh: true,
-                onUpdate: updateLocation,
-                onEnter: syncLocationRail,
-                onEnterBack: syncLocationRail,
-                onLeaveBack: syncLocationRail,
-                onRefresh: (self) => {
-                    updateLocation(self);
-                    syncLocationRail(self);
-                },
-            });
-            // pinReparent moves the section outside React's delegated event root.
-            // Keep its existing tabs clickable while that pin is active.
-            const locationButtonHandlers = [...locationSection.querySelectorAll('.renewal-location__list button')]
-                .map((button, index) => {
-                    const handleClick = () => {
-                        if (locationSection.parentElement === document.body) selectLocation(index);
-                    };
-                    button.addEventListener('click', handleClick);
-                    return () => button.removeEventListener('click', handleClick);
                 });
+                timeline.fromTo(
+                    image,
+                    {
+                        x: 0,
+                        y: 0,
+                        width: () => transition.clientWidth,
+                        height: () => intro.offsetHeight,
+                    },
+                    {
+                        x: () => bounds().x,
+                        y: () => bounds().y,
+                        width: () => bounds().width,
+                        height: () => bounds().height,
+                        autoRound: false,
+                        duration: 1,
+                    },
+                    0
+                );
+                // Cover the location rail/links only while travelling; restore on arrival.
+                // A positive start keeps the intro copy above the image before shrinking.
+                timeline.set(image, { zIndex: 3 }, 0.000001);
+                timeline.set(image, { zIndex: 1 }, 1);
+                timeline.set(target, { autoAlpha: 0 }, 0);
+                timeline.set(target, { autoAlpha: 1 }, 1);
+                timeline.set(image, { autoAlpha: 0 }, 1);
+                const locationRail = locationSection.querySelector('.renewal-location__rail');
+                gsap.set(locationRail, { display: 'none' });
+                const syncLocationRail = (self) => {
+                    gsap.set(locationRail, { display: self.scroll() >= self.start ? 'block' : 'none' });
+                };
+                // Match the 580 × 320 location asset's lower-right diagonal cut.
+                timeline.fromTo(
+                    image,
+                    {
+                        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)',
+                    },
+                    {
+                        clipPath: 'polygon(0% 0%, 100% 0%, 100% 85.07%, 91.7391% 100%, 0% 100%)',
+                        duration: 0.15,
+                    },
+                    0
+                );
+                const updateLocation = (self) => {
+                    setSelectedLocation(
+                        Math.min(locations.length - 1, Math.floor(self.progress * locations.length))
+                    );
+                };
+                locationScrollRef.current = ScrollTrigger.create({
+                    trigger: locationSection,
+                    start: () => timeline.scrollTrigger.end,
+                    end: () => `+=${locations.length * window.innerHeight}`,
+                    pin: locationSection,
+                    // Keep viewport pin coordinates independent of the page wrappers.
+                    pinReparent: true,
+                    invalidateOnRefresh: true,
+                    onUpdate: updateLocation,
+                    onEnter: syncLocationRail,
+                    onEnterBack: syncLocationRail,
+                    onLeaveBack: syncLocationRail,
+                    onRefresh: (self) => {
+                        updateLocation(self);
+                        syncLocationRail(self);
+                    },
+                });
+                // pinReparent moves the section outside React's delegated event root.
+                // Keep its existing tabs clickable while that pin is active.
+                locationButtonHandlers.push(...[...locationSection.querySelectorAll('.renewal-location__list button')]
+                    .map((button, index) => {
+                        const handleClick = () => {
+                            if (locationSection.parentElement === document.body) selectLocation(index);
+                        };
+                        button.addEventListener('click', handleClick);
+                        return () => button.removeEventListener('click', handleClick);
+                    }));
+            }
             const slogan = sloganRef.current;
             const sloganText = sloganTextRef.current;
             const sloganCursor = sloganCursorRef.current;
