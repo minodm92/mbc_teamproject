@@ -424,8 +424,29 @@ export function VisitorGuide({ links }) {
     };
   }, [links.length]);
 
+  // Hover follows the pointer's height over the whole section, so the margins beside each row also hover.
+  const handleSectionPointerMove = (event) => {
+    const rows = linksRef.current ? [...linksRef.current.querySelectorAll('.renewal-guide__link')] : [];
+    const index = rows.findIndex((row) => {
+      const rect = row.getBoundingClientRect();
+      return event.clientY >= rect.top && event.clientY < rect.bottom;
+    });
+    if (index === -1) {
+      setHoverIndex(null);
+      return;
+    }
+    if (index !== hoverIndex) positionGuideVisual(index, linksRef, visualsRef);
+    setHoverIndex(index);
+  };
+
   return (
-    <section ref={sectionRef} className="renewal-guide" aria-labelledby="renewal-guide-title">
+    <section
+      ref={sectionRef}
+      className="renewal-guide"
+      aria-labelledby="renewal-guide-title"
+      onPointerMove={handleSectionPointerMove}
+      onPointerLeave={() => setHoverIndex(null)}
+    >
       <div className="renewal-guide__stage">
         <header>
           <h2 id="renewal-guide-title">VISITOR<br />INFORMATION</h2>
@@ -446,9 +467,6 @@ export function VisitorGuide({ links }) {
             ref={linksRef}
             className="renewal-guide__links"
             aria-label="방문 정보"
-            onPointerLeave={() => {
-              setHoverIndex(null);
-            }}
             onBlur={(event) => {
               if (!event.currentTarget.contains(event.relatedTarget)) {
                 setHoverIndex(null);
@@ -460,10 +478,6 @@ export function VisitorGuide({ links }) {
                 key={label}
                 to={to}
                 className={`renewal-guide__link${activeIndex === index ? ' is-active' : ''}${hoverIndex === index ? ' is-hovered' : ''}`}
-                onPointerEnter={() => {
-                  setHoverIndex(index);
-                  requestAnimationFrame(() => positionGuideVisual(index, linksRef, visualsRef));
-                }}
                 onFocus={() => {
                   setHoverIndex(index);
                   requestAnimationFrame(() => positionGuideVisual(index, linksRef, visualsRef));
