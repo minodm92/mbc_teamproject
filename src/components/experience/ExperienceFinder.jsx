@@ -187,6 +187,8 @@ export default function ExperienceFinder() {
                     key={experienceType || 'default'}
                     src={hero.image}
                     alt=""
+                    width="1920"
+                    height="1080"
                     onError={(event) => {
                         if (!event.currentTarget.src.endsWith(experienceFinderHero.default.image))
                             event.currentTarget.src = experienceFinderHero.default.image;
@@ -228,7 +230,7 @@ export default function ExperienceFinder() {
                                 <div className="match-result__list">
                                     {recommendations.map(item => (
                                         <article className="match-result__card" key={item.id}>
-                                            {item.image && <img src={item.image} alt="" />}
+                                            {item.image && <img src={item.image} alt="" width="1920" height="1080" />}
                                             <div className="match-result__card-body">
                                                 <span className="match-result__category">{categoryLabels[item.category]}</span>
                                                 <h3>{item.title}</h3>
