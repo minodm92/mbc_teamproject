@@ -353,9 +353,9 @@ export function VisitorGuide({ links }) {
   const visuals = [
     'guide-before.svg',
     'guide-plan.svg',
-    'guide-schedule.svg',
-    'guide-club.svg',
-    'guide-new.svg',
+    'guide-schedule-2.svg',
+    'guide-club-2.svg',
+    'guide-new-2.svg',
   ];
 
   useLayoutEffect(() => {
