@@ -74,8 +74,7 @@
     --detail-shift: 35.28vh;
     --detail-opacity: 0;
     position: relative;
-    height: 1550svh;
-    min-height: 10850px;
+    height: var(--mobility-intro-scroll-height, 731.2svh);
 }
 .mobility-intro__sticky {
     position: relative;
@@ -206,12 +205,12 @@
 .con2 {
     position: relative;
     width: 100%;
-    min-height: 100vh;
+    min-height: 100svh;
 }
 .con2__sticky {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 100svh;
     min-height: 700px;
     overflow: hidden;
     background: var(--color-main-1);
@@ -439,7 +438,7 @@
     padding: clamp(12px, 2.037svh, 22px) clamp(7px, 1.019svh, 11px) 0;
     border-top: 1px solid var(--color-main-2);
     color: color-mix(in srgb, var(--color-main-2) 50%, transparent);
-    font-size: clamp(14px, 1.852svh, 20px);
+    font-size: 20px;
     line-height: 1.4;
     cursor: pointer;
     transition:
@@ -455,7 +454,7 @@
 }
 .mobility-playground__list li span,
 .mobility-playground__list li strong {
-    font: 400 clamp(14px, 1.852svh, 20px) / 1.4 var(--font-en);
+    font: 400 20px/1.4 var(--font-en);
     white-space: nowrap;
 }
 .mobility-playground__list li.is-active {
@@ -464,12 +463,12 @@
 }
 .mobility-playground__list li.is-active span,
 .mobility-playground__list li.is-active strong {
-    font-weight: 645;
+    font-weight: 700;
 }
 .mobility-playground__list li p {
     grid-column: 2;
     margin-top: clamp(8px, 1.111svh, 12px);
-    font: 500 clamp(14px, 1.852svh, 20px) / 1.4 var(--font-ko);
+    font: 500 20px/1.4 var(--font-ko);
 }
 .mobility-playground__image {
     position: absolute;
@@ -808,8 +807,7 @@
         font-size: 30px;
     }
     .mobility-intro {
-        height: 1550svh;
-        min-height: 10850px;
+        height: var(--mobility-intro-scroll-height, 731.2svh);
     }
     .mobility-intro__sticky header h2,
     .mobility-statement h2 {
@@ -1062,7 +1060,7 @@
     }
     .con2-slide {
         position: relative;
-        height: 100vh;
+        height: 100svh;
         transform: none !important;
     }
     .con2-slide__reveal {
