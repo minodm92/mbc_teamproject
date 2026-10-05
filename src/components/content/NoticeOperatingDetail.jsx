@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { notices } from '../../common/data/content';
-﻿import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
 import './NoticesPage.css';
 import './NoticeOperatingDetail.css';
@@ -37,7 +37,18 @@ const detailedNotices = {
   },
 };
 
-function NoticeBody({ detail }) {
+function NoticeBody({ detail, content }) {
+  if (!detail) {
+    if (!content) return <p>상세 내용은 준비 중입니다.</p>;
+    if (typeof content === 'string') return content.split(/\n{2,}/).map((text, index) => <p key={index}>{text}</p>);
+    if (!Array.isArray(content)) return null;
+    return content.map((block, index) => {
+      if (block.type === 'list') return <ol key={index}>{block.items.map((text, itemIndex) => <li key={itemIndex}>{text}</li>)}</ol>;
+      if (block.type === 'image') return <figure key={index}><img src={block.src} alt={block.alt || ''} />{block.caption && <figcaption>{block.caption}</figcaption>}</figure>;
+      if (block.type === 'link') return <p key={index}><a href={block.href} target="_blank" rel="noreferrer">{block.label}</a></p>;
+      return <p key={index}>{block.strong ? <strong>{block.text}</strong> : block.text}</p>;
+    });
+  }
   return <>
     <p>안녕하세요. {detail.location}입니다.</p>
     {detail.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -53,6 +64,7 @@ function NoticeBody({ detail }) {
 }
 export default function NoticeOperatingDetail({ notice }) {
   const detail = detailedNotices[notice.id];
+  const isPlaceholder = !['goyang-october-hours', 'goyang-october-access', 'hanam-drive-light'].includes(notice.id);
   const noticeIndex = notices.findIndex((item) => item.id === notice.id);
   const nextNotice = noticeIndex >= 0 ? notices[noticeIndex + 1] : undefined;
   const previousNotice = noticeIndex > 0 ? notices[noticeIndex - 1] : undefined;
@@ -67,17 +79,17 @@ export default function NoticeOperatingDetail({ notice }) {
           <header className="notice-operating-page__heading">
             <h1>{notice.title}</h1>
             <div className="notice-operating-page__metadata">
-              <span>{detail?.location || (notice.id === 'goyang-october-hours' ? '현대 모터스튜디오 고양' : notice.category)}</span>
+              {!isPlaceholder && <span>{detail?.location || (notice.id === 'goyang-october-hours' ? '현대 모터스튜디오 고양' : notice.category)}</span>}
               <time dateTime={notice.date.replaceAll('.', '-')}>{notice.date}</time>
             </div>
           </header>
           <div className="notice-operating-page__body">
-            {detail ? <NoticeBody detail={detail} /> : notice.id === 'goyang-october-hours' ? <>
+            {isPlaceholder ? <p>상세 내용은 준비 중입니다.</p> : detail ? <NoticeBody detail={detail} /> : notice.id === 'goyang-october-hours' ? <>
             <p>안녕하세요. 현대 모터스튜디오 고양입니다.</p>
             <p>10월 5일 월요일은 정기 휴관 없이 정상 운영합니다. 방문 계획에 참고해 주세요.</p>
             <ul><li><strong>10월 5일(월) 정상 운영</strong><br />기존 정기 휴관일에서 정상 운영일로 변경됩니다.</li></ul>
             <p>여러분의 방문을 기다립니다. 감사합니다.</p>
-            </> : <p>{notice.content || '상세 내용은 준비 중입니다.'}</p>}
+            </> : <NoticeBody content={notice.content} />}
           </div>
         </article>
         <div className="notice-operating-page__actions">
