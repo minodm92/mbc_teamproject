@@ -241,6 +241,19 @@
     width: 100%;
 }
 
+.newsroom-card__title {
+    transition: opacity 180ms ease;
+}
+
+.newsroom-card__link:hover .newsroom-card__title,
+.newsroom-card__link:focus-visible .newsroom-card__title {
+    opacity: 0.68;
+}
+
+.newsroom-card--related .newsroom-card__information {
+    width: calc(100% - 20px);
+}
+
 .newsroom-card__location,
 .newsroom-card__date {
     margin: 0;
