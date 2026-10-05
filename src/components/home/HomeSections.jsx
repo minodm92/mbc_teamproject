@@ -1,4 +1,4 @@
-import { Fragment, useId, useLayoutEffect, useRef, useState } from 'react';
+import { Fragment, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -339,6 +339,9 @@ export function VisitorGuide({ links }) {
   const visualsRef = useRef(null);
   const [scrollActiveIndex, setScrollActiveIndex] = useState(0);
   const [hoverIndex, setHoverIndex] = useState(null);
+  const pointerYRef = useRef(null);
+  const hoverUpdateRef = useRef(null);
+  const loopRef = useRef(null);
   const activeIndex = hoverIndex ?? scrollActiveIndex;
   const descriptions = [
     '휴관 및 운영시간 · 전시 관람 제한 · 시설 이용 안내 · 주요 공지사항',
@@ -424,28 +427,74 @@ export function VisitorGuide({ links }) {
     };
   }, [links.length]);
 
-  // Hover follows the pointer's height over the whole section, so the margins beside each row also hover.
-  const handleSectionPointerMove = (event) => {
+  // Hover follows the last known pointer height inside the section. Scrolling re-runs this with the same
+  // pointer position, so the highlighted row keeps up with the page. Outside the section it returns to null,
+  // and the scroll-driven highlight (scrollActiveIndex) takes over again.
+  const updateHoverFromPointer = () => {
+    const section = sectionRef.current;
+    const y = pointerYRef.current;
+    if (!section || y === null) {
+      setHoverIndex(null);
+      return;
+    }
+    const box = section.getBoundingClientRect();
+    if (y < box.top || y >= box.bottom) {
+      setHoverIndex(null);
+      return;
+    }
     const rows = linksRef.current ? [...linksRef.current.querySelectorAll('.renewal-guide__link')] : [];
     const index = rows.findIndex((row) => {
       const rect = row.getBoundingClientRect();
-      return event.clientY >= rect.top && event.clientY < rect.bottom;
+      return y >= rect.top && y < rect.bottom;
     });
     if (index === -1) {
       setHoverIndex(null);
       return;
     }
-    if (index !== hoverIndex) positionGuideVisual(index, linksRef, visualsRef);
+    positionGuideVisual(index, linksRef, visualsRef);
     setHoverIndex(index);
   };
+  hoverUpdateRef.current = updateHoverFromPointer;
+
+  useEffect(() => {
+    // Recalculate per frame while the pointer is inside the section (rows keep moving under a still pointer as the
+    // scrub settles), and for a short time after a scroll. The loop stops once neither applies.
+    let frame = 0;
+    let until = 0;
+    const tick = () => {
+      hoverUpdateRef.current?.();
+      const keepGoing = pointerYRef.current !== null || performance.now() < until;
+      frame = keepGoing ? requestAnimationFrame(tick) : 0;
+    };
+    const ensureLoop = () => {
+      if (!frame) frame = requestAnimationFrame(tick);
+    };
+    loopRef.current = ensureLoop;
+    const onScroll = () => {
+      until = performance.now() + 700;
+      ensureLoop();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <section
       ref={sectionRef}
       className="renewal-guide"
       aria-labelledby="renewal-guide-title"
-      onPointerMove={handleSectionPointerMove}
-      onPointerLeave={() => setHoverIndex(null)}
+      onPointerMove={(event) => {
+        pointerYRef.current = event.clientY;
+        updateHoverFromPointer();
+        loopRef.current?.();
+      }}
+      onPointerLeave={() => {
+        pointerYRef.current = null;
+        setHoverIndex(null);
+      }}
     >
       <div className="renewal-guide__stage">
         <header>
