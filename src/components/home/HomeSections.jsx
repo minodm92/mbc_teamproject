@@ -197,10 +197,10 @@ export function HomeStories({ stories }) {
           onUpdate: updateLineFromProgress,
           scrollTrigger: {
             trigger: titleLine,
-            start: 'top bottom',
+            start: 'top 70%',
             endTrigger: section,
-            end: 'bottom bottom',
-            scrub: 1,
+            end: 'bottom 70%',
+            scrub: 0.35,
             invalidateOnRefresh: true,
             onRefresh: updateLineFromProgress,
           },
@@ -220,38 +220,19 @@ export function HomeStories({ stories }) {
         const settleState = isMobile ? { y: 0, opacity: 1 } : { x: 0, opacity: 1 };
         if (reduceMotion) return;
 
-        const revealHold = 1;
         const reveal = gsap.timeline({
           scrollTrigger: {
-            trigger: row,
-            start: () => {
-              const anchorOffset = copy ? copy.offsetTop + 10 : row.offsetHeight / 2;
-              const nextRow = rows[index + 1];
-              const availableDistance = nextRow
-                ? nextRow.offsetTop - row.offsetTop
-                : section.offsetHeight - row.offsetTop;
-              const scrollDistance = Math.max(window.innerHeight * 0.42, availableDistance * 0.68);
-              const timelineDuration = revealHold + 0.08 + 0.9;
-              const holdDistance = scrollDistance * (revealHold / timelineDuration);
-              const topViewportPercent = 100 * (1 - (anchorOffset - holdDistance) / window.innerHeight);
-              return `top ${topViewportPercent}%`;
-            },
-            end: () => {
-              const nextRow = rows[index + 1];
-              const availableDistance = nextRow
-                ? nextRow.offsetTop - row.offsetTop
-                : section.offsetHeight - row.offsetTop;
-              return `+=${Math.max(window.innerHeight * 0.42, availableDistance * 0.68)}`;
-            },
+            trigger: copy || row,
+            start: copy ? 'top+=10 bottom' : 'center bottom',
+            end: copy ? 'top+=10 70%' : 'center 70%',
             refreshPriority: -1,
             scrub: 0.35,
             invalidateOnRefresh: true,
           },
         });
 
-        reveal.to({}, { duration: revealHold, ease: 'none' });
-        if (copy) reveal.fromTo(copy, startState, { ...settleState, duration: 0.9, ease: 'none' }, revealHold);
-        if (image) reveal.fromTo(image, imageStartState, { ...settleState, duration: 0.9, ease: 'none' }, revealHold + 0.08);
+        if (copy) reveal.fromTo(copy, startState, { ...settleState, duration: 0.9, ease: 'none' }, 0);
+        if (image) reveal.fromTo(image, imageStartState, { ...settleState, duration: 0.9, ease: 'none' }, 0.08);
       });
 
       if (reduceMotion) {

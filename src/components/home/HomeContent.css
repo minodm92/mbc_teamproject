@@ -739,37 +739,6 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     transform: translateX(-50%);
     white-space: nowrap;
 }
-.renewal-vehicle-exhibition-slogan-entry {
-    background: #fff;
-}
-.renewal-vehicle-exhibition-slogan {
-    position: relative;
-    display: flex;
-    height: 100svh;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    color: #111;
-    text-align: center;
-}
-.renewal-vehicle-exhibition-shared-title {
-    margin: 0;
-    font-family: var(--font-en);
-    font-weight: 550;
-    white-space: nowrap;
-}
-.renewal-vehicle-exhibition-slogan .renewal-vehicle-exhibition-shared-title {
-    position: relative;
-    font-size: clamp(48px, 3.64583vw, 70px);
-    line-height: 1.2;
-}
-.renewal-vehicle-exhibition-title-handoff-layer {
-    position: fixed;
-    z-index: 5;
-    inset: 0;
-    pointer-events: none;
-}
-.renewal-vehicle-exhibition-shared-title span,
 .renewal-vehicle-exhibition-card-list__header h2 span {
     display: block;
 }
@@ -784,6 +753,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
 .renewal-vehicle-exhibition-card-list {
     position: relative;
     height: min(211.40625vw, 4059px);
+    margin-top: 30svh;
     background: #fff;
     color: #111;
 }
@@ -889,10 +859,11 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     .renewal-vehicle-exhibition-card-list {
         --vehicle-card-start: 100svh;
         --vehicle-card-gap: 120svh;
+        --vehicle-card-end-gap: calc(min(35.15625vw, 675px) + 140px + 10svh);
         height: calc(
             var(--vehicle-card-start) + var(--vehicle-card-gap) + var(--vehicle-card-gap) +
                 var(--vehicle-card-gap) + var(--vehicle-card-gap) + var(--vehicle-card-gap) +
-                var(--vehicle-card-gap)
+                var(--vehicle-card-end-gap)
         );
     }
     .renewal-vehicle-exhibition-card-list__item.is-avante-n {
@@ -924,14 +895,6 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     }
 }
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
-    .renewal-vehicle-exhibition-slogan-entry {
-        position: relative;
-        z-index: 2;
-        padding-top: 30svh;
-    }
-    .renewal-vehicle-exhibition-card-list__mobile-title {
-        display: none;
-    }
     .renewal-vehicle-exhibition-card-list__header p {
         width: max-content;
         white-space: nowrap;
@@ -1100,7 +1063,8 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
 .renewal-story--2 img,
 .renewal-story--4 img {
     grid-column: 1;
-    margin-left: min(6.666667vw, 128px);
+    margin-right: min(6.875vw, 132px);
+    justify-self: end;
 }
 .renewal-story--1 .renewal-story__copy {
     width: min(27.5vw, 528px);
@@ -1389,9 +1353,6 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         height: 100svh;
         min-height: 600px;
     }
-    .renewal-vehicle-exhibition-slogan {
-        height: 100svh;
-    }
     .renewal-current {
         display: flex;
         width: 100%;
@@ -1484,6 +1445,8 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         width: 100%;
         height: auto;
         margin-left: 0;
+        margin-right: 0;
+        justify-self: auto;
     }
     .renewal-story .renewal-story__copy {
         width: 100%;
@@ -1572,7 +1535,6 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     .renewal-experience p {
         font-size: 42px;
     }
-    .renewal-vehicle-exhibition-slogan h2,
     .renewal-vehicle-exhibition-card-list__header h2 {
         font-size: min(8vw, 38px);
     }

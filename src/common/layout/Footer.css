@@ -81,7 +81,7 @@
 }
 .reservation-footer__meta {
     position: relative;
-    z-index: 2;
+    z-index: 4;
     width: max-content;
 }
 .reservation-footer__social {
@@ -121,17 +121,15 @@
 }
 .reservation-footer > small {
     position: absolute;
-    z-index: 3;
+    z-index: 1;
     top: 557px;
     left: 100px;
     font: 500 15px var(--font-en);
 }
 .reservation-footer__cars {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 350px;
+    z-index: 2;
+    inset: 0;
 }
 .reservation-footer__car,
 .reservation-footer__rock {
@@ -161,6 +159,27 @@
     width: 579px;
     transform: rotate(6.98deg);
 }
+.reservation-footer__car--five {
+    left: 10%;
+    bottom: 14px;
+    width: 469px;
+}
+.reservation-footer__car--six {
+    left: 37%;
+    bottom: 5px;
+    width: 469px;
+}
+.reservation-footer__car--seven {
+    right: 5%;
+    bottom: 8px;
+    width: 469px;
+}
+.reservation-footer__toy-car {
+    left: calc(2% + var(--toy-car-index) * 5.3%);
+    bottom: 8px;
+    width: 100px;
+    height: auto;
+}
 .reservation-footer__rock {
     z-index: 2;
     right: 19%;
@@ -184,6 +203,13 @@
 .reservation-footer.is-physics-static .reservation-footer__rock {
     opacity: 1;
 }
+.reservation-footer.is-physics-running .reservation-footer__toy-car {
+    opacity: 0;
+}
+.reservation-footer.is-physics-running.is-toys-active .reservation-footer__toy-car,
+.reservation-footer.is-physics-static .reservation-footer__toy-car {
+    opacity: 1;
+}
 .reservation-footer.is-physics-running .reservation-footer__car,
 .reservation-footer.is-physics-running .reservation-footer__rock {
     pointer-events: none;
@@ -204,6 +230,38 @@
     width: 11.86%;
     height: auto;
 }
+.reservation-footer__rock--two {
+    right: 42%;
+    bottom: 190px;
+    width: 158px;
+    aspect-ratio: 157.654/94;
+    overflow: hidden;
+}
+.reservation-footer__rock--two .reservation-footer__rock-image {
+    position: absolute;
+    top: -15.93%;
+    left: -16.61%;
+    width: 132.52%;
+    height: 140.41%;
+    max-width: none;
+    object-fit: fill;
+}
+.reservation-footer__rock--two .reservation-footer__rock-eye {
+    top: 13.8%;
+    left: 18%;
+    z-index: 2;
+    width: 10.15%;
+}
+.reservation-footer__rock--two .reservation-footer__rock-eyelid {
+    position: absolute;
+    top: 13.2%;
+    left: 16.4%;
+    z-index: 3;
+    width: 14.18%;
+    height: auto;
+    transform: rotate(-154.37deg);
+    transform-origin: center;
+}
 @media (max-width: 1100px) {
     .reservation-footer {
         height: 650px;
@@ -220,7 +278,7 @@
         left: 40px;
     }
     .reservation-footer__cars {
-        height: 260px;
+        height: auto;
     }
     .reservation-footer__car--one {
         width: 32vw;
@@ -234,9 +292,18 @@
     .reservation-footer__car--four {
         width: 38vw;
     }
+    .reservation-footer__car--five,
+    .reservation-footer__car--six,
+    .reservation-footer__car--seven {
+        width: 33vw;
+    }
     .reservation-footer__rock {
         width: 14vw;
         bottom: 95px;
+    }
+    .reservation-footer__rock--two {
+        width: 12vw;
+        bottom: 145px;
     }
 }
 @media (max-width: 680px) {
@@ -281,6 +348,11 @@
     .reservation-footer__car--four {
         right: -13%;
         width: 50vw;
+    }
+    .reservation-footer__car--five,
+    .reservation-footer__car--six,
+    .reservation-footer__car--seven {
+        width: 40vw;
     }
     .reservation-footer__rock {
         display: none;

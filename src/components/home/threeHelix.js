@@ -48,9 +48,11 @@ void main() {
 const fragmentShader = `
 uniform sampler2D map;
 uniform float opacity;
+uniform float zoom;
 varying vec2 vUv;
 void main() {
-    vec4 color = texture2D(map, vUv);
+    vec2 zoomedUv = (vUv - 0.5) / zoom + 0.5;
+    vec4 color = texture2D(map, zoomedUv);
     if (color.a <= 0.001) discard;
     gl_FragColor = vec4(color.rgb, color.a * opacity);
 }
@@ -89,7 +91,11 @@ function createCardGeometry() {
 
 function createCardMaterial(texture) {
     return new THREE.ShaderMaterial({
-        uniforms: { map: { value: texture }, opacity: { value: 1 } },
+        uniforms: {
+            map: { value: texture },
+            opacity: { value: 1 },
+            zoom: { value: 1 },
+        },
         vertexShader,
         fragmentShader,
         side: THREE.DoubleSide,
@@ -161,6 +167,7 @@ export function createThreeHelix(canvas, imageUrls) {
             createCardMaterial(textures[index % textures.length])
         );
         mesh.userData.index = index;
+        mesh.userData.hoverAmount = 1;
         mesh.userData.hoverScale = 1;
         scene.add(mesh);
         cards.push(mesh);
@@ -258,20 +265,28 @@ export function createThreeHelix(canvas, imageUrls) {
 
     const updateHover = () => {
         hoveredCard = null;
+        const isGridEntryStage = toTimelineProgress(progress) >= GRID_ENTRY_START;
         if (pointerActive) {
             raycaster.setFromCamera(pointer, cam);
             const hits = raycaster.intersectObjects(
-                cards.filter((card) => card.visible),
+                cards.filter(
+                    (card) =>
+                        card.visible &&
+                        (!isGridEntryStage || card.userData.index < FINAL_CARD_COUNT)
+                ),
                 false
             );
             if (hits.length > 0) hoveredCard = hits[0].object;
         }
 
         for (let index = 0; index < N; index += 1) {
-            const current = cards[index].userData.hoverScale ?? 1;
+            const current = cards[index].userData.hoverAmount ?? 1;
             const target = cards[index] === hoveredCard ? 1.12 : 1;
             const next = current + (target - current) * HOVER_LERP_K;
-            cards[index].userData.hoverScale = Math.abs(target - next) < 0.001 ? target : next;
+            const hoverAmount = Math.abs(target - next) < 0.001 ? target : next;
+            cards[index].userData.hoverAmount = hoverAmount;
+            cards[index].userData.hoverScale = isGridEntryStage ? 1 : hoverAmount;
+            cards[index].material.uniforms.zoom.value = isGridEntryStage ? hoverAmount : 1;
         }
     };
 
