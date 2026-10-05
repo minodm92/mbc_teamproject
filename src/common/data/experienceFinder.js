@@ -53,7 +53,7 @@ export const experienceTypeCategories = {
 export const experienceFinderHero = {
   default: {
     title: '나의 일상에 꼭 맞는 경험 추천',
-    image: '/images/locations/goyang.svg',
+    image: '/images/locations/main.webp',
   },
   mobility: {
     title: '차량을 직접 보고 운전해보고 싶어요',

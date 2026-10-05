@@ -34,8 +34,8 @@ export const exhibitions = [
 ];
 
 export const programs = [
-  { id: 'hydrogen-energy', title: '수소 에너지 탐험', english: 'HYDROGEN ENERGY JOURNEY', location: '고양', image: '/images/programs/hydrogen.svg', description: '수소 에너지와 미래 모빌리티를 직접 살펴보는 체험 프로그램' },
-  { id: 'design-workshop', title: '모빌리티 디자인 워크숍', english: 'MOBILITY DESIGN WORKSHOP', location: '부산', image: '/images/programs/design.svg', description: '나만의 시선으로 미래 이동 경험을 상상하고 만들어보세요.' },
+  { id: 'hydrogen-energy', title: '수소 에너지 탐험', english: 'HYDROGEN ENERGY JOURNEY', location: '고양', image: '/images/programs/hydrogen.webp', description: '수소 에너지와 미래 모빌리티를 직접 살펴보는 체험 프로그램' },
+  { id: 'design-workshop', title: '모빌리티 디자인 워크숍', english: 'MOBILITY DESIGN WORKSHOP', location: '부산', image: '/images/programs/design.webp', description: '나만의 시선으로 미래 이동 경험을 상상하고 만들어보세요.' },
 ];
 
 export const notices = [
