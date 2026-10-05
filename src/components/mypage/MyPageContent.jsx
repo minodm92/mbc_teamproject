@@ -13,11 +13,44 @@ import membershipSeparator from './assets/membership-separator.svg';
 import membershipArrow from './assets/membership-arrow-up-right.svg';
 import './MyPageContent.css';
 
+const EXPERIENCE_RESULT_KEY = 'hyundai-experience-finder-result';
+const experienceLabels = {
+    mobility: '차량 전시 · 시승',
+    art: '아트 전시',
+    experience: '체험 전시',
+    program: '프로그램',
+};
+const preferenceLabels = {
+    immersive: '몰입감 있는 경험',
+    interactive: '직접 참여하는 경험',
+    explore: '깊이 알아가는 경험',
+    sensory: '감각적인 경험',
+    together: '함께 즐기는 경험',
+    discover: '새로운 발견의 경험',
+};
+
+function getExperienceSummary() {
+    if (typeof window === 'undefined') return '아직 찾은 경험이 없습니다.';
+    try {
+        const result = JSON.parse(window.localStorage.getItem(EXPERIENCE_RESULT_KEY));
+        if (!result) return '아직 찾은 경험이 없습니다.';
+        const recommendation = result.recommendationTitles?.[0];
+        return recommendation
+            || [experienceLabels[result.experienceType], preferenceLabels[result.preference]]
+                .filter(Boolean)
+                .join(' · ')
+            || '아직 찾은 경험이 없습니다.';
+    } catch {
+        return '아직 찾은 경험이 없습니다.';
+    }
+}
+
 export function MyPage() {
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
     const [period, setPeriod] = useState('1개월');
+    const [experienceSummary] = useState(getExperienceSummary);
     const allInquiries = useInquiryStore((state) => state.inquiries ?? []);
     const allReservations = useReservationStore((state) => state.reservations ?? []);
     const inquiries = allInquiries.filter((item) => item.userId === user?.id);
@@ -84,6 +117,11 @@ export function MyPage() {
                         </div>
                         <p>{user?.email}</p>
                     </header>
+
+                    <section className="mypage-finding" aria-label="경험 찾기 결과">
+                        <span>관심 분야</span>
+                        <strong>{experienceSummary}</strong>
+                    </section>
 
                     <section
                         className="mypage-information"
