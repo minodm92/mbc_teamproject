@@ -577,11 +577,8 @@ export default function HomeContent() {
                         ),
                     scrub: true,
                     invalidateOnRefresh: true,
-                    onUpdate: (self) => {
-                        const hasArrived = self.progress >= 0.999;
-                        gsap.set(target, { autoAlpha: hasArrived ? 1 : 0 });
-                        gsap.set(image, { autoAlpha: hasArrived ? 0 : 1 });
-                    },
+                    onUpdate: syncSharedImage,
+                    onRefresh: syncSharedImage,
                 },
             });
             timeline.fromTo(
