@@ -302,13 +302,30 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #111;
+    color: #848484;
     font: 500 15px/1.4 var(--font-en);
 }
 .login-page__signup img {
     width: 13px;
     height: 13px;
     transform: rotate(45deg);
+    filter: brightness(0) invert(51.7647%);
+}
+.login-page__home,
+.login-page__signup a {
+    transition: color 0.2s;
+}
+.login-page__home img,
+.login-page__signup img {
+    transition: filter 0.2s;
+}
+.login-page__home:hover,
+.login-page__signup a:hover {
+    color: #424242;
+}
+.login-page__home:hover img,
+.login-page__signup a:hover img {
+    filter: brightness(0) invert(25.8824%);
 }
 .login-page__demo {
     position: absolute;
