@@ -48,10 +48,10 @@ export function LoginPage() {
           setPersistence(rememberLogin);
           if (loginWithEmail(email, password)) navigate(destination);
         }}>
-          <label className="login-page__label" htmlFor="login-email">EMAIL</label>
+          <label className="login-page__label" htmlFor="login-email">Email</label>
           <input id="login-email" name="email" type="email" placeholder="이메일을 입력해주세요" value={email} onChange={(event) => setEmail(event.target.value)} required autoComplete="email" disabled={isAuthLoading} />
           <div className="login-page__password-field">
-            <label className="login-page__label" htmlFor="login-password">PASSWORD</label>
+            <label className="login-page__label" htmlFor="login-password">Password</label>
             <div className="login-page__password">
               <input id="login-password" name="password" type={showPassword ? 'text' : 'password'} placeholder="비밀번호를 입력해주세요" value={password} onChange={(event) => setPassword(event.target.value)} required autoComplete="current-password" disabled={isAuthLoading} />
               <PasswordToggle className="login-page__eye" visible={showPassword} controls="login-password" onToggle={() => setShowPassword((value) => !value)} />
