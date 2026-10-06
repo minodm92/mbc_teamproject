@@ -5,15 +5,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { locations } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
+import { withInstantScroll } from '../../common/utils/scrollPosition';
 import { HomeHero, HomeStories, VisitorGuide } from '../../components/home/HomeSections';
 import SpiralGallery from './SpiralGallery';
 import HomeProgramSequence from './HomeProgramSequence';
 import { homeAsset as asset } from './homeAssets';
 import {
     setHomeScrollLocked,
-    setHomeWheelDistanceRatio,
-    setupHomeScrollSmoothing,
-} from './homeScrollSmoothing';
+    setupHomeScrollControls,
+    registerHomeScrollBoundary,
+} from './homeScrollControls';
 import './HomeContent.css';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
@@ -330,6 +331,7 @@ export default function HomeContent() {
     const previousLocationRef = useRef(selectedLocation);
     const locationTransitionRef = useRef(null);
     const locationScrollRef = useRef(null);
+    const locationNavigationRef = useRef(null);
     const locationImageRef = useRef(null);
     const locationCopyRef = useRef(null);
     const sloganRef = useRef(null);
@@ -352,12 +354,41 @@ export default function HomeContent() {
         setSelectedLocation(index);
         const trigger = locationScrollRef.current;
         if (trigger) {
-            trigger.scroll(
-                trigger.start + (trigger.end - trigger.start) * ((index + 0.5) / locations.length)
-            );
+            const target = trigger.start + (trigger.end - trigger.start) * ((index + 0.5) / locations.length);
+            locationNavigationRef.current = { target };
+            trigger.scroll(target);
             ScrollTrigger.update();
         }
     };
+    useLayoutEffect(() => {
+        const cancelNavigation = () => { locationNavigationRef.current = null; };
+        const handleKeyDown = (event) => {
+            if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
+                cancelNavigation();
+            }
+        };
+        const finishNavigation = () => {
+            if (!locationNavigationRef.current) return;
+            cancelNavigation();
+            const trigger = locationScrollRef.current;
+            if (trigger) {
+                setSelectedLocation(Math.min(locations.length - 1, Math.floor(trigger.progress * locations.length)));
+            }
+        };
+        window.addEventListener('wheel', cancelNavigation, { passive: true, capture: true });
+        window.addEventListener('touchstart', cancelNavigation, { passive: true });
+        window.addEventListener('pointerdown', cancelNavigation, { passive: true });
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('scrollend', finishNavigation);
+        return () => {
+            cancelNavigation();
+            window.removeEventListener('wheel', cancelNavigation, true);
+            window.removeEventListener('touchstart', cancelNavigation);
+            window.removeEventListener('pointerdown', cancelNavigation);
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('scrollend', finishNavigation);
+        };
+    }, []);
     useLayoutEffect(() => {
         if (previousLocationRef.current === selectedLocation) return undefined;
         previousLocationRef.current = selectedLocation;
@@ -445,7 +476,7 @@ export default function HomeContent() {
         if (!transition) return undefined;
         const navigationEntry = performance.getEntriesByType('navigation')[0];
         if (navigationEntry?.type === 'reload' && window.scrollY > 0) {
-            window.scrollTo(0, 0);
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
         }
         const media = gsap.matchMedia();
         let refreshFrame;
@@ -460,6 +491,15 @@ export default function HomeContent() {
             let typingSequence;
             let sloganPin;
             let isSloganTyping = false;
+            let sloganAdvanceFrame;
+            let removeSloganBoundary;
+            const holdSloganPosition = () => {
+                if (!isSloganTyping || !sloganPin) return;
+                const target = sloganPin.start + 1;
+                if (Math.abs(window.scrollY - target) > 1) {
+                    withInstantScroll(() => sloganPin.scroll(target));
+                }
+            };
             let cleanupDriveInteraction;
             let cleanupExperienceWheel;
             let cleanupVehicleExhibitionTransition;
@@ -596,7 +636,8 @@ export default function HomeContent() {
                             pin: hero,
                             pinSpacing: true,
                             scrub: 1.2,
-                            anticipatePin: 1,
+                            // Pin at the measured boundary; velocity prediction can toggle a stationary section.
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
                             onLeave: () => {
                                 gsap.set(heroCanvas, { visibility: 'hidden' });
@@ -766,6 +807,12 @@ export default function HomeContent() {
                 };
                 // Match the 580 × 320 location asset's lower-right diagonal cut.
                 const updateLocation = (self) => {
+                    const navigation = locationNavigationRef.current;
+                    if (navigation) {
+                        // Keep the clicked location visible while its existing smooth scroll runs.
+                        if (Math.abs(window.scrollY - navigation.target) > 1) return;
+                        locationNavigationRef.current = null;
+                    }
                     setSelectedLocation(
                         Math.min(locations.length - 1, Math.floor(self.progress * locations.length))
                     );
@@ -783,6 +830,7 @@ export default function HomeContent() {
                     onEnterBack: syncLocationRail,
                     onLeaveBack: syncLocationRail,
                     onRefresh: (self) => {
+                        locationNavigationRef.current = null;
                         updateLocation(self);
                         syncLocationRail(self);
                     },
@@ -810,9 +858,12 @@ export default function HomeContent() {
                         defaults: { ease: 'steps(1)' },
                         paused: true,
                         onComplete: () => {
-                            isSloganTyping = false;
-                            setHomeScrollLocked(false);
-                            requestAnimationFrame(() => sloganPin?.scroll(sloganPin.end + 1));
+                            sloganAdvanceFrame = requestAnimationFrame(() => {
+                                if (!isSloganTyping || !sloganPin) return;
+                                isSloganTyping = false;
+                                setHomeScrollLocked(false);
+                                sloganPin.scroll(sloganPin.end + 1);
+                            });
                         },
                     })
                     .to({}, { duration: 0.4 })
@@ -836,15 +887,20 @@ export default function HomeContent() {
                     end: () => `+=${window.innerHeight}`,
                     pin: slogan,
                     pinReparent: true,
-                    anticipatePin: 1,
+                    anticipatePin: 0,
                     invalidateOnRefresh: true,
                     onEnter: () => {
                         if (isSloganTyping) return;
                         isSloganTyping = true;
                         setHomeScrollLocked(true);
+                        holdSloganPosition();
                         typingSequence.restart();
                     },
                     onLeaveBack: () => {
+                        if (isSloganTyping) {
+                            holdSloganPosition();
+                            return;
+                        }
                         isSloganTyping = false;
                         setHomeScrollLocked(false);
                         typingSequence.pause(0);
@@ -852,8 +908,14 @@ export default function HomeContent() {
                         gsap.set(sloganCursor, { opacity: 0 });
                     },
                 });
+                window.addEventListener('scroll', holdSloganPosition);
+                removeSloganBoundary = registerHomeScrollBoundary(
+                    (from, target) => from <= sloganPin.start && target > sloganPin.start ? sloganPin.start + 1 : target,
+                    () => [sloganPin.start, sloganPin.end]
+                );
             }
             const driveSection = driveRef.current;
+            const driveStage = driveSection?.parentElement;
             const driveTrack = driveSection?.querySelector('.renewal-drive__track');
             if (driveSection && driveTrack) {
                 const driveSlides = [...driveTrack.querySelectorAll('.renewal-drive__slide')];
@@ -901,6 +963,12 @@ export default function HomeContent() {
                         Math.abs(driveTargets.at(-1) ?? 0),
                         window.innerHeight * driveModels.length * 2
                     );
+                const refreshDriveStage = () => {
+                    measureDriveLayout();
+                    gsap.set(driveStage, { height: driveSection.offsetHeight + driveScrollDistance() });
+                };
+                gsap.set(driveSection, { position: 'sticky', top: 0 });
+                refreshDriveStage();
                 const setDriveCopyVisibility = (index, shouldShow, motionDirection) => {
                     if (driveCopyVisibility[index] === shouldShow) return;
                     driveCopyVisibility[index] = shouldShow;
@@ -986,19 +1054,38 @@ export default function HomeContent() {
                     autoAlpha: 1,
                     clipPath: 'inset(-4px 0% -4px 0%)',
                 });
+                let driveExitTimer;
+                let driveExitLocked = false;
+                let driveExitAllowed = false;
+                const holdDriveExit = (trigger) => {
+                    if (driveExitAllowed || driveExitLocked) return;
+                    driveExitLocked = true;
+                    setHomeScrollLocked(true);
+                    withInstantScroll(() => trigger.scroll(trigger.end - 1));
+                    ScrollTrigger.update();
+                    driveExitTimer = window.setTimeout(() => {
+                        driveExitLocked = false;
+                        driveExitAllowed = true;
+                        setHomeScrollLocked(false);
+                    }, 300);
+                };
                 const driveTimeline = gsap.timeline({
                     scrollTrigger: {
-                        trigger: driveSection,
-                        start: 'center center',
+                        id: 'home-drive',
+                        trigger: driveStage,
+                        start: 'top top',
                         end: () => `+=${driveScrollDistance()}`,
-                        pin: driveSection,
-                        pinReparent: true,
-                        anticipatePin: 1,
                         scrub: true,
                         invalidateOnRefresh: true,
-                        onRefreshInit: measureDriveLayout,
+                        onRefreshInit: refreshDriveStage,
                         onRefresh: updateDriveCopy,
-                        onToggle: (self) => setHomeWheelDistanceRatio(self.isActive ? 0.8 : 1),
+                        onLeave: (self) => {
+                            // A direct navigation to a distant section is not a vehicle-exit gesture.
+                            if (self.scroll() <= self.end + window.innerHeight) holdDriveExit(self);
+                        },
+                        onUpdate: (self) => {
+                            if (!driveExitLocked && self.progress < 0.9) driveExitAllowed = false;
+                        },
                     },
                     onUpdate: updateDriveCopy,
                 });
@@ -1012,9 +1099,30 @@ export default function HomeContent() {
                         })
                         .to({}, { duration: centeredHold });
                 });
+                const removeDriveBoundary = registerHomeScrollBoundary((from, target) => {
+                    const trigger = driveTimeline.scrollTrigger;
+                    if (target > from && from <= trigger.end && target >= trigger.end && !driveExitAllowed) {
+                        holdDriveExit(trigger);
+                        return trigger.end - 1;
+                    }
+                    return target;
+                }, () => [driveTimeline.scrollTrigger.start, driveTimeline.scrollTrigger.end]);
+                const keepDriveExitPosition = () => {
+                    if (!driveExitLocked) return;
+                    const trigger = driveTimeline.scrollTrigger;
+                    if (Math.abs(window.scrollY - (trigger.end - 1)) > 1) {
+                        withInstantScroll(() => trigger.scroll(trigger.end - 1));
+                        ScrollTrigger.update();
+                    }
+                };
+                window.addEventListener('scroll', keepDriveExitPosition);
                 updateDriveCopy();
                 cleanupDriveInteraction = () => {
-                    setHomeWheelDistanceRatio(1);
+                    window.clearTimeout(driveExitTimer);
+                    if (driveExitLocked) setHomeScrollLocked(false);
+                    driveExitLocked = false;
+                    removeDriveBoundary();
+                    window.removeEventListener('scroll', keepDriveExitPosition);
                     driveTimeline.scrollTrigger?.kill();
                     driveTimeline.kill();
                     driveSlides.forEach((slide) => {
@@ -1097,7 +1205,7 @@ export default function HomeContent() {
                     end: () => `+=${experienceRotationDistance}`,
                     pin: experienceSection,
                     pinReparent: true,
-                    anticipatePin: 1,
+                    anticipatePin: 0,
                     invalidateOnRefresh: true,
                     onToggle: (self) => {
                         isActive = self.isActive;
@@ -1117,26 +1225,23 @@ export default function HomeContent() {
             }
             const vehicleExhibitionCardList = vehicleExhibitionCardListRef.current;
             if (vehicleExhibitionCardList) {
-                const vehicleExhibitionScrollSmoothing = ScrollTrigger.create({
-                    trigger: vehicleExhibitionCardList,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    onToggle: (self) => setHomeWheelDistanceRatio(self.isActive ? 0.8 : 1),
-                    invalidateOnRefresh: true,
-                });
                 const vehicleExhibitionSectionPin = ScrollTrigger.create({
                     trigger: vehicleExhibitionCardList,
                     start: 'top top',
                     end: () => `+=${window.innerHeight}`,
                     pin: vehicleExhibitionCardList,
                     pinSpacing: true,
-                    anticipatePin: 1,
+                    anticipatePin: 0,
                     invalidateOnRefresh: true,
                 });
                 const vehicleExhibitionHeaderContent = vehicleExhibitionCardList.querySelector(
                     '.renewal-vehicle-exhibition-card-list__header-content'
                 );
                 let vehicleExhibitionDescriptionTrigger = null;
+                const removeDescriptionBoundary = registerHomeScrollBoundary(
+                    (_from, target) => target,
+                    () => [vehicleExhibitionSectionPin.start - 1, vehicleExhibitionSectionPin.end + 1]
+                );
                 let isDescriptionExitLocked = false;
                 let allowDescriptionExit = false;
                 const vehicleExhibitionHeaderReveal = vehicleExhibitionHeaderContent
@@ -1181,7 +1286,7 @@ export default function HomeContent() {
                             if (isDescriptionExitLocked) return;
                             isDescriptionExitLocked = true;
                             setHomeScrollLocked(true);
-                            self.scroll(self.start + 1);
+                            withInstantScroll(() => self.scroll(self.start + 1));
                             vehicleExhibitionHeaderReveal.reverse();
                         },
                         invalidateOnRefresh: true,
@@ -1224,6 +1329,7 @@ export default function HomeContent() {
                     );
                 });
                 cleanupVehicleExhibitionTransition = () => {
+                    removeDescriptionBoundary();
                     setHomeScrollLocked(false);
                     isDescriptionExitLocked = false;
                     allowDescriptionExit = false;
@@ -1239,8 +1345,6 @@ export default function HomeContent() {
                         clearProps: 'opacity,visibility,clipPath',
                     });
                     vehicleExhibitionSectionPin.kill();
-                    vehicleExhibitionScrollSmoothing.kill();
-                    setHomeWheelDistanceRatio(1);
                 };
             }
             const currentExhibition = currentExhibitionRef.current;
@@ -1270,7 +1374,7 @@ export default function HomeContent() {
                         pin: currentExhibition,
                         pinReparent: true,
                         scrub: 1.5,
-                        anticipatePin: 1,
+                        anticipatePin: 0,
                         invalidateOnRefresh: true,
                         onUpdate: () => {
                             renderHelix();
@@ -1333,6 +1437,9 @@ export default function HomeContent() {
                 };
             }
             return () => {
+                cancelAnimationFrame(sloganAdvanceFrame);
+                removeSloganBoundary?.();
+                window.removeEventListener('scroll', holdSloganPosition);
                 isSloganTyping = false;
                 setHomeScrollLocked(false);
                 sloganPin?.kill();
@@ -1344,6 +1451,7 @@ export default function HomeContent() {
                 cleanupCurrentExhibition?.();
                 locationButtonHandlers.forEach((removeHandler) => removeHandler());
                 locationScrollRef.current = null;
+                locationNavigationRef.current = null;
             };
         });
         window.addEventListener('load', refreshScrollLayout);
@@ -1358,7 +1466,7 @@ export default function HomeContent() {
             media.revert();
         };
     }, []);
-    useLayoutEffect(() => setupHomeScrollSmoothing(), []);
+    useLayoutEffect(() => setupHomeScrollControls(), []);
 
     return (
         <main className="renewal-home" id="top">
@@ -1458,6 +1566,7 @@ export default function HomeContent() {
                     </strong>
                 </section>
             </div>
+            <div className="renewal-drive-stage">
             <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
                 <div className="renewal-drive__track">
                     {driveModels.map((item) => (
@@ -1512,6 +1621,7 @@ export default function HomeContent() {
                     ))}
                 </div>
             </section>
+            </div>
             <section
                 className="renewal-experience"
                 ref={experienceRef}

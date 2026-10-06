@@ -119,9 +119,8 @@ export default function HomeProgramSequence() {
         const viewport = viewportRef.current;
         const video = videoRef.current;
         if (!sequence || !viewport) return undefined;
-        if (window.matchMedia('(max-width: 767px)').matches) return undefined;
-
-        const context = gsap.context(() => {
+        const media = gsap.matchMedia();
+        media.add('(min-width: 768px)', () => {
             gsap.set([stepTwoRef.current, stepThreeRef.current], { autoAlpha: 1 });
             const timeline = gsap.timeline({ paused: true });
             const stepTwoStart = STEP_HOLD;
@@ -146,37 +145,39 @@ export default function HomeProgramSequence() {
                 pin: viewport,
                 pinSpacing: false,
                 scrub: 1.8,
-                anticipatePin: 1,
+                // Keep pin changes tied to scroll position, rather than recent scroll velocity.
+                anticipatePin: 0,
                 refreshPriority: -1,
                 invalidateOnRefresh: true,
             });
+
+            let disposed = false;
+            let refreshFrame = 0;
+            const refresh = () => {
+                if (disposed || refreshFrame) return;
+                refreshFrame = requestAnimationFrame(() => {
+                    refreshFrame = 0;
+                    if (!disposed) ScrollTrigger.refresh();
+                });
+            };
+            const images = [...sequence.querySelectorAll('img')];
+            images.forEach((image) => image.addEventListener('load', refresh));
+            video?.addEventListener('loadedmetadata', refresh);
+            document.fonts?.ready.then(refresh);
+            const resizeObserver = new ResizeObserver(refresh);
+            resizeObserver.observe(sequence);
+            resizeObserver.observe(viewport);
+
+            return () => {
+                disposed = true;
+                cancelAnimationFrame(refreshFrame);
+                resizeObserver.disconnect();
+                images.forEach((image) => image.removeEventListener('load', refresh));
+                video?.removeEventListener('loadedmetadata', refresh);
+            };
         }, sequence);
 
-        let disposed = false;
-        let refreshFrame = 0;
-        const refresh = () => {
-            if (disposed || refreshFrame) return;
-            refreshFrame = requestAnimationFrame(() => {
-                refreshFrame = 0;
-                if (!disposed) ScrollTrigger.refresh();
-            });
-        };
-        const images = [...sequence.querySelectorAll('img')];
-        images.forEach((image) => image.addEventListener('load', refresh));
-        video?.addEventListener('loadedmetadata', refresh);
-        document.fonts?.ready.then(refresh);
-        const resizeObserver = new ResizeObserver(refresh);
-        resizeObserver.observe(sequence);
-        resizeObserver.observe(viewport);
-
-        return () => {
-            disposed = true;
-            cancelAnimationFrame(refreshFrame);
-            resizeObserver.disconnect();
-            images.forEach((image) => image.removeEventListener('load', refresh));
-            video?.removeEventListener('loadedmetadata', refresh);
-            context.revert();
-        };
+        return () => media.revert();
     }, []);
 
     return (

@@ -72,7 +72,7 @@ export default function LocationShowcase({ intro = false }) {
       if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
       // Keep the scrollbar lane reserved, so the layout width does not change when the page becomes scrollable.
       document.documentElement.style.scrollbarGutter = "stable";
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       const hero = root.querySelector(".location-hero");
       const title = root.querySelector(".location-hero__wordmark");
       const titleImage = title?.querySelector("img");
@@ -193,7 +193,9 @@ export default function LocationShowcase({ intro = false }) {
               if (skipKeys.includes(event.key)) skip(event);
             };
             const keepAtTop = () => {
-              if (isPinned() && window.scrollY !== 0) window.scrollTo(0, 0);
+              if (isPinned() && window.scrollY !== 0) {
+                window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+              }
             };
             const detachIntroInput = () => {
               skipEvents.forEach((e) => window.removeEventListener(e, skip));
@@ -408,7 +410,8 @@ export default function LocationShowcase({ intro = false }) {
               `+=${document.documentElement.clientHeight * (sequence ? HERO_REVEAL.pinLength : 1.8)}`,
             pin: true,
             scrub: sequence ? HERO_REVEAL.scrub : 1.5,
-            anticipatePin: 1,
+            // Velocity prediction can release and reapply a pin after the scroll has stopped.
+            anticipatePin: 0,
             invalidateOnRefresh: true,
             onRefreshInit: () => {
               gsap.set(hero, { height: heroHeight });
@@ -598,7 +601,7 @@ export default function LocationShowcase({ intro = false }) {
               end: () => `+=${Math.max(senayanGap, window.innerHeight * 0.5)}`,
               pin: true,
               scrub: true,
-              anticipatePin: 1,
+              anticipatePin: 0,
               invalidateOnRefresh: true,
               onRefreshInit: measureSenayanGap,
             },

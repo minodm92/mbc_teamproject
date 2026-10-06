@@ -1,8 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
-import { setHomeWheelDistanceRatio, setupHomeScrollSmoothing } from '../home/homeScrollSmoothing';
 import routeOverviewImage from '../../../public/images/mobility/route-overview-con6.png';
 import routeState01 from './assets/routes/route-state-01.png';
 import routeState02 from './assets/routes/route-state-02.png';
@@ -75,7 +74,6 @@ const DETAIL_REVEAL_DURATION = 0.6;
 const SLIDE_SCROLL_DURATION = 1;
 const VEHICLE_PIN_HOLD_DURATION = 0.6;
 const VEHICLE_OUTRO_HOLD_DURATION = 0.6;
-const VEHICLE_SCROLL_DISTANCE_RATIO = 0.6;
 const VEHICLE_SCROLL_SCRUB = 0.2;
 const PLAYGROUND_ITEM_SCROLL_DURATION = 0.6;
 const ROUTE_ITEM_SCROLL_DURATION = 0.7;
@@ -291,12 +289,9 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
                             scrub: VEHICLE_SCROLL_SCRUB,
                             pin: sticky,
                             pinSpacing: false,
-                            anticipatePin: 1,
+                            // Keep pin changes tied to scroll position, rather than recent scroll velocity.
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
-                            onToggle: (self) =>
-                                setHomeWheelDistanceRatio(
-                                    self.isActive ? VEHICLE_SCROLL_DISTANCE_RATIO : 1
-                                ),
                         },
                     });
 
@@ -326,7 +321,6 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
 
         return () => {
             cancelled = true;
-            setHomeWheelDistanceRatio(1);
             context?.revert();
         };
     }, [triggerRef, vehicles.length]);
@@ -363,8 +357,6 @@ export default function VehicleDisplay() {
     const [isRouteListActive, setIsRouteListActive] = useState(false);
     const persistentPlaygroundTitleRef = useRef(null);
     const [activePlaygroundIndex, setActivePlaygroundIndex] = useState(0);
-
-    useLayoutEffect(() => setupHomeScrollSmoothing(), []);
 
     useEffect(() => {
         const section = transitionRef.current;
@@ -531,7 +523,7 @@ export default function VehicleDisplay() {
                             scrub: 1.5,
                             pin: true,
                             pinSpacing: true,
-                            anticipatePin: 1,
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
                             onUpdate: syncStatementHandoff,
                             onRefresh: syncStatementHandoff,
@@ -664,7 +656,7 @@ export default function VehicleDisplay() {
                                 `+=${window.innerHeight * playgroundItems.length * PLAYGROUND_ITEM_SCROLL_DURATION}`,
                             pin: true,
                             pinSpacing: true,
-                            anticipatePin: 1,
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
                             onUpdate: syncPlaygroundState,
                             onRefresh: syncPlaygroundState,
@@ -760,7 +752,7 @@ export default function VehicleDisplay() {
                             scrub: 1,
                             pin: true,
                             pinSpacing: true,
-                            anticipatePin: 1,
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
                         },
                     });
@@ -896,7 +888,7 @@ export default function VehicleDisplay() {
                             scrub: 1,
                             pin: true,
                             pinSpacing: true,
-                            anticipatePin: 1,
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
                             onUpdate: syncRouteState,
                             onRefresh: syncRouteState,
@@ -999,7 +991,7 @@ export default function VehicleDisplay() {
                             scrub: 1,
                             pin: true,
                             pinSpacing: true,
-                            anticipatePin: 1,
+                            anticipatePin: 0,
                             invalidateOnRefresh: true,
                         },
                     });

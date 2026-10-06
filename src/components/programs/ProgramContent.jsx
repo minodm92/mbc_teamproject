@@ -390,7 +390,8 @@ export default function ProgramContent() {
                 end: () => `+=${window.innerHeight}`,
                 pin: true,
                 pinSpacing: true,
-                anticipatePin: 1,
+                // Pin only at the measured boundary so stopping near it cannot move the section.
+                anticipatePin: 0,
                 invalidateOnRefresh: true,
             });
 
@@ -472,7 +473,7 @@ export default function ProgramContent() {
                         ? () => `+=${window.innerHeight * 4.6}`
                         : 'bottom 20%',
                     pin: isDesktop,
-                    anticipatePin: isDesktop ? 1 : 0,
+                    anticipatePin: 0,
                     scrub: 1,
                     refreshPriority: -1,
                     invalidateOnRefresh: true,

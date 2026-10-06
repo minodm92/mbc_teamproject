@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import Header from './common/layout/Header';
 import { getHeaderVariant } from './common/router/headerVariant';
@@ -41,8 +41,8 @@ import ExperienceFinderPage from './pages/experience/ExperienceFinderPage';
 
 function ScrollToTop() {
     const { pathname } = useLocation();
-    useEffect(() => {
-        window.scrollTo(0, 0);
+    useLayoutEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }, [pathname]);
     return null;
 }
