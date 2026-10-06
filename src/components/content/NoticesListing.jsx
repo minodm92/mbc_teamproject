@@ -1,25 +1,35 @@
 ﻿import { useSearchParams, Link } from 'react-router-dom';
 import { notices } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './NoticesPage.css';
 
 const categories = ['전체', '알림', '보도기사'];
 const pageSize = 10;
 
 function NoticePagination({ page, count, onChange }) {
-    const start = Math.floor((page - 1) / 10) * 10 + 1;
+    const groupStart = Math.floor((page - 1) / 10) * 10 + 1;
+    const groupEnd = Math.min(groupStart + 9, count);
+    const pages = Array.from({ length: groupEnd - groupStart + 1 }, (_, index) => groupStart + index);
+    const hasPrev = page > 1;
+    const hasNext = page < count;
+
     return (
         <nav className="notices-page__pagination" aria-label="공지사항 페이지">
-            <button type="button" aria-label="이전 페이지" disabled={page === 1} onClick={() => onChange(page - 1)}>
-                <ChevronLeft size={24} strokeWidth={1.5} aria-hidden="true" />
-            </button>
-            {Array.from({ length: Math.min(10, count - start + 1) }, (_, index) => start + index).map((number) => (
+            {hasPrev && (
+                <>
+                    <button type="button" className="notices-page__pagination-arrow" aria-label="첫 페이지" onClick={() => onChange(1)}>«</button>
+                    <button type="button" className="notices-page__pagination-arrow" aria-label="이전 페이지" onClick={() => onChange(page - 1)}>‹</button>
+                </>
+            )}
+            {pages.map((number) => (
                 <button key={number} type="button" aria-label={number + '페이지'} aria-current={page === number ? 'page' : undefined} aria-controls="notice-results" onClick={() => onChange(number)}>{number}</button>
             ))}
-            <button type="button" aria-label="다음 페이지" disabled={page === count} onClick={() => onChange(page + 1)}>
-                <ChevronRight size={24} strokeWidth={1.5} aria-hidden="true" />
-            </button>
+            {hasNext && (
+                <>
+                    <button type="button" className="notices-page__pagination-arrow" aria-label="다음 페이지" onClick={() => onChange(page + 1)}>›</button>
+                    <button type="button" className="notices-page__pagination-arrow" aria-label="마지막 페이지" onClick={() => onChange(count)}>»</button>
+                </>
+            )}
         </nav>
     );
 }
