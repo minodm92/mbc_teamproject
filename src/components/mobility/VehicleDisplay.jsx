@@ -1,16 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
+import { setHomeWheelDistanceRatio, setupHomeScrollSmoothing } from '../home/homeScrollSmoothing';
 import routeOverviewImage from '../../../public/images/mobility/route-overview-con6.png';
-import routeState01 from '../../../public/images/mobility/route-state-01.png';
-import routeState02 from '../../../public/images/mobility/route-state-02.jpg';
-import routeState03 from '../../../public/images/mobility/route-state-03.jpg';
-import routeState04 from '../../../public/images/mobility/route-state-04.jpg';
-import routeState05 from '../../../public/images/mobility/route-state-05.jpg';
-import routeState06 from '../../../public/images/mobility/route-state-06.jpg';
-import routeState07 from '../../../public/images/mobility/route-state-07.jpg';
-import routeState08 from '../../../public/images/mobility/route-state-08.jpg';
+import routeState01 from './assets/routes/route-state-01.png';
+import routeState02 from './assets/routes/route-state-02.png';
+import routeState03 from './assets/routes/route-state-03.png';
+import routeState04 from './assets/routes/route-state-04.png';
+import routeState05 from './assets/routes/route-state-05.png';
+import routeState06 from './assets/routes/route-state-06.png';
+import routeState07 from './assets/routes/route-state-07.png';
+import routeState08 from './assets/routes/route-state-08.png';
 import './VehicleDisplay.css';
 
 const routes = [
@@ -67,8 +68,21 @@ const gallery = Array.from(
     { length: 6 },
     (_, index) => `/images/mobility/gallery-con7-${index + 1}.png`
 );
-const INTRO_SCROLL_DURATION = 7;
-const SLIDE_SCROLL_DURATION = 2;
+const INTRO_SCROLL_DURATION = 1;
+const INTRO_TRANSITION_EXTRA_DURATION = 0.6;
+const DETAIL_REVEAL_BASE_DURATION = 0.28;
+const DETAIL_REVEAL_DURATION = 0.6;
+const SLIDE_SCROLL_DURATION = 1;
+const VEHICLE_PIN_HOLD_DURATION = 0.6;
+const VEHICLE_OUTRO_HOLD_DURATION = 0.6;
+const VEHICLE_SCROLL_DISTANCE_RATIO = 0.6;
+const VEHICLE_SCROLL_SCRUB = 0.2;
+const PLAYGROUND_ITEM_SCROLL_DURATION = 0.6;
+const ROUTE_ITEM_SCROLL_DURATION = 0.7;
+const ROUTE_LIST_HOLD_DURATION = 0.5;
+const BASE_INTRO_DURATION = INTRO_SCROLL_DURATION + INTRO_TRANSITION_EXTRA_DURATION;
+const DETAIL_DURATION_EXTENSION = Math.max(0, DETAIL_REVEAL_DURATION - DETAIL_REVEAL_BASE_DURATION);
+const INTRO_TRANSITION_DURATION = BASE_INTRO_DURATION * (1 + DETAIL_DURATION_EXTENSION);
 
 const playgroundItems = [
     {
@@ -186,6 +200,14 @@ const showcaseVehicles = [
     },
 ];
 
+const VEHICLE_INTRO_HEIGHT_SVH =
+    100 *
+    (1 +
+        VEHICLE_PIN_HOLD_DURATION +
+        INTRO_TRANSITION_DURATION +
+        (showcaseVehicles.length - 1) * SLIDE_SCROLL_DURATION +
+        VEHICLE_OUTRO_HOLD_DURATION);
+
 function VehicleShowcase({ vehicle }) {
     return (
         <section
@@ -252,9 +274,8 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
                 context = gsap.context(() => {
                     const slides = gsap.utils.toArray('.con2-slide', section);
                     const reveals = gsap.utils.toArray('.con2-slide__reveal', section);
-                    const introDuration = INTRO_SCROLL_DURATION;
+                    const introDuration = INTRO_TRANSITION_DURATION;
                     const slideDuration = SLIDE_SCROLL_DURATION;
-                    const outroHoldDuration = 1.5;
 
                     gsap.set(slides[0], { yPercent: 0 });
                     gsap.set(reveals[0], { yPercent: 0 });
@@ -266,16 +287,22 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
                             trigger: section,
                             start: 'top top',
                             end: () =>
-                                `+=${window.innerHeight * (introDuration + (slides.length - 1) * slideDuration + outroHoldDuration)}`,
-                            scrub: 1,
+                                `+=${window.innerHeight * (VEHICLE_PIN_HOLD_DURATION + introDuration + (slides.length - 1) * slideDuration + VEHICLE_OUTRO_HOLD_DURATION)}`,
+                            scrub: VEHICLE_SCROLL_SCRUB,
                             pin: sticky,
                             pinSpacing: false,
                             anticipatePin: 1,
                             invalidateOnRefresh: true,
+                            onToggle: (self) =>
+                                setHomeWheelDistanceRatio(
+                                    self.isActive ? VEHICLE_SCROLL_DISTANCE_RATIO : 1
+                                ),
                         },
                     });
 
-                    timeline.to({}, { duration: introDuration });
+                    timeline
+                        .to({}, { duration: VEHICLE_PIN_HOLD_DURATION })
+                        .to({}, { duration: introDuration });
 
                     slides.slice(1).forEach((slide, index) => {
                         const reveal = reveals[index + 1];
@@ -288,7 +315,7 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
                             );
                     });
 
-                    timeline.to({}, { duration: outroHoldDuration });
+                    timeline.to({}, { duration: VEHICLE_OUTRO_HOLD_DURATION });
 
                     section.dataset.slideCount = String(slides.length);
                     section.dataset.scrollTrigger = timeline.scrollTrigger ? 'active' : 'inactive';
@@ -299,6 +326,7 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
 
         return () => {
             cancelled = true;
+            setHomeWheelDistanceRatio(1);
             context?.revert();
         };
     }, [triggerRef, vehicles.length]);
@@ -335,6 +363,9 @@ export default function VehicleDisplay() {
     const [isRouteListActive, setIsRouteListActive] = useState(false);
     const persistentPlaygroundTitleRef = useRef(null);
     const [activePlaygroundIndex, setActivePlaygroundIndex] = useState(0);
+
+    useLayoutEffect(() => setupHomeScrollSmoothing(), []);
+
     useEffect(() => {
         const section = transitionRef.current;
         if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches)
@@ -343,8 +374,12 @@ export default function VehicleDisplay() {
         const update = () => {
             frame = 0;
             const rect = section.getBoundingClientRect();
-            const distance = Math.max(1, window.innerHeight * INTRO_SCROLL_DURATION);
-            const progress = Math.min(1, Math.max(0, -rect.top / distance));
+            const distance = Math.max(1, window.innerHeight * BASE_INTRO_DURATION);
+            const holdDistance = window.innerHeight * VEHICLE_PIN_HOLD_DURATION;
+            const progress = Math.min(
+                1 + DETAIL_DURATION_EXTENSION,
+                Math.max(0, (-rect.top - holdDistance) / distance)
+            );
             const clamp = (value) => Math.min(1, Math.max(0, value));
             const ease = (value) => value * value * (3 - 2 * value);
             const mix = (from, to, value) => from + (to - from) * value;
@@ -354,7 +389,7 @@ export default function VehicleDisplay() {
             const settleEnd = 0.61;
             const settle = ease(clamp((progress - expandEnd) / (settleEnd - expandEnd)));
             const swap = ease(clamp((progress - 0.28) / 0.14));
-            const detailDuration = SLIDE_SCROLL_DURATION / INTRO_SCROLL_DURATION;
+            const detailDuration = DETAIL_REVEAL_DURATION;
             const detail = ease(clamp((progress - 0.42) / detailDuration));
             const sticky = section.querySelector('.mobility-intro__sticky');
             const width = sticky?.clientWidth || section.clientWidth || window.innerWidth;
@@ -492,7 +527,7 @@ export default function VehicleDisplay() {
                         scrollTrigger: {
                             trigger: section,
                             start: 'center center',
-                            end: () => `+=${window.innerHeight * 10}`,
+                            end: () => `+=${window.innerHeight * 6}`,
                             scrub: 1.5,
                             pin: true,
                             pinSpacing: true,
@@ -625,7 +660,8 @@ export default function VehicleDisplay() {
                         ScrollTrigger.create({
                             trigger: section,
                             start: 'center center',
-                            end: () => `+=${window.innerHeight * playgroundItems.length}`,
+                            end: () =>
+                                `+=${window.innerHeight * playgroundItems.length * PLAYGROUND_ITEM_SCROLL_DURATION}`,
                             pin: true,
                             pinSpacing: true,
                             anticipatePin: 1,
@@ -720,8 +756,8 @@ export default function VehicleDisplay() {
                         scrollTrigger: {
                             trigger: section,
                             start: 'center center',
-                            end: () => `+=${window.innerHeight * 10}`,
-                            scrub: 1.5,
+                            end: () => `+=${window.innerHeight * 7}`,
+                            scrub: 1,
                             pin: true,
                             pinSpacing: true,
                             anticipatePin: 1,
@@ -829,10 +865,11 @@ export default function VehicleDisplay() {
 
                 gsap.registerPlugin(ScrollTrigger);
                 context = gsap.context(() => {
-                    const revealScreens = 2.5;
+                    const revealScreens = 2;
                     const listTransitionScreens = 1.5;
-                    const routeScreens = routes.length;
-                    const routeStartScreen = revealScreens + listTransitionScreens;
+                    const routeScreens = routes.length * ROUTE_ITEM_SCROLL_DURATION;
+                    const routeStartScreen =
+                        revealScreens + listTransitionScreens + ROUTE_LIST_HOLD_DURATION;
                     const totalScreens = routeStartScreen + routeScreens;
                     const syncRouteState = (self) => {
                         const routePhase = self.progress * totalScreens - routeStartScreen;
@@ -841,7 +878,7 @@ export default function VehicleDisplay() {
                             0,
                             Math.min(0.999999, routePhase / routeScreens)
                         );
-                        const nextIndex = Math.floor(routeProgress * routeScreens);
+                        const nextIndex = Math.floor(routeProgress * routes.length);
                         setIsRouteListActive((currentValue) =>
                             currentValue === nextRouteListActive
                                 ? currentValue
@@ -871,7 +908,7 @@ export default function VehicleDisplay() {
                         .fromTo(
                             visual,
                             { width: '100%' },
-                            { width: '50%', duration: 2, ease: 'power2.inOut' }
+                            { width: '50%', duration: 1.5, ease: 'power2.inOut' }
                         )
                         .fromTo(
                             heading,
@@ -909,7 +946,8 @@ export default function VehicleDisplay() {
                             },
                             '<'
                         )
-                        .to({}, { duration: routes.length * 1.2 });
+                        .to({}, { duration: ROUTE_LIST_HOLD_DURATION })
+                        .to({}, { duration: routeScreens * 1.2 });
 
                     section.dataset.scrollTrigger = timeline.scrollTrigger ? 'active' : 'inactive';
                     requestAnimationFrame(() => ScrollTrigger.refresh());
@@ -944,6 +982,7 @@ export default function VehicleDisplay() {
                     const entranceDelayScreens = 0.6;
                     const betweenLayerDelayScreens = 0.5;
                     const releaseDelayScreens = 0.6;
+                    const layerTransitionScreens = 0.7;
                     const timeline = gsap.timeline({
                         scrollTrigger: {
                             trigger: section,
@@ -951,7 +990,7 @@ export default function VehicleDisplay() {
                             end: () =>
                                 `+=${
                                     window.innerHeight *
-                                    (layersToRemove.length +
+                                    (layersToRemove.length * layerTransitionScreens +
                                         entranceDelayScreens +
                                         betweenLayerDelayScreens *
                                             Math.max(0, layersToRemove.length - 1) +
@@ -969,7 +1008,7 @@ export default function VehicleDisplay() {
                     layersToRemove.forEach((image, index) => {
                         timeline.to(image, {
                             y: () => -(image.offsetTop + image.offsetHeight),
-                            duration: 2,
+                            duration: layerTransitionScreens,
                             ease: 'none',
                         });
                         if (index < layersToRemove.length - 1) {
@@ -1020,6 +1059,7 @@ export default function VehicleDisplay() {
                 className="mobility-intro con2"
                 ref={transitionRef}
                 aria-label="차량 모델 소개"
+                style={{ '--mobility-intro-scroll-height': `${VEHICLE_INTRO_HEIGHT_SVH}svh` }}
             >
                 <VehicleCurtains vehicles={showcaseVehicles.slice(1)} triggerRef={transitionRef}>
                     <header>
