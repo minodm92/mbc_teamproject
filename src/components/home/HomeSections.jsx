@@ -16,6 +16,17 @@ export function HomeHero() {
 
   return (
     <section className="renewal-hero renewal-hero--step-1" data-hero-step="1" aria-label="현대 모터스튜디오 메인 비주얼">
+      <div className="renewal-hero__mobile">
+        <div className="renewal-hero__mobile-media" aria-hidden="true">
+          <img className="renewal-hero__mobile-background" src={asset('hero-mobile-background.png')} alt="" />
+          <img className="renewal-hero__mobile-photo" src={asset('hero-mobile-overlay.png')} alt="" />
+          <span />
+        </div>
+        <div className="renewal-hero__mobile-copy">
+          <h1>SHAPING THE<br />FUTURE OF <em>MOTION</em></h1>
+          <p>차량 전시부터 시승, 디자인 콘텐츠, 브랜드 컬렉션까지 모빌리티에<br />대한 이해와 취향을 넓혀갈 수 있는 다채로운 체험이 마련되어 있습니다.</p>
+        </div>
+      </div>
       <div className="renewal-hero__canvas" data-hero-canvas>
         <svg className="renewal-hero__scene" viewBox="0 0 1920 1080" preserveAspectRatio="none" aria-hidden="true">
           <defs>
@@ -257,9 +268,10 @@ export function HomeStories({ stories }) {
     };
 
     media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(false));
-    media.add('(max-width: 900px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(true));
+    media.add('(min-width: 768px) and (max-width: 900px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(true));
+    media.add('(max-width: 767px)', () => storiesSetup(true, true));
     media.add('(min-width: 901px) and (prefers-reduced-motion: reduce)', () => storiesSetup(false, true));
-    media.add('(max-width: 900px) and (prefers-reduced-motion: reduce)', () => storiesSetup(true, true));
+    media.add('(min-width: 768px) and (max-width: 900px) and (prefers-reduced-motion: reduce)', () => storiesSetup(true, true));
 
     return () => media.revert();
   }, [stories.length]);

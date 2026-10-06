@@ -36,6 +36,22 @@ const steps = [
     },
 ];
 
+const mobilePrograms = [
+    {
+        title: '수소 에너지 탐험',
+        description: '수소에너지를 이해하고 수소전기차의 원리를 배우는 클래스입니다.',
+        overlay: 'mobile-program-overlay-1.png',
+        image: 'mobile-program-photo-1.png',
+    },
+    {
+        title: '교통 안전 교육(단체)',
+        description: '위험 상황을 이해하고, 대처 방법을 배울 수 있는 프로그램입니다.',
+        overlay: 'mobile-program-overlay-2.png',
+        image: 'mobile-program-photo-2.png',
+        cropped: true,
+    },
+];
+
 // Each reveal mask stays attached to the viewport bottom. Overlapping starts
 // let their top edges rise as one continuous wave until they fill the screen.
 const panels = [
@@ -103,6 +119,7 @@ export default function HomeProgramSequence() {
         const viewport = viewportRef.current;
         const video = videoRef.current;
         if (!sequence || !viewport) return undefined;
+        if (window.matchMedia('(max-width: 767px)').matches) return undefined;
 
         const context = gsap.context(() => {
             gsap.set([stepTwoRef.current, stepThreeRef.current], { autoAlpha: 1 });
@@ -164,6 +181,29 @@ export default function HomeProgramSequence() {
 
     return (
         <section className="renewal-program-sequence" ref={sequenceRef} aria-label="PROGRAM">
+            <div className="renewal-program-sequence__mobile">
+                <h2>프로그램</h2>
+                <div className="renewal-program-sequence__mobile-list">
+                    {mobilePrograms.map((program) => (
+                        <article key={program.title}>
+                            <img
+                                className="renewal-program-sequence__mobile-overlay"
+                                src={asset(program.overlay)}
+                                alt=""
+                            />
+                            <img
+                                className={program.cropped ? 'is-cropped' : undefined}
+                                src={asset(program.image)}
+                                alt=""
+                            />
+                            <div>
+                                <h3>{program.title}</h3>
+                                <p>{program.description}</p>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </div>
             <div className="renewal-program-sequence__viewport" ref={viewportRef}>
                 <svg
                     className="renewal-program-sequence__masks"

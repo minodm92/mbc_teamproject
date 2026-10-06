@@ -79,29 +79,10 @@ export const setupHomeScrollSmoothing = () => {
             return;
         }
 
-        if (
-            !media.matches ||
-            event.defaultPrevented ||
-            event.ctrlKey ||
-            Math.abs(event.deltaY) <= Math.abs(event.deltaX) ||
-            canNestedElementScroll(event.target, event.deltaY)
-        ) {
-            return;
-        }
-
-        event.preventDefault();
-        const deltaUnit =
-            event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerHeight : 1;
-        const maximumScroll = getMaximumScroll();
-
-        if (!animationFrame) currentScroll = window.scrollY;
-        targetScroll = Math.min(
-            maximumScroll,
-            Math.max(0, targetScroll + event.deltaY * deltaUnit * homeWheelDistanceRatio)
-        );
-        previousTime = performance.now();
-
-        if (!animationFrame) animationFrame = requestAnimationFrame(render);
+        // Use the browser's native wheel scrolling. ScrollTrigger reads this
+        // native position directly, avoiding the feedback loop caused by
+        // repeatedly writing window.scrollTo() while pinned sections reflow.
+        if (!media.matches || event.defaultPrevented || event.ctrlKey) return;
     };
 
     const handleNativeScroll = () => {
