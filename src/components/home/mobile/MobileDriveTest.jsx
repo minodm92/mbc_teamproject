@@ -14,7 +14,6 @@ export default function MobileDriveTest() {
                     const isSelected = index === selected;
                     return (
                         <li key={item.title}>
-                            {/* TODO: ask whether tapping the selected row should go to /reservations. */}
                             <button
                                 className={`home-mobile-drive__item${isSelected ? ' is-selected' : ''}`}
                                 type="button"
