@@ -331,4 +331,45 @@
     .home-mobile-program span {
         font: 500 16px/1.4 var(--font-ko);
     }
+
+    /* 8. Common footer, home page only: logo -> links -> copyright (Figma footer, 207px).
+       Social icons, the call-centre line and the falling cars are not in the mobile design. */
+    html.is-home-page .reservation-footer {
+        display: flex;
+        height: auto;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 93px 18px 21px;
+        background: #0e0e0e;
+    }
+    html.is-home-page .reservation-footer__meta {
+        display: contents;
+    }
+    html.is-home-page .reservation-footer__social,
+    html.is-home-page .reservation-footer__meta p,
+    html.is-home-page .reservation-footer__cars {
+        display: none;
+    }
+    html.is-home-page .reservation-footer__wordmark {
+        position: static;
+        order: 1;
+        width: 143px;
+        height: auto;
+    }
+    html.is-home-page .reservation-footer__meta nav {
+        order: 2;
+        max-width: none;
+        margin-top: 22px;
+        gap: 8px;
+    }
+    html.is-home-page .reservation-footer__meta nav a {
+        font: 400 13px/1.2 'Red Hat Display', 'SUIT Variable', 'SUIT', sans-serif;
+    }
+    html.is-home-page .reservation-footer > small {
+        position: static;
+        order: 3;
+        margin-top: 8px;
+        color: #848484;
+        font: 400 13px/1.2 var(--font-en);
+    }
 }
