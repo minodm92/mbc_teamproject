@@ -690,13 +690,8 @@ export default function HomeContent() {
                         onRefresh: syncSharedImage,
                     },
                 });
-                const viewportWidth = () => window.innerWidth;
+                const viewportWidth = () => imageViewport.clientWidth;
                 const viewportHeight = () => window.innerHeight;
-                const sourceAspectRatio = 1920 / 1000;
-                const sourceCoverSize = () => ({
-                    width: Math.max(viewportWidth(), viewportHeight() * sourceAspectRatio),
-                    height: Math.max(viewportHeight(), viewportWidth() / sourceAspectRatio),
-                });
                 const clipAtProgress = (progress) => {
                     const destination = bounds();
                     const x = destination.x * progress;
@@ -715,8 +710,8 @@ export default function HomeContent() {
                         yPercent: -50,
                         x: 0,
                         y: 0,
-                        scale: 1,
-                        transformOrigin: '50% 50%',
+                        width: viewportWidth,
+                        height: viewportHeight,
                         force3D: true,
                     },
                     {
@@ -730,15 +725,8 @@ export default function HomeContent() {
                             const destination = bounds();
                             return destination.y + destination.height / 2 - viewportHeight() / 2;
                         },
-                        scale: () => {
-                            const destination = bounds();
-                            const coverSize = sourceCoverSize();
-                            return Math.max(
-                                destination.width / coverSize.width,
-                                destination.height / coverSize.height
-                            );
-                        },
-                        transformOrigin: '50% 50%',
+                        width: () => bounds().width,
+                        height: () => bounds().height,
                         force3D: true,
                         autoRound: false,
                         duration: 1,
@@ -1059,7 +1047,7 @@ export default function HomeContent() {
                 const updateExperienceContent = () => {
                     const relativeRotation =
                         (((currentIndicatorRotation - currentSpinnerRotation) % 360) + 360) % 360;
-                    const orderIndex = Math.floor(relativeRotation / 36) % experienceRing.length;
+                    const orderIndex = Math.ceil(relativeRotation / 36) % experienceRing.length;
                     const segmentIndex = experienceSelectionOrder[orderIndex];
                     if (segmentIndex === lastSegmentIndex) return;
                     lastSegmentIndex = segmentIndex;
@@ -1539,7 +1527,7 @@ export default function HomeContent() {
                         <img
                             data-experience-preview
                             key={`${item.image}-${item.preview}`}
-                            src={asset(item.preview)}
+                            src={asset(item.image.replace('experience-source-', 'experience-bg-'))}
                             alt=""
                         />
                     ))}
