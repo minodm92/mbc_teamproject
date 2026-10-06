@@ -362,6 +362,7 @@ export default function HomeContent() {
             let cleanupCurrentExhibition;
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             const image = transition.querySelector('.renewal-location-transition__image');
+            const imageViewport = transition.querySelector('.renewal-location-transition__viewport');
             const intro = transition.previousElementSibling?.matches('.renewal-intro')
                 ? transition.previousElementSibling
                 : null;
@@ -372,7 +373,18 @@ export default function HomeContent() {
                 : null;
             let heroSequenceTrigger;
             if (hero && intro) {
-                const heroDistance = () => window.innerHeight * 12;
+                const stepHold = 0.4;
+                const openingDuration = 2.4;
+                const introFullHold = 0.5;
+                const stepTwoEnd = 2;
+                const stepThreeStart = stepTwoEnd + stepHold;
+                const stepThreeEnd = stepThreeStart + 0.2;
+                const stepFourStart = stepThreeEnd + stepHold;
+                const stepFourEnd = stepFourStart + 1;
+                const openingStart = stepFourEnd + stepHold;
+                const introFullStart = openingStart + openingDuration;
+                const heroTimelineDuration = introFullStart + introFullHold;
+                const heroDistance = () => window.innerHeight * heroTimelineDuration;
                 const shade = hero.querySelector('.renewal-hero__shade-layer');
                 const copy = (step) => [...hero.querySelectorAll(`[data-hero-copy="${step}"]`)];
                 const shadeSubtract = hero.querySelector('.renewal-hero__shade-subtract');
@@ -497,30 +509,32 @@ export default function HomeContent() {
                             duration: 0.65,
                         }, 1)
                         .to(copy(2), { autoAlpha: 1, duration: 0.2 }, 1.75)
-                        .call(() => { hero.dataset.heroStep = '2'; }, [], 2)
-                        .addLabel('step-02-hold', 2)
-                        .to(copy(2), { autoAlpha: 0, duration: 0.2 }, 3)
-                        .to(copy(3), { autoAlpha: 1, duration: 0.2 }, 3)
-                        .call(() => { hero.dataset.heroStep = '3'; }, [], 4)
-                        .addLabel('step-03-hold', 4)
-                        .to(copy(3), { autoAlpha: 0, duration: 0.2 }, 5)
-                        .to(copy(4), { autoAlpha: 1, duration: 0.2 }, 5)
-                        .to(shadeSubtract, { attr: { height: 319 }, duration: 0.65 }, 5)
-                        .to(openingGeometry, { attr: { opacity: 1 }, duration: 0.65 }, 5.35)
-                        .call(() => { hero.dataset.heroStep = '4'; }, [], 6)
-                        .addLabel('step-04-hold', 6)
-                        .to(shade, { autoAlpha: 0, duration: 0.35 }, 7)
-                        .to(openingProgress, { value: 1, duration: 4, onUpdate: updateOpeningGeometry }, 7)
-                        .addLabel('intro-full', 11)
-                        .to({}, { duration: 1 }, 11)
-                        .addLabel('intro-hold', 12);
+                        .call(() => { hero.dataset.heroStep = '2'; }, [], stepTwoEnd)
+                        .addLabel('step-02-hold', stepTwoEnd)
+                        .to(copy(2), { autoAlpha: 0, duration: 0.2 }, stepThreeStart)
+                        .to(copy(3), { autoAlpha: 1, duration: 0.2 }, stepThreeStart)
+                        .call(() => { hero.dataset.heroStep = '3'; }, [], stepThreeEnd)
+                        .addLabel('step-03-hold', stepThreeEnd)
+                        .to(copy(3), { autoAlpha: 0, duration: 0.2 }, stepFourStart)
+                        .to(copy(4), { autoAlpha: 1, duration: 0.2 }, stepFourStart)
+                        .to(shadeSubtract, { attr: { height: 319 }, duration: 0.65 }, stepFourStart)
+                        .to(openingGeometry, { attr: { opacity: 1 }, duration: 0.65 }, stepFourStart + 0.35)
+                        .call(() => { hero.dataset.heroStep = '4'; }, [], stepFourEnd)
+                        .addLabel('step-04-hold', stepFourEnd)
+                        .to(shade, { autoAlpha: 0, duration: 0.35 }, openingStart)
+                        .to(openingProgress, {
+                            value: 1,
+                            duration: openingDuration,
+                            onUpdate: updateOpeningGeometry,
+                        }, openingStart)
+                        .addLabel('intro-full', introFullStart)
+                        .to({}, { duration: introFullHold }, introFullStart)
+                        .addLabel('intro-hold', heroTimelineDuration);
                     heroSequenceTrigger = heroTimeline.scrollTrigger;
                 }
             }
             const locationButtonHandlers = [];
-            if (!prefersReducedMotion && intro && image && target && locationSection) {
-                // The shared image stays in viewport coordinates through H, FULL and travel.
-                // Only Location is pinned; its spacer also supplies the following sections' space.
+            if (!prefersReducedMotion && intro && image && imageViewport && target && locationSection) {
                 const bounds = () => {
                     const destination = target.getBoundingClientRect();
                     const section = locationSection.getBoundingClientRect();
@@ -533,10 +547,9 @@ export default function HomeContent() {
                 };
                 const syncSharedImage = (self) => {
                     const atLocation = self.progress >= 1;
-                    gsap.set(image, { autoAlpha: atLocation ? 0 : 1 });
+                    gsap.set(imageViewport, { autoAlpha: atLocation ? 0 : 1 });
                     gsap.set(target, { autoAlpha: atLocation ? 1 : 0 });
                 };
-                // Fade the copy without intercepting wheel input or pinning the image's parent.
                 const introFade = gsap.fromTo(
                     intro,
                     { '--intro-copy-opacity': 1 },
@@ -570,52 +583,84 @@ export default function HomeContent() {
                             ),
                         scrub: true,
                         invalidateOnRefresh: true,
-                        onUpdate: syncSharedImage,
                         onRefresh: syncSharedImage,
                     },
                 });
+                const viewportWidth = () => window.innerWidth;
+                const viewportHeight = () => window.innerHeight;
+                const sourceAspectRatio = 1920 / 1000;
+                const sourceCoverSize = () => ({
+                    width: Math.max(viewportWidth(), viewportHeight() * sourceAspectRatio),
+                    height: Math.max(viewportHeight(), viewportWidth() / sourceAspectRatio),
+                });
+                const clipAtProgress = (progress) => {
+                    const destination = bounds();
+                    const x = destination.x * progress;
+                    const y = destination.y * progress;
+                    const width = viewportWidth() + (destination.width - viewportWidth()) * progress;
+                    const height = viewportHeight() + (destination.height - viewportHeight()) * progress;
+                    const cropProgress = Math.min(1, progress / 0.15);
+                    const lowerRightY = 1 - 0.1493 * cropProgress;
+                    const lowerRightX = 1 - 0.082609 * cropProgress;
+                    return `polygon(${x}px ${y}px, ${x + width}px ${y}px, ${x + width}px ${y + height * lowerRightY}px, ${x + width * lowerRightX}px ${y + height}px, ${x}px ${y + height}px)`;
+                };
                 timeline.fromTo(
                     image,
                     {
+                        xPercent: -50,
+                        yPercent: -50,
                         x: 0,
                         y: 0,
-                        width: () => transition.clientWidth,
-                        height: () => intro.offsetHeight,
+                        scale: 1,
+                        transformOrigin: '50% 50%',
+                        force3D: true,
                     },
                     {
-                        x: () => bounds().x,
-                        y: () => bounds().y,
-                        width: () => bounds().width,
-                        height: () => bounds().height,
+                        xPercent: -50,
+                        yPercent: -50,
+                        x: () => {
+                            const destination = bounds();
+                            return destination.x + destination.width / 2 - viewportWidth() / 2;
+                        },
+                        y: () => {
+                            const destination = bounds();
+                            return destination.y + destination.height / 2 - viewportHeight() / 2;
+                        },
+                        scale: () => {
+                            const destination = bounds();
+                            const coverSize = sourceCoverSize();
+                            return Math.max(
+                                destination.width / coverSize.width,
+                                destination.height / coverSize.height
+                            );
+                        },
+                        transformOrigin: '50% 50%',
+                        force3D: true,
                         autoRound: false,
                         duration: 1,
                     },
                     0
                 );
+                timeline.fromTo(
+                    imageViewport,
+                    { clipPath: () => clipAtProgress(0) },
+                    { clipPath: () => clipAtProgress(0.15), duration: 0.15 },
+                    0
+                );
+                timeline.to(imageViewport, { clipPath: () => clipAtProgress(1), duration: 0.85 }, 0.15);
                 // Cover the location rail/links only while travelling; restore on arrival.
                 // A positive start keeps the intro copy above the image before shrinking.
-                timeline.set(image, { zIndex: 3 }, 0.000001);
-                timeline.set(image, { zIndex: 1 }, 1);
+                timeline.set(imageViewport, { zIndex: 3 }, 0.000001);
+                timeline.set(imageViewport, { zIndex: 1 }, 1);
                 timeline.set(target, { autoAlpha: 0 }, 0);
                 timeline.set(target, { autoAlpha: 1 }, 1);
-                timeline.set(image, { autoAlpha: 0 }, 1);
+                timeline.set(imageViewport, { autoAlpha: 0 }, 1);
                 const locationRail = locationSection.querySelector('.renewal-location__rail');
                 gsap.set(locationRail, { display: 'none' });
                 const syncLocationRail = (self) => {
                     gsap.set(locationRail, { display: self.scroll() >= self.start ? 'block' : 'none' });
                 };
                 // Match the 580 × 320 location asset's lower-right diagonal cut.
-                timeline.fromTo(
-                    image,
-                    {
-                        clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 100% 100%, 0% 100%)',
-                    },
-                    {
-                        clipPath: 'polygon(0% 0%, 100% 0%, 100% 85.07%, 91.7391% 100%, 0% 100%)',
-                        duration: 0.15,
-                    },
-                    0
-                );
                 const updateLocation = (self) => {
                     setSelectedLocation(
                         Math.min(locations.length - 1, Math.floor(self.progress * locations.length))
@@ -1241,12 +1286,13 @@ export default function HomeContent() {
                 </a>
             </section>
             <div className="renewal-location-transition" ref={locationTransitionRef}>
-                <img
-                    className="renewal-location-transition__image"
-                    src={asset('intro.svg')}
-                    alt=""
-                    aria-hidden="true"
-                />
+                <div className="renewal-location-transition__viewport" aria-hidden="true">
+                    <img
+                        className="renewal-location-transition__image"
+                        src={asset('intro.svg')}
+                        alt=""
+                    />
+                </div>
                 <section className="renewal-location" aria-label="현대 모터스튜디오 지점">
                     <div className="renewal-location__list" role="tablist" aria-label="지점 선택">
                         {locations.map((item, index) => (
