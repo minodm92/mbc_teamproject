@@ -75,7 +75,7 @@ export default function NoticesListing() {
                     <h1>
                         NOTICE
                     </h1>
-                    <p className="notices-page__intro">방문 전 공지사항을 확인해 보세요.</p>
+                    <p className="notices-page__intro">운영 시간부터 휴관 일정까지,<br />방문 전 필요한 소식을 확인해보세요.</p>
                 </div>
             </header>
             <section aria-label="공지사항 목록">

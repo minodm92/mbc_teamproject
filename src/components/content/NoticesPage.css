@@ -495,3 +495,56 @@ body:has(.notices-page) .site-header {
     background: #dd0000;
     transform: translateX(-50%);
 }
+
+.notices-page { padding-top: 0; }
+body:has(.notices-page) .site-header { background: transparent; }
+.notices-page .notices-page__hero {
+    position: relative;
+    height: 658px;
+    padding: 240px 100px 0;
+    overflow: hidden;
+    color: #fff;
+    background-color: #424244;
+    background-image: url('../../assets/images/notices/notice-hero.png');
+    background-repeat: no-repeat;
+    background-size: 193.4% auto;
+    background-position: -9.98vw -0.91vw;
+}
+.notices-page .notices-page__hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0) 26%, rgb(0 0 0 / 0.8) 74%), rgb(0 0 0 / 0.2);
+    pointer-events: none;
+}
+.notices-page .notices-page__hero > * { position: relative; }
+.notices-page .notices-page__breadcrumb {
+    justify-content: flex-start;
+    gap: 4px;
+    color: #a8a7ac;
+    font: 700 22px/1.4 var(--font-ko);
+}
+.notices-page .notices-page__breadcrumb a,
+.notices-page .notices-page__breadcrumb a:first-child,
+.notices-page .notices-page__breadcrumb [aria-current] { color: inherit; font-family: inherit; }
+.notices-page .notices-page__heading { margin-top: 8px; }
+.notices-page .notices-page__hero .notices-page__heading h1 {
+    min-height: 0; padding-top: 0; color: #fff;
+    font: 500 60px/1.1 var(--font-en); letter-spacing: 0; text-transform: none;
+}
+.notices-page .notices-page__hero .notices-page__heading .notices-page__intro {
+    margin-top: 32px; color: #fff; font: 700 22px/1.4 var(--font-ko);
+}
+.notices-page section[aria-label='공지사항 목록'] { padding: 40px 0; }
+@media (min-width: 1441px) {
+    .notices-page .notices-page__toolbar { padding-left: calc(var(--notice-gutter) + 75px); }
+}
+@media (max-width: 1023px) {
+    .notices-page .notices-page__hero {
+        height: auto; min-height: 320px; padding: 120px 24px 48px;
+        background-size: cover; background-position: center;
+    }
+    .notices-page .notices-page__breadcrumb { font-size: 14px; }
+    .notices-page .notices-page__hero .notices-page__heading h1 { font-size: clamp(36px, 6vw, 60px); }
+    .notices-page .notices-page__hero .notices-page__heading .notices-page__intro { font-size: clamp(15px, 2vw, 22px); }
+}
