@@ -305,4 +305,30 @@
         background: var(--hm-ink);
         vertical-align: -3px;
     }
+
+    /* 7. PROGRAM: 399x263 image cards with a one-line title, 40px apart. */
+    .home-mobile-programs {
+        padding: 20px var(--hm-gutter) 40px;
+    }
+    .home-mobile-programs__list {
+        display: grid;
+        margin: 25px 0 0;
+        padding: 0;
+        gap: 40px;
+        list-style: none;
+    }
+    .home-mobile-program {
+        display: grid;
+        gap: 8px;
+    }
+    .home-mobile-program img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 399/263;
+        object-fit: cover;
+        background: #797979;
+    }
+    .home-mobile-program span {
+        font: 500 16px/1.4 var(--font-ko);
+    }
 }

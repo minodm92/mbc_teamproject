@@ -18,6 +18,10 @@ import g90Image from '../../../assets/images/locations/figma/g90.png';
 import gv80Image from '../../../assets/images/locations/figma/gv80.png';
 import gv70Image from '../../../assets/images/locations/figma/gv70.png';
 import santafeImage from '../../../assets/images/locations/figma/santafe.png';
+import programImage1 from '../../../assets/images/locations/figma/program-1.png';
+import programImage2 from '../../../assets/images/locations/figma/program-2.png';
+import programImage3 from '../../../assets/images/locations/figma/program-3.png';
+import programImage4 from '../../../assets/images/locations/figma/program-4.png';
 
 // Figma's SEOUL table repeats the GOYANG values, so Seoul uses the location page data.
 const seoul = locationShowcase.find((location) => location.id === 'seoul');
@@ -178,5 +182,17 @@ export const mobileDriveTest = {
         { title: 'PRIVATE NEW CAR DRIVE', meta: ['GOYANG · HANAM', 'UNTACT'] },
         { title: 'HIGH PERFORMANCE' },
         { title: 'BASIC DRIVE' },
+    ],
+};
+
+// TODO: /programs/:id only knows the ids in common/data/content.js, which has none of
+// these four, so every card links to the program list for now.
+export const mobilePrograms = {
+    title: 'PROGRAM',
+    items: [
+        { title: '레고와 함께하는 미래자동차 코딩 워크샵 (새싹 Ver)', image: programImage1 },
+        { title: '수소전기차와 오호볼 이야기', image: programImage2 },
+        { title: '현대자동차 직업체험 워크샵 (한국어)', image: programImage3 },
+        { title: '현대자동차 직업체험 워크샵 (영어)', image: programImage4 },
     ],
 };

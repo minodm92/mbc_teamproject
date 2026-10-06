@@ -3,6 +3,7 @@ import MobileLocations from './MobileLocations';
 import MobileNowExhibition from './MobileNowExhibition';
 import MobileVehicles from './MobileVehicles';
 import MobileDriveTest from './MobileDriveTest';
+import MobilePrograms from './MobilePrograms';
 import './HomeMobile.css';
 
 // Mobile-only home (<=900px). The desktop .renewal-home stays mounted but hidden,
@@ -15,6 +16,7 @@ export default function HomeMobile() {
             <MobileNowExhibition />
             <MobileVehicles />
             <MobileDriveTest />
+            <MobilePrograms />
         </div>
     );
 }
