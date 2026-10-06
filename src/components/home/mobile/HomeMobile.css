@@ -1,0 +1,81 @@
+/* Mobile home — Figma "Mobile" frame (430px wide, node 3007:7248).
+   Desktop (>=901px) never shows .home-mobile; mobile never shows .renewal-home. */
+.home-mobile {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .renewal-home {
+        display: none;
+    }
+
+    .home-mobile {
+        --hm-gutter: 15px;
+        --hm-ink: #0e0e0e;
+        --hm-dark: #0e0e0e; /* Figma: #111 + 20% black overlay */
+        display: block;
+        overflow-x: clip;
+        background: #fff;
+        color: var(--hm-ink);
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    }
+    .home-mobile img {
+        display: block;
+        max-width: 100%;
+    }
+
+    /* Common header, home page only: 60px bar, 124x28 logo, menu button only. */
+    html.is-home-page .site-header,
+    html.is-home-page .site-header__bar {
+        height: 60px;
+    }
+    html.is-home-page .site-header__bar {
+        padding-inline: 18px;
+    }
+    html.is-home-page .site-header__logo {
+        flex-basis: 124px;
+        width: 124px;
+        height: 28px;
+    }
+    html.is-home-page .site-header__account {
+        display: none;
+    }
+    html.is-home-page .site-header__toggle {
+        width: 44px;
+        height: 44px;
+    }
+    html.is-home-page .site-header__toggle svg {
+        width: 24px;
+        height: 24px;
+    }
+    html.is-home-page .site-header__nav {
+        top: 60px;
+        height: calc(100dvh - 60px);
+    }
+
+    /* 1. Hero: logotype on dark (header sits on top), then the image band. */
+    .home-mobile-hero {
+        background: var(--hm-dark);
+    }
+    .home-mobile-hero__title {
+        margin: 0;
+        padding: 117px var(--hm-gutter) 57px;
+    }
+    .home-mobile-hero__title img {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        margin-inline: auto;
+    }
+    .home-mobile-hero__media {
+        padding: 10px;
+        background: #fff;
+    }
+    .home-mobile-hero__media img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 410/230;
+        object-fit: cover;
+    }
+}

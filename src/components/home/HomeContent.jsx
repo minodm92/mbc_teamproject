@@ -8,6 +8,7 @@ import { paths } from '../../common/router/routePaths';
 import { HomeHero, HomeStories, VisitorGuide } from '../../components/home/HomeSections';
 import SpiralGallery from './SpiralGallery';
 import HomeProgramSequence from './HomeProgramSequence';
+import HomeMobile from './mobile/HomeMobile';
 import { homeAsset as asset } from './homeAssets';
 import {
     setHomeScrollLocked,
@@ -1212,274 +1213,277 @@ export default function HomeContent() {
     useLayoutEffect(() => setupHomeScrollSmoothing(), []);
 
     return (
-        <main className="renewal-home" id="top">
-            <HomeHero />
-            <section className="renewal-intro">
-                <img
-                    className="renewal-intro__static-background"
-                    src={asset('intro.svg')}
-                    alt="현대 모터스튜디오 공간"
-                />
-                <h1 className="renewal-intro__title">
-                    SHAPING THE
-                    <br />
-                    FUTURE OF <em>MOTION</em>
-                </h1>
-                <p className="renewal-intro__description">
-                    차량 전시부터 시승, 디자인 콘텐츠와 브랜드 컬렉션까지 모빌리티에 대한
-                    <br />
-                    이해와 취향을 넓힐 수 있는 다양한 경험을 제공합니다. 세심하게
-                    <br />
-                    구성된 전시와 프로그램을 통해 자동차는 물론 디자인과 예술까지 누구나
-                    자신만의
-                    <br />
-                    방식으로 몰입할 수 있는 특별한 순간을 만나보세요.
-                </p>
-                <a className="renewal-top" href="#top" aria-label="페이지 상단으로 이동">
-                    <img src={asset('top-arrow.svg')} alt="" />
-                    <span>TOP</span>
-                </a>
-            </section>
-            <div className="renewal-location-transition" ref={locationTransitionRef}>
-                <img
-                    className="renewal-location-transition__image"
-                    src={asset('intro.svg')}
-                    alt=""
-                    aria-hidden="true"
-                />
-                <section className="renewal-location" aria-label="현대 모터스튜디오 지점">
-                    <div className="renewal-location__list" role="tablist" aria-label="지점 선택">
-                        {locations.map((item, index) => (
-                            <button
-                                key={item.slug}
-                                type="button"
-                                role="tab"
-                                aria-selected={selectedLocation === index}
-                                className={selectedLocation === index ? 'is-active' : ''}
-                                onClick={() => selectLocation(index)}
-                            >
-                                {item.slug === 'senayan-park' ? 'SENAYAN PARK' : item.english}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="renewal-location__rail" aria-hidden="true">
-                        <i style={{ '--location-index': selectedLocation }} />
-                    </div>
-                    <Link
-                        className="renewal-location__detail"
-                        role="tabpanel"
-                        to={paths.location(location.slug)}
-                    >
-                        <img
-                            ref={locationImageRef}
-                            className={selectedLocation === 0 ? 'is-goyang' : ''}
-                            src={selectedLocation === 0 ? asset('intro.svg') : locationDetail.image ?? location.image}
-                            alt={`${location.name} 공간`}
-                        />
-                        <div ref={locationCopyRef}>
-                            <strong>{locationDetail.tagline}</strong>
-                            <p>{locationDetail.description}</p>
-                        </div>
-                    </Link>
-                </section>
-            </div>
-            <div className="renewal-slogan-entry">
-                <section className="renewal-slogan" ref={sloganRef} aria-label="브랜드 슬로건">
-                    <p>
-                        WHAT YOU FIND
+        <>
+            <main className="renewal-home" id="top">
+                <HomeHero />
+                <section className="renewal-intro">
+                    <img
+                        className="renewal-intro__static-background"
+                        src={asset('intro.svg')}
+                        alt="현대 모터스튜디오 공간"
+                    />
+                    <h1 className="renewal-intro__title">
+                        SHAPING THE
                         <br />
-                        WHEN MOTION
+                        FUTURE OF <em>MOTION</em>
+                    </h1>
+                    <p className="renewal-intro__description">
+                        차량 전시부터 시승, 디자인 콘텐츠와 브랜드 컬렉션까지 모빌리티에 대한
                         <br />
-                        MEETS
+                        이해와 취향을 넓힐 수 있는 다양한 경험을 제공합니다. 세심하게
+                        <br />
+                        구성된 전시와 프로그램을 통해 자동차는 물론 디자인과 예술까지 누구나
+                        자신만의
+                        <br />
+                        방식으로 몰입할 수 있는 특별한 순간을 만나보세요.
                     </p>
-                    <strong aria-label="EXPERIENCE">
-                        <span ref={sloganTextRef} />
-                        <span
-                            className="renewal-slogan__cursor"
-                            ref={sloganCursorRef}
-                            aria-hidden="true"
-                        />
-                    </strong>
+                    <a className="renewal-top" href="#top" aria-label="페이지 상단으로 이동">
+                        <img src={asset('top-arrow.svg')} alt="" />
+                        <span>TOP</span>
+                    </a>
                 </section>
-            </div>
-            <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
-                <div className="renewal-drive__track">
-                    {driveModels.map((item) => (
-                        <article
-                            className={`renewal-drive__slide ${item.shadowClass ?? ''}`}
-                            key={item.name}
+                <div className="renewal-location-transition" ref={locationTransitionRef}>
+                    <img
+                        className="renewal-location-transition__image"
+                        src={asset('intro.svg')}
+                        alt=""
+                        aria-hidden="true"
+                    />
+                    <section className="renewal-location" aria-label="현대 모터스튜디오 지점">
+                        <div className="renewal-location__list" role="tablist" aria-label="지점 선택">
+                            {locations.map((item, index) => (
+                                <button
+                                    key={item.slug}
+                                    type="button"
+                                    role="tab"
+                                    aria-selected={selectedLocation === index}
+                                    className={selectedLocation === index ? 'is-active' : ''}
+                                    onClick={() => selectLocation(index)}
+                                >
+                                    {item.slug === 'senayan-park' ? 'SENAYAN PARK' : item.english}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="renewal-location__rail" aria-hidden="true">
+                            <i style={{ '--location-index': selectedLocation }} />
+                        </div>
+                        <Link
+                            className="renewal-location__detail"
+                            role="tabpanel"
+                            to={paths.location(location.slug)}
                         >
-                            <h2>{item.name}</h2>
-                            <div
-                                className={`renewal-drive__vehicle-frame ${item.vehicleClass ?? ''}`}
-                            >
-                                <div className="renewal-drive__vehicle-body-frame">
-                                    <img
-                                        className="renewal-drive__vehicle-body"
-                                        src={item.body}
-                                        alt={`${item.name} 시승 차량`}
-                                    />
-                                </div>
-                                {item.wheels.map((wheel, wheelIndex) => (
-                                    <span
-                                        className="renewal-drive__wheel-position"
-                                        key={`${item.name}-wheel-${wheelIndex}`}
-                                        style={{
-                                            '--wheel-left': `${wheel.left}%`,
-                                            '--wheel-top': `${wheel.top}%`,
-                                            '--wheel-width': `${wheel.width}%`,
-                                            '--wheel-height': `${wheel.height}%`,
-                                            '--wheel-rotation': `${wheel.rotation}deg`,
-                                        }}
-                                    >
-                                        <img
-                                            className="renewal-drive__wheel"
-                                            src={item.wheel}
-                                            alt=""
-                                            aria-hidden="true"
-                                        />
-                                    </span>
-                                ))}
-                            </div>
                             <img
-                                className={`renewal-drive__shadow ${item.shadowClass ?? ''}`}
-                                src={item.shadow}
-                                alt=""
+                                ref={locationImageRef}
+                                className={selectedLocation === 0 ? 'is-goyang' : ''}
+                                src={selectedLocation === 0 ? asset('intro.svg') : locationDetail.image ?? location.image}
+                                alt={`${location.name} 공간`}
+                            />
+                            <div ref={locationCopyRef}>
+                                <strong>{locationDetail.tagline}</strong>
+                                <p>{locationDetail.description}</p>
+                            </div>
+                        </Link>
+                    </section>
+                </div>
+                <div className="renewal-slogan-entry">
+                    <section className="renewal-slogan" ref={sloganRef} aria-label="브랜드 슬로건">
+                        <p>
+                            WHAT YOU FIND
+                            <br />
+                            WHEN MOTION
+                            <br />
+                            MEETS
+                        </p>
+                        <strong aria-label="EXPERIENCE">
+                            <span ref={sloganTextRef} />
+                            <span
+                                className="renewal-slogan__cursor"
+                                ref={sloganCursorRef}
                                 aria-hidden="true"
                             />
-                            <div className="renewal-drive__copy">
-                                <h3>{item.title}</h3>
-                                <p>{item.copy}</p>
-                            </div>
-                        </article>
-                    ))}
+                        </strong>
+                    </section>
                 </div>
-            </section>
-            <section
-                className="renewal-experience"
-                ref={experienceRef}
-                aria-label="휠로 탐색하는 차량 전시"
-            >
-                <div className="renewal-experience__previews" aria-hidden="true">
-                    {experienceRing.map((item) => (
-                        <img
-                            data-experience-preview
-                            key={`${item.image}-${item.preview}`}
-                            src={asset(item.preview)}
-                            alt=""
-                        />
-                    ))}
-                </div>
-                <div className="renewal-experience__shade" aria-hidden="true" />
-                <div className="renewal-experience__ring-position">
-                    <div className="renewal-experience__ring" ref={experienceRingRef}>
-                        {experienceRing.map((item) => (
-                            <span
-                                className="renewal-experience__ring-item"
-                                key={item.image}
-                                style={{
-                                    '--x': `${item.x}%`,
-                                    '--y': `${item.y}%`,
-                                    '--rotate': `${item.rotate}deg`,
-                                }}
+                <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
+                    <div className="renewal-drive__track">
+                        {driveModels.map((item) => (
+                            <article
+                                className={`renewal-drive__slide ${item.shadowClass ?? ''}`}
+                                key={item.name}
                             >
-                                <img src={asset(item.image)} alt="" draggable={false} />
-                            </span>
+                                <h2>{item.name}</h2>
+                                <div
+                                    className={`renewal-drive__vehicle-frame ${item.vehicleClass ?? ''}`}
+                                >
+                                    <div className="renewal-drive__vehicle-body-frame">
+                                        <img
+                                            className="renewal-drive__vehicle-body"
+                                            src={item.body}
+                                            alt={`${item.name} 시승 차량`}
+                                        />
+                                    </div>
+                                    {item.wheels.map((wheel, wheelIndex) => (
+                                        <span
+                                            className="renewal-drive__wheel-position"
+                                            key={`${item.name}-wheel-${wheelIndex}`}
+                                            style={{
+                                                '--wheel-left': `${wheel.left}%`,
+                                                '--wheel-top': `${wheel.top}%`,
+                                                '--wheel-width': `${wheel.width}%`,
+                                                '--wheel-height': `${wheel.height}%`,
+                                                '--wheel-rotation': `${wheel.rotation}deg`,
+                                            }}
+                                        >
+                                            <img
+                                                className="renewal-drive__wheel"
+                                                src={item.wheel}
+                                                alt=""
+                                                aria-hidden="true"
+                                            />
+                                        </span>
+                                    ))}
+                                </div>
+                                <img
+                                    className={`renewal-drive__shadow ${item.shadowClass ?? ''}`}
+                                    src={item.shadow}
+                                    alt=""
+                                    aria-hidden="true"
+                                />
+                                <div className="renewal-drive__copy">
+                                    <h3>{item.title}</h3>
+                                    <p>{item.copy}</p>
+                                </div>
+                            </article>
                         ))}
                     </div>
-                    <div className="renewal-experience__indicator" ref={experienceIndicatorRef}>
-                        <img
-                            className="renewal-experience__pointer"
-                            src={asset('experience-pointer.svg')}
-                            alt=""
-                            draggable={false}
-                        />
+                </section>
+                <section
+                    className="renewal-experience"
+                    ref={experienceRef}
+                    aria-label="휠로 탐색하는 차량 전시"
+                >
+                    <div className="renewal-experience__previews" aria-hidden="true">
+                        {experienceRing.map((item) => (
+                            <img
+                                data-experience-preview
+                                key={`${item.image}-${item.preview}`}
+                                src={asset(item.preview)}
+                                alt=""
+                            />
+                        ))}
                     </div>
-                </div>
-                <p ref={experienceTitleRef} aria-live="polite">
-                    IONIQ5N
-                </p>
-            </section>
-            <section
-                className="renewal-vehicle-exhibition-card-list"
-                ref={vehicleExhibitionCardListRef}
-            >
-                <header className="renewal-vehicle-exhibition-card-list__header">
-                    <div className="renewal-vehicle-exhibition-card-list__header-content">
-                        <div className="renewal-vehicle-exhibition-card-list__title-slot">
-                            <h2 className="renewal-vehicle-exhibition-card-list__mobile-title">
-                                <span>HYUNDAI MOTORSTUDIO</span>
-                                <span>VEHICLE EXHIBITION</span>
-                            </h2>
+                    <div className="renewal-experience__shade" aria-hidden="true" />
+                    <div className="renewal-experience__ring-position">
+                        <div className="renewal-experience__ring" ref={experienceRingRef}>
+                            {experienceRing.map((item) => (
+                                <span
+                                    className="renewal-experience__ring-item"
+                                    key={item.image}
+                                    style={{
+                                        '--x': `${item.x}%`,
+                                        '--y': `${item.y}%`,
+                                        '--rotate': `${item.rotate}deg`,
+                                    }}
+                                >
+                                    <img src={asset(item.image)} alt="" draggable={false} />
+                                </span>
+                            ))}
                         </div>
-                        <p>
-                            직접 달리며 만나는 현대자동차의 새로운 가능성 보고, 듣고, 느끼는 것에서
-                            한 걸음
-                            <br />더 나아가 현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
-                        </p>
+                        <div className="renewal-experience__indicator" ref={experienceIndicatorRef}>
+                            <img
+                                className="renewal-experience__pointer"
+                                src={asset('experience-pointer.svg')}
+                                alt=""
+                                draggable={false}
+                            />
+                        </div>
                     </div>
-                </header>
-                <div className="renewal-vehicle-exhibition-card-list__items">
-                    {exhibitionVehicles.map(({ name, powertrain, color, image, position }) => (
-                        <article
-                            className={`renewal-vehicle-exhibition-card-list__item ${position}`}
-                            key={name}
-                        >
-                            <img src={asset(image)} alt={name} />
-                            <h3>{name}</h3>
-                            <dl>
-                                <div>
-                                    <dt>POWERTRAIN</dt>
-                                    <dd>{powertrain}</dd>
-                                </div>
-                                <div>
-                                    <dt>EXTERIOR COLOR</dt>
-                                    <dd>{color}</dd>
-                                </div>
-                            </dl>
-                        </article>
-                    ))}
-                </div>
-            </section>
-            <section className="renewal-current" ref={currentExhibitionRef}>
-                <div className="renewal-current__content">
-                    <div className="renewal-current__heading">
-                        <h2 className="renewal-current__title" ref={currentExhibitionTopRef}>
-                            CURRENT
+                    <p ref={experienceTitleRef} aria-live="polite">
+                        IONIQ5N
+                    </p>
+                </section>
+                <section
+                    className="renewal-vehicle-exhibition-card-list"
+                    ref={vehicleExhibitionCardListRef}
+                >
+                    <header className="renewal-vehicle-exhibition-card-list__header">
+                        <div className="renewal-vehicle-exhibition-card-list__header-content">
+                            <div className="renewal-vehicle-exhibition-card-list__title-slot">
+                                <h2 className="renewal-vehicle-exhibition-card-list__mobile-title">
+                                    <span>HYUNDAI MOTORSTUDIO</span>
+                                    <span>VEHICLE EXHIBITION</span>
+                                </h2>
+                            </div>
+                            <p>
+                                직접 달리며 만나는 현대자동차의 새로운 가능성 보고, 듣고, 느끼는 것에서
+                                한 걸음
+                                <br />더 나아가 현대자동차의 다양한 모델의 감각과 기술을 경험해보세요.
+                            </p>
+                        </div>
+                    </header>
+                    <div className="renewal-vehicle-exhibition-card-list__items">
+                        {exhibitionVehicles.map(({ name, powertrain, color, image, position }) => (
+                            <article
+                                className={`renewal-vehicle-exhibition-card-list__item ${position}`}
+                                key={name}
+                            >
+                                <img src={asset(image)} alt={name} />
+                                <h3>{name}</h3>
+                                <dl>
+                                    <div>
+                                        <dt>POWERTRAIN</dt>
+                                        <dd>{powertrain}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>EXTERIOR COLOR</dt>
+                                        <dd>{color}</dd>
+                                    </div>
+                                </dl>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+                <section className="renewal-current" ref={currentExhibitionRef}>
+                    <div className="renewal-current__content">
+                        <div className="renewal-current__heading">
+                            <h2 className="renewal-current__title" ref={currentExhibitionTopRef}>
+                                CURRENT
+                            </h2>
+                            <p className="renewal-current__copy" ref={currentExhibitionCopyRef}>
+                                DISCOVER OUR
+                                <br />
+                                CURRENT EXHIBITIONS
+                            </p>
+                        </div>
+                        <h2 className="renewal-current__title" ref={currentExhibitionBottomRef}>
+                            EXHIBITION
                         </h2>
-                        <p className="renewal-current__copy" ref={currentExhibitionCopyRef}>
-                            DISCOVER OUR
-                            <br />
-                            CURRENT EXHIBITIONS
-                        </p>
                     </div>
-                    <h2 className="renewal-current__title" ref={currentExhibitionBottomRef}>
-                        EXHIBITION
+                    <SpiralGallery ref={spiralGalleryRef} />
+                </section>
+                <HomeProgramSequence />
+                <section className="renewal-story-title">
+                    <h2>
+                        THE LATEST FROM
+                        <br />
+                        HYUNDAI MOTORSTUDIO
                     </h2>
-                </div>
-                <SpiralGallery ref={spiralGalleryRef} />
-            </section>
-            <HomeProgramSequence />
-            <section className="renewal-story-title">
-                <h2>
-                    THE LATEST FROM
-                    <br />
-                    HYUNDAI MOTORSTUDIO
-                </h2>
-                <p>현대 모터스튜디오의 새로운 이야기를 만나보세요.</p>
-                <span className="renewal-story-title__line-track" aria-hidden="true">
-                    <img
-                        className="renewal-story-title__line-base"
-                        src={asset('title-center-line.svg')}
-                        alt=""
-                    />
-                    <span className="renewal-story-title__line-fill">
-                        <img src={asset('title-center-line.svg')} alt="" />
+                    <p>현대 모터스튜디오의 새로운 이야기를 만나보세요.</p>
+                    <span className="renewal-story-title__line-track" aria-hidden="true">
+                        <img
+                            className="renewal-story-title__line-base"
+                            src={asset('title-center-line.svg')}
+                            alt=""
+                        />
+                        <span className="renewal-story-title__line-fill">
+                            <img src={asset('title-center-line.svg')} alt="" />
+                        </span>
                     </span>
-                </span>
-            </section>
-            <HomeStories stories={stories} />
-            <VisitorGuide links={guideLinks} />
-        </main>
+                </section>
+                <HomeStories stories={stories} />
+                <VisitorGuide links={guideLinks} />
+            </main>
+            <HomeMobile />
+        </>
     );
 }
