@@ -1,11 +1,12 @@
-﻿import { useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { ArrowDown, ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
-import membershipHeroImage from './assets/membership-hero.png';
-import membershipBenefitsImage from './assets/membership-benefits.png';
-import membershipJoinImage from './assets/membership-join.png';
-import membershipLocationsImage from './assets/membership-locations.png';
+import membershipHeroImage from '../../assets/images/membership/membership-hero.png';
+import categoryIntroImage from '../../assets/images/membership/category-intro.png';
+import categoryJoinImage from '../../assets/images/membership/category-join.png';
+import categoryBenefitsImage from '../../assets/images/membership/category-benefits.png';
+import categoryLocationsImage from '../../assets/images/membership/category-locations.png';
 import './MembershipPage.css';
 
 const membershipTypes = [
@@ -98,8 +99,27 @@ const membershipTabs = [
 ];
 
 export default function MembershipPage() {
-    const [activeTab, setActiveTab] = useState('intro');
+    const [searchParams, setSearchParams] = useSearchParams();
+    const tabParam = searchParams.get('tab');
+    const activeTab = membershipTabs.some(([id]) => id === tabParam) ? tabParam : 'intro';
+    const currentTabLabel = membershipTabs.find(([id]) => id === activeTab)[1];
     const [activeLounge, setActiveLounge] = useState('seoul');
+    const contentRef = useRef(null);
+    const previousTab = useRef(null);
+
+    useEffect(() => {
+        if (previousTab.current !== null && previousTab.current !== activeTab) {
+            contentRef.current?.scrollIntoView({
+                block: 'start',
+                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+            });
+        }
+        previousTab.current = activeTab;
+    }, [activeTab]);
+
+    function setActiveTab(id) {
+        setSearchParams(id === 'intro' ? {} : { tab: id });
+    }
 
     function handleTabKeyDown(event, index) {
         let nextIndex;
@@ -118,30 +138,32 @@ export default function MembershipPage() {
             <section
                 className="membership-hero"
                 aria-labelledby="membership-title"
-                style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.12)), url("${membershipHeroImage}")` }}
+                style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 26%, rgba(0,0,0,.4) 74%), linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.2)), url("${membershipHeroImage}")` }}
             >
-                <div className="membership-hero__copy">
-                    <p>HYUNDAI MOTORSTUDIO MEMBERSHIP</p>
-                    <h1 id="membership-title">멤버십 소개</h1>
-                    <p className="membership-hero__intro">
-                        더 깊은 경험과 새로운 영감이 시작되는
-                        <br />
-                        현대 모터스튜디오 전용 멤버십
-                    </p>
-                </div>
-                <span className="membership-hero__index" aria-hidden="true">
-                    01
-                </span>
+                <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
+                    <Link to={paths.home}>HOME</Link>
+                    <span aria-hidden="true"> / </span>
+                    <span>안내</span>
+                    <span aria-hidden="true"> / </span>
+                    {activeTab === 'intro' ? (
+                        <span aria-current="page">멤버십</span>
+                    ) : (
+                        <>
+                            <Link to={paths.membership}>멤버십</Link>
+                            <span aria-hidden="true"> / </span>
+                            <span aria-current="page">{currentTabLabel}</span>
+                        </>
+                    )}
+                </nav>
+                <h1 id="membership-title">MEMBERSHIP</h1>
+                <p className="membership-hero__intro">
+                    공간과 모빌리티, 문화를 더 가까이
+                    <br />
+                    HMS Club 멤버십 혜택을 확인해보세요.
+                </p>
             </section>
 
-            <div className="membership-breadcrumb" aria-label="현재 위치">
-                <Link to={paths.home}>홈</Link>
-                <span aria-hidden="true">›</span>
-                <span>멤버십 소개</span>
-                <span aria-hidden="true">›</span>
-                <span>{membershipTabs.find(([id]) => id === activeTab)[1]}</span>
-            </div>
-            <div className="membership-content">
+            <div className="membership-content" ref={contentRef}>
                 <div
                     className="membership-nav"
                     id="membership-tabs"
@@ -174,43 +196,48 @@ export default function MembershipPage() {
                     className="membership-intro"
                 >
                     <p className="membership-eyebrow">WELCOME TO HMS CLUB</p>
-                    <h2 id="membership-intro-title">HMS Club 멤버십 혜택 카테고리</h2>
+                    <h2 id="membership-intro-title">HMS CLUB CATEGORY</h2>
                     <div className="membership-category-grid">
                         {[
                             [
-                                '혜택 안내',
-                                membershipBenefitsImage,
-                                '주차권부터 특별한 프로그램까지, HMS Club의 다양한 혜택을 만나보세요.',
-                                'benefits',
+                                '멤버십 안내',
+                                categoryIntroImage,
+                                'HMS Club이 어떤 멤버십인지, 현대 모터스튜디오 전용 혜택을 소개합니다.',
+                                'intro',
                             ],
                             [
                                 '가입 안내',
-                                membershipJoinImage,
+                                categoryJoinImage,
                                 '멤버십 가입 대상과 방법, Basic·Plus 회원 유형을 확인해 보세요.',
                                 'join',
                             ],
                             [
-                                '이용 안내',
-                                membershipLocationsImage,
-                                '현대 모터스튜디오의 각 거점에서 즐길 수 있는 경험을 확인해 보세요.',
+                                '혜택 안내',
+                                categoryBenefitsImage,
+                                '주차권부터 특별한 프로그램까지, HMS Club의 다양한 혜택을 만나보세요.',
+                                'benefits',
+                            ],
+                            [
+                                '이용·라운지 안내',
+                                categoryLocationsImage,
+                                '현대 모터스튜디오의 각 거점과 라운지에서 즐길 수 있는 경험을 확인해 보세요.',
                                 'locations',
                             ],
                         ].map(([title, image, description, target]) => (
                             <article key={target}>
-                                <img src={image} alt="" loading="lazy" />
+                                <span
+                                    className="membership-category-grid__media"
+                                    aria-hidden="true"
+                                    style={{ backgroundImage: `url("${image}")` }}
+                                />
                                 <h3>{title}</h3>
                                 <p>{description}</p>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setActiveTab(target);
-                                        document
-                                            .getElementById(`membership-tab-${target}`)
-                                            ?.focus();
-                                    }}
+                                <Link
+                                    className="membership-category-grid__link"
+                                    to={target === 'intro' ? paths.membership : `${paths.membership}?tab=${target}`}
                                 >
                                     {title} 바로가기 <ArrowUpRight aria-hidden="true" />
-                                </button>
+                                </Link>
                             </article>
                         ))}
                     </div>
