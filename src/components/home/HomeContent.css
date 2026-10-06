@@ -20,7 +20,8 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar{display:block}
 .renewal-hero__word--left{text-align:right}
 .renewal-hero__word--right{text-align:left}
 .renewal-location-transition{--intro-copy-opacity:1;position:relative;z-index:0;isolation:isolate;background:#fff}
-.renewal-location-transition__image{position:absolute;z-index:1;top:0;left:0;width:100%;height:100svh;object-fit:cover;pointer-events:none;will-change:transform,width,height}
+.renewal-location-transition__viewport{position:absolute;z-index:1;top:0;left:0;width:100vw;height:100svh;overflow:hidden;pointer-events:none;clip-path:polygon(0 0,100% 0,100% 100%,100% 100%,0 100%);will-change:clip-path}
+.renewal-location-transition__image{position:absolute;top:50%;left:50%;display:block;width:max(100vw,192svh);height:max(100svh,52.083333vw);max-width:none;object-fit:fill;pointer-events:none;transform-origin:50% 50%;will-change:transform}
 .renewal-intro{position:relative;z-index:1;top:0;height:100svh;background:transparent;color:#fff;overflow:hidden}
 .renewal-intro__static-background{display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .renewal-intro__title{position:absolute;z-index:2;top:11.7%;left:5.208%;font:550 clamp(54px,4.167vw,80px)/1.1 var(--font-en);white-space:nowrap;opacity:var(--intro-copy-opacity)}
@@ -254,17 +255,6 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     position: relative;
     isolation: isolate;
     background: #fff;
-}
-.renewal-location-transition__image {
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100svh;
-    object-fit: cover;
-    pointer-events: none;
-    will-change: transform, width, height;
 }
 .renewal-intro {
     position: relative;
@@ -1552,10 +1542,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         clip-path: inset(0) !important;
     }
 }
-@media (max-width: 900px) {
-    .renewal-location-transition__image {
-        display: none;
-    }
+@media(max-width:900px){.renewal-location-transition__viewport{display:none}
     .renewal-intro {
         position: relative;
         margin-bottom: 0;
@@ -1567,10 +1554,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         visibility: visible;
     }
 }
-@media (prefers-reduced-motion: reduce) {
-    .renewal-location-transition__image {
-        display: none;
-    }
+@media(prefers-reduced-motion:reduce){.renewal-location-transition__viewport{display:none}
     .renewal-intro {
         position: relative;
         margin-bottom: 0;
@@ -1594,11 +1578,12 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         margin-top: -100svh;
         padding-top: 125svh;
     }
-    .renewal-location-transition__image {
+    .renewal-location-transition__viewport {
         position: fixed;
     }
     .renewal-intro {
         position: fixed;
+        top: 0;
         left: 0;
         width: 100%;
     }
