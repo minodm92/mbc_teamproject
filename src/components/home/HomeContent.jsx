@@ -30,6 +30,7 @@ const driveModels = [
         shadow: asset('drive-shadow-standard.svg'),
         title: '아웃도어 라이프_데이트립 드라이브',
         copy: '넉넉한 시간과 자유로운 코스로 차량의 주행감과 편의성을 경험해보세요.\n일상 속에서 차량의 매력을 더욱 깊이 느낄 수 있습니다.',
+        mobileCopy: '넉넉한 시간과 자유로운 코스로 차량의\n주행감과 편의성을 경험해보세요.',
     },
     {
         name: 'IONIQ5N',
@@ -44,6 +45,7 @@ const driveModels = [
         shadowClass: 'is-ioniq5n',
         title: '하이 퍼포먼스 드라이브_언택트',
         copy: 'N 브랜드의 강렬한 퍼포먼스와 고성능 감성을 직접 경험해보세요.\n공공도로 주행을 통해 역동적인 드라이빙의 즐거움을 느낄 수 있습니다.',
+        mobileCopy: 'N 브랜드의 강렬한 퍼포먼스와 GV60\n마그마의 고성능 감성을 직접 경험해보세요.',
     },
     {
         name: 'CASPER',
@@ -58,6 +60,7 @@ const driveModels = [
         shadowClass: 'is-casper',
         title: '베이직 드라이브',
         copy: '자동차 전문가 Guru의 친절한 설명과 함께 다양한 현대자동차를 직접 시승해보세요.\n차량의 특징과 주행 감각을 보다 쉽고 깊이 있게 경험할 수 있습니다.',
+        mobileCopy: '자동차 전문가 Guru의 친절한 설명과\n함께 다양한 현대자동차를 직접 시승해보세요.',
     },
     {
         name: 'G90',
@@ -72,6 +75,7 @@ const driveModels = [
         shadowClass: 'is-g90',
         title: '아웃도어 라이프_데이트립 드라이브',
         copy: '자동차 전문가 Guru의 설명과 함께 현대자동차의 다양한 차량을 시승해보세요.\n차량의 특징과 주행 감각을 보다 쉽고 편안하게 경험할 수 있습니다.',
+        mobileCopy: '자동차 전문가 Guru의 설명과 함께\n현대자동차의 다양한 차량을 시승해보세요.',
     },
 ];
 const exhibitionVehicles = [
@@ -80,6 +84,7 @@ const exhibitionVehicles = [
         powertrain: 'GASOLINE 2.0 TURBO',
         color: 'PERFORMANCE BLUE',
         image: 'vehicle-1.svg',
+        mobileImage: 'mobile-vehicle-exhibition-1.svg',
         position: 'is-avante-n',
     },
     {
@@ -87,6 +92,7 @@ const exhibitionVehicles = [
         powertrain: '3.5 GASOLINE CALLIGRAPHY',
         color: 'ABYSS BLACK PEARL',
         image: 'vehicle-2.svg',
+        mobileImage: 'mobile-vehicle-exhibition-2.svg',
         position: 'is-grandeur',
     },
     {
@@ -94,6 +100,7 @@ const exhibitionVehicles = [
         powertrain: 'CALLIGRAPHY AWD',
         color: 'IONOSPHERE GREEN PEARL',
         image: 'vehicle-3.svg',
+        mobileImage: 'mobile-vehicle-exhibition-3.svg',
         position: 'is-ioniq-9',
     },
     {
@@ -101,6 +108,7 @@ const exhibitionVehicles = [
         powertrain: 'PRESTIGE 2WD',
         color: 'DIGITAL TEAL GREEN PEARL',
         image: 'vehicle-4.svg',
+        mobileImage: 'mobile-vehicle-exhibition-4.svg',
         position: 'is-ioniq-5',
     },
     {
@@ -108,6 +116,7 @@ const exhibitionVehicles = [
         powertrain: '3.5T GASOLINE AWD',
         color: 'VEARING BLUE',
         image: 'vehicle-5.svg',
+        mobileImage: 'mobile-vehicle-exhibition-5.svg',
         position: 'is-gv80',
     },
     {
@@ -115,8 +124,45 @@ const exhibitionVehicles = [
         powertrain: '1ST GENERATION AVANTE',
         color: 'DARK RED',
         image: 'vehicle-6.svg',
+        mobileImage: 'mobile-vehicle-exhibition-6.svg',
         position: 'is-elantra',
     },
+];
+const mobileExhibitionVehicles = [
+    {
+        name: '엘란트라 N TCR',
+        copy: '속도를 즐기는 당신에게',
+        image: 'experience-source-7.png',
+        featured: true,
+    },
+    {
+        name: 'G90',
+        copy: '오늘에 머물지 않는 당신에게',
+        image: 'experience-source-8.png',
+    },
+    {
+        name: '아이오닉 6 N',
+        copy: 'Rule the Paradigm',
+        image: 'experience-source-9.png',
+    },
+    {
+        name: 'SANTA FE',
+        copy: '일상과 일상 사이를 열다',
+        image: 'experience-source-10.png',
+    },
+    {
+        name: 'ELANTRA',
+        copy: "Heritage 1990's",
+        image: 'experience-source-3.png',
+    },
+];
+const mobileCurrentExhibitions = [
+    { image: 'current-exhibition-1.png', crop: 'is-left-1' },
+    { image: 'current-exhibition-4.png' },
+    { image: 'current-exhibition-2.png', crop: 'is-left-2' },
+    { image: 'current-exhibition-5.png', crop: 'is-left-3' },
+    { image: 'current-exhibition-3.png', crop: 'is-left-4' },
+    { image: 'current-exhibition-6.png' },
 ];
 const experienceRing = [
     {
@@ -316,7 +362,7 @@ export default function HomeContent() {
         if (previousLocationRef.current === selectedLocation) return undefined;
         previousLocationRef.current = selectedLocation;
 
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+        if (window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches) return undefined;
         const image = locationImageRef.current;
         const copy = locationCopyRef.current;
         if (!image || !copy) return undefined;
@@ -336,6 +382,64 @@ export default function HomeContent() {
 
         return () => context.revert();
     }, [selectedLocation]);
+    useLayoutEffect(() => {
+        const drive = driveRef.current;
+        if (!drive) return undefined;
+
+        const media = gsap.matchMedia();
+        media.add('(max-width: 767px)', () => {
+            const slides = gsap.utils.toArray('.renewal-drive__slide', drive);
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const timelines = [];
+
+            slides.forEach((slide) => {
+                const vehicle = slide.querySelector('.renewal-drive__vehicle-frame');
+                const wheels = [...slide.querySelectorAll('.renewal-drive__wheel')];
+                if (!vehicle) return;
+
+                if (prefersReducedMotion) {
+                    gsap.set(vehicle, { x: 0 });
+                    gsap.set(wheels, { '--wheel-roll': '0deg' });
+                    return;
+                }
+
+                const timeline = gsap.timeline({
+                    defaults: { ease: 'none' },
+                    scrollTrigger: {
+                        trigger: slide,
+                        start: 'top 92%',
+                        end: 'top 42%',
+                        scrub: 0.65,
+                        invalidateOnRefresh: true,
+                    },
+                });
+                timeline.fromTo(
+                    vehicle,
+                    { x: () => window.innerWidth * 0.88 },
+                    { x: 0, duration: 1 },
+                    0
+                );
+                timeline.fromTo(
+                    wheels,
+                    { '--wheel-roll': '0deg' },
+                    { '--wheel-roll': '-720deg', duration: 1 },
+                    0
+                );
+                timelines.push(timeline);
+            });
+
+            return () => {
+                timelines.forEach((timeline) => {
+                    timeline.scrollTrigger?.kill();
+                    timeline.kill();
+                });
+                gsap.set('.renewal-drive__vehicle-frame', { clearProps: 'transform' });
+                gsap.set('.renewal-drive__wheel', { clearProps: '--wheel-roll' });
+            };
+        });
+
+        return () => media.revert();
+    }, []);
     useLayoutEffect(() => {
         const transition = locationTransitionRef.current;
         if (!transition) return undefined;
@@ -1248,7 +1352,17 @@ export default function HomeContent() {
                     aria-hidden="true"
                 />
                 <section className="renewal-location" aria-label="현대 모터스튜디오 지점">
-                    <div className="renewal-location__list" role="tablist" aria-label="지점 선택">
+                    <div
+                        className="renewal-location__list"
+                        role="tablist"
+                        aria-label="지점 선택"
+                        onWheel={(event) => {
+                            if (!window.matchMedia('(max-width: 767px)').matches) return;
+                            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+                            event.preventDefault();
+                            event.currentTarget.scrollLeft += event.deltaY;
+                        }}
+                    >
                         {locations.map((item, index) => (
                             <button
                                 key={item.slug}
@@ -1349,7 +1463,8 @@ export default function HomeContent() {
                             />
                             <div className="renewal-drive__copy">
                                 <h3>{item.title}</h3>
-                                <p>{item.copy}</p>
+                                <p className="renewal-drive__copy-desktop">{item.copy}</p>
+                                <p className="renewal-drive__copy-mobile">{item.mobileCopy}</p>
                             </div>
                         </article>
                     ))}
@@ -1360,6 +1475,23 @@ export default function HomeContent() {
                 ref={experienceRef}
                 aria-label="휠로 탐색하는 차량 전시"
             >
+                <div className="renewal-experience__mobile">
+                    <h2>차량 전시</h2>
+                    <div className="renewal-experience__mobile-track">
+                        {mobileExhibitionVehicles.map((item) => (
+                            <article
+                                className={item.featured ? 'is-featured' : undefined}
+                                key={item.name}
+                            >
+                                <img src={asset(item.image)} alt={item.name} />
+                                <p>
+                                    <strong>{item.name}</strong>
+                                    <span>{item.copy}</span>
+                                </p>
+                            </article>
+                        ))}
+                    </div>
+                </div>
                 <div className="renewal-experience__previews" aria-hidden="true">
                     {experienceRing.map((item) => (
                         <img
@@ -1404,6 +1536,20 @@ export default function HomeContent() {
                 className="renewal-vehicle-exhibition-card-list"
                 ref={vehicleExhibitionCardListRef}
             >
+                <header className="renewal-vehicle-exhibition-card-list__mobile-header">
+                    <h2>
+                        HYUNDAI MOTORSTUDIO
+                        <br />
+                        VEHICLE EXHIBITION
+                    </h2>
+                    <p>
+                        직접 달리며 만나는 현대자동차의 새로운 가능성을 보고,
+                        <br />
+                        듣고, 느끼는 것에서 한 걸음 더 나아가 현대자동차의
+                        <br />
+                        다양한 모델의 감각과 기술을 경험해보세요.
+                    </p>
+                </header>
                 <header className="renewal-vehicle-exhibition-card-list__header">
                     <div className="renewal-vehicle-exhibition-card-list__header-content">
                         <div className="renewal-vehicle-exhibition-card-list__title-slot">
@@ -1420,12 +1566,18 @@ export default function HomeContent() {
                     </div>
                 </header>
                 <div className="renewal-vehicle-exhibition-card-list__items">
-                    {exhibitionVehicles.map(({ name, powertrain, color, image, position }) => (
+                    {exhibitionVehicles.map(
+                        ({ name, powertrain, color, image, mobileImage, position }) => (
                         <article
                             className={`renewal-vehicle-exhibition-card-list__item ${position}`}
                             key={name}
                         >
                             <img src={asset(image)} alt={name} />
+                            <img
+                                className="renewal-vehicle-exhibition-card-list__mobile-image"
+                                src={asset(mobileImage)}
+                                alt={name}
+                            />
                             <h3>{name}</h3>
                             <dl>
                                 <div>
@@ -1438,10 +1590,32 @@ export default function HomeContent() {
                                 </div>
                             </dl>
                         </article>
-                    ))}
+                        )
+                    )}
                 </div>
             </section>
             <section className="renewal-current" ref={currentExhibitionRef}>
+                <div className="renewal-current__mobile">
+                    <header>
+                        <h2>
+                            DISCOVER OUR
+                            <br />
+                            CURRENT EXHIBITIONS
+                        </h2>
+                        <p>
+                            자동차와 모빌리티를 더욱 깊이 이해할 수 있도록 다양한 체험과 문화
+                            프로그램을 준비했습니다. 관심과 취향에 맞는 프로그램을 선택해 새로운
+                            영감을 만나보세요.
+                        </p>
+                    </header>
+                    <div className="renewal-current__mobile-grid">
+                        {mobileCurrentExhibitions.map((item) => (
+                            <figure className={item.crop ?? ''} key={item.image}>
+                                <img src={asset(item.image)} alt="" />
+                            </figure>
+                        ))}
+                    </div>
+                </div>
                 <div className="renewal-current__content">
                     <div className="renewal-current__heading">
                         <h2 className="renewal-current__title" ref={currentExhibitionTopRef}>
