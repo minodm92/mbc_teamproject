@@ -25,7 +25,19 @@
         max-width: 100%;
     }
 
-    /* Common header, home page only: 60px bar, 124x28 logo, menu button only. */
+    /* Common header, home page only: 60px bar, 124x28 logo, menu button only.
+       No background: Header.css paints #363636 on :hover/:focus-within/expanded,
+       which sticks after a tap on touch screens. The header is position:absolute,
+       so it scrolls away with the dark hero and never sits over white sections. */
+    html.is-home-page #root .site-header,
+    html.is-home-page #root .site-header:hover,
+    html.is-home-page #root .site-header:focus-within,
+    html.is-home-page #root .site-header.site-header--expanded {
+        border: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
     html.is-home-page .site-header,
     html.is-home-page .site-header__bar {
         height: 60px;
@@ -109,23 +121,50 @@
         margin-top: 52px;
     }
 
-    /* 3. Locations: one full-width block per studio, each with its Figma background. */
+    /* 3. Locations: one full-width block per studio, each with its Figma background.
+       Like the desktop location cards, the name bars stack while scrolling (CSS sticky only).
+       Only the 64px bar sticks (20 + 33px name + 11): a whole sticky block would leave
+       the image and info table of later studios off-screen on short phones.
+       Each bar's bottom margin, cancelled by the following body, lines up the point
+       where all bars hit the wrapper's end, so the stack leaves in one piece. */
+    .home-mobile-locations {
+        --hm-bar: 64px;
+        --hm-stack-top: 0px; /* the header is position:absolute, so nothing to clear */
+    }
+    .home-mobile-location__bar,
     .home-mobile-location {
-        display: block;
-        padding: 20px var(--hm-gutter) 40px;
+        --hm-bar-gap: calc((var(--hm-stack-count) - 1 - var(--i)) * var(--hm-bar));
         background: var(--location-bg);
         color: #fff;
     }
+    .home-mobile-location__bar.is-light,
     .home-mobile-location.is-light {
         color: var(--hm-ink);
     }
-    .home-mobile-location__name {
-        margin: 0;
+    .home-mobile-location__bar {
+        position: sticky;
+        z-index: calc(var(--i) + 1);
+        top: calc(var(--hm-stack-top) + var(--i) * var(--hm-bar));
+        box-sizing: border-box;
+        height: var(--hm-bar);
+        margin: 0 0 var(--hm-bar-gap);
+        padding: 20px var(--hm-gutter) 0;
         font: 500 30px/1.1 var(--font-en);
+    }
+    .home-mobile-location__bar a {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .home-mobile-location {
+        display: block;
+        margin-top: calc(var(--hm-bar-gap) * -1);
+        padding: 5px var(--hm-gutter) 40px;
     }
     .home-mobile-location__keywords {
         display: flex;
-        margin: 16px 0 0;
+        margin: 0;
         padding: 0;
         flex-direction: column;
         gap: 3px;
@@ -262,27 +301,38 @@
         font: 600 30px/1.1 var(--font-en);
     }
 
-    /* 6. DRIVE TEST: divided list; the first row carries the location meta. */
+    /* 6. DRIVE TEST (Figma Drive Test / Test2 / Test3): tapping a row selects it.
+       Row 74px = 20 + 33 + 20 + 1px line; selected 110px = 20 + 21 meta + 10 + 33 + 25 + 1px.
+       The selected row is #0e0e0e and opens the meta line; the others are 60% grey. */
     .home-mobile-drive {
-        --hm-drive-line: rgb(17 17 17 / 60%);
+        --hm-drive-grey: rgb(17 17 17 / 60%);
+        --hm-drive-ease: 0.3s ease;
         padding: 20px var(--hm-gutter);
     }
     .home-mobile-drive__list {
         margin: 40px 0 0;
         padding: 0;
-        border-top: 1px solid var(--hm-drive-line);
+        border-top: 1px solid var(--hm-drive-grey);
         list-style: none;
     }
     .home-mobile-drive__list li {
-        border-bottom: 1px solid var(--hm-drive-line);
+        border-bottom: 1px solid var(--hm-drive-grey);
     }
     .home-mobile-drive__item {
         display: block;
+        width: 100%;
         padding: 20px 0;
-        color: var(--hm-drive-line);
+        border: 0;
+        background: none;
+        color: var(--hm-drive-grey);
+        text-align: left;
+        cursor: pointer;
+        transition:
+            color var(--hm-drive-ease),
+            padding-bottom var(--hm-drive-ease);
     }
-    .home-mobile-drive__item.is-featured {
-        padding-bottom: 24px;
+    .home-mobile-drive__item.is-selected {
+        padding-bottom: 25px;
         color: var(--hm-ink);
     }
     .home-mobile-drive__item strong {
@@ -291,10 +341,24 @@
     }
     .home-mobile-drive__meta {
         display: flex;
-        margin-bottom: 10px;
+        height: 0;
+        margin-bottom: 0;
+        overflow: hidden;
         align-items: center;
         gap: 20px;
+        color: var(--hm-ink);
         font: 700 15px/1.4 var(--font-en);
+        white-space: nowrap;
+        opacity: 0;
+        transition:
+            height var(--hm-drive-ease),
+            margin-bottom var(--hm-drive-ease),
+            opacity var(--hm-drive-ease);
+    }
+    .home-mobile-drive__item.is-selected .home-mobile-drive__meta {
+        height: 21px;
+        margin-bottom: 10px;
+        opacity: 1;
     }
     .home-mobile-drive__meta span + span::before {
         content: '';
@@ -302,8 +366,14 @@
         width: 1px;
         height: 18px;
         margin-right: 20px;
-        background: var(--hm-ink);
+        background: var(--hm-ink); /* Figma: #111 line with 20% black on top */
         vertical-align: -3px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-mobile-drive__item,
+        .home-mobile-drive__meta {
+            transition: none;
+        }
     }
 
     /* 7. PROGRAM: 399x263 image cards with a one-line title, 40px apart. */

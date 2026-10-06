@@ -174,15 +174,12 @@ export const mobileVehicles = {
     ],
 };
 
-// The first entry is the highlighted one in Figma (dark text + location meta);
-// the others are dimmed. All entries go to the test drive reservation page.
+// Figma Drive Test / Drive Test2 / Drive Test3 (3822:1833, 4131:2564, 4131:2585):
+// one selected row at a time; the selected row shows the same meta line.
 export const mobileDriveTest = {
     title: 'DRIVE TEST',
-    items: [
-        { title: 'PRIVATE NEW CAR DRIVE', meta: ['GOYANG · HANAM', 'UNTACT'] },
-        { title: 'HIGH PERFORMANCE' },
-        { title: 'BASIC DRIVE' },
-    ],
+    meta: ['GOYANG · HANAM', 'UNTACT'],
+    items: ['PRIVATE NEW CAR DRIVE', 'HIGH PERFORMANCE', 'BASIC DRIVE'],
 };
 
 // TODO: /programs/:id only knows the ids in common/data/content.js, which has none of
