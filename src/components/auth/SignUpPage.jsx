@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
+import { isDemoEmailRegistered } from '../../common/auth/demoAccounts';
 import { paths } from '../../common/router/routePaths';
 import { AuthSocialButtons, PasswordToggle } from './AuthControls';
 import './SignUpPage.css';
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const fields = [
   { key: 'name', label: 'Name', placeholder: '이름을 입력해주세요', type: 'text', autoComplete: 'name', required: true },
@@ -14,22 +17,41 @@ const fields = [
 
 export default function SignUpPageView() {
   const navigate = useNavigate();
-  const loginWithEmail = useAuthStore((state) => state.loginWithEmail);
-  const updateProfile = useAuthStore((state) => state.updateProfile);
   const loginWithKakao = useAuthStore((state) => state.loginWithKakao);
   const authError = useAuthStore((state) => state.authError);
+  const clearAuthError = useAuthStore((state) => state.clearAuthError);
+  const registerDemoAccount = useAuthStore((state) => state.registerDemoAccount);
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const [values, setValues] = useState({ name: '', email: '', phone: '', password: '' });
   const [agreed, setAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [formError, setFormError] = useState('');
+  const errorMessage = formError || authError;
+
+  useEffect(() => { clearAuthError(); }, [clearAuthError]);
+
+  function validate() {
+    const missing = fields.find(({ key, required }) => required && !values[key].trim());
+    if (missing) return `${missing.label}을(를) 입력해주세요.`;
+    if (!EMAIL_PATTERN.test(values.email.trim())) return '올바른 이메일 형식을 입력해주세요.';
+    if (values.password.length < 6) return '비밀번호는 6자 이상 입력해주세요.';
+    if (!agreed) return '이용약관 및 개인정보 처리방침에 동의해주세요.';
+    // registerDemoAccount는 같은 이메일을 덮어쓰므로 저장 전에 중복을 먼저 막는다.
+    if (isDemoEmailRegistered(values.email)) return '이미 사용 중인 아이디입니다.';
+    return '';
+  }
 
   function submit(event) {
     event.preventDefault();
     if (isAuthLoading) return;
-    if (loginWithEmail(values.email, values.password)) {
-      updateProfile({ name: values.name, phone: values.phone, termsAgreed: agreed });
-      navigate(paths.mypage);
-    }
+    clearAuthError();
+    const error = validate();
+    setFormError(error);
+    if (error) return;
+    const result = registerDemoAccount({ email: values.email, password: values.password });
+    if (!result.success) { setFormError(result.error); return; }
+    alert('회원가입이 완료되었습니다.');
+    navigate(paths.login);
   }
 
   return <main className="signup-page">
@@ -49,7 +71,7 @@ export default function SignUpPageView() {
         <p className="signup-page__eyebrow">MEMBERSHIP</p>
         <h1 id="signup-heading">CREATE ACCOUNT</h1>
         <p className="signup-page__intro">현대 모터스튜디오 서비스를 이용하기 위한<br />회원 정보를 입력해주세요.</p>
-        <form className="signup-page__form" onSubmit={submit} aria-busy={isAuthLoading}>
+        <form className="signup-page__form" noValidate onSubmit={submit} aria-busy={isAuthLoading}>
           {fields.map(({ key, label, type, ...inputProps }) => <div className="signup-page__field" key={key}>
             <label htmlFor={`signup-${key}`}>{label}</label>
             <div className={key === 'password' ? 'signup-page__password' : undefined}>
@@ -58,7 +80,7 @@ export default function SignUpPageView() {
             </div>
           </div>)}
           <label className="signup-page__terms"><input type="checkbox" checked={agreed} onChange={(event) => setAgreed(event.target.checked)} disabled={isAuthLoading} />이용약관 및 개인정보 처리방침에 동의합니다.</label>
-          {authError && <p className="signup-page__error" role="alert">{authError}</p>}
+          {errorMessage && <p className="signup-page__error" role="alert">{errorMessage}</p>}
           <button className="signup-page__submit" type="submit" disabled={isAuthLoading}>GET STARTED<img src="/images/login/login-arrow.svg" width="16" height="16" alt="" /></button>
         </form>
         <div className="signup-page__divider"><span>Or continue with</span></div>
