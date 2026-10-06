@@ -436,7 +436,7 @@ const pageThreeDetails = {
 export const newsroomArticles = [
     {
         id: 'news-01',
-        location: '현대 모터 스튜디오',
+        location: '현대 모터스튜디오 서울',
         title: '자동차 마니아들의 놀이터로 돌아온 ‘현대 모터스튜디오 서울’',
         date: '2025.09.24',
         dateISO: '2025-09-24',

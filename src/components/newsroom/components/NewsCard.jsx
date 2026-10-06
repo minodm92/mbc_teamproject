@@ -20,7 +20,7 @@ export default function NewsCard({ article, variant = 'default', listPage = 1 })
                     />
                 </span>
                 <div className="newsroom-card__information">
-                    <p className="newsroom-card__location">{article.location}</p>
+                    <p className="newsroom-card__location">{article.location.replace('현대 모터스튜디오 ', '')}</p>
                     <div className="newsroom-card__text">
                         <h3 className="newsroom-card__title" title={article.title}>
                             {article.title}

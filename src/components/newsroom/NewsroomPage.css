@@ -18,7 +18,7 @@
 
 .newsroom-intro {
     position: relative;
-    height: 1030px;
+    height: 994px;
 }
 
 .newsroom-hero {
@@ -40,16 +40,46 @@
     object-position: center;
 }
 
+.newsroom-hero__copy {
+    position: absolute;
+    z-index: 1;
+    top: 160px;
+    left: 100px;
+    color: #fff;
+}
+
+.newsroom-hero__breadcrumb {
+    display: flex;
+    gap: 4px;
+    color: #a8a7ac;
+    font: 700 22px/1.4 var(--font-ko);
+}
+
+.newsroom-hero__breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.newsroom-hero__title {
+    margin: 8px 0 0;
+    font: 500 60px/1.1 var(--font-en);
+}
+
+.newsroom-hero__description {
+    margin: 32px 0 0;
+    font: 700 22px/1.4 var(--font-ko);
+}
+
 .newsroom-featured {
     position: absolute;
     z-index: 1;
-    top: 559px;
+    top: 535px;
     left: 50%;
     display: grid;
-    width: min(1404px, calc(100% - 48px));
-    grid-template-columns: repeat(4, minmax(0, 306px));
+    width: min(1400px, calc(100% - 48px));
+    grid-template-columns: repeat(4, minmax(0, 320px));
     justify-content: space-between;
-    gap: 20px;
+    gap: 40px;
     transform: translateX(-50%);
 }
 
@@ -70,10 +100,9 @@
 
 .newsroom-feature-card__title {
     position: absolute;
-    top: 37px;
-    left: 15px;
-    display: flex;
-    flex-direction: column;
+    bottom: 45px;
+    left: 20px;
+    right: 20px;
     margin: 0;
     font-family: var(--font-ko);
     font-size: 22px;
@@ -83,10 +112,10 @@
 
 .newsroom-feature-card__location {
     position: absolute;
-    top: 108px;
-    left: 15px;
+    bottom: 20px;
+    left: 20px;
     margin: 0;
-    font-family: var(--font-ko);
+    font-family: var(--font-en);
     font-size: 15px;
     font-weight: 500;
     line-height: 1.4;
@@ -94,9 +123,9 @@
 
 .newsroom-promo {
     position: relative;
-    height: 780px;
-    padding-top: 61px;
-    text-align: center;
+    height: 784px;
+    padding: 61px 100px 0;
+    text-align: left;
     background: #fff;
 }
 
@@ -120,12 +149,11 @@
 
 .newsroom-promo__link {
     position: absolute;
-    top: 268px;
-    left: 50%;
+    top: 262px;
+    left: 0;
     display: block;
-    width: min(1720px, calc(100% - 48px));
-    aspect-ratio: 1720 / 415;
-    transform: translateX(-50%);
+    width: 100%;
+    height: 415px;
     background: #a8a7ac;
 }
 
@@ -139,7 +167,7 @@
 .newsroom-news {
     scroll-margin-top: 96px;
     position: relative;
-    padding: 13px 24px 100px;
+    padding: 13px 100px 40px;
     background: #fff;
 }
 
@@ -150,16 +178,24 @@
     font-size: 48px;
     font-weight: 600;
     line-height: 1.1;
-    text-align: center;
+}
+
+.newsroom-news__description {
+    margin: 23px 0 0;
+    color: #848484;
+    font-family: var(--font-ko);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
 }
 
 .newsroom-news__grid {
     display: grid;
-    width: min(1500px, 100%);
-    grid-template-columns: repeat(3, minmax(0, 420px));
+    width: min(1660px, 100%);
+    grid-template-columns: repeat(3, minmax(0, 465px));
     justify-content: space-between;
-    gap: 64px 24px;
-    margin: 95px auto 0;
+    gap: 79px 24px;
+    margin: 70px auto 0;
 }
 
 .newsroom-card {
@@ -188,7 +224,7 @@
 .newsroom-card__date {
     margin: 0;
     font-family: var(--font-ko);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     line-height: 1.4;
 }
@@ -204,7 +240,7 @@
     overflow: hidden;
     margin: 0;
     font-family: var(--font-ko);
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
     line-height: 1.4;
     text-overflow: ellipsis;
@@ -217,7 +253,7 @@
 
 .newsroom-pagination {
     display: grid;
-    margin: 80px auto 0;
+    margin: 32px auto 0;
     width: 260px;
     height: 30px;
     align-items: center;
@@ -234,7 +270,8 @@
     color: #0e0e0e;
     background: transparent;
     font-family: var(--font-en);
-    font-size: 25px;
+    font-size: 15px;
+    font-weight: 500;
     line-height: 1;
 }
 
@@ -311,13 +348,32 @@
         padding: 56px 24px 72px;
     }
 
+    .newsroom-hero__copy {
+        top: 32px;
+        left: 24px;
+        right: 24px;
+    }
+
+    .newsroom-hero__breadcrumb {
+        font-size: 14px;
+    }
+
+    .newsroom-hero__title {
+        font-size: clamp(36px, 6vw, 60px);
+    }
+
+    .newsroom-hero__description {
+        font-size: clamp(15px, 2vw, 22px);
+    }
+
     .newsroom-promo__link {
         position: relative;
         top: auto;
         left: auto;
         width: 100%;
+        height: auto;
+        aspect-ratio: 1920 / 415;
         margin: 56px auto 0;
-        transform: none;
     }
 
     .newsroom-news {
@@ -395,6 +451,14 @@
     display: block;
     color: inherit;
     text-decoration: none;
+}
+
+.newsroom-feature-card__link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
 }
 
 .newsroom-feature-card__link:focus-visible {
