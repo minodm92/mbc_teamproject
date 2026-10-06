@@ -504,15 +504,8 @@ body:has(.notices-page) .site-header { background: transparent; }
     background-color: #424244;
     background-image: url('../../assets/images/notices/notice-hero.png');
     background-repeat: no-repeat;
-    background-size: 193.4% auto;
-    background-position: -9.98vw -0.91vw;
-}
-.notices-page .notices-page__hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgb(0 0 0 / 0) 26%, rgb(0 0 0 / 0.8) 74%), rgb(0 0 0 / 0.2);
-    pointer-events: none;
+    background-size: cover;
+    background-position: center;
 }
 .notices-page .notices-page__hero > * { position: relative; }
 .notices-page .notices-page__breadcrumb {
