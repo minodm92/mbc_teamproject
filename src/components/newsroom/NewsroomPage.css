@@ -23,27 +23,38 @@
 
 .newsroom-hero {
     position: absolute;
-    top: 80px;
+    top: 0;
     left: 50%;
     width: 100%;
-    height: 578px;
+    height: 658px;
     overflow: hidden;
     transform: translateX(-50%);
     background: #424244;
 }
 
+.newsroom-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0) 26%, rgb(0 0 0 / 0.4) 74%);
+    pointer-events: none;
+}
+
 .newsroom-hero__image {
+    position: absolute;
+    top: 0;
+    left: -14.8%;
     display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
+    width: 123.8%;
+    max-width: none;
+    height: auto;
+    margin-top: -9.69%;
 }
 
 .newsroom-hero__copy {
     position: absolute;
     z-index: 1;
-    top: 160px;
+    top: 240px;
     left: 100px;
     color: #fff;
 }
@@ -266,6 +277,14 @@
         height: auto;
         aspect-ratio: 1919 / 578;
         transform: none;
+    }
+
+    .newsroom-hero__image {
+        position: static;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        object-fit: cover;
     }
 
     .newsroom-featured {
