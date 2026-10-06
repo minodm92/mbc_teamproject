@@ -261,4 +261,48 @@
         display: block;
         font: 600 30px/1.1 var(--font-en);
     }
+
+    /* 6. DRIVE TEST: divided list; the first row carries the location meta. */
+    .home-mobile-drive {
+        --hm-drive-line: rgb(17 17 17 / 60%);
+        padding: 20px var(--hm-gutter);
+    }
+    .home-mobile-drive__list {
+        margin: 40px 0 0;
+        padding: 0;
+        border-top: 1px solid var(--hm-drive-line);
+        list-style: none;
+    }
+    .home-mobile-drive__list li {
+        border-bottom: 1px solid var(--hm-drive-line);
+    }
+    .home-mobile-drive__item {
+        display: block;
+        padding: 20px 0;
+        color: var(--hm-drive-line);
+    }
+    .home-mobile-drive__item.is-featured {
+        padding-bottom: 24px;
+        color: var(--hm-ink);
+    }
+    .home-mobile-drive__item strong {
+        display: block;
+        font: 600 30px/1.1 var(--font-en);
+    }
+    .home-mobile-drive__meta {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+        gap: 20px;
+        font: 700 15px/1.4 var(--font-en);
+    }
+    .home-mobile-drive__meta span + span::before {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 18px;
+        margin-right: 20px;
+        background: var(--hm-ink);
+        vertical-align: -3px;
+    }
 }

@@ -169,3 +169,14 @@ export const mobileVehicles = {
         { location: '고양', name: 'SANTAFE', image: santafeImage, imageBox: 'contain' },
     ],
 };
+
+// The first entry is the highlighted one in Figma (dark text + location meta);
+// the others are dimmed. All entries go to the test drive reservation page.
+export const mobileDriveTest = {
+    title: 'DRIVE TEST',
+    items: [
+        { title: 'PRIVATE NEW CAR DRIVE', meta: ['GOYANG · HANAM', 'UNTACT'] },
+        { title: 'HIGH PERFORMANCE' },
+        { title: 'BASIC DRIVE' },
+    ],
+};
