@@ -256,7 +256,12 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
     useEffect(() => {
         const section = triggerRef.current;
         const sticky = stickyRef.current;
-        if (!section || !sticky || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (
+            !section ||
+            !sticky ||
+            window.matchMedia('(max-width: 600px)').matches ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
             return undefined;
         }
 
@@ -364,11 +369,18 @@ export default function VehicleDisplay() {
     const persistentPlaygroundTitleRef = useRef(null);
     const [activePlaygroundIndex, setActivePlaygroundIndex] = useState(0);
 
-    useLayoutEffect(() => setupHomeScrollSmoothing(), []);
+    useLayoutEffect(() => {
+        if (window.matchMedia('(max-width: 600px)').matches) return undefined;
+        return setupHomeScrollSmoothing();
+    }, []);
 
     useEffect(() => {
         const section = transitionRef.current;
-        if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+        if (
+            !section ||
+            window.matchMedia('(max-width: 600px)').matches ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        )
             return undefined;
         let frame = 0;
         const update = () => {
@@ -456,7 +468,7 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = statementRef.current;
-        if (!section) return undefined;
+        if (!section || window.matchMedia('(max-width: 600px)').matches) return undefined;
 
         void import('@google/model-viewer');
 
@@ -613,7 +625,11 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = playgroundRef.current;
-        if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        if (
+            !section ||
+            window.matchMedia('(max-width: 600px)').matches ||
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        ) {
             return undefined;
         }
 
@@ -708,7 +724,7 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = driveRef.current;
-        if (!section) return undefined;
+        if (!section || window.matchMedia('(max-width: 600px)').matches) return undefined;
 
         void import('@google/model-viewer');
 
@@ -831,6 +847,7 @@ export default function VehicleDisplay() {
         const section = routesRef.current;
         if (
             !section ||
+            window.matchMedia('(max-width: 600px)').matches ||
             window.matchMedia('(max-width: 900px)').matches ||
             window.matchMedia('(prefers-reduced-motion: reduce)').matches
         )
@@ -963,7 +980,7 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = galleryRef.current;
-        if (!section) return undefined;
+        if (!section || window.matchMedia('(max-width: 600px)').matches) return undefined;
 
         let context;
         let cancelled = false;
@@ -1037,7 +1054,14 @@ export default function VehicleDisplay() {
                     alt="야간의 현대 모터스튜디오와 제네시스 차량"
                 />
                 <div className="mobility-hero__copy">
-                    <h1>HYUNDAI IN MOTION</h1>
+                    <h1>
+                        <span className="mobility-desktop-copy">HYUNDAI IN MOTION</span>
+                        <span className="mobility-mobile-copy">
+                            HYUNDAI
+                            <br />
+                            MOTOR IN MOTION
+                        </span>
+                    </h1>
                     <p>
                         다양한 테마에 따라 드라이빙의 즐거움을 체험하고 깊이 있는 자동차 지식을
                         겸비한 구루와 함께 드라이빙의 매력에 빠져보세요.
@@ -1054,6 +1078,129 @@ export default function VehicleDisplay() {
                     </div>
                 </dl>
             </section>
+
+            <div className="mobility-mobile" aria-label="모빌리티 모바일 콘텐츠">
+                <section className="mobility-mobile__intro">
+                    <span>START THE DRIVE.</span>
+                    <h2>
+                        MEET YOUR MATCH
+                        <br />
+                        START THE DRIVE
+                    </h2>
+                    <p>DISCOVER THE MODEL THAT FITS YOUR JOURNEY AND LIFESTYLE.</p>
+                </section>
+
+                <section className="mobility-mobile__vehicles">
+                    <h2>시승 모델</h2>
+                    <div className="mobility-mobile__vehicle-track">
+                        {showcaseVehicles.map((vehicle) => (
+                            <article key={vehicle.name}>
+                                <img src={vehicle.exterior} alt={`${vehicle.name} 주행 모습`} />
+                                <p>
+                                    <strong>{vehicle.name}</strong>
+                                    <span>{vehicle.specs[0][1]}</span>
+                                </p>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="mobility-mobile__drive">
+                    <header>
+                        <h2>
+                            CHOOSE YOUR ROAD
+                            <br />
+                            OWN THE DRIVE
+                        </h2>
+                        <p>
+                            DISCOVER DISTINCT ROUTES DESIGNED TO REVEAL A DIFFERENT SIDE OF EVERY
+                            DRIVE.
+                        </p>
+                    </header>
+                    <ol>
+                        <li>
+                            <b>01 .</b>
+                            <strong>FEEL EVERY RESPONSE</strong>
+                            <p>
+                                EXPERIENCE ACCELERATION, STEERING, AND BRAKING ACROSS REAL ROADS TO
+                                DISCOVER THE VEHICLE’S TRUE CHARACTER.
+                            </p>
+                        </li>
+                        <li>
+                            <b>02 .</b>
+                            <strong>DISCOVER YOUR COMFORT</strong>
+                            <p>
+                                EXPLORE RIDE QUALITY, CABIN QUIETNESS, AND EVERYDAY COMFORT THROUGH
+                                A COURSE DESIGNED FOR NATURAL DRIVING.
+                            </p>
+                        </li>
+                        <li>
+                            <b>03 .</b>
+                            <strong>DRIVE WITH CONFIDENCE</strong>
+                            <p>
+                                TEST SMART SAFETY AND DRIVER-ASSISTANCE FEATURES IN REAL CONDITIONS
+                                BEFORE CHOOSING THE RIGHT MODEL.
+                            </p>
+                        </li>
+                    </ol>
+                </section>
+
+                <section className="mobility-mobile__playground">
+                    <h2>MOTOR PLAYGROUND</h2>
+                    <ol>
+                        {playgroundItems.map((item) => (
+                            <li key={item.number}>
+                                <img src={item.image} alt={item.imageAlt} />
+                                <div>
+                                    <strong>{item.title}</strong>
+                                    <p>{item.description}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+
+                <section className="mobility-mobile__routes">
+                    <header>
+                        <h2>ROUTE OVERVIEW</h2>
+                        <p>
+                            현대모터스튜디오에서는 코스마다 차량의 승차감과 가속 성능, 조향 감각을
+                            서로 다른 환경에서 확인할 수 있도록 구성되어 있습니다. 여유로운 주행부터
+                            역동적인 드라이빙까지, 차량과 도로가 만들어 내는 다양한 순간을 직접
+                            느껴보세요.
+                        </p>
+                    </header>
+                    <ol>
+                        {routes.map((route) => (
+                            <li key={route.title}>
+                                <img src={route.image} alt={`${route.title} 경로 지도`} />
+                                <strong>{route.title}</strong>
+                                <p>{route.description}</p>
+                            </li>
+                        ))}
+                    </ol>
+                </section>
+
+                <section className="mobility-mobile__gallery">
+                    <header>
+                        <h2>SEE MORE IN MOTION</h2>
+                        <p>
+                            시승과 차량 전시를 더욱 깊이 이해할 수 있도록 다양한 차량과 경험을 순간에
+                            담았습니다. 다양한 경험을 눈으로 느껴보시고 차량과 교감을 위해
+                            선택해보세요.
+                        </p>
+                    </header>
+                    <div>
+                        {gallery.map((image, index) => (
+                            <img
+                                key={image}
+                                src={image}
+                                alt={`현대 모터스튜디오 모빌리티 갤러리 ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                </section>
+            </div>
 
             <section
                 className="mobility-intro con2"
