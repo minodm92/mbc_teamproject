@@ -65,11 +65,12 @@ function NoticeBody({ detail, content }) {
 export default function NoticeOperatingDetail({ notice }) {
   const detail = detailedNotices[notice.id];
   const isPlaceholder = !['goyang-october-hours', 'goyang-october-access', 'hanam-drive-light'].includes(notice.id);
+  const hasShortTitle = isPlaceholder && notice.title.length <= 30;
   const noticeIndex = notices.findIndex((item) => item.id === notice.id);
   const nextNotice = noticeIndex >= 0 ? notices[noticeIndex + 1] : undefined;
   const previousNotice = noticeIndex > 0 ? notices[noticeIndex - 1] : undefined;
   return (
-    <main className="notices-page notice-operating-page">
+    <main className={`notices-page notice-operating-page${isPlaceholder ? ' notice-operating-page--placeholder' : ''}${hasShortTitle ? ' notice-operating-page--short-title' : ''}`}>
       <div className="notice-operating-page__inner">
         <nav className="notice-operating-page__breadcrumb" aria-label="현재 위치">
           <Link to={paths.home}>HOME</Link><span aria-hidden="true">›</span>
