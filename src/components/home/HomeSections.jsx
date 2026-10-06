@@ -279,12 +279,12 @@ export function HomeStories({ stories }) {
   return (
     <section ref={sectionRef} className="renewal-stories">
       <svg
-        ref={lineRef}
-        className="renewal-stories__center-line"
-        viewBox="0 0 8 2904"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
+          ref={lineRef}
+          className="renewal-stories__center-line"
+          viewBox="0 0 8 2904"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
         <defs>
           <clipPath id={lineClipId} clipPathUnits="userSpaceOnUse">
             <rect ref={lineProgressRef} x="0" y="0" width="8" height="0" />
@@ -431,6 +431,19 @@ export function VisitorGuide({ links }) {
           gsap.set(menu, { clearProps: 'transform' });
         };
       });
+
+      media.add('(max-width: 767px)', () => {
+        const rows = [...menu.querySelectorAll('.renewal-guide__link')];
+        const triggers = rows.map((row, index) => ScrollTrigger.create({
+          trigger: row,
+          start: 'top 60%',
+          end: 'bottom 40%',
+          onEnter: () => setScrollActiveIndex(index),
+          onEnterBack: () => setScrollActiveIndex(index),
+        }));
+
+        return () => triggers.forEach((trigger) => trigger.kill());
+      });
     });
 
     return () => {
@@ -443,6 +456,8 @@ export function VisitorGuide({ links }) {
   // pointer position, so the highlighted row keeps up with the page. Outside the section it returns to null,
   // and the scroll-driven highlight (scrollActiveIndex) takes over again.
   const updateHoverFromPointer = () => {
+    if (!window.matchMedia('(min-width: 901px)').matches) return;
+
     const section = sectionRef.current;
     const y = pointerYRef.current;
     if (!section || y === null) {
