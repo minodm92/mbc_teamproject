@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { paths } from '../../common/router/routePaths';
@@ -24,7 +24,9 @@ export function LoginPage() {
   const authError = useAuthStore((state) => state.authError);
   const isAuthLoading = useAuthStore((state) => state.isAuthLoading);
   const setPersistence = useAuthStore((state) => state.setRememberLogin);
-  const destination = location.state?.from || paths.mypage;
+  const clearAuthError = useAuthStore((state) => state.clearAuthError);
+  const destination = location.state?.from || paths.home;
+  useEffect(() => { clearAuthError(); }, [clearAuthError]);
   return <main className="login-page">
     <section className="login-page__visual" aria-label="현대 모터스튜디오">
       <img className="login-page__vehicle" src="/images/login/avante.png" alt="도심을 달리는 현대 AVANTE" />
@@ -42,7 +44,7 @@ export function LoginPage() {
       <div className="login-page__content">
         <h1 id="login-heading">WELCOME BACK</h1>
         <p className="login-page__intro">현대 모터스튜디오 서비스를 계속 이용하려면 로그인해주세요.</p>
-        <form className="login-page__form" aria-busy={isAuthLoading} onSubmit={(event) => {
+        <form className="login-page__form" noValidate aria-busy={isAuthLoading} onSubmit={(event) => {
           event.preventDefault();
           if (isAuthLoading) return;
           setPersistence(rememberLogin);
