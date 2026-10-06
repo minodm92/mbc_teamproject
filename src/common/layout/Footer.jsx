@@ -138,6 +138,7 @@ export default function Footer() {
     };
 
     clearPhysicsStyles();
+    if (!stage.offsetParent) return undefined;
 
     const startPhysics = async () => {
       if (hasPlayed) return;

@@ -130,6 +130,7 @@
     position: absolute;
     z-index: 2;
     inset: 0;
+    display: none;
 }
 .reservation-footer__car,
 .reservation-footer__rock {
@@ -306,56 +307,42 @@
         bottom: 145px;
     }
 }
-@media (max-width: 680px) {
+@media (max-width: 767px) {
     .reservation-footer {
-        height: 560px;
-        padding: 60px 24px 0;
+        height: 204px;
+        padding: 0;
+    }
+    .reservation-footer__meta {
+        position: static;
+    }
+    .reservation-footer__social,
+    .reservation-footer__meta p,
+    .reservation-footer__cars {
+        display: none;
     }
     .reservation-footer__meta nav {
-        gap: 12px;
-        flex-wrap: wrap;
-        max-width: 300px;
+        position: absolute;
+        z-index: 2;
+        top: 146px;
+        left: 18px;
+        gap: 8px;
+        margin: 0;
+        max-width: none;
     }
-    .reservation-footer__meta nav a,
-    .reservation-footer__meta p {
-        font-size: 12px;
+    .reservation-footer__meta nav a {
+        font: 400 13px/1.2 var(--font-en);
     }
     .reservation-footer__wordmark {
-        top: 235px;
-        left: 24px;
-        width: 88vw;
+        top: 93px;
+        left: 18px;
+        width: 143px;
+        height: 31px;
     }
     .reservation-footer > small {
-        top: 360px;
-        left: 24px;
-        font-size: 9px;
-    }
-    .reservation-footer__cars {
-        height: 190px;
-    }
-    .reservation-footer__car--one {
-        left: -8%;
-        width: 42vw;
-    }
-    .reservation-footer__car--two {
-        left: 19%;
-        width: 45vw;
-    }
-    .reservation-footer__car--three {
-        left: 43%;
-        width: 48vw;
-    }
-    .reservation-footer__car--four {
-        right: -13%;
-        width: 50vw;
-    }
-    .reservation-footer__car--five,
-    .reservation-footer__car--six,
-    .reservation-footer__car--seven {
-        width: 40vw;
-    }
-    .reservation-footer__rock {
-        display: none;
+        top: 170px;
+        left: 18px;
+        color: #848484;
+        font: 400 13px/1.2 var(--font-en);
     }
 }
 @media (prefers-reduced-motion: reduce) {
