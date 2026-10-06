@@ -301,13 +301,39 @@
         font: 600 30px/1.1 var(--font-en);
     }
 
-    /* 6. DRIVE TEST (Figma Drive Test / Test2 / Test3): tapping a row selects it.
+    /* 6. DRIVE TEST (Figma Drive Test / Test2 / Test3): the panel sticks to the top and
+       the selection follows the scroll, one 40svh step per row (tapping also selects).
+       The ::after block is the sticky travel (padding would not count: sticky stays
+       inside the content box); the sentinels cover the same range from the top.
        Row 74px = 20 + 33 + 20 + 1px line; selected 110px = 20 + 21 meta + 10 + 33 + 25 + 1px.
        The selected row is #0e0e0e and opens the meta line; the others are 60% grey. */
     .home-mobile-drive {
         --hm-drive-grey: rgb(17 17 17 / 60%);
         --hm-drive-ease: 0.3s ease;
+        --hm-drive-step: 40svh;
+        position: relative;
+    }
+    .home-mobile-drive::after {
+        content: '';
+        display: block;
+        height: calc(var(--hm-drive-steps) * var(--hm-drive-step));
+    }
+    .home-mobile-drive__steps {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        pointer-events: none;
+        visibility: hidden;
+    }
+    .home-mobile-drive__steps div {
+        height: var(--hm-drive-step);
+    }
+    .home-mobile-drive__panel {
+        position: sticky;
+        top: 0;
         padding: 20px var(--hm-gutter);
+        background: #fff;
     }
     .home-mobile-drive__list {
         margin: 40px 0 0;
