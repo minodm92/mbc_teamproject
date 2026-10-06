@@ -10,6 +10,10 @@ import hanamImage from '../../../assets/images/locations/figma/hanam.svg';
 import busanImage from '../../../assets/images/locations/figma/busan.svg';
 import beijingImage from '../../../assets/images/locations/figma/beijing.svg';
 import senayanParkImage from '../../../assets/images/locations/figma/senayan-park.svg';
+import avanteImage from '../../../assets/images/locations/figma/avante.png';
+import avanteThumb1 from '../../../assets/images/locations/figma/avante-1.png';
+import avanteThumb2 from '../../../assets/images/locations/figma/avante-2.png';
+import avanteThumb3 from '../../../assets/images/locations/figma/avante-3.png';
 
 // Figma's SEOUL table repeats the GOYANG values, so Seoul uses the location page data.
 const seoul = locationShowcase.find((location) => location.id === 'seoul');
@@ -129,3 +133,13 @@ export const mobileLocations = [
         ],
     },
 ];
+
+// No exhibition detail page exists for this one yet, so it links to /exhibitions.
+export const mobileNowExhibition = {
+    title: 'THE ALL-NEW AVANTE',
+    date: '2026.09.08 ~',
+    description:
+        '국내 준중형 세단의 기준을 제시해 온 아반떼가 8세대 완전 변경 모델로 새롭게 태어났습니다. 3가지 컬러의 차량, 그리고 헤리티지 테이블을 통해 1세대 엘란트라부터 이어져 온 아반떼의 혁신과 진화 그리고 진보된 디자인과 기술을 직접 경험해 보세요.',
+    background: avanteImage,
+    thumbnails: [avanteThumb1, avanteThumb2, avanteThumb3],
+};

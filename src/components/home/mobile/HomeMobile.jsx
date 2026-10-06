@@ -1,5 +1,6 @@
 import MobileHero from './MobileHero';
 import MobileLocations from './MobileLocations';
+import MobileNowExhibition from './MobileNowExhibition';
 import './HomeMobile.css';
 
 // Mobile-only home (<=900px). The desktop .renewal-home stays mounted but hidden,
@@ -9,6 +10,7 @@ export default function HomeMobile() {
         <div className="home-mobile">
             <MobileHero />
             <MobileLocations />
+            <MobileNowExhibition />
         </div>
     );
 }

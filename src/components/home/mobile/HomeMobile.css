@@ -159,4 +159,62 @@
         margin: 0;
         white-space: pre-line;
     }
+
+    /* 4. NOW EXHIBITION: full-bleed car photo, text and thumbnails as HTML. */
+    .home-mobile-now__link {
+        position: relative;
+        display: block;
+        height: 615px;
+        overflow: hidden;
+        isolation: isolate;
+        color: #fff;
+    }
+    .home-mobile .home-mobile-now__background {
+        position: absolute;
+        z-index: -2;
+        top: -6.48%;
+        left: calc(50% - 416px); /* Figma crop at 430px: left -46.77% */
+        width: auto;
+        max-width: none;
+        height: 107.69%;
+    }
+    .home-mobile-now__link::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 0;
+        background: linear-gradient(to bottom, rgb(0 0 0 / 0%) 50%, rgb(0 0 0 / 60%));
+    }
+    .home-mobile-now__head {
+        position: absolute;
+        top: 20px;
+        left: var(--hm-gutter);
+        width: 232px;
+    }
+    .home-mobile-now__date {
+        margin: 8px 0 0;
+        font: 700 22px/1.4 var(--font-en);
+    }
+    .home-mobile-now__thumbs {
+        display: flex;
+        margin: 11px 0 0;
+        padding: 0;
+        gap: 10px;
+        list-style: none;
+    }
+    .home-mobile-now__thumbs img {
+        width: 87px;
+        height: 57px;
+        object-fit: cover;
+        background: #fff;
+    }
+    .home-mobile-now__copy {
+        position: absolute;
+        top: 440px;
+        right: var(--hm-gutter);
+        width: min(232px, calc(100% - var(--hm-gutter) * 2));
+        margin: 0;
+        font: 500 16px/1.4 var(--font-ko);
+        opacity: 0.6;
+    }
 }
