@@ -259,7 +259,7 @@ function VehicleCurtains({ vehicles, triggerRef, children }) {
         if (
             !section ||
             !sticky ||
-            window.matchMedia('(max-width: 600px)').matches ||
+            window.matchMedia('(max-width: 900px)').matches ||
             window.matchMedia('(prefers-reduced-motion: reduce)').matches
         ) {
             return undefined;
@@ -370,7 +370,7 @@ export default function VehicleDisplay() {
     const [activePlaygroundIndex, setActivePlaygroundIndex] = useState(0);
 
     useLayoutEffect(() => {
-        if (window.matchMedia('(max-width: 600px)').matches) return undefined;
+        if (window.matchMedia('(max-width: 900px)').matches) return undefined;
         return setupHomeScrollSmoothing();
     }, []);
 
@@ -378,7 +378,7 @@ export default function VehicleDisplay() {
         const section = transitionRef.current;
         if (
             !section ||
-            window.matchMedia('(max-width: 600px)').matches ||
+            window.matchMedia('(max-width: 900px)').matches ||
             window.matchMedia('(prefers-reduced-motion: reduce)').matches
         )
             return undefined;
@@ -468,7 +468,7 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = statementRef.current;
-        if (!section || window.matchMedia('(max-width: 600px)').matches) return undefined;
+        if (!section || window.matchMedia('(max-width: 900px)').matches) return undefined;
 
         void import('@google/model-viewer');
 
@@ -627,7 +627,7 @@ export default function VehicleDisplay() {
         const section = playgroundRef.current;
         if (
             !section ||
-            window.matchMedia('(max-width: 600px)').matches ||
+            window.matchMedia('(max-width: 900px)').matches ||
             window.matchMedia('(prefers-reduced-motion: reduce)').matches
         ) {
             return undefined;
@@ -724,7 +724,7 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = driveRef.current;
-        if (!section || window.matchMedia('(max-width: 600px)').matches) return undefined;
+        if (!section || window.matchMedia('(max-width: 900px)').matches) return undefined;
 
         void import('@google/model-viewer');
 
@@ -847,7 +847,6 @@ export default function VehicleDisplay() {
         const section = routesRef.current;
         if (
             !section ||
-            window.matchMedia('(max-width: 600px)').matches ||
             window.matchMedia('(max-width: 900px)').matches ||
             window.matchMedia('(prefers-reduced-motion: reduce)').matches
         )
@@ -980,7 +979,7 @@ export default function VehicleDisplay() {
 
     useEffect(() => {
         const section = galleryRef.current;
-        if (!section || window.matchMedia('(max-width: 600px)').matches) return undefined;
+        if (!section || window.matchMedia('(max-width: 900px)').matches) return undefined;
 
         let context;
         let cancelled = false;
