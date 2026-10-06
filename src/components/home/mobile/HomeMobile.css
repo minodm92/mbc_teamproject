@@ -78,4 +78,85 @@
         aspect-ratio: 410/230;
         object-fit: cover;
     }
+
+    /* Shared section heading (Figma E_Mobile2: Red Hat Display 48 / 1.1, Medium). */
+    .home-mobile-title {
+        margin: 0;
+        font: 500 48px/1.1 var(--font-en);
+    }
+
+    /* 2. EXPLORE THE POSSIBILITIES OF MOBILITY + LOCATIONS heading. */
+    .home-mobile-intro {
+        padding: 60px var(--hm-gutter) 27px;
+    }
+    .home-mobile-intro__title {
+        margin: 0 -3px;
+        font: 600 min(30px, calc((100vw - 24px) / 13.6)) / 1.1 var(--font-en);
+        text-align: center;
+    }
+    .home-mobile-intro__title span {
+        display: block;
+        white-space: nowrap;
+    }
+    .home-mobile-intro__copy {
+        margin: 30px 0 0;
+        font: 500 14px/1.3 var(--font-ko);
+    }
+    .home-mobile-intro__copy:first-of-type {
+        margin-top: 52px;
+    }
+    .home-mobile-intro__locations {
+        margin-top: 52px;
+    }
+
+    /* 3. Locations: one full-width block per studio, each with its Figma background. */
+    .home-mobile-location {
+        display: block;
+        padding: 20px var(--hm-gutter) 40px;
+        background: var(--location-bg);
+        color: #fff;
+    }
+    .home-mobile-location.is-light {
+        color: var(--hm-ink);
+    }
+    .home-mobile-location__name {
+        margin: 0;
+        font: 500 30px/1.1 var(--font-en);
+    }
+    .home-mobile-location__keywords {
+        display: flex;
+        margin: 16px 0 0;
+        padding: 0;
+        flex-direction: column;
+        gap: 3px;
+        list-style: none;
+        font: 600 18px/1.2 var(--font-en);
+    }
+    .home-mobile-location__keywords .is-lead {
+        font-size: 16px;
+        font-weight: 700;
+    }
+    .home-mobile-location__image {
+        width: 100%;
+        height: auto;
+        margin-top: 18px;
+        aspect-ratio: 399/296;
+        object-fit: cover;
+    }
+    .home-mobile-location__info {
+        display: grid;
+        margin: 22px 0 0;
+        gap: 4px;
+        font: 400 13px/1.2 'Red Hat Display', 'SUIT Variable', 'SUIT', sans-serif;
+    }
+    .home-mobile-location__info div {
+        display: grid;
+        grid-template-columns: 53px minmax(0, 1fr);
+        column-gap: 30px;
+        align-items: center;
+    }
+    .home-mobile-location__info dd {
+        margin: 0;
+        white-space: pre-line;
+    }
 }
