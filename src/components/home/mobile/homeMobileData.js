@@ -175,11 +175,14 @@ export const mobileVehicles = {
 };
 
 // Figma Drive Test / Drive Test2 / Drive Test3 (3822:1833, 4131:2564, 4131:2585):
-// one selected row at a time; the selected row shows the same meta line.
+// one selected row at a time; the selected row shows its own meta line.
 export const mobileDriveTest = {
     title: 'DRIVE TEST',
-    meta: ['GOYANG · HANAM', 'UNTACT'],
-    items: ['PRIVATE NEW CAR DRIVE', 'HIGH PERFORMANCE', 'BASIC DRIVE'],
+    items: [
+        { title: 'PRIVATE NEW CAR DRIVE', meta: ['GOYANG · HANAM', 'UNTACT'] },
+        { title: 'HIGH PERFORMANCE', meta: ['GOYANG · HANAM', 'UNTACT'] },
+        { title: 'BASIC DRIVE', meta: ['SEOUL', 'UNTACT'] },
+    ],
 };
 
 // TODO: /programs/:id only knows the ids in common/data/content.js, which has none of
