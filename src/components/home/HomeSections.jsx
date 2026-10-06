@@ -256,10 +256,9 @@ export function HomeStories({ stories }) {
       };
     };
 
+    // Desktop only: below 901px the desktop home is hidden in favour of HomeMobile.
     media.add('(min-width: 901px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(false));
-    media.add('(max-width: 900px) and (prefers-reduced-motion: no-preference)', () => storiesSetup(true));
     media.add('(min-width: 901px) and (prefers-reduced-motion: reduce)', () => storiesSetup(false, true));
-    media.add('(max-width: 900px) and (prefers-reduced-motion: reduce)', () => storiesSetup(true, true));
 
     return () => media.revert();
   }, [stories.length]);

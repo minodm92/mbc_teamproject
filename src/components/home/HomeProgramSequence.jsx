@@ -104,7 +104,9 @@ export default function HomeProgramSequence() {
         const video = videoRef.current;
         if (!sequence || !viewport) return undefined;
 
-        const context = gsap.context(() => {
+        // Desktop-only: on mobile this section is hidden and must not pin.
+        const media = gsap.matchMedia(sequence);
+        media.add('(min-width: 901px)', () => {
             gsap.set([stepTwoRef.current, stepThreeRef.current], { autoAlpha: 1 });
             const timeline = gsap.timeline({ paused: true });
             const stepTwoStart = STEP_HOLD;
@@ -133,7 +135,7 @@ export default function HomeProgramSequence() {
                 refreshPriority: -1,
                 invalidateOnRefresh: true,
             });
-        }, sequence);
+        });
 
         let disposed = false;
         let refreshFrame = 0;
@@ -158,7 +160,7 @@ export default function HomeProgramSequence() {
             resizeObserver.disconnect();
             images.forEach((image) => image.removeEventListener('load', refresh));
             video?.removeEventListener('loadedmetadata', refresh);
-            context.revert();
+            media.revert();
         };
     }, []);
 
