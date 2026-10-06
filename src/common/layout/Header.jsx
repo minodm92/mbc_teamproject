@@ -4,10 +4,11 @@ import { X } from 'lucide-react';
 import { paths } from '../router/routePaths';
 import { useAuthStore } from '../../store/useAuthStore';
 import ReservationSelect from '../../components/reservation/ReservationSelect';
+import experienceFindingIcon from './assets/experience-finding.svg';
 import './Header.css';
 
 const nav = [
-  { label: '현대모터스튜디오', to: paths.motorstudio, children: [{ label: '소개', to: paths.motorstudio }, ...[['고양', 'goyang'], ['서울', 'seoul'], ['하남', 'hanam'], ['부산', 'busan'], ['베이징', 'beijing'], ['스나얀 파크', 'senayan-park']].map(([label, slug]) => ({ label, to: paths.location(slug) }))] },
+  { label: '현대모터스튜디오', to: paths.motorstudio },
   { label: '모빌리티', to: paths.mobility },
   { label: '전시/프로그램', to: paths.exhibitions, children: [{ label: '전시', to: paths.exhibitions }, { label: '프로그램', to: paths.programs }] },
   { label: '예약', to: paths.reservations },
@@ -68,7 +69,9 @@ export default function Header({ variant = 'light' }) {
     let frame = 0;
     const update = () => {
       frame = 0;
-      setScrolled(window.scrollY > 80);
+      const nextScrolled = window.scrollY > 80;
+      setScrolled(nextScrolled);
+      if (nextScrolled) setTopHovered(false);
     };
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -137,6 +140,7 @@ export default function Header({ variant = 'light' }) {
     setMobileGroup(null);
     setOpen(false);
     setSubnavOpen(false);
+    window.scrollTo(0, 0);
   };
   const renderAsset = (name, className) => variant === 'light' || isReservation || isNewsroom
     ? <img className={className} src={`/images/common/${name}.svg`} alt="" />
@@ -146,7 +150,7 @@ export default function Header({ variant = 'light' }) {
     </>;
 
   return <>
-    {scrolled && <button className="site-header__reveal-zone" type="button" aria-label="상단 메뉴 표시" onPointerEnter={() => setTopHovered(true)} onFocus={() => setTopHovered(true)} onClick={() => setTopHovered(true)} />}
+    {scrolled && <button className="site-header__reveal-zone" type="button" aria-label="상단 메뉴 표시" onFocus={() => setTopHovered(true)} onClick={() => setTopHovered(true)} />}
     <header data-mobile-theme={mobileDarkBackground ? 'light' : 'dark'} onPointerEnter={() => setTopHovered(true)} onPointerLeave={event => { if (event.clientY > (headerRef.current?.offsetHeight || 80)) { setTopHovered(false); setSubnavOpen(false); } }} ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${isNewsroom ? ' site-header--newsroom' : ''}${subnavOpen ? ' site-header--expanded' : ''}${scrolled ? ' site-header--scrolled' : ''}${scrolled && !topHovered && !open ? ' site-header--scroll-hidden' : ''}`}>
     <div className="site-header__bar">
       <Link className="site-header__logo" to={paths.home} onClick={closeMenus} aria-label="현대 모터스튜디오 홈">
@@ -160,20 +164,16 @@ export default function Header({ variant = 'light' }) {
         <img src="/images/reservation/dropdown-chevron.svg" alt="" aria-hidden="true" />
       </div>}
       <nav className={`site-header__nav${open ? ' site-header__nav--open' : ''}`} aria-label="주 메뉴">
-        {nav.map((item) => <div className="site-header__group" key={item.label}>
+        {nav.map((item) => <div className="site-header__group" key={item.label} onPointerEnter={() => setSubnavOpen(Boolean(item.children))}>
           {item.children
-            ? <button className="site-header__link" type="button" aria-expanded={subnavOpen} onClick={() => setSubnavOpen((value) => !value)}>{item.label}</button>
+            ? <button className="site-header__link" type="button" aria-expanded={subnavOpen} onFocus={() => setSubnavOpen(true)} onClick={() => setSubnavOpen((value) => !value)}>{item.label}</button>
             : <NavLink to={item.to} onClick={closeMenus} className="site-header__link">{item.label}</NavLink>}
           {item.children && <div className="site-header__submenu">{item.children.map((child) => <NavLink key={child.to} to={child.to} onClick={closeMenus}>{child.label}</NavLink>)}</div>}
         </div>)}
       </nav>
       <div className="site-header__actions">
         <Link className="site-header__experience" to={paths.experience} onClick={closeMenus} aria-label="경험 찾기">
-          {renderAsset('experience-car', 'site-header__experience-car')}
-          {renderAsset('experience-eye', 'site-header__experience-eye')}
-          {renderAsset('experience-wheel', 'site-header__experience-wheel site-header__experience-wheel--front')}
-          {renderAsset('experience-wheel', 'site-header__experience-wheel site-header__experience-wheel--rear')}
-          <span>경험</span>
+          <img className="site-header__experience-finding" src={experienceFindingIcon} alt="" />
         </Link>
         <button className="site-header__account" type="button" aria-label={isAuthenticated ? '마이페이지' : '로그인'} onClick={() => { closeMenus(); navigate(isAuthenticated ? paths.mypage : paths.login); }}>
           {renderAsset('profile', 'site-header__account-image')}
@@ -184,11 +184,7 @@ export default function Header({ variant = 'light' }) {
     {open && <div className="site-header__mobile-menu" role="dialog" aria-modal="true" aria-label="모바일 메뉴">
       <div className="site-header__mobile-tools">
         <Link to={paths.experience} onClick={closeMenus} aria-label="경험 찾기" className="site-header__experience site-header__mobile-experience">
-          <img className="site-header__experience-car" src="/images/common/experience-car-black.svg" alt="" />
-          <img className="site-header__experience-eye" src="/images/common/experience-eye-black.svg" alt="" />
-          <img className="site-header__experience-wheel site-header__experience-wheel--front" src="/images/common/experience-wheel-black.svg" alt="" />
-          <img className="site-header__experience-wheel site-header__experience-wheel--rear" src="/images/common/experience-wheel-black.svg" alt="" />
-          <span>경험</span>
+          <img className="site-header__experience-finding" src={experienceFindingIcon} alt="" />
         </Link>
         <Link to={isAuthenticated ? paths.mypage : paths.login} onClick={closeMenus} aria-label={isAuthenticated ? '마이페이지' : '로그인'}>
           <img src="/images/common/profile-black.svg" width="24" height="24" alt="" />
@@ -209,10 +205,10 @@ export default function Header({ variant = 'light' }) {
             {children.length ? <button className="site-header__mobile-category" type="button" aria-expanded={expanded} aria-controls={`mobile-navigation-${index}`} onClick={() => setMobileGroup(expanded ? null : index)}>
               <span>{label}</span>
               <img src={expanded ? '/images/common/mobile-menu/minus.svg' : '/images/common/mobile-menu/plus.svg'} width="24" height="24" alt="" />
-            </button> : <div className="site-header__mobile-category" data-expanded={expanded}>
+            </button> : <div className="site-header__mobile-category">
               <NavLink to={item.to} onClick={closeMenus}>{label}</NavLink>
-              <button className="site-header__mobile-category-icon" type="button" aria-label={label + ' 메뉴 선택'} aria-expanded={expanded} onClick={() => setMobileGroup(expanded ? null : index)}>
-                <img src={expanded ? '/images/common/mobile-menu/minus.svg' : '/images/common/mobile-menu/plus.svg'} width="24" height="24" alt="" />
+              <button className="site-header__mobile-category-icon" type="button" aria-label={label + ' 페이지로 이동'} onClick={() => { closeMenus(); navigate(item.to); }}>
+                <img src="/images/common/mobile-menu/plus.svg" width="24" height="24" alt="" />
               </button>
             </div>}
             {expanded && children.length > 0 && <div id={`mobile-navigation-${index}`} className="site-header__mobile-children">

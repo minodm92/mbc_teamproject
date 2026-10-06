@@ -87,15 +87,10 @@
 .site-header--expanded .site-header__submenu { display: flex; }
 .site-header__submenu a { font-size: 15px; font-weight: 500; line-height: 1.4; white-space: nowrap; }
 .site-header__actions { display: flex; align-items: center; gap: 15px; margin-left: auto; }
-.site-header__experience { position: relative; display: block; width: 32px; height: 24px; }
-.site-header__experience img,
-.site-header__experience span { position: absolute; display: block; }
-.site-header__experience-car { top: 0; left: 0; width: 31.5px; height: 19.1px; }
-.site-header__experience-eye { top: 6px; left: 6px; width: 3.6px; height: 3.64px; }
-.site-header__experience-wheel { top: 14px; width: 9.2px; height: 9.27px; }
-.site-header__experience-wheel--front { right: 2.8px; }
-.site-header__experience-wheel--rear { left: 2px; }
-.site-header__experience span { top: 4px; left: 12px; color: inherit; font-size: 7px; font-weight: 700; line-height: normal; white-space: nowrap; }
+.site-header__experience { position: relative; display: block; width: 28px; height: 25px; }
+.site-header__experience-finding { position: absolute; inset: 0; display: block; }
+.site-header--dark:not(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) .site-header__experience-finding,
+.site-header--responsive:not(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) .site-header__experience-finding { filter: brightness(0) invert(.066667); }
 .site-header__account,
 .site-header__toggle { display: grid; place-items: center; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
 .site-header__account { position: relative; width: 24px; height: 24px; }
@@ -249,9 +244,10 @@
   .site-header__mobile-tools .site-header__mobile-experience {
     position: relative;
     display: block;
-    width: 32px;
-    height: 24px;
+    width: 28px;
+    height: 25px;
   }
+  .site-header__mobile-experience .site-header__experience-finding { filter: brightness(0) invert(.066667); }
   .site-header__mobile-close {
     position: absolute;
     top: 18px;
