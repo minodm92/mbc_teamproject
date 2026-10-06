@@ -689,7 +689,7 @@
     top: 453px;
 }
 .program-locations__branch h3 {
-    font: 467 60px/1.1 var(--font-en);
+    font: 600 60px/1.1 var(--font-en);
 }
 .program-locations__branch p {
     margin-top: 18px;
@@ -2255,11 +2255,12 @@
         line-height: 1.1;
     }
     .program-locations__branch p {
+        width: calc(100% - 10px);
         max-width: none;
-        margin-top: 14px;
+        margin: 14px auto 0;
         font-size: 16px;
         line-height: 1.4;
-        text-align: center;
+        text-align: left;
     }
     .program-locations__branch--goyang {
         margin-top: 0;
@@ -2324,6 +2325,76 @@
     }
     .program-closing .program-image-reveal__strips {
         display: none !important;
+    }
+}
+
+/* Programs by Location mobile layout — Figma 2172:1772 */
+@media (max-width: 767px) {
+    .program-locations {
+        padding: 0;
+        overflow: hidden;
+    }
+    .program-locations__canvas {
+        width: 100%;
+        background: #fff;
+    }
+    .program-locations__intro {
+        box-sizing: border-box;
+        height: 230px;
+        padding: 36px 16px 0;
+        text-align: center;
+    }
+    .program-locations__intro h2 {
+        font-size: 30px;
+        font-weight: 600;
+        line-height: 1.1;
+    }
+    .program-locations__intro p {
+        margin-top: 14px;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.4;
+        text-align: center;
+    }
+    .program-locations__programs {
+        display: block;
+        margin-top: 0;
+    }
+    .program-locations__group,
+    .program-locations__group--goyang {
+        box-sizing: border-box;
+        display: block;
+        min-height: 685px;
+        margin-top: 0;
+        padding-top: 48px;
+    }
+    .program-locations__group--goyang {
+        min-height: 675px;
+    }
+    .program-locations__branch {
+        display: block;
+        width: 100%;
+        padding: 0;
+        text-align: center;
+    }
+    .program-locations__branch h3 {
+        font: 500 30px/1.1 var(--font-en);
+    }
+    .program-locations__branch p {
+        position: static;
+        left: auto;
+        width: auto;
+        max-width: none;
+        margin: 14px auto 0;
+        font: 500 16px/1.4 var(--font-ko);
+        text-align: center;
+    }
+    .program-locations__cards {
+        --location-card-width: min(88.6vw, 381px);
+        gap: 30px;
+        margin-top: 48px;
+        padding: 0 calc((100vw - var(--location-card-width)) / 2) 8px;
+        scroll-padding-inline: calc((100vw - var(--location-card-width)) / 2);
     }
 }
 
@@ -2855,10 +2926,12 @@
     }
     .program-locations__branch p {
         max-width: 36rem;
-        margin: 16px auto 0;
+        margin: 16px 0 0;
+        position: relative;
+        left: -16px;
         font-size: clamp(16px, 1.8vw, 19px);
         line-height: 1.55;
-        text-align: center;
+        text-align: left;
     }
     .program-locations__cards {
         display: grid;
@@ -3025,6 +3098,12 @@
 
 .program-discover__mobile {
     display: none;
+}
+
+@media (min-width: 1280px) {
+    .program-locations__branch p {
+        text-align: left;
+    }
 }
 @media (max-width: 767px) {
     .program-discover {

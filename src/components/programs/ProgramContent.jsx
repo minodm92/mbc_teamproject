@@ -38,7 +38,7 @@ const initialCalendarDate = () => {
     return dates.find(date => getCalendarPrograms(date).length >= 2) || dates[0] || today;
 };
 
-function Calendar({ selectedDate, onSelectDate, month, onChangeMonth, reservationUrl }) {
+function Calendar({ selectedDate, onSelectDate, month, onChangeMonth }) {
     const [year, monthNumber] = month.split('-').map(Number);
     const firstWeekday = new Date(year, monthNumber - 1, 1).getDay();
     const count = new Date(year, monthNumber, 0).getDate();
@@ -71,7 +71,7 @@ function Calendar({ selectedDate, onSelectDate, month, onChangeMonth, reservatio
                 </span>;
             })}
         </div>
-        <a href={reservationUrl}>Reservation</a>
+        <Link to={paths.programReservation}>Reservation</Link>
     </div>;
 }
 
@@ -103,7 +103,6 @@ export default function ProgramContent() {
     const [selectedDate, setSelectedDate] = useState(initialCalendarDate);
     const [calendarMonth, setCalendarMonth] = useState(() => initialCalendarDate().slice(0, 7));
     const scheduledPrograms = getCalendarPrograms(selectedDate).slice(0, 3);
-    const calendarReservationUrl = scheduledPrograms[0]?.href || 'https://motorstudio.hyundai.com/itg/ri/bt/pgmGuide.do';
     const [isFeatureDetailsOpen, setIsFeatureDetailsOpen] = useState(false);
     const toggleMarqueeItem = (itemKey) => {
         if (!window.matchMedia('(hover: none)').matches) return;
@@ -843,31 +842,6 @@ export default function ProgramContent() {
         return () => media.revert();
     }, []);
 
-    useLayoutEffect(() => {
-        const reveal = pageRef.current.querySelector('.program-closing__visual');
-        const source = reveal.querySelector('.program-image-reveal__source');
-        const stripLayer = reveal.querySelector('.program-image-reveal__strips');
-        const media = gsap.matchMedia();
-
-        media.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
-            gsap.set(stripLayer, { display: 'none' });
-            gsap.fromTo(source, { autoAlpha: 1, clipPath: 'inset(0 0 100% 0)' }, {
-                clipPath: 'inset(0 0 0% 0)',
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: reveal,
-                    start: 'top 80%',
-                    end: 'bottom 80%',
-                    refreshPriority: -10,
-                    scrub: 0.8,
-                    invalidateOnRefresh: true,
-                },
-            });
-        });
-
-        return () => media.revert();
-    }, []);
-
     return (
         <main className="program-page" ref={pageRef}>
             <div className="program-opening" ref={openingRef}>
@@ -919,12 +893,12 @@ export default function ProgramContent() {
 
             <section className="program-monthly">
                 <div className="program-monthly__heading"><h2>MONTHLY CALENDAR</h2><p>이번 달 현대 모터스튜디오에서 진행되는<br />다양한 프로그램을 확인해 보세요.</p></div>
-                <Calendar selectedDate={selectedDate} onSelectDate={selectScheduleDate} month={calendarMonth} onChangeMonth={changeCalendarMonth} reservationUrl={calendarReservationUrl} />
+                <Calendar selectedDate={selectedDate} onSelectDate={selectScheduleDate} month={calendarMonth} onChangeMonth={changeCalendarMonth} />
                 <div className="program-monthly__programs" key={selectedDate}>
                     {scheduledPrograms.map((program) => (
                         <div className="program-monthly__row" key={program.bizCd + program.id}>
                             <span>{program.location}</span>
-                            <article role="link" tabIndex={0} aria-label={program.title + ' 프로그램 안내'} onClick={() => window.location.assign(program.href)} onKeyDown={event => { if (event.key === 'Enter') window.location.assign(program.href); }}>
+                            <article aria-label={program.title + ' 프로그램 안내'}>
                                 <img src={program.image} alt="" />
                                 <div>
                                     <h3>{program.title}</h3>
