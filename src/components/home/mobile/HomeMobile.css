@@ -217,4 +217,48 @@
         font: 500 16px/1.4 var(--font-ko);
         opacity: 0.6;
     }
+
+    .home-mobile-title span {
+        display: block;
+    }
+
+    /* 5. VEHICLE EXHIBITION: 400x198 cutout cards, 40px apart. */
+    .home-mobile-vehicles {
+        padding: 20px var(--hm-gutter);
+    }
+    .home-mobile-vehicles__list {
+        display: grid;
+        margin: 40px 0 0;
+        padding: 0;
+        gap: 40px;
+        list-style: none;
+    }
+    .home-mobile-vehicle {
+        display: block;
+    }
+    .home-mobile-vehicle__media {
+        position: relative;
+        display: block;
+        overflow: hidden;
+        aspect-ratio: 400/198;
+        background: #fff;
+    }
+    .home-mobile .home-mobile-vehicle__media img {
+        position: absolute;
+        max-width: none;
+    }
+    .home-mobile .home-mobile-vehicle__media img.is-contain {
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .home-mobile-vehicle__location {
+        display: block;
+        font: 500 16px/1.4 var(--font-ko);
+    }
+    .home-mobile-vehicle__name {
+        display: block;
+        font: 600 30px/1.1 var(--font-en);
+    }
 }

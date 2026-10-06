@@ -14,6 +14,10 @@ import avanteImage from '../../../assets/images/locations/figma/avante.png';
 import avanteThumb1 from '../../../assets/images/locations/figma/avante-1.png';
 import avanteThumb2 from '../../../assets/images/locations/figma/avante-2.png';
 import avanteThumb3 from '../../../assets/images/locations/figma/avante-3.png';
+import g90Image from '../../../assets/images/locations/figma/g90.png';
+import gv80Image from '../../../assets/images/locations/figma/gv80.png';
+import gv70Image from '../../../assets/images/locations/figma/gv70.png';
+import santafeImage from '../../../assets/images/locations/figma/santafe.png';
 
 // Figma's SEOUL table repeats the GOYANG values, so Seoul uses the location page data.
 const seoul = locationShowcase.find((location) => location.id === 'seoul');
@@ -142,4 +146,26 @@ export const mobileNowExhibition = {
         '국내 준중형 세단의 기준을 제시해 온 아반떼가 8세대 완전 변경 모델로 새롭게 태어났습니다. 3가지 컬러의 차량, 그리고 헤리티지 테이블을 통해 1세대 엘란트라부터 이어져 온 아반떼의 혁신과 진화 그리고 진보된 디자인과 기술을 직접 경험해 보세요.',
     background: avanteImage,
     thumbnails: [avanteThumb1, avanteThumb2, avanteThumb3],
+};
+
+// imageBox: the image's position inside the 400x198 card in Figma (percent of the card),
+// or 'contain' where Figma fits the whole image.
+export const mobileVehicles = {
+    title: ['VEHICLE', 'EXHIBITION'],
+    items: [
+        {
+            location: '고양',
+            name: 'G90',
+            image: g90Image,
+            imageBox: { top: '18.45%', left: '0%', width: '100%', height: '77.13%' },
+        },
+        {
+            location: '서울',
+            name: 'GV80',
+            image: gv80Image,
+            imageBox: { top: '16.79%', left: '-2.58%', width: '105.17%', height: '83.68%' },
+        },
+        { location: '고양', name: 'GV70', image: gv70Image, imageBox: 'contain' },
+        { location: '고양', name: 'SANTAFE', image: santafeImage, imageBox: 'contain' },
+    ],
 };
