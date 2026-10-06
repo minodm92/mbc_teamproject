@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import programThreeVideoUrl from '../../assets/videos/program-step-03-figma.mp4?url';
+import programThreeVideoUrl from '../../assets/videos/program-step-03-current.mp4?url';
 import { homeAsset as asset } from './homeAssets';
 import './HomeProgramSequence.css';
 
@@ -15,9 +15,8 @@ const steps = [
         count: '2 / 3',
         description: (
             <>
-                수전해 실험과 넥쏘 조립을 통해 수소에너지를 이해하고,
-                <br />
-                수소전기차의 구동 원리를 배우는 클래스입니다.
+                <span>수전해 실험과 넥쏘 조립을 통해 수소에너지를 이해하고,</span>
+                <span>수소전기차의 구동 원리를 배우는 클래스입니다.</span>
             </>
         ),
     },
@@ -28,9 +27,8 @@ const steps = [
         count: '3 / 3',
         description: (
             <>
-                생활 속 교통사고 위험 상황을 이해하고, 보행과
-                <br />
-                통학버스 이용 시 필요한 안전 수칙 및 대처 방법을 배울 수 있는 교육 프로그램입니다.
+                <span>생활 속 교통사고 위험 상황을 이해하고, 보행과</span>
+                <span>통학버스 이용 시 필요한 안전 수칙 및 대처 방법을 배울 수 있는 교육 프로그램입니다.</span>
             </>
         ),
     },
@@ -216,7 +214,7 @@ export default function HomeProgramSequence() {
                     className="renewal-program-sequence__step renewal-program-sequence__step--three"
                     ref={stepThreeRef}
                     aria-label="CURRENT PROGRAMS"
-                >
+                    >
                     <video
                         className="renewal-program-sequence__background"
                         ref={videoRef}
@@ -228,6 +226,12 @@ export default function HomeProgramSequence() {
                         preload="auto"
                         aria-hidden="true"
                     />
+                    <p className="renewal-program-sequence__current-title">
+                        CURRENT
+                        <br />
+                        PROGRAMS
+                    </p>
+                    <span className="renewal-program-sequence__current-count">1 / 3</span>
                 </article>
             </div>
         </section>
