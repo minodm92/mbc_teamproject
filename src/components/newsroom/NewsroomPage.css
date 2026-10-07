@@ -643,14 +643,14 @@
         height: auto;
     }
 
-    /* Home "Studio Story" card text: image 16, title 15, detail lines 6. */
+    /* Card text: image 12, title 4, detail lines 6. */
     .newsroom-card__information {
         gap: 6px;
-        margin-top: 16px;
+        margin-top: 12px;
     }
 
     .newsroom-card__text {
-        gap: 15px;
+        gap: 4px;
     }
 
     .newsroom-card__title {
