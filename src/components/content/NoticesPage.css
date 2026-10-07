@@ -659,8 +659,10 @@ body:has(.notices-page) .site-header { background: transparent; }
         position: relative;
         align-items: center;
         flex-wrap: nowrap;
+        min-height: 77px;
+        padding: 0 calc(var(--notice-gutter) + 24px) 0 calc(var(--notice-gutter) + 113px);
     }
-    /* 1px #111 line under the tab row, same width as the list; the selected tab's 3px bar sits on top of it. */
+    /* 1px #111 line under the tab row, same width as the list. */
     .notices-page--list .notices-page__toolbar::after {
         content: '';
         position: absolute;
@@ -674,18 +676,18 @@ body:has(.notices-page) .site-header { background: transparent; }
         position: relative;
         z-index: 1;
     }
-    /* KOR_Sub1: SUIT Bold 24/1.4. The button stays 64 tall (text from 20) so the 3px bar keeps sitting on the line. */
+    /* KOR_Sub1: SUIT Bold 24/1.4 in a 77 tall row (text from 20). The selected tab is shown by colour only. */
     .notices-page--list .notices-page__filters button {
-        height: 64px;
+        height: 77px;
         padding: 20px 0 0;
         color: #a8a7ac;
         font: 700 24px/1.4 var(--font-ko);
     }
     .notices-page--list .notices-page__filters button[aria-pressed='true'] {
-        color: #0e0e0e;
+        color: #111;
     }
     .notices-page--list .notices-page__filters button[aria-pressed='true']::after {
-        background: #0e0e0e;
+        display: none;
     }
 
     /* List: 1290 centered on white, 20 above/below, 1px #dedede under every row; rows 94. Pagination: no background, then 120 to the footer. */
@@ -703,33 +705,40 @@ body:has(.notices-page) .site-header { background: transparent; }
         background: #fff;
         border-bottom: 1px solid #dedede;
     }
+    .notices-page--list .notices-page__row {
+        grid-template-columns: 65px 96px minmax(0, 1fr) 115px 35px;
+    }
     .notices-page--list .notices-page__number {
-        color: #0e0e0e;
-        font: 500 15px/1.4 var(--font-ko);
+        color: #111;
+        font: 500 18px/1.4 var(--font-ko);
     }
     /* KOR_Sub6: SUIT Medium 18/1.4 for the badge text; the badge stays 80x37. */
     .notices-page--list .notices-page__category {
         border-color: #ccc;
-        color: #0e0e0e;
+        color: #111;
         font: 500 18px/1.4 var(--font-ko);
         white-space: nowrap;
     }
     .notices-page--list .notices-page__row--pinned .notices-page__category {
-        border-color: #0e0e0e;
+        border-color: #111;
         color: #fff;
-        background: #0e0e0e;
+        background: #111;
     }
     .notices-page--list .notices-page__title {
         display: block;
         overflow: hidden;
-        color: #0e0e0e;
+        color: #111;
         font: 500 18px/1.4 var(--font-ko);
         text-overflow: ellipsis;
         white-space: nowrap;
     }
     .notices-page--list .notices-page__row time {
-        color: #0e0e0e;
-        font: 500 15px/1.4 var(--font-ko);
+        color: #111;
+        font: 500 18px/1.4 var(--font-ko);
+    }
+    .notices-page--list .notices-page__arrow {
+        justify-self: center;
+        align-self: center;
     }
     .notices-page--list .notices-page__pagination {
         height: 36px;
@@ -744,5 +753,12 @@ body:has(.notices-page) .site-header { background: transparent; }
     .notices-page--list .notices-page__pagination button[aria-current='page'],
     .notices-page--list .notices-page__pagination .notices-page__pagination-arrow {
         color: #0e0e0e;
+    }
+}
+
+/* Notices list content is 1294 wide (313 gutters at 1920). */
+@media (min-width: 1441px) {
+    .notices-page--list {
+        --notice-gutter: max(75px, calc((100vw - 1294px) / 2));
     }
 }
