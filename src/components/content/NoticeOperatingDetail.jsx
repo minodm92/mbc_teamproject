@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
 import './NoticesPage.css';
 import './NoticeOperatingDetail.css';
+import noticeHeroImage from '../../assets/images/notices/notice-hero.png';
 
 const detailedNotices = {
   'goyang-october-access': {
@@ -69,8 +70,17 @@ export default function NoticeOperatingDetail({ notice }) {
   const noticeIndex = notices.findIndex((item) => item.id === notice.id);
   const nextNotice = noticeIndex >= 0 ? notices[noticeIndex + 1] : undefined;
   const previousNotice = noticeIndex > 0 ? notices[noticeIndex - 1] : undefined;
+  const contentImage = Array.isArray(notice.content)
+    ? notice.content.find((block) => block.type === 'image')?.src
+    : undefined;
+  const heroImage = contentImage || noticeHeroImage;
   return (
     <main className={`notices-page notice-operating-page${isPlaceholder ? ' notice-operating-page--placeholder' : ''}${hasShortTitle ? ' notice-operating-page--short-title' : ''}`}>
+      <header className="notice-operating-page__hero">
+        <img src={heroImage} alt="" />
+        <div className="notice-operating-page__hero-overlay" />
+        <h1>{notice.title}</h1>
+      </header>
       <div className="notice-operating-page__inner">
         <nav className="notice-operating-page__breadcrumb" aria-label="현재 위치">
           <Link to={paths.home}>HOME</Link><span aria-hidden="true">›</span>

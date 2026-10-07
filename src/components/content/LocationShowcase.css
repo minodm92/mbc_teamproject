@@ -530,6 +530,9 @@ body:has(.location-showcase--intro) .site-header {
   }
 }
 @media (max-width: 767px) {
+  .location-showcase .studio-details {
+    display: block;
+  }
   .locations {
     --bar: 44px;
   }
@@ -578,11 +581,88 @@ body:has(.location-showcase--intro) .site-header {
     font-size: 12px;
   }
   .loc__image {
-    flex: 1;
-    min-height: 0;
-    width: auto;
-    margin: 20px 4px 0 -16px;
-    aspect-ratio: auto;
+    flex: 0 0 auto;
+    width: calc(100vw - 31px);
+    max-width: 399px;
+    margin: 20px 0 0;
+    aspect-ratio: 399 / 296;
+  }
+  .loc__image img {
+    object-fit: cover;
+  }
+  .studio-avante,
+  .studio-vehicles {
+    display: none;
+  }
+  .studio-drive-scroll {
+    height: auto;
+  }
+  .studio-drive {
+    padding: 20px 15px 0;
+    background: #fff;
+  }
+  .studio-drive__image {
+    width: 100%;
+    aspect-ratio: 399 / 263;
+    margin-top: 40px;
+    overflow: hidden;
+    order: 2;
+  }
+  .studio-drive__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .studio-drive__copy {
+    display: flex;
+    flex-direction: column;
+  }
+  .studio-drive .studio-section-title {
+    margin: 0 0 40px;
+    font: 500 48px/1.1 var(--font-en);
+  }
+  .studio-drive__links button {
+    display: block;
+    width: 100%;
+    min-height: 74px;
+    padding: 20px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(17, 17, 17, .6);
+    color: rgba(17, 17, 17, .6);
+    background: none;
+    text-align: left;
+  }
+  .studio-drive__links button:first-child {
+    border-top: 1px solid rgba(17, 17, 17, .6);
+  }
+  .studio-drive__links button.is-active {
+    min-height: 110px;
+    color: #111;
+  }
+  .studio-drive__metadata-wrap {
+    display: none;
+  }
+  .studio-drive__metadata-wrap.is-active {
+    display: block;
+    margin-bottom: 10px;
+  }
+  .studio-drive__metadata {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font: 700 15px/1.4 var(--font-en);
+  }
+  .studio-drive__metadata i {
+    height: 18px;
+    border-left: 1px solid #111;
+  }
+  .studio-drive__links h3 {
+    margin: 0;
+    font: 600 30px/1.1 var(--font-en);
+  }
+  .studio-programs {
+    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {

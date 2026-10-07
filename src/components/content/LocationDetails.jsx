@@ -64,6 +64,10 @@ export default function LocationDetails() {
   }, []);
   // Clicking a item scrolls to the middle of its third of the DRIVE TEST wrapper.
   const scrollToDrive = (index) => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      setActiveDriveIndex(index);
+      return;
+    }
     const wrapper = driveWrapperRef.current;
     if (!wrapper) return;
     const travel = wrapper.offsetHeight - window.innerHeight;

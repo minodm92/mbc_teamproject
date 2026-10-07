@@ -107,13 +107,17 @@ export default function NewsroomDetail() {
 
     return (
         <main className="newsroom-page newsroom-detail">
-            <header className="newsroom-detail__page-header">
-                <h1>NEWS</h1>
+            <header className="newsroom-detail__hero">
+                <img src={article.image} alt="" />
+                <div className="newsroom-detail__hero-overlay" />
+                <div className="newsroom-detail__hero-copy">
+                <h1>{article.title}</h1>
                 <nav aria-label="현재 위치">
                     <Link to="/">현대 모터 스튜디오</Link><span aria-hidden="true">›</span>
                     <span>안내</span><span aria-hidden="true">›</span>
                     <Link to={newsroomListPath}>뉴스룸</Link>
                 </nav>
+                </div>
             </header>
 
             <article className="newsroom-detail__article">

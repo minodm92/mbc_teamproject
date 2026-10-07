@@ -97,6 +97,12 @@ const membershipTabs = [
     ['benefits', '혜택 안내'],
     ['locations', '이용·라운지 안내'],
 ];
+const membershipHeroByTab = {
+    intro: ['MEMBERSHIP', membershipHeroImage],
+    join: ['가입 안내', categoryJoinImage],
+    benefits: ['혜택 안내', categoryBenefitsImage],
+    locations: ['이용·라운지 안내', categoryLocationsImage],
+};
 
 export default function MembershipPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -133,12 +139,13 @@ export default function MembershipPage() {
         setActiveTab(membershipTabs[nextIndex][0]);
         event.currentTarget.parentElement.children[nextIndex].focus();
     }
+    const [heroTitle, heroImage] = membershipHeroByTab[activeTab] || membershipHeroByTab.intro;
     return (
         <main className="membership-page membership-page--tabs">
             <section
                 className="membership-hero"
                 aria-labelledby="membership-title"
-                style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 26%, rgba(0,0,0,.4) 74%), linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.2)), url("${membershipHeroImage}")` }}
+                style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 26%, rgba(0,0,0,.4) 74%), linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.2)), url("${heroImage}")` }}
             >
                 <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
                     <Link to={paths.home}>HOME</Link>
@@ -155,7 +162,7 @@ export default function MembershipPage() {
                         </>
                     )}
                 </nav>
-                <h1 id="membership-title">MEMBERSHIP</h1>
+                <h1 id="membership-title">{heroTitle}</h1>
                 <p className="membership-hero__intro">
                     공간과 모빌리티, 문화를 더 가까이
                     <br />
