@@ -1,0 +1,86 @@
+/* Detail-page hero, same rules as the notices / newsroom / membership list heroes:
+   PC (1024+) 658 tall, copy left 100 and bottom-aligned 80 up; tablet 520, copy 24 / 80; mobile (767-) 520, copy 15 / 30.
+   Photo cover/centre under 30% black + a fade from 53% to 80% black. Breadcrumb → title 6. */
+.detail-hero {
+    position: relative;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    height: 658px;
+    margin: 0;
+    padding: 0 100px 80px;
+    overflow: hidden;
+    color: #fff;
+    background: #424244;
+}
+.detail-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+        linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+    pointer-events: none;
+}
+.detail-hero__image {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+.detail-hero__breadcrumb,
+.detail-hero__title {
+    position: relative;
+    z-index: 1;
+}
+.detail-hero__breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0;
+    color: #a8a7ac;
+    font: 700 22px/1.4 var(--font-ko);
+}
+.detail-hero__breadcrumb a {
+    color: inherit;
+}
+.detail-hero__title {
+    max-width: 1200px;
+    margin: 6px 0 0;
+    color: #fff;
+    font: 500 60px/1.1 'Red Hat Display', var(--font-ko);
+    letter-spacing: 0;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+    .detail-hero {
+        height: 520px;
+        padding: 0 24px 80px;
+    }
+    .detail-hero__breadcrumb {
+        font-size: 14px;
+    }
+    .detail-hero__title {
+        font-size: clamp(36px, 6vw, 54px);
+    }
+}
+@media (max-width: 767px) {
+    .detail-hero {
+        height: 520px;
+        padding: 0 15px 30px;
+    }
+    .detail-hero__breadcrumb {
+        font-size: 13px;
+    }
+    .detail-hero__title {
+        font-weight: 600;
+        font-size: 30px;
+    }
+}

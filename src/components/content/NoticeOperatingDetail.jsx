@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
 import './NoticesPage.css';
 import './NoticeOperatingDetail.css';
+import DetailHero from './DetailHero';
 import noticeHeroImage from '../../assets/images/notices/notice-hero.png';
 
 const detailedNotices = {
@@ -76,16 +77,8 @@ export default function NoticeOperatingDetail({ notice }) {
   const heroImage = contentImage || noticeHeroImage;
   return (
     <main className={`notices-page notice-operating-page${isPlaceholder ? ' notice-operating-page--placeholder' : ''}${hasShortTitle ? ' notice-operating-page--short-title' : ''}`}>
-      <header className="notice-operating-page__hero">
-        <img src={heroImage} alt="" />
-        <div className="notice-operating-page__hero-overlay" />
-        <h1>{notice.title}</h1>
-      </header>
+      <DetailHero image={heroImage} title={notice.title} section="공지사항" sectionPath={paths.notices} titleTag="p" />
       <div className="notice-operating-page__inner">
-        <nav className="notice-operating-page__breadcrumb" aria-label="현재 위치">
-          <Link to={paths.home}>HOME</Link><span aria-hidden="true">›</span>
-          <Link to={paths.notices}>공지사항</Link><span aria-hidden="true">›</span><span aria-current="page">상세 안내</span>
-        </nav>
         <article>
           <header className="notice-operating-page__heading">
             <h1>{notice.title}</h1>
