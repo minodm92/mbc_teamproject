@@ -96,6 +96,9 @@ export default function ExhibitionsPage() {
     let closingImageY = 0;
     const cursorTarget = { x: 0, y: 0 };
     const cursorCurrent = { x: 0, y: 0 };
+    const mobileRevealProgress = new WeakMap();
+    let mobileLastScrollY = window.scrollY;
+    let mobileScrollDirection = 1;
     gsap.set(introTitleLines, { text: '' });
     const introTyping = gsap.timeline({ paused: true })
       .to(introTitleLines[0], { duration: 0.54, ease: 'none', text: 'MORE THAN' })
@@ -119,8 +122,8 @@ export default function ExhibitionsPage() {
       const vh = window.innerHeight;
       const mobilePacing = mobileViewport.matches;
       const sectionProgress = (rect, section, mobileHoldScreens, desktopHoldScreens = 0.18) => {
-        const holdScreens = mobilePacing ? mobileHoldScreens + 0.12 : desktopHoldScreens;
-        const holdDistance = vh * holdScreens;
+        if (mobilePacing) return clamp((vh - rect.top) / Math.max(1, rect.height + vh));
+        const holdDistance = vh * desktopHoldScreens;
         return clamp(-rect.top / Math.max(1, rect.height - vh - holdDistance));
       };
       const heroRect = hero.getBoundingClientRect();
@@ -140,13 +143,13 @@ export default function ExhibitionsPage() {
         introDescription.style.opacity = '1';
         introDescription.style.transform = 'none';
         previewTitle.style.opacity = '1';
-        previewTitle.style.transform = 'translate3d(-50%, -50%, 0)';
+        previewTitle.style.transform = mobileViewport.matches ? 'none' : 'translate3d(-50%, -50%, 0)';
         previewImages.forEach((image) => { image.style.transform = 'none'; });
         previewImages.forEach((image) => { image.style.opacity = '1'; });
-        previewExpandedImage.style.opacity = '1';
+        previewExpandedImage.style.opacity = mobileViewport.matches ? '0' : '1';
         previewExpandedImage.style.transform = 'translate3d(-50%, -50%, 0) scale(1)';
         sequenceTrack.style.transform = 'none';
-        previewTitle.style.opacity = '0';
+        previewTitle.style.opacity = mobileViewport.matches ? '1' : '0';
         sceneParts.forEach(({ scene, image, shade, title, description }) => {
           scene.style.visibility = 'visible';
           image.style.clipPath = 'none';
@@ -187,12 +190,101 @@ export default function ExhibitionsPage() {
         closingDescription.style.transform = 'none';
         return;
       }
-      if (heroRect.bottom > 0 && heroRect.top <= 0) {
-        const progress = sectionProgress(heroRect, hero, 0.25);
+      if (mobilePacing) {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY !== mobileLastScrollY) {
+          mobileScrollDirection = currentScrollY > mobileLastScrollY ? 1 : -1;
+          mobileLastScrollY = currentScrollY;
+        }
+        const fadeAtViewport = (element, delay = 0, baseTransform = 'none') => {
+          const rect = element.getBoundingClientRect();
+          const isOutsideViewport = rect.bottom < -24 || rect.top > vh + 24;
+          if (isOutsideViewport) {
+            mobileRevealProgress.set(element, 0);
+            element.style.opacity = '0';
+            const transformPrefix = baseTransform === 'none' ? '' : `${baseTransform} `;
+            element.style.transform = `${transformPrefix}translate3d(0, 12px, 0)`;
+            return;
+          }
+          const entryDistance = mobileScrollDirection > 0
+            ? vh * 0.9 - rect.top - delay
+            : rect.bottom - vh * 0.1 - delay;
+          const enter = ease(clamp(entryDistance / 120));
+          const opacity = Math.max(mobileRevealProgress.get(element) || 0, enter);
+          mobileRevealProgress.set(element, opacity);
+          element.style.opacity = opacity.toFixed(3);
+          const transformPrefix = baseTransform === 'none' ? '' : `${baseTransform} `;
+          element.style.transform = `${transformPrefix}translate3d(0, ${((1 - opacity) * 12).toFixed(1)}px, 0)`;
+        };
+
+        heroImage.style.width = '';
+        heroImage.style.height = '';
+        fadeAtViewport(heroCopy);
+        heroScroll.style.opacity = '1';
+
+        introContent.style.opacity = '1';
+        introContent.style.transform = 'none';
+        introTyping.progress(1);
+        fadeAtViewport(introEyebrow);
+        fadeAtViewport(introTitle, 45);
+        fadeAtViewport(introDescription, 75);
+
+        previewImages.forEach((image, index) => fadeAtViewport(image, index * 12));
+        previewTitle.style.transform = 'none';
+        fadeAtViewport(previewTitle, 120);
+        previewExpandedImage.style.opacity = '0';
+        previewExpandedImage.style.transform = 'none';
+
+        featureCopy.style.opacity = '1';
+        featureCopy.style.transform = 'none';
+        fadeAtViewport(featureTitle);
+        fadeAtViewport(featureDescription, 35);
+        featureImage.style.clipPath = 'none';
+        fadeAtViewport(featureImage, 40);
+
+        sceneParts.forEach(({ scene, image, shade, title, description }) => {
+          scene.style.visibility = 'visible';
+          image.style.clipPath = 'none';
+          image.style.transform = 'none';
+          shade.style.clipPath = 'none';
+          fadeAtViewport(image);
+          title.style.transform = 'none';
+          description.style.transform = 'none';
+          fadeAtViewport(title, 70);
+          fadeAtViewport(description, 100);
+        });
+        sequenceTrack.style.transform = 'none';
+
+        editorialImages.forEach((image) => {
+          if (image === featureImage || image === reflectionImage) return;
+          fadeAtViewport(image);
+        });
+
+        reflectionCopy.style.opacity = '1';
+        reflectionCopy.style.transform = 'none';
+        reflectionTitleRenderLayer.style.transform = 'scale(1)';
+        fadeAtViewport(reflectionTitle);
+        fadeAtViewport(reflectionDescription, 35);
+        reflectionImage.style.clipPath = 'none';
+        fadeAtViewport(reflectionImage, 50);
+
+        closingImage.style.transform = 'translateX(-50%)';
+        closingScale = 1;
+        closingImageY = 0;
+        fadeAtViewport(closingTitle);
+        fadeAtViewport(closingBackground, 30);
+        fadeAtViewport(closingImage, 55, 'translateX(-50%)');
+        fadeAtViewport(closingDescription, 85);
+        return;
+      }
+      if (heroRect.bottom > 0 && (heroRect.top <= 0 || (mobilePacing && heroRect.top < vh))) {
+        const progress = mobilePacing
+          ? clamp(-heroRect.top / Math.max(1, heroRect.height))
+          : sectionProgress(heroRect, hero, 0.25);
         const desktop = window.innerWidth > 1200;
         const expansion = ease(clamp((progress - (desktop ? 0.14 : 0.06)) / (desktop ? 0.6 : 0.68)));
-        const initialWidth = window.innerWidth <= 760 ? 125 : 195;
-        const initialHeight = window.innerWidth <= 760 ? vh * 0.48 : 540;
+        const initialWidth = window.innerWidth <= 760 ? window.innerWidth : 195;
+        const initialHeight = window.innerWidth <= 760 ? heroImage.parentElement.clientHeight : 540;
         heroImage.style.width = `${initialWidth + (window.innerWidth - initialWidth) * expansion}px`;
         heroImage.style.height = `${initialHeight + (vh - initialHeight) * expansion}px`;
         heroCopy.style.opacity = (1 - ease(clamp((progress - (desktop ? 0.26 : 0.22)) / (desktop ? 0.34 : 0.4)))).toFixed(3);
@@ -249,16 +341,29 @@ export default function ExhibitionsPage() {
         previewExpandedImage.style.opacity = (imageReveal * imageOpacity).toFixed(3);
         previewExpandedImage.style.transform = `translate3d(-50%, -50%, 0) scale(${imageScale.toFixed(5)})`;
         previewTitle.style.opacity = '1';
-        previewTitle.style.transform = 'translate3d(-50%, -50%, 0)';
+        previewTitle.style.transform = mobilePreview ? 'none' : 'translate3d(-50%, -50%, 0)';
       }
       const sequenceRect = sequence.getBoundingClientRect();
       if (sequenceRect.bottom > 0 && sequenceRect.top < vh) {
-        const travel = Math.max(1, sequenceRect.height - vh);
         const mobileSequence = mobileViewport.matches;
-        const mobileLeadIn = mobileSequence ? vh : 0;
-        const sequenceProgress = clamp((-sequenceRect.top - mobileLeadIn) / Math.max(1, travel - mobileLeadIn));
-        const holdWeight = mobileSequence ? 1.3 : 1.2;
-        const transitionWeight = mobileSequence ? 0.82 : 0.78;
+        if (mobileSequence) {
+          sceneParts.forEach(({ scene, title, description }) => {
+            const sceneRect = scene.getBoundingClientRect();
+            const sceneProgress = clamp((vh - sceneRect.top) / Math.max(1, sceneRect.height + vh));
+            const titleReveal = ease(clamp((sceneProgress - 0.1) / 0.18));
+            const descriptionReveal = ease(clamp((sceneProgress - 0.34) / 0.2));
+            scene.style.visibility = 'visible';
+            title.style.opacity = titleReveal.toFixed(3);
+            title.style.transform = `translate3d(0, ${((1 - titleReveal) * 108).toFixed(2)}%, 0)`;
+            description.style.opacity = descriptionReveal.toFixed(3);
+            description.style.transform = `translate3d(0, ${((1 - descriptionReveal) * 108).toFixed(2)}%, 0)`;
+          });
+          sequenceTrack.style.transform = 'none';
+        } else {
+        const travel = Math.max(1, sequenceRect.height - vh);
+        const sequenceProgress = clamp(-sequenceRect.top / travel);
+        const holdWeight = 1.2;
+        const transitionWeight = 0.78;
         const timelineLength = sceneParts.length * holdWeight + (sceneParts.length - 1) * transitionWeight;
         const timelinePosition = sequenceProgress * timelineLength;
         let trackPosition = timelinePosition;
@@ -294,19 +399,13 @@ export default function ExhibitionsPage() {
           description.style.transform = `translate3d(0, ${((1 - descriptionReveal) * 108).toFixed(2)}%, 0)`;
         });
         sequenceTrack.style.transform = `translate3d(${(-slidePosition * sequenceViewport.clientWidth).toFixed(2)}px, 0, 0)`;
+        }
       }
       const featureRect = feature.getBoundingClientRect();
       if (featureRect.bottom > 0 && featureRect.top < vh) {
         let progress;
         if (mobilePacing) {
-          const holdDistance = vh * 0.55;
-          const animationDistance = Math.max(1, featureRect.height - vh - holdDistance);
-          const distance = Math.max(0, -featureRect.top);
-          const contentReadyDistance = animationDistance * 0.66;
-          if (distance <= contentReadyDistance) progress = distance / animationDistance;
-          else if (distance <= contentReadyDistance + holdDistance) progress = 0.66;
-          else progress = (distance - holdDistance) / animationDistance;
-          progress = clamp(progress);
+          progress = sectionProgress(featureRect, feature, 0);
         } else {
           const holdDistance = vh * 0.18;
           progress = clamp(-featureRect.top / Math.max(1, featureRect.height - vh - holdDistance));

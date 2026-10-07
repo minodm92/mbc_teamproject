@@ -294,3 +294,286 @@
     visibility: visible;
   }
 }
+
+/* Figma 2200:742: the existing page's mobile layout only. */
+@media (max-width: 760px) {
+  .exhibition-page { --exhibition-gutter: 15px; }
+
+  .exhibition-page .exhibition-hero { height: 520px; }
+  .exhibition-page .exhibition-hero__frame { position: relative; height: 520px; }
+  .exhibition-page .exhibition-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .exhibition-page .exhibition-hero__copy {
+    top: auto;
+    bottom: 30px;
+    left: 15px;
+    width: calc(100% - 30px);
+    padding: 0;
+    text-align: left;
+  }
+  .exhibition-page .exhibition-hero h1 {
+    width: 100%;
+    max-width: 400px;
+    font-family: 'Red Hat Display', Arial, sans-serif;
+    font-size: 48px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0;
+    white-space: normal;
+    overflow-wrap: normal;
+  }
+  .exhibition-page .exhibition-hero__copy p {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 6px;
+    font-family: var(--font-ko);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    overflow-wrap: break-word;
+  }
+  .exhibition-page .exhibition-hero__scroll { display: none; }
+
+  .exhibition-page .exhibition-intro {
+    height: 380px;
+    min-height: 0;
+    margin-top: 0;
+    padding: 0;
+  }
+  .exhibition-page .exhibition-intro > div {
+    position: relative;
+    top: auto;
+    width: 100%;
+    height: 100%;
+    padding-top: 93px;
+    justify-content: flex-start;
+  }
+  .exhibition-page .exhibition-intro__eyebrow {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .exhibition-page .exhibition-intro__title-spacer { display: none; }
+  .exhibition-page .exhibition-intro__title-frame {
+    top: 132px;
+    left: 50%;
+    height: 106px;
+    transform: translateX(-50%);
+  }
+  .exhibition-page .exhibition-intro h2.exhibition-intro__title-visual {
+    font-size: clamp(39px, 11.16vw, 48px);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+  .exhibition-page .exhibition-intro__english-mask {
+    position: absolute;
+    top: 263px;
+    left: 50%;
+    width: min(100%, 430px);
+    margin: 0;
+    transform: translateX(-50%);
+  }
+  .exhibition-page .exhibition-intro__english {
+    padding-inline: 25px;
+    font-size: 13px !important;
+    font-weight: 400;
+    line-height: 1.2 !important;
+  }
+
+  .exhibition-page .exhibition-preview { height: 640px; }
+  .exhibition-page .exhibition-preview__canvas {
+    position: relative;
+    height: 640px;
+    perspective: none;
+  }
+  .exhibition-page .exhibition-preview__image {
+    left: var(--mobile-x) !important;
+    top: var(--mobile-y) !important;
+    width: var(--mobile-w) !important;
+    height: var(--mobile-h) !important;
+    transform: none;
+  }
+  .exhibition-page .exhibition-preview__image:nth-child(1) { --mobile-x: 5.349%; --mobile-y: 53px; --mobile-w: 23.488%; --mobile-h: 93px; }
+  .exhibition-page .exhibition-preview__image:nth-child(2) { --mobile-x: 68.605%; --mobile-y: 374px; --mobile-w: 31.395%; --mobile-h: 104px; }
+  .exhibition-page .exhibition-preview__image:nth-child(3) { --mobile-x: 93.953%; --mobile-y: 208px; --mobile-w: 26.279%; --mobile-h: 134px; }
+  .exhibition-page .exhibition-preview__image:nth-child(4) { --mobile-x: -27.209%; --mobile-y: 383px; --mobile-w: 30.233%; --mobile-h: 103px; }
+  .exhibition-page .exhibition-preview__image:nth-child(5),
+  .exhibition-page .exhibition-preview__image:nth-child(8),
+  .exhibition-page .exhibition-preview__image:nth-child(11) { display: none; }
+  .exhibition-page .exhibition-preview__image:nth-child(6) { --mobile-x: 10.233%; --mobile-y: 360px; --mobile-w: 15.349%; --mobile-h: 60px; }
+  .exhibition-page .exhibition-preview__image:nth-child(7) { --mobile-x: -6.047%; --mobile-y: 132px; --mobile-w: 17.442%; --mobile-h: 66px; }
+  .exhibition-page .exhibition-preview__image:nth-child(9) { --mobile-x: -13.256%; --mobile-y: 261px; --mobile-w: 17.209%; --mobile-h: 66px; }
+  .exhibition-page .exhibition-preview__image:nth-child(10) { --mobile-x: 42.558%; --mobile-y: 492px; --mobile-w: 18.14%; --mobile-h: 106px; }
+  .exhibition-page .exhibition-preview__image:nth-child(12) { --mobile-x: 64.651%; --mobile-y: 82px; --mobile-w: 26.977%; --mobile-h: 129px; }
+  .exhibition-page .exhibition-preview h2 {
+    top: 265px;
+    left: 0;
+    width: 100%;
+    padding: 0;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0;
+    transform: none;
+  }
+  .exhibition-page .exhibition-preview h2::after {
+    display: block;
+    margin-top: 15px;
+    color: #0e0e0e;
+    content: '모빌리티가 펼치는\A다양한 경험을 만나보세요.';
+    font: 500 13px/1.3 var(--font-ko);
+    white-space: pre;
+  }
+
+  .exhibition-page .exhibition-editorial {
+    min-height: 0;
+    margin-top: 0;
+  }
+  .exhibition-page .exhibition-editorial--feature,
+  .exhibition-page .exhibition-editorial--reflection { height: 722px; }
+  .exhibition-page .exhibition-editorial--feature .exhibition-editorial__stage,
+  .exhibition-page .exhibition-editorial--reflection .exhibition-editorial__stage {
+    position: relative;
+    height: 722px;
+  }
+  .exhibition-page .exhibition-editorial--feature .exhibition-editorial__copy,
+  .exhibition-page .exhibition-editorial--reflection .exhibition-editorial__copy {
+    top: 55px;
+    left: 15px;
+    right: auto;
+    width: min(373px, calc(100% - 30px));
+  }
+  .exhibition-page .exhibition-editorial h2 {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+  .exhibition-page .exhibition-editorial--feature h2,
+  .exhibition-page .exhibition-editorial--reflection h2 { padding: 0; }
+  .exhibition-page .exhibition-editorial p {
+    margin-top: 15px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+  .exhibition-page .exhibition-editorial--feature .exhibition-editorial__stage > img,
+  .exhibition-page .exhibition-editorial--reflection .exhibition-editorial__stage > img {
+    top: 232px;
+    bottom: auto;
+    left: 25px;
+    right: 25px;
+    width: calc(100% - 50px);
+    height: 440px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .exhibition-page .exhibition-sequence {
+    height: auto;
+    margin-top: 0;
+    background: #fff;
+  }
+  .exhibition-page .exhibition-sequence__viewport {
+    position: relative;
+    height: auto;
+    overflow: visible;
+    background: #fff;
+  }
+  .exhibition-page .exhibition-sequence__track {
+    display: block;
+    height: auto;
+    transform: none;
+  }
+  .exhibition-page .exhibition-scene {
+    width: 100%;
+    height: 500px;
+    min-height: 0;
+    color: #0e0e0e;
+    background: #fff;
+  }
+  .exhibition-page .exhibition-scene__frame { height: 500px; }
+  .exhibition-page .exhibition-scene__frame > img {
+    top: 100px;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .exhibition-page .exhibition-scene__shade { display: none; }
+  .exhibition-page .exhibition-scene__copy,
+  .exhibition-page .exhibition-scene--4d-ride .exhibition-scene__copy {
+    top: 42px;
+    left: 0;
+    right: 0;
+    display: flex;
+    width: 100%;
+    height: 417px;
+    max-width: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    color: #0e0e0e;
+    text-align: center;
+  }
+  .exhibition-page .exhibition-scene__text-mask { width: 100%; overflow: visible; }
+  .exhibition-page .exhibition-scene h2 {
+    font: 600 30px/1.1 var(--font-en);
+    letter-spacing: 0;
+    white-space: nowrap;
+  }
+  .exhibition-page .exhibition-scene--mobility-art h2 { font-size: 0; }
+  .exhibition-page .exhibition-scene--mobility-art h2::after {
+    content: 'MOBILITY & ART';
+    font: 600 30px/1.1 var(--font-en);
+  }
+  .exhibition-page .exhibition-scene p {
+    padding-inline: 12px;
+    font: 500 clamp(11px, 3.02vw, 13px)/1.3 var(--font-ko);
+    white-space: normal;
+  }
+
+  .exhibition-page .exhibition-closing {
+    height: 722px;
+    min-height: 0;
+    margin-top: 0;
+  }
+  .exhibition-page .exhibition-closing__stage {
+    position: relative;
+    height: 722px;
+  }
+  .exhibition-page .exhibition-closing h2 {
+    top: 55px;
+    padding: 0 10px;
+    font-size: clamp(19px, 5.12vw, 22px);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+  .exhibition-page .exhibition-closing__stage > span {
+    top: 206px;
+    color: #fff;
+    font-size: clamp(40px, 11.16vw, 48px);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  .exhibition-page .exhibition-closing__stage > img {
+    top: 292px;
+    left: 50%;
+    width: calc(100% - 30px);
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .exhibition-page .exhibition-closing__stage > p {
+    top: 639px;
+    bottom: auto;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+}
