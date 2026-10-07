@@ -659,35 +659,41 @@ body:has(.notices-page) .site-header { background: transparent; }
         position: relative;
         align-items: center;
         flex-wrap: nowrap;
-        min-height: 77px;
-        padding: 0 calc(var(--notice-gutter) + 24px) 0 calc(var(--notice-gutter) + 113px);
+        min-height: 74px;
+        padding: 0 calc(var(--notice-gutter) + 24px) 0 calc(var(--notice-gutter) + 115px);
     }
-    /* 1px #111 line under the tab row, same width as the list. */
+    /* 1px #111 line under the tab row, across the full width. */
     .notices-page--list .notices-page__toolbar::after {
         content: '';
         position: absolute;
-        right: var(--notice-gutter);
+        right: 0;
         bottom: 0;
-        left: var(--notice-gutter);
+        left: 0;
         height: 1px;
         background: #111;
     }
     .notices-page--list .notices-page__filters {
         position: relative;
         z-index: 1;
+        gap: 32px;
     }
-    /* KOR_Sub1: SUIT Bold 24/1.4 in a 77 tall row (text from 20). The selected tab is shown by colour only. */
+    /* KOR_Sub2: SUIT Bold 22/1.4 in a 74 tall row (text from 20). Selected tab: 3px #111 bar 6px under the text, as wide as the text. */
     .notices-page--list .notices-page__filters button {
-        height: 77px;
+        display: flex;
+        align-items: flex-start;
+        height: 74px;
         padding: 20px 0 0;
         color: #a8a7ac;
-        font: 700 24px/1.4 var(--font-ko);
+        font: 700 22px/1.4 var(--font-ko);
     }
     .notices-page--list .notices-page__filters button[aria-pressed='true'] {
         color: #111;
     }
     .notices-page--list .notices-page__filters button[aria-pressed='true']::after {
-        display: none;
+        top: calc(20px + 1.4em + 6px);
+        bottom: auto;
+        height: 3px;
+        background: #111;
     }
 
     /* List: 1290 centered on white, 20 above/below, 1px #dedede under every row; rows 94. Pagination: no background, then 120 to the footer. */
