@@ -130,7 +130,6 @@
     position: absolute;
     z-index: 2;
     inset: 0;
-    display: none;
 }
 .reservation-footer__car,
 .reservation-footer__rock {
@@ -235,17 +234,15 @@
     right: 42%;
     bottom: 190px;
     width: 158px;
-    aspect-ratio: 157.654/94;
-    overflow: hidden;
+    aspect-ratio: 1626/967;
+    overflow: visible;
 }
 .reservation-footer__rock--two .reservation-footer__rock-image {
-    position: absolute;
-    top: -15.93%;
-    left: -16.61%;
-    width: 132.52%;
-    height: 140.41%;
-    max-width: none;
-    object-fit: fill;
+    position: static;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
 }
 .reservation-footer__rock--two .reservation-footer__rock-eye {
     top: 13.8%;
@@ -305,6 +302,11 @@
     .reservation-footer__rock--two {
         width: 12vw;
         bottom: 145px;
+    }
+}
+@media (min-width: 768px) {
+    .reservation-footer__car:not(.reservation-footer__toy-car) {
+        width: 380px;
     }
 }
 @media (max-width: 767px) {

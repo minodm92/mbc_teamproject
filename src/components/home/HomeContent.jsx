@@ -29,6 +29,7 @@ const driveModels = [
             { left: 70.19, top: 58.25, width: 16.16, height: 41.75, rotation: 0 },
         ],
         shadow: asset('drive-shadow-standard.svg'),
+        contactOffset: 0,
         title: '아웃도어 라이프_데이트립 드라이브',
         copy: '넉넉한 시간과 자유로운 코스로 차량의 주행감과 편의성을 경험해보세요.\n일상 속에서 차량의 매력을 더욱 깊이 느낄 수 있습니다.',
         mobileCopy: '넉넉한 시간과 자유로운 코스로 차량의\n주행감과 편의성을 경험해보세요.',
@@ -44,6 +45,7 @@ const driveModels = [
         shadow: asset('drive-shadow-ioniq5n.svg'),
         vehicleClass: 'is-ioniq5n',
         shadowClass: 'is-ioniq5n',
+        contactOffset: 25,
         title: '하이 퍼포먼스 드라이브_언택트',
         copy: 'N 브랜드의 강렬한 퍼포먼스와 고성능 감성을 직접 경험해보세요.\n공공도로 주행을 통해 역동적인 드라이빙의 즐거움을 느낄 수 있습니다.',
         mobileCopy: 'N 브랜드의 강렬한 퍼포먼스와 GV60\n마그마의 고성능 감성을 직접 경험해보세요.',
@@ -59,9 +61,11 @@ const driveModels = [
         shadow: asset('drive-shadow-casper.svg'),
         vehicleClass: 'is-casper',
         shadowClass: 'is-casper',
+        contactOffset: 24,
         title: '베이직 드라이브',
         copy: '자동차 전문가 Guru의 친절한 설명과 함께 다양한 현대자동차를 직접 시승해보세요.\n차량의 특징과 주행 감각을 보다 쉽고 깊이 있게 경험할 수 있습니다.',
-        mobileCopy: '자동차 전문가 Guru의 친절한 설명과\n함께 다양한 현대자동차를 직접 시승해보세요.',
+        mobileCopy:
+            '자동차 전문가 Guru의 친절한 설명과\n함께 다양한 현대자동차를 직접 시승해보세요.',
     },
     {
         name: 'G90',
@@ -74,6 +78,7 @@ const driveModels = [
         shadow: asset('drive-shadow-g90.svg'),
         vehicleClass: 'is-g90',
         shadowClass: 'is-g90',
+        contactOffset: 53,
         title: '아웃도어 라이프_데이트립 드라이브',
         copy: '자동차 전문가 Guru의 설명과 함께 현대자동차의 다양한 차량을 시승해보세요.\n차량의 특징과 주행 감각을 보다 쉽고 편안하게 경험할 수 있습니다.',
         mobileCopy: '자동차 전문가 Guru의 설명과 함께\n현대자동차의 다양한 차량을 시승해보세요.',
@@ -354,16 +359,23 @@ export default function HomeContent() {
         setSelectedLocation(index);
         const trigger = locationScrollRef.current;
         if (trigger) {
-            const target = trigger.start + (trigger.end - trigger.start) * ((index + 0.5) / locations.length);
+            const target =
+                trigger.start + (trigger.end - trigger.start) * ((index + 0.5) / locations.length);
             locationNavigationRef.current = { target };
             trigger.scroll(target);
             ScrollTrigger.update();
         }
     };
     useLayoutEffect(() => {
-        const cancelNavigation = () => { locationNavigationRef.current = null; };
+        const cancelNavigation = () => {
+            locationNavigationRef.current = null;
+        };
         const handleKeyDown = (event) => {
-            if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(event.key)) {
+            if (
+                ['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' '].includes(
+                    event.key
+                )
+            ) {
                 cancelNavigation();
             }
         };
@@ -372,7 +384,9 @@ export default function HomeContent() {
             cancelNavigation();
             const trigger = locationScrollRef.current;
             if (trigger) {
-                setSelectedLocation(Math.min(locations.length - 1, Math.floor(trigger.progress * locations.length)));
+                setSelectedLocation(
+                    Math.min(locations.length - 1, Math.floor(trigger.progress * locations.length))
+                );
             }
         };
         window.addEventListener('wheel', cancelNavigation, { passive: true, capture: true });
@@ -393,7 +407,8 @@ export default function HomeContent() {
         if (previousLocationRef.current === selectedLocation) return undefined;
         previousLocationRef.current = selectedLocation;
 
-        if (window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches) return undefined;
+        if (window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches)
+            return undefined;
         const image = locationImageRef.current;
         const copy = locationCopyRef.current;
         if (!image || !copy) return undefined;
@@ -420,7 +435,9 @@ export default function HomeContent() {
         const media = gsap.matchMedia();
         media.add('(max-width: 767px)', () => {
             const slides = gsap.utils.toArray('.renewal-drive__slide', drive);
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const prefersReducedMotion = window.matchMedia(
+                '(prefers-reduced-motion: reduce)'
+            ).matches;
             const timelines = [];
 
             slides.forEach((slide) => {
@@ -493,6 +510,11 @@ export default function HomeContent() {
             let isSloganTyping = false;
             let sloganAdvanceFrame;
             let removeSloganBoundary;
+            const resetSloganPresentation = () => {
+                typingSequence?.pause(0);
+                if (sloganTextRef.current) gsap.set(sloganTextRef.current, { text: '' });
+                if (sloganCursorRef.current) gsap.set(sloganCursorRef.current, { opacity: 0 });
+            };
             const holdSloganPosition = () => {
                 if (!isSloganTyping || !sloganPin) return;
                 const target = sloganPin.start + 1;
@@ -504,9 +526,13 @@ export default function HomeContent() {
             let cleanupExperienceWheel;
             let cleanupVehicleExhibitionTransition;
             let cleanupCurrentExhibition;
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const prefersReducedMotion = window.matchMedia(
+                '(prefers-reduced-motion: reduce)'
+            ).matches;
             const image = transition.querySelector('.renewal-location-transition__image');
-            const imageViewport = transition.querySelector('.renewal-location-transition__viewport');
+            const imageViewport = transition.querySelector(
+                '.renewal-location-transition__viewport'
+            );
             const intro = transition.previousElementSibling?.matches('.renewal-intro')
                 ? transition.previousElementSibling
                 : null;
@@ -537,14 +563,20 @@ export default function HomeContent() {
                 const heroCanvas = hero.querySelector('.renewal-hero__canvas');
                 if (prefersReducedMotion) {
                     hero.dataset.heroStep = '4';
-                    copy(4).forEach((word) => { word.style.visibility = 'visible'; });
+                    copy(4).forEach((word) => {
+                        word.style.visibility = 'visible';
+                    });
                     gsap.set(shade, { autoAlpha: 1 });
-                    gsap.set(shadeSubtract, { attr: { x: 688, y: 355, width: 545, height: 319, opacity: 1 } });
+                    gsap.set(shadeSubtract, {
+                        attr: { x: 688, y: 355, width: 545, height: 319, opacity: 1 },
+                    });
                     gsap.set(openingGeometry, { attr: { opacity: 1, transform: '' } });
                 } else {
                     gsap.set(heroCanvas, { autoAlpha: 1 });
                     gsap.set(shade, { autoAlpha: 0 });
-                    gsap.set(shadeSubtract, { attr: { x: 960.5, y: 515.5, width: 0, height: 0, opacity: 1 } });
+                    gsap.set(shadeSubtract, {
+                        attr: { x: 960.5, y: 515.5, width: 0, height: 0, opacity: 1 },
+                    });
                     gsap.set([...copy(2), ...copy(3), ...copy(4)], { autoAlpha: 0 });
                     gsap.set(openingGeometry, { attr: { opacity: 0, transform: '' } });
                     const openingProgress = { value: 0 };
@@ -554,32 +586,50 @@ export default function HomeContent() {
                         return t * t * t * (t * (t * 6 - 15) + 10);
                     };
                     const rectilinearUnion = (rectangles) => {
-                        const rects = rectangles.map(([left, top, right, bottom]) => [
-                            Math.max(0, left), Math.max(0, top),
-                            Math.min(1920, right), Math.min(1080, bottom),
-                        ]).filter(([left, top, right, bottom]) => left < right && top < bottom);
-                        const xs = [...new Set(rects.flatMap(([left, , right]) => [left, right]))].sort((a, b) => a - b);
-                        const ys = [...new Set(rects.flatMap(([, top, , bottom]) => [top, bottom]))].sort((a, b) => a - b);
+                        const rects = rectangles
+                            .map(([left, top, right, bottom]) => [
+                                Math.max(0, left),
+                                Math.max(0, top),
+                                Math.min(1920, right),
+                                Math.min(1080, bottom),
+                            ])
+                            .filter(([left, top, right, bottom]) => left < right && top < bottom);
+                        const xs = [
+                            ...new Set(rects.flatMap(([left, , right]) => [left, right])),
+                        ].sort((a, b) => a - b);
+                        const ys = [
+                            ...new Set(rects.flatMap(([, top, , bottom]) => [top, bottom])),
+                        ].sort((a, b) => a - b);
                         const cells = Array.from({ length: xs.length - 1 }, (_, x) =>
                             Array.from({ length: ys.length - 1 }, (_, y) => {
                                 const midX = (xs[x] + xs[x + 1]) / 2;
                                 const midY = (ys[y] + ys[y + 1]) / 2;
-                                return rects.some(([left, top, right, bottom]) =>
-                                    left < midX && midX < right && top < midY && midY < bottom
+                                return rects.some(
+                                    ([left, top, right, bottom]) =>
+                                        left < midX && midX < right && top < midY && midY < bottom
                                 );
                             })
                         );
                         const edges = [];
                         const add = (fromX, fromY, toX, toY) => {
-                            edges.push({ from: `${fromX},${fromY}`, to: `${toX},${toY}`, x: fromX, y: fromY });
+                            edges.push({
+                                from: `${fromX},${fromY}`,
+                                to: `${toX},${toY}`,
+                                x: fromX,
+                                y: fromY,
+                            });
                         };
                         for (let x = 0; x < cells.length; x += 1) {
                             for (let y = 0; y < cells[x].length; y += 1) {
                                 if (!cells[x][y]) continue;
-                                if (y === 0 || !cells[x][y - 1]) add(xs[x], ys[y], xs[x + 1], ys[y]);
-                                if (x === cells.length - 1 || !cells[x + 1][y]) add(xs[x + 1], ys[y], xs[x + 1], ys[y + 1]);
-                                if (y === cells[x].length - 1 || !cells[x][y + 1]) add(xs[x + 1], ys[y + 1], xs[x], ys[y + 1]);
-                                if (x === 0 || !cells[x - 1][y]) add(xs[x], ys[y + 1], xs[x], ys[y]);
+                                if (y === 0 || !cells[x][y - 1])
+                                    add(xs[x], ys[y], xs[x + 1], ys[y]);
+                                if (x === cells.length - 1 || !cells[x + 1][y])
+                                    add(xs[x + 1], ys[y], xs[x + 1], ys[y + 1]);
+                                if (y === cells[x].length - 1 || !cells[x][y + 1])
+                                    add(xs[x + 1], ys[y + 1], xs[x], ys[y + 1]);
+                                if (x === 0 || !cells[x - 1][y])
+                                    add(xs[x], ys[y + 1], xs[x], ys[y]);
                             }
                         }
                         const byStart = new Map();
@@ -588,7 +638,8 @@ export default function HomeContent() {
                             byStart.get(edge.from).push(index);
                         });
                         const visited = new Set();
-                        const point = (edge) => `${Number(edge.x.toFixed(3))} ${Number(edge.y.toFixed(3))}`;
+                        const point = (edge) =>
+                            `${Number(edge.x.toFixed(3))} ${Number(edge.y.toFixed(3))}`;
                         const loops = [];
                         edges.forEach((first, index) => {
                             if (visited.has(index)) return;
@@ -618,14 +669,31 @@ export default function HomeContent() {
                         const band = 320 * opened + 250 * finish;
                         const stem = 140 * smootherstep(progress / 0.2);
                         const postOffset = 47.9560036663611 * (1 - smootherstep(progress / 0.4));
-                        openingPath.setAttribute('d', rectilinearUnion([
-                            [924 - vertical, 0, 996 + vertical, 355 + stem],
-                            [924 - vertical, 674 - stem, 996 + vertical, 1080],
-                            [735.9560036663611 - horizontal - postOffset, 355, 735.9560036663611, 674],
-                            [1185.043996333639, 355, 1185.043996333639 + horizontal + postOffset, 674],
-                            [735.9560036663611 - horizontal, 490.7871674491393 - band,
-                                1185.043996333639 + horizontal, 532.2222222222222 + band],
-                        ]));
+                        openingPath.setAttribute(
+                            'd',
+                            rectilinearUnion([
+                                [924 - vertical, 0, 996 + vertical, 355 + stem],
+                                [924 - vertical, 674 - stem, 996 + vertical, 1080],
+                                [
+                                    735.9560036663611 - horizontal - postOffset,
+                                    355,
+                                    735.9560036663611,
+                                    674,
+                                ],
+                                [
+                                    1185.043996333639,
+                                    355,
+                                    1185.043996333639 + horizontal + postOffset,
+                                    674,
+                                ],
+                                [
+                                    735.9560036663611 - horizontal,
+                                    490.7871674491393 - band,
+                                    1185.043996333639 + horizontal,
+                                    532.2222222222222 + band,
+                                ],
+                            ])
+                        );
                     };
                     const heroTimeline = gsap.timeline({
                         defaults: { ease: 'none' },
@@ -649,29 +717,59 @@ export default function HomeContent() {
                     heroTimeline
                         .addLabel('step-01', 0)
                         .to(shade, { autoAlpha: 1, duration: 0.35 }, 1)
-                        .to(shadeSubtract, {
-                            attr: { x: 688, y: 355, width: 545, height: 321 },
-                            duration: 0.65,
-                        }, 1)
+                        .to(
+                            shadeSubtract,
+                            {
+                                attr: { x: 688, y: 355, width: 545, height: 321 },
+                                duration: 0.65,
+                            },
+                            1
+                        )
                         .to(copy(2), { autoAlpha: 1, duration: 0.2 }, 1.75)
-                        .call(() => { hero.dataset.heroStep = '2'; }, [], stepTwoEnd)
+                        .call(
+                            () => {
+                                hero.dataset.heroStep = '2';
+                            },
+                            [],
+                            stepTwoEnd
+                        )
                         .addLabel('step-02-hold', stepTwoEnd)
                         .to(copy(2), { autoAlpha: 0, duration: 0.2 }, stepThreeStart)
                         .to(copy(3), { autoAlpha: 1, duration: 0.2 }, stepThreeStart)
-                        .call(() => { hero.dataset.heroStep = '3'; }, [], stepThreeEnd)
+                        .call(
+                            () => {
+                                hero.dataset.heroStep = '3';
+                            },
+                            [],
+                            stepThreeEnd
+                        )
                         .addLabel('step-03-hold', stepThreeEnd)
                         .to(copy(3), { autoAlpha: 0, duration: 0.2 }, stepFourStart)
                         .to(copy(4), { autoAlpha: 1, duration: 0.2 }, stepFourStart)
                         .to(shadeSubtract, { attr: { height: 319 }, duration: 0.65 }, stepFourStart)
-                        .to(openingGeometry, { attr: { opacity: 1 }, duration: 0.65 }, stepFourStart + 0.35)
-                        .call(() => { hero.dataset.heroStep = '4'; }, [], stepFourEnd)
+                        .to(
+                            openingGeometry,
+                            { attr: { opacity: 1 }, duration: 0.65 },
+                            stepFourStart + 0.35
+                        )
+                        .call(
+                            () => {
+                                hero.dataset.heroStep = '4';
+                            },
+                            [],
+                            stepFourEnd
+                        )
                         .addLabel('step-04-hold', stepFourEnd)
                         .to(shade, { autoAlpha: 0, duration: 0.35 }, openingStart)
-                        .to(openingProgress, {
-                            value: 1,
-                            duration: openingDuration,
-                            onUpdate: updateOpeningGeometry,
-                        }, openingStart)
+                        .to(
+                            openingProgress,
+                            {
+                                value: 1,
+                                duration: openingDuration,
+                                onUpdate: updateOpeningGeometry,
+                            },
+                            openingStart
+                        )
                         .addLabel('intro-full', introFullStart)
                         .to({}, { duration: introFullHold }, introFullStart)
                         .addLabel('intro-hold', heroTimelineDuration);
@@ -679,7 +777,14 @@ export default function HomeContent() {
                 }
             }
             const locationButtonHandlers = [];
-            if (!prefersReducedMotion && intro && image && imageViewport && target && locationSection) {
+            if (
+                !prefersReducedMotion &&
+                intro &&
+                image &&
+                imageViewport &&
+                target &&
+                locationSection
+            ) {
                 const bounds = () => {
                     const destination = target.getBoundingClientRect();
                     const section = locationSection.getBoundingClientRect();
@@ -737,8 +842,10 @@ export default function HomeContent() {
                     const destination = bounds();
                     const x = destination.x * progress;
                     const y = destination.y * progress;
-                    const width = viewportWidth() + (destination.width - viewportWidth()) * progress;
-                    const height = viewportHeight() + (destination.height - viewportHeight()) * progress;
+                    const width =
+                        viewportWidth() + (destination.width - viewportWidth()) * progress;
+                    const height =
+                        viewportHeight() + (destination.height - viewportHeight()) * progress;
                     const cropProgress = Math.min(1, progress / 0.15);
                     const lowerRightY = 1 - 0.1493 * cropProgress;
                     const lowerRightX = 1 - 0.082609 * cropProgress;
@@ -780,7 +887,11 @@ export default function HomeContent() {
                     { clipPath: () => clipAtProgress(0.15), duration: 0.15 },
                     0
                 );
-                timeline.to(imageViewport, { clipPath: () => clipAtProgress(1), duration: 0.85 }, 0.15);
+                timeline.to(
+                    imageViewport,
+                    { clipPath: () => clipAtProgress(1), duration: 0.85 },
+                    0.15
+                );
                 // Cover the location rail/links only while travelling; restore on arrival.
                 // A positive start keeps the intro copy above the image before shrinking.
                 timeline.set(imageViewport, { zIndex: 3 }, 0.000001);
@@ -791,7 +902,9 @@ export default function HomeContent() {
                 const locationRail = locationSection.querySelector('.renewal-location__rail');
                 gsap.set(locationRail, { display: 'none' });
                 const syncLocationRail = (self) => {
-                    gsap.set(locationRail, { display: self.scroll() >= self.start ? 'block' : 'none' });
+                    gsap.set(locationRail, {
+                        display: self.scroll() >= self.start ? 'block' : 'none',
+                    });
                 };
                 // Match the 580 × 320 location asset's lower-right diagonal cut.
                 const updateLocation = (self) => {
@@ -815,7 +928,10 @@ export default function HomeContent() {
                     invalidateOnRefresh: true,
                     onUpdate: updateLocation,
                     onEnter: syncLocationRail,
-                    onEnterBack: syncLocationRail,
+                    onEnterBack: (self) => {
+                        syncLocationRail(self);
+                        resetSloganPresentation();
+                    },
                     onLeaveBack: syncLocationRail,
                     onRefresh: (self) => {
                         locationNavigationRef.current = null;
@@ -825,14 +941,18 @@ export default function HomeContent() {
                 });
                 // pinReparent moves the section outside React's delegated event root.
                 // Keep its existing tabs clickable while that pin is active.
-                locationButtonHandlers.push(...[...locationSection.querySelectorAll('.renewal-location__list button')]
-                    .map((button, index) => {
-                        const handleClick = () => {
-                            if (locationSection.parentElement === document.body) selectLocation(index);
-                        };
-                        button.addEventListener('click', handleClick);
-                        return () => button.removeEventListener('click', handleClick);
-                    }));
+                locationButtonHandlers.push(
+                    ...[...locationSection.querySelectorAll('.renewal-location__list button')].map(
+                        (button, index) => {
+                            const handleClick = () => {
+                                if (locationSection.parentElement === document.body)
+                                    selectLocation(index);
+                            };
+                            button.addEventListener('click', handleClick);
+                            return () => button.removeEventListener('click', handleClick);
+                        }
+                    )
+                );
             }
             const slogan = sloganRef.current;
             const sloganText = sloganTextRef.current;
@@ -882,6 +1002,7 @@ export default function HomeContent() {
                         isSloganTyping = true;
                         setHomeScrollLocked(true);
                         holdSloganPosition();
+                        resetSloganPresentation();
                         typingSequence.restart();
                     },
                     onLeaveBack: () => {
@@ -891,14 +1012,14 @@ export default function HomeContent() {
                         }
                         isSloganTyping = false;
                         setHomeScrollLocked(false);
-                        typingSequence.pause(0);
-                        gsap.set(sloganText, { text: '' });
-                        gsap.set(sloganCursor, { opacity: 0 });
                     },
                 });
                 window.addEventListener('scroll', holdSloganPosition);
                 removeSloganBoundary = registerHomeScrollBoundary(
-                    (from, target) => from <= sloganPin.start && target > sloganPin.start ? sloganPin.start + 1 : target,
+                    (from, target) =>
+                        from <= sloganPin.start && target > sloganPin.start
+                            ? sloganPin.start + 1
+                            : target,
                     () => [sloganPin.start, sloganPin.end]
                 );
             }
@@ -919,8 +1040,6 @@ export default function HomeContent() {
                 ]);
                 const revealStart = 0.25;
                 const driveCopyVisibility = driveSlides.map((_, index) => index === 0);
-                let driveMotionDirection = -1;
-                let previousTrackX = 0;
                 const centeredHold = 0.5;
                 const driveTargets = [];
                 const measureDriveLayout = () => {
@@ -953,11 +1072,13 @@ export default function HomeContent() {
                     );
                 const refreshDriveStage = () => {
                     measureDriveLayout();
-                    gsap.set(driveStage, { height: driveSection.offsetHeight + driveScrollDistance() });
+                    gsap.set(driveStage, {
+                        height: driveSection.offsetHeight + driveScrollDistance(),
+                    });
                 };
                 gsap.set(driveSection, { position: 'sticky', top: 0 });
                 refreshDriveStage();
-                const setDriveCopyVisibility = (index, shouldShow, motionDirection) => {
+                const setDriveCopyVisibility = (index, shouldShow) => {
                     if (driveCopyVisibility[index] === shouldShow) return;
                     driveCopyVisibility[index] = shouldShow;
                     const targets = driveCopies[index];
@@ -970,14 +1091,9 @@ export default function HomeContent() {
                         });
                         gsap.fromTo(
                             targets,
+                            { opacity: 0 },
                             {
-                                clipPath:
-                                    motionDirection < 0
-                                        ? 'inset(-4px 0% -4px 100%)'
-                                        : 'inset(-4px 100% -4px 0%)',
-                            },
-                            {
-                                clipPath: 'inset(-4px 0% -4px 0%)',
+                                opacity: 1,
                                 duration: 0.35,
                                 ease: 'power1.out',
                             }
@@ -986,10 +1102,7 @@ export default function HomeContent() {
                     }
 
                     gsap.to(targets, {
-                        clipPath:
-                            motionDirection < 0
-                                ? 'inset(-4px 100% -4px 0%)'
-                                : 'inset(-4px 0% -4px 100%)',
+                        opacity: 0,
                         duration: 0.28,
                         ease: 'power1.in',
                         onComplete: () => {
@@ -1002,10 +1115,6 @@ export default function HomeContent() {
                 const updateDriveCopy = () => {
                     const viewportWidth = window.innerWidth;
                     const trackX = Number(gsap.getProperty(driveTrack, 'x')) || 0;
-                    if (Math.abs(trackX - previousTrackX) > 0.1) {
-                        driveMotionDirection = trackX < previousTrackX ? -1 : 1;
-                    }
-                    previousTrackX = trackX;
                     driveWheels.forEach((wheels) => {
                         wheels.forEach((wheel) => {
                             const wheelDiameter = wheel.offsetWidth * 0.9;
@@ -1031,16 +1140,14 @@ export default function HomeContent() {
                         const shouldShow = isEntering
                             ? visibleRatio >= revealStart
                             : visibleRatio > revealStart;
-                        setDriveCopyVisibility(index, shouldShow, driveMotionDirection);
+                        setDriveCopyVisibility(index, shouldShow);
                     });
                 };
                 gsap.set(driveCopies.slice(1).flat(), {
                     autoAlpha: 0,
-                    clipPath: 'inset(-4px 0% -4px 100%)',
                 });
                 gsap.set(driveCopies[0], {
                     autoAlpha: 1,
-                    clipPath: 'inset(-4px 0% -4px 0%)',
                 });
                 let driveExitTimer;
                 let driveExitLocked = false;
@@ -1087,14 +1194,22 @@ export default function HomeContent() {
                         })
                         .to({}, { duration: centeredHold });
                 });
-                const removeDriveBoundary = registerHomeScrollBoundary((from, target) => {
-                    const trigger = driveTimeline.scrollTrigger;
-                    if (target > from && from <= trigger.end && target >= trigger.end && !driveExitAllowed) {
-                        holdDriveExit(trigger);
-                        return trigger.end - 1;
-                    }
-                    return target;
-                }, () => [driveTimeline.scrollTrigger.start, driveTimeline.scrollTrigger.end]);
+                const removeDriveBoundary = registerHomeScrollBoundary(
+                    (from, target) => {
+                        const trigger = driveTimeline.scrollTrigger;
+                        if (
+                            target > from &&
+                            from <= trigger.end &&
+                            target >= trigger.end &&
+                            !driveExitAllowed
+                        ) {
+                            holdDriveExit(trigger);
+                            return trigger.end - 1;
+                        }
+                        return target;
+                    },
+                    () => [driveTimeline.scrollTrigger.start, driveTimeline.scrollTrigger.end]
+                );
                 const keepDriveExitPosition = () => {
                     if (!driveExitLocked) return;
                     const trigger = driveTimeline.scrollTrigger;
@@ -1121,7 +1236,7 @@ export default function HomeContent() {
                         wheel.style.removeProperty('--wheel-roll');
                     });
                     gsap.killTweensOf(driveCopies.flat());
-                    gsap.set(driveCopies.flat(), { clearProps: 'clipPath,opacity,visibility' });
+                    gsap.set(driveCopies.flat(), { clearProps: 'opacity,visibility' });
                 };
             }
             const experienceSection = experienceRef.current;
@@ -1228,7 +1343,10 @@ export default function HomeContent() {
                 let vehicleExhibitionDescriptionTrigger = null;
                 const removeDescriptionBoundary = registerHomeScrollBoundary(
                     (_from, target) => target,
-                    () => [vehicleExhibitionSectionPin.start - 1, vehicleExhibitionSectionPin.end + 1]
+                    () => [
+                        vehicleExhibitionSectionPin.start - 1,
+                        vehicleExhibitionSectionPin.end + 1,
+                    ]
                 );
                 let isDescriptionExitLocked = false;
                 let allowDescriptionExit = false;
@@ -1475,8 +1593,7 @@ export default function HomeContent() {
                     <br />
                     이해와 취향을 넓힐 수 있는 다양한 경험을 제공합니다. 세심하게
                     <br />
-                    구성된 전시와 프로그램을 통해 자동차는 물론 디자인과 예술까지 누구나
-                    자신만의
+                    구성된 전시와 프로그램을 통해 자동차는 물론 디자인과 예술까지 누구나 자신만의
                     <br />
                     방식으로 몰입할 수 있는 특별한 순간을 만나보세요.
                 </p>
@@ -1525,7 +1642,11 @@ export default function HomeContent() {
                         <img
                             ref={locationImageRef}
                             className={selectedLocation === 0 ? 'is-goyang' : ''}
-                            src={selectedLocation === 0 ? asset('intro.svg') : locationDetail.image ?? location.image}
+                            src={
+                                selectedLocation === 0
+                                    ? asset('intro.svg')
+                                    : (locationDetail.image ?? location.image)
+                            }
                             alt={`${location.name} 공간`}
                         />
                         <div ref={locationCopyRef}>
@@ -1555,60 +1676,63 @@ export default function HomeContent() {
                 </section>
             </div>
             <div className="renewal-drive-stage">
-            <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
-                <div className="renewal-drive__track">
-                    {driveModels.map((item) => (
-                        <article
-                            className={`renewal-drive__slide ${item.shadowClass ?? ''}`}
-                            key={item.name}
-                        >
-                            <h2>{item.name}</h2>
-                            <div
-                                className={`renewal-drive__vehicle-frame ${item.vehicleClass ?? ''}`}
+                <section className="renewal-drive" ref={driveRef} aria-label="시승 프로그램">
+                    <div className="renewal-drive__track">
+                        {driveModels.map((item) => (
+                            <article
+                                className={`renewal-drive__slide ${item.shadowClass ?? ''}`}
+                                key={item.name}
+                                style={{
+                                    '--drive-vehicle-contact-offset': `${item.contactOffset}px`,
+                                }}
                             >
-                                <div className="renewal-drive__vehicle-body-frame">
-                                    <img
-                                        className="renewal-drive__vehicle-body"
-                                        src={item.body}
-                                        alt={`${item.name} 시승 차량`}
-                                    />
-                                </div>
-                                {item.wheels.map((wheel, wheelIndex) => (
-                                    <span
-                                        className="renewal-drive__wheel-position"
-                                        key={`${item.name}-wheel-${wheelIndex}`}
-                                        style={{
-                                            '--wheel-left': `${wheel.left}%`,
-                                            '--wheel-top': `${wheel.top}%`,
-                                            '--wheel-width': `${wheel.width}%`,
-                                            '--wheel-height': `${wheel.height}%`,
-                                            '--wheel-rotation': `${wheel.rotation}deg`,
-                                        }}
-                                    >
+                                <h2>{item.name}</h2>
+                                <div
+                                    className={`renewal-drive__vehicle-frame ${item.vehicleClass ?? ''}`}
+                                >
+                                    <div className="renewal-drive__vehicle-body-frame">
                                         <img
-                                            className="renewal-drive__wheel"
-                                            src={item.wheel}
-                                            alt=""
-                                            aria-hidden="true"
+                                            className="renewal-drive__vehicle-body"
+                                            src={item.body}
+                                            alt={`${item.name} 시승 차량`}
                                         />
-                                    </span>
-                                ))}
-                            </div>
-                            <img
-                                className={`renewal-drive__shadow ${item.shadowClass ?? ''}`}
-                                src={item.shadow}
-                                alt=""
-                                aria-hidden="true"
-                            />
-                            <div className="renewal-drive__copy">
-                                <h3>{item.title}</h3>
-                                <p className="renewal-drive__copy-desktop">{item.copy}</p>
-                                <p className="renewal-drive__copy-mobile">{item.mobileCopy}</p>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            </section>
+                                    </div>
+                                    {item.wheels.map((wheel, wheelIndex) => (
+                                        <span
+                                            className="renewal-drive__wheel-position"
+                                            key={`${item.name}-wheel-${wheelIndex}`}
+                                            style={{
+                                                '--wheel-left': `${wheel.left}%`,
+                                                '--wheel-top': `${wheel.top}%`,
+                                                '--wheel-width': `${wheel.width}%`,
+                                                '--wheel-height': `${wheel.height}%`,
+                                                '--wheel-rotation': `${wheel.rotation}deg`,
+                                            }}
+                                        >
+                                            <img
+                                                className="renewal-drive__wheel"
+                                                src={item.wheel}
+                                                alt=""
+                                                aria-hidden="true"
+                                            />
+                                        </span>
+                                    ))}
+                                </div>
+                                <img
+                                    className={`renewal-drive__shadow ${item.shadowClass ?? ''}`}
+                                    src={item.shadow}
+                                    alt=""
+                                    aria-hidden="true"
+                                />
+                                <div className="renewal-drive__copy">
+                                    <h3>{item.title}</h3>
+                                    <p className="renewal-drive__copy-desktop">{item.copy}</p>
+                                    <p className="renewal-drive__copy-mobile">{item.mobileCopy}</p>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
             </div>
             <section
                 className="renewal-experience"
@@ -1708,28 +1832,28 @@ export default function HomeContent() {
                 <div className="renewal-vehicle-exhibition-card-list__items">
                     {exhibitionVehicles.map(
                         ({ name, powertrain, color, image, mobileImage, position }) => (
-                        <article
-                            className={`renewal-vehicle-exhibition-card-list__item ${position}`}
-                            key={name}
-                        >
-                            <img src={asset(image)} alt={name} />
-                            <img
-                                className="renewal-vehicle-exhibition-card-list__mobile-image"
-                                src={asset(mobileImage)}
-                                alt={name}
-                            />
-                            <h3>{name}</h3>
-                            <dl>
-                                <div>
-                                    <dt>POWERTRAIN</dt>
-                                    <dd>{powertrain}</dd>
-                                </div>
-                                <div>
-                                    <dt>EXTERIOR COLOR</dt>
-                                    <dd>{color}</dd>
-                                </div>
-                            </dl>
-                        </article>
+                            <article
+                                className={`renewal-vehicle-exhibition-card-list__item ${position}`}
+                                key={name}
+                            >
+                                <img src={asset(image)} alt={name} />
+                                <img
+                                    className="renewal-vehicle-exhibition-card-list__mobile-image"
+                                    src={asset(mobileImage)}
+                                    alt={name}
+                                />
+                                <h3>{name}</h3>
+                                <dl>
+                                    <div>
+                                        <dt>POWERTRAIN</dt>
+                                        <dd>{powertrain}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>EXTERIOR COLOR</dt>
+                                        <dd>{color}</dd>
+                                    </div>
+                                </dl>
+                            </article>
                         )
                     )}
                 </div>
