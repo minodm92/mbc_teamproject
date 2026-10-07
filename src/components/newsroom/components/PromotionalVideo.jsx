@@ -4,7 +4,7 @@ const promotionalVideoUrl = 'https://youtu.be/PFf2gwcMDwI?si=gSPCtq9IZYukK7-q';
 
 export default function PromotionalVideo() {
     return (
-        <section className="newsroom-promo" aria-labelledby="newsroom-promo-title">
+        <section className="newsroom-promo" aria-labelledby="newsroom-promo-title" data-header-theme="dark">
             <div className="newsroom-promo__copy">
                 <h2 className="newsroom-promo__title" id="newsroom-promo-title">
                     PROMOTIONAL VIDEO

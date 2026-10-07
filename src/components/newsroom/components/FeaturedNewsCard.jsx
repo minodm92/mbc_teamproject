@@ -20,16 +20,21 @@ const featuredImages = {
     'news-04': { src: news04Featured, width: '187.87%', height: '143.72%', left: '-46.37%', top: '-21.97%' },
 };
 
-export default function FeaturedNewsCard({ article }) {
+export default function FeaturedNewsCard({ article, isClone = false }) {
     const branchName = Object.keys(branchNames).find((name) => article.location.includes(name));
     const locationText = branchName ? branchNames[branchName] : `현대 모터스튜디오 ${article.location}`;
     const featured = featuredImages[article.id];
 
     return (
-        <article className="newsroom-feature-card">
+        <article
+            className={`newsroom-feature-card${isClone ? ' newsroom-feature-card--clone' : ''}`}
+            data-header-theme="dark"
+            aria-hidden={isClone || undefined}
+        >
             <Link
                 className="newsroom-feature-card__link"
                 to={paths.newsroomArticle(article.id)}
+                tabIndex={isClone ? -1 : undefined}
                 aria-label={`${article.title} · ${article.location} · ${article.date}`}
             >
                 <picture>

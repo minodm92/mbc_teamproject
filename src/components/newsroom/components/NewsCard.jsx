@@ -35,7 +35,7 @@ export default function NewsCard({ article, variant = 'default', listPage = 1 })
                 to={`${paths.newsroomArticle(article.id)}?page=${listPage}`}
                 aria-label={`${article.title} · ${article.location} · ${article.date}`}
             >
-                <span className="newsroom-card__media">
+                <span className="newsroom-card__media" data-header-theme="dark">
                     <img
                         className="newsroom-card__image"
                         src={article.image}
