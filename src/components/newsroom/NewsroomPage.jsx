@@ -30,7 +30,7 @@ export function NewsroomPage() {
     return (
         <main className="newsroom-page">
             <section className="newsroom-intro" aria-label="뉴스룸">
-                <div className="newsroom-hero">
+                <div className="newsroom-hero" data-header-theme="dark">
                     <img
                         className="newsroom-hero__image"
                         src={heroNight}

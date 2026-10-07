@@ -26,7 +26,7 @@ export default function FeaturedNewsCard({ article }) {
     const featured = featuredImages[article.id];
 
     return (
-        <article className="newsroom-feature-card">
+        <article className="newsroom-feature-card" data-header-theme="dark">
             <Link
                 className="newsroom-feature-card__link"
                 to={paths.newsroomArticle(article.id)}
