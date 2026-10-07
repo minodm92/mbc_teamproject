@@ -1,5 +1,7 @@
 export default function NewsroomPagination({ currentPage, pageCount, onPageChange }) {
-    const pages = Array.from({ length: pageCount }, (_, index) => index + 1);
+    const groupStart = Math.floor((currentPage - 1) / 10) * 10 + 1;
+    const groupEnd = Math.min(groupStart + 9, pageCount);
+    const pages = Array.from({ length: groupEnd - groupStart + 1 }, (_, index) => groupStart + index);
     const hasPrev = currentPage > 1;
     const hasNext = currentPage < pageCount;
 

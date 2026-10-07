@@ -475,3 +475,13 @@
     outline: 2px solid #d00000;
     outline-offset: 3px;
 }
+@media (max-width: 767px) {
+    .newsroom-pagination {
+        gap: 4px;
+    }
+
+    .newsroom-pagination button {
+        width: 32px;
+        height: 32px;
+    }
+}
