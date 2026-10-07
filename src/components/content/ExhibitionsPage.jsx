@@ -12,6 +12,10 @@ const exhibitionPreview = [
   [7, 961, 911, 122, 167], [8, 1227, 737, 229, 162], [9, 1530, 662, 96, 93],
   [10, 1456, 477, 128, 140], [11, 1520, 264, 142, 100], [12, 1281, 186, 182, 204],
 ];
+const exhibitionPreviewMobileRails = [
+  ['top', ['preview-01', 'preview-02', 'preview-03', 'preview-04', 'preview-05', 'preview-06']],
+  ['bottom', ['preview-07', 'preview-08', 'preview-09', 'preview-10', 'preview-11', 'preview-12', 'preview-expanded']],
+];
 const exhibitionPreviewDepth = [
   { delay: .015, end: 1.12, travel: 650, scale: 1.12, drift: .18, initialZ: -120, zTravel: 1000, zStart: .075, zDuration: .18 },
   { delay: .035, end: 1.24, travel: 610, scale: 1.3, drift: .25, initialZ: -180, zTravel: 1100, zStart: .285, zDuration: .18 },
@@ -229,7 +233,10 @@ export default function ExhibitionsPage() {
         fadeAtViewport(introTitle, 45);
         fadeAtViewport(introDescription, 75);
 
-        previewImages.forEach((image, index) => fadeAtViewport(image, index * 12));
+        previewImages.forEach((image) => {
+          image.style.opacity = '1';
+          image.style.transform = 'none';
+        });
         previewTitle.style.transform = 'none';
         fadeAtViewport(previewTitle, 120);
         previewExpandedImage.style.opacity = '0';
@@ -536,7 +543,7 @@ export default function ExhibitionsPage() {
     </section>
     <section className="exhibition-intro exhibition-reveal"><div><p className="exhibition-intro__eyebrow">보는 것을 넘어, 경험으로 이어지는 전시</p><div className="exhibition-intro__title-spacer" aria-hidden="true" /><div className="exhibition-intro__title-frame"><h2 className="exhibition-intro__title-visual" aria-label="MORE THAN JUST SEEING"><span className="exhibition-intro__title-line"><span className="exhibition-intro__title-layout" aria-hidden="true">MORE THAN</span><span className="exhibition-intro__title-type" aria-hidden="true" /></span><span className="exhibition-intro__title-line"><span className="exhibition-intro__title-layout" aria-hidden="true">JUST SEEING</span><span className="exhibition-intro__title-type" aria-hidden="true" /></span></h2></div><div className="exhibition-intro__english-mask"><p className="exhibition-intro__english">Experience mobility beyond simply seeing, through technology and interaction.<br />Discover new perspectives through culture and art.</p></div></div></section>
     <section className="exhibition-preview exhibition-reveal" aria-label="전시 이미지 미리보기">
-      <div className="exhibition-preview__canvas">{exhibitionPreview.map(([number, x, y, width, height]) => <img className="exhibition-preview__image" key={number} src={exhibitionImage(`preview-${String(number).padStart(2, '0')}`)} alt="" loading="lazy" style={{ '--x': `${x / 19.2}%`, '--y': `${y / 10.8}%`, '--w': `${width / 19.2}%`, '--h': `${height / 10.8}%` }} />)}<h2><span>EXPERIENCE,</span><span>UNFOLDED</span></h2><img className="exhibition-preview__expanded-image" src={exhibitionImage('preview-expanded')} alt="현대 모터스튜디오의 몰입형 전시 공간" loading="lazy" /></div>
+      <div className="exhibition-preview__canvas">{exhibitionPreview.map(([number, x, y, width, height]) => <img className="exhibition-preview__image" key={number} src={exhibitionImage(`preview-${String(number).padStart(2, '0')}`)} alt="" loading="lazy" style={{ '--x': `${x / 19.2}%`, '--y': `${y / 10.8}%`, '--w': `${width / 19.2}%`, '--h': `${height / 10.8}%` }} />)}{exhibitionPreviewMobileRails.map(([rail, images]) => <div className={`exhibition-preview__rail exhibition-preview__rail--${rail}`} key={rail} aria-hidden="true"><div className="exhibition-preview__rail-track">{[0, 1].map((copy) => <div className="exhibition-preview__rail-group" key={`${rail}-${copy}`}>{images.map((name) => <img src={exhibitionImage(name)} alt="" loading="lazy" key={`${rail}-${copy}-${name}`} />)}</div>)}</div></div>)}<h2><span>EXPERIENCE,</span><span>UNFOLDED</span></h2><img className="exhibition-preview__expanded-image" src={exhibitionImage('preview-expanded')} alt="현대 모터스튜디오의 몰입형 전시 공간" loading="lazy" /></div>
     </section>
     <section className="exhibition-editorial exhibition-editorial--feature exhibition-reveal"><div className="exhibition-editorial__stage"><div className="exhibition-editorial__copy"><h2>DON'T JUST LOOK.<br />EXPERIENCE IT.</h2><p>보고 끝나는 전시가 아닌, 직접 움직이고<br />참여하며 모빌리티를 발견하는 경험.<br />자동차의 기술과 제작 과정부터 몰입형 콘텐츠까지<br />다양한 방식으로 자동차를 경험해 보세요.</p></div><img src={exhibitionImage('feature')} alt="현대 모터스튜디오 전시 공간" loading="lazy" /></div></section>
     <div className="exhibition-sequence"><div className="exhibition-sequence__viewport"><div className="exhibition-sequence__track">{exhibitionScenes.map((scene) => <section className={`exhibition-scene exhibition-scene--${scene.image}`} key={scene.image} aria-label={scene.label || scene.title}><div className="exhibition-scene__frame"><img src={exhibitionImage(scene.image)} alt="" loading="lazy" /><div className="exhibition-scene__shade" /><div className="exhibition-scene__copy"><div className="exhibition-scene__text-mask"><h2>{scene.title}</h2></div><div className="exhibition-scene__text-mask"><p>{scene.description}</p></div></div></div></section>)}</div></div></div>
