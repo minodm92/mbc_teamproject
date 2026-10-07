@@ -18,6 +18,12 @@ const membershipTabs = [
     ['benefits', '혜택 안내'],
     ['locations', '이용·라운지 안내'],
 ];
+// 탭별 히어로 제목·사진 (feature/motorstudio-mobile.v2 708ab11과 동일한 동작)
+const membershipHeroByTab = {
+    intro: ['MEMBERSHIP', membershipHeroImage],
+    benefits: ['혜택 안내', categoryBenefitsImage],
+    locations: ['이용·라운지 안내', categoryLocationsImage],
+};
 
 const categories = [
     [
@@ -163,6 +169,7 @@ export default function MembershipPage() {
     // 예전 '가입 안내' 탭 링크(?tab=join)는 멤버십 안내 탭의 가입 안내 섹션으로 보낸다.
     const activeTab = membershipTabs.some(([id]) => id === tabParam) ? tabParam : 'intro';
     const currentTabLabel = membershipTabs.find(([id]) => id === activeTab)[1];
+    const [heroTitle, heroImage] = membershipHeroByTab[activeTab] || membershipHeroByTab.intro;
     const [activeLounge, setActiveLounge] = useState('seoul');
     const tabsRef = useRef(null);
     const joinRef = useRef(null);
@@ -211,7 +218,7 @@ export default function MembershipPage() {
                 className="membership-hero"
                 aria-labelledby="membership-title"
                 data-header-theme="dark"
-                style={{ '--membership-hero-image': `url("${membershipHeroImage}")` }}
+                style={{ '--membership-hero-image': `url("${heroImage}")` }}
             >
                 <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
                     <Link to={paths.home}>HOME</Link>
@@ -228,7 +235,7 @@ export default function MembershipPage() {
                         </>
                     )}
                 </nav>
-                <h1 id="membership-title">MEMBERSHIP</h1>
+                <h1 id="membership-title">{heroTitle}</h1>
                 <p className="membership-hero__intro">
                     공간과 모빌리티, 문화를 더 가까이
                     <br />
