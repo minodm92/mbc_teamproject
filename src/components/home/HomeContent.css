@@ -1598,6 +1598,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     --drive-content-offset: max(0px, calc((100svh - 1080px) / 2));
     --drive-copy-offset: 0px;
     --drive-vehicle-offset: 0px;
+    --drive-vehicle-contact-offset: 0px;
     --drive-copy-top: min(80.463svh, 869px);
     --drive-vehicle-bottom: min(72.6852svh, 785px);
     --drive-shadow-top: min(70.3981svh, 760.3px);
@@ -1643,7 +1644,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
 .renewal-drive__vehicle-frame {
     position: absolute;
     z-index: 2;
-    top: calc(min(25svh, 270px) + 10px + var(--drive-content-offset) + var(--drive-group-offset));
+    top: calc(min(25svh, 270px) + 10px + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
     left: calc(50% + var(--drive-vehicle-offset));
     width: min(128.8889svh, 1392px);
     aspect-ratio: 1392/515;
@@ -1693,7 +1694,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     transform-origin: center top;
 }
 .renewal-drive__vehicle-frame.is-ioniq5n {
-    top: calc(min(20.1852svh, 190px) + var(--drive-content-offset) + var(--drive-group-offset));
+    top: calc(min(20.1852svh, 190px) + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
     width: min(135.0926svh, 1459px);
     aspect-ratio: 1459/591.6418;
 }
@@ -1701,7 +1702,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     height: 92.6236%;
 }
 .renewal-drive__vehicle-frame.is-casper {
-    top: calc(min(17.963svh, 194px) + var(--drive-content-offset) + var(--drive-group-offset));
+    top: calc(min(17.963svh, 194px) + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
     width: min(113.7037svh, 1228px);
     aspect-ratio: 1228/571;
 }
@@ -1716,8 +1717,18 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
 .renewal-drive__shadow.is-casper {
     width: min(103.7963svh, 1121px);
 }
+@media (min-width: 901px) {
+    .renewal-drive__shadow,
+    .renewal-drive__shadow.is-ioniq5n,
+    .renewal-drive__shadow.is-casper,
+    .renewal-drive__shadow.is-g90 {
+        top: auto;
+        bottom: calc(100% - var(--drive-copy-top) - var(--drive-content-offset) + 50px);
+        transform-origin: center bottom;
+    }
+}
 .renewal-drive__vehicle-frame.is-g90 {
-    top: calc(min(21.1481svh, 228.4px) + var(--drive-content-offset) + var(--drive-group-offset));
+    top: calc(min(21.1481svh, 228.4px) + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
     width: min(133.7963svh, 1445px);
     aspect-ratio: 1445/522.572;
 }
