@@ -698,3 +698,21 @@
         min-height: 40px;
     }
 }
+
+/* Phones (≤767): hero like the exhibitions mobile hero — 520 tall, photo cover/centre, copy 15 from the left and 30 above the bottom.
+   Overlay: 30% black + fade from 53% to 80% black (same as PC). 768–1100 keeps the rules above. */
+@media (max-width: 767px) {
+    .newsroom-hero {
+        height: 520px;
+    }
+
+    .newsroom-hero::after {
+        background:
+            linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+            linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+    }
+
+    .newsroom-hero__copy {
+        bottom: 30px;
+    }
+}
