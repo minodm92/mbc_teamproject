@@ -99,6 +99,18 @@
   pointer-events: none;
 }
 
+@keyframes exhibition-preview-rail-left {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes exhibition-preview-rail-right {
+  from { transform: translate3d(-50%, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+
+.exhibition-preview__rail { display: none; }
+
 .exhibition-editorial { position: relative; height: 1000px; background: #fff; }
 .exhibition-editorial__copy { position: absolute; z-index: 1; }
 .exhibition-editorial h2 { font-size: 80px; line-height: 1.1; }
@@ -392,28 +404,50 @@
     perspective: none;
   }
   .exhibition-page .exhibition-preview__image {
-    left: var(--mobile-x) !important;
-    top: var(--mobile-y) !important;
-    width: var(--mobile-w) !important;
-    height: var(--mobile-h) !important;
-    transform: none;
+    display: none;
   }
-  .exhibition-page .exhibition-preview__image:nth-child(1) { --mobile-x: 5.349%; --mobile-y: 53px; --mobile-w: 23.488%; --mobile-h: 93px; }
-  .exhibition-page .exhibition-preview__image:nth-child(2) { --mobile-x: 68.605%; --mobile-y: 374px; --mobile-w: 31.395%; --mobile-h: 104px; }
-  .exhibition-page .exhibition-preview__image:nth-child(3) { --mobile-x: 93.953%; --mobile-y: 208px; --mobile-w: 26.279%; --mobile-h: 134px; }
-  .exhibition-page .exhibition-preview__image:nth-child(4) { --mobile-x: -27.209%; --mobile-y: 383px; --mobile-w: 30.233%; --mobile-h: 103px; }
-  .exhibition-page .exhibition-preview__image:nth-child(5),
-  .exhibition-page .exhibition-preview__image:nth-child(8),
-  .exhibition-page .exhibition-preview__image:nth-child(11) { display: none; }
-  .exhibition-page .exhibition-preview__image:nth-child(6) { --mobile-x: 10.233%; --mobile-y: 360px; --mobile-w: 15.349%; --mobile-h: 60px; }
-  .exhibition-page .exhibition-preview__image:nth-child(7) { --mobile-x: -6.047%; --mobile-y: 132px; --mobile-w: 17.442%; --mobile-h: 66px; }
-  .exhibition-page .exhibition-preview__image:nth-child(9) { --mobile-x: -13.256%; --mobile-y: 261px; --mobile-w: 17.209%; --mobile-h: 66px; }
-  .exhibition-page .exhibition-preview__image:nth-child(10) { --mobile-x: 42.558%; --mobile-y: 492px; --mobile-w: 18.14%; --mobile-h: 106px; }
-  .exhibition-page .exhibition-preview__image:nth-child(12) { --mobile-x: 64.651%; --mobile-y: 82px; --mobile-w: 26.977%; --mobile-h: 129px; }
+  .exhibition-page .exhibition-preview__expanded-image { display: none; }
+  .exhibition-page .exhibition-preview__rail {
+    position: absolute;
+    left: 0;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+  }
+  .exhibition-page .exhibition-preview__rail--top { top: 54px; }
+  .exhibition-page .exhibition-preview__rail--bottom { bottom: 48px; }
+  .exhibition-page .exhibition-preview__rail-track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+  .exhibition-page .exhibition-preview__rail--top,
+  .exhibition-page .exhibition-preview__rail--bottom { z-index: 1; }
+  .exhibition-page .exhibition-preview__rail--top .exhibition-preview__rail-track {
+    animation: exhibition-preview-rail-left 34s linear infinite;
+  }
+  .exhibition-page .exhibition-preview__rail--bottom .exhibition-preview__rail-track {
+    animation: exhibition-preview-rail-right 38s linear infinite;
+  }
+  .exhibition-page .exhibition-preview__rail-group {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: 14px;
+    padding-right: 14px;
+  }
+  .exhibition-page .exhibition-preview__rail img {
+    display: block;
+    flex: none;
+    width: auto;
+    height: 132px;
+    object-fit: contain;
+  }
   .exhibition-page .exhibition-preview h2 {
     top: 265px;
     left: 0;
     width: 100%;
+    z-index: 2;
     padding: 0;
     font-size: 30px;
     font-weight: 600;
@@ -575,5 +609,16 @@
     font-size: 13px;
     font-weight: 500;
     line-height: 1.3;
+  }
+}
+
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .exhibition-page .exhibition-preview__rail--top .exhibition-preview__rail-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+  .exhibition-page .exhibition-preview__rail--bottom .exhibition-preview__rail-track {
+    animation: none;
+    transform: translate3d(-50%, 0, 0);
   }
 }
