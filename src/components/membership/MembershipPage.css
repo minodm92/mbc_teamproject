@@ -822,12 +822,20 @@
 }
 
 /* Membership revision (Figma): hero, first-screen category cards, banner-only shared layout. */
+/* Hero heading rule shared with newsroom/notices: breadcrumb → title 6, title → description 28, 80 to the hero bottom. */
 .membership-page--tabs .membership-hero {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
     height: 658px;
     min-height: 0;
-    padding: 240px 100px 0;
+    padding: 0 100px 80px;
     color: #fff;
+    background-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0.4) 74%),
+        linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        var(--membership-hero-image);
     background-size: auto, auto, 140.8% auto;
     background-position: 0 0, 0 0, -27.48vw -5.1vw;
 }
@@ -842,12 +850,12 @@
     text-decoration: none;
 }
 .membership-page--tabs .membership-hero h1 {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     font: 500 60px/1.1 var(--font-en);
     letter-spacing: 0;
 }
 .membership-page--tabs .membership-hero__intro {
-    margin-top: 32px !important;
+    margin-top: 28px !important;
     font: 700 22px/1.4 var(--font-ko);
 }
 .membership-page--tabs .membership-content:has(#membership-panel-intro:not([hidden])) {
@@ -921,7 +929,7 @@
     .membership-page--tabs .membership-hero {
         height: auto;
         min-height: 380px;
-        padding: 120px 24px 48px;
+        padding: 120px 24px 80px;
         background-size: auto, auto, cover;
         background-position: 0 0, 0 0, center;
     }
@@ -932,7 +940,7 @@
         font-size: clamp(36px, 6vw, 60px);
     }
     .membership-page--tabs .membership-hero__intro {
-        margin-top: 16px !important;
+        margin-top: 28px !important;
         font-size: clamp(15px, 2vw, 22px);
     }
     .membership-page--tabs .membership-category-grid {
@@ -953,5 +961,49 @@
 @media (max-width: 600px) {
     .membership-page--tabs .membership-category-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Phones (≤767): hero like the exhibitions mobile hero — 520 tall, photo cover/centre, copy 15 from the left and 30 above the bottom.
+   Overlay: 30% black + fade from 53% to 80% black. 768–1100 keeps the rules above. */
+@media (max-width: 767px) {
+    .membership-page--tabs .membership-hero {
+        height: 520px;
+        min-height: 0;
+        padding: 0 15px 30px;
+        background-image:
+            linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+            linear-gradient(180deg, rgba(0, 0, 0, 0) 53%, rgba(0, 0, 0, 0.8) 100%),
+            var(--membership-hero-image);
+        background-size: auto, auto, cover;
+        background-position: 0 0, 0 0, center;
+    }
+}
+
+/* Phones (≤767): body content on the same 15px gutters as the hero copy (content width = screen - 30), on every tab. */
+@media (max-width: 767px) {
+    .membership-page--tabs .membership-content,
+    .membership-page--tabs .membership-content:has(#membership-panel-intro:not([hidden])) {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .membership-page--tabs .membership-category-grid {
+        padding: 0;
+    }
+    /* The PC 75px side margins made this box wider than the screen (the page laid out 465 wide at 390). */
+    .membership-page--tabs .membership-intro__copy {
+        width: auto;
+        margin-right: 0;
+        margin-left: 0;
+    }
+}
+
+/* PC (≥1024): hero overlay same as the notices PC hero — 30% black + fade from 53% to 80% black. Photo layer and crop unchanged. */
+@media (min-width: 1024px) {
+    .membership-page--tabs .membership-hero {
+        background-image:
+            linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+            linear-gradient(180deg, rgba(0, 0, 0, 0) 53%, rgba(0, 0, 0, 0.8) 100%),
+            var(--membership-hero-image);
     }
 }
