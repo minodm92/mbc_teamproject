@@ -768,3 +768,201 @@ body:has(.notices-page) .site-header { background: transparent; }
         --notice-gutter: max(75px, calc((100vw - 1294px) / 2));
     }
 }
+
+/*
+ * Notices list, mobile (≤767px). No notices mobile design exists; this follows the home mobile design
+ * (Figma 2306:3508, 430 wide) the same way the newsroom mobile page does: 15px gutters, sizes from 430 scaled for 360–767.
+ */
+@media (max-width: 767px) {
+    .notices-page.notices-page--list {
+        --notice-gutter: 15px;
+    }
+
+    /* Hero: 519 at 430, 20% dim + bottom fade, copy stacked up from the bottom. */
+    .notices-page.notices-page--list .notices-page__hero {
+        display: flex;
+        height: clamp(434px, 120.7vw, 658px);
+        min-height: 0;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0 15px 28px;
+    }
+    .notices-page.notices-page--list .notices-page__hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.2)),
+            linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+        pointer-events: none;
+    }
+    .notices-page.notices-page--list .notices-page__hero > nav,
+    .notices-page.notices-page--list .notices-page__hero > .notices-page__heading {
+        z-index: 1;
+    }
+    .notices-page.notices-page--list .notices-page__breadcrumb {
+        gap: 4px;
+        font: 700 13px/1.4 var(--font-ko);
+    }
+    .notices-page.notices-page--list .notices-page__hero .notices-page__heading {
+        margin-top: 8px;
+    }
+    .notices-page.notices-page--list .notices-page__hero .notices-page__heading h1 {
+        font: 600 30px/1.1 var(--font-en);
+        letter-spacing: 0;
+    }
+    .notices-page.notices-page--list .notices-page__hero .notices-page__heading .notices-page__intro {
+        margin-top: 12px;
+        color: #fff;
+        font: 500 14px/1.3 var(--font-ko);
+    }
+
+    /* Tabs (52 tall, from 15, gap 20) + search icon (24 inside a 44x44 target, 15 from the right). */
+    .notices-page.notices-page--list section[aria-label='공지사항 목록'] {
+        padding: 40px 0 60px;
+    }
+    .notices-page.notices-page--list .notices-page__toolbar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0;
+        min-height: 52px;
+        padding: 0 15px;
+    }
+    .notices-page.notices-page--list .notices-page__filters {
+        gap: 20px;
+        min-height: 52px;
+    }
+    .notices-page.notices-page--list .notices-page__filters button {
+        display: flex;
+        align-items: flex-start;
+        height: 52px;
+        padding: 14px 0 0;
+        color: #a8a7ac;
+        font: 700 16px/1.4 var(--font-ko);
+    }
+    .notices-page.notices-page--list .notices-page__filters button[aria-pressed='true'] {
+        color: #111;
+    }
+    .notices-page.notices-page--list .notices-page__filters button[aria-pressed='true']::after {
+        top: calc(14px + 1.4em + 4px);
+        bottom: auto;
+        height: 2px;
+        background: #111;
+    }
+    /* The search form's input drops to its own full-width line under the tabs. */
+    .notices-page.notices-page--list .notices-page__search {
+        display: contents;
+    }
+    .notices-page.notices-page--list .notices-page__search button {
+        order: 2;
+        flex: 0 0 44px;
+        width: 44px;
+        height: 44px;
+        margin-right: -10px;
+    }
+    .notices-page.notices-page--list .notices-page__search input {
+        order: 3;
+        flex: 0 0 100%;
+        width: 0;
+        height: 0;
+        border-bottom-width: 0;
+    }
+    .notices-page.notices-page--list .notices-page__search--open input {
+        width: 100%;
+        height: 44px;
+        margin: 0 0 8px;
+        padding: 0;
+        font-size: 15px;
+        border-bottom-width: 1px;
+    }
+
+    /* Rows: one column card. Line 1 number/pin + badge, line 2 title (2 lines max), line 3 date; arrow on the right. */
+    .notices-page.notices-page--list .notices-page__results,
+    .notices-page.notices-page--list .notices-page__row,
+    .notices-page.notices-page--list .notices-page__list li:first-child .notices-page__row {
+        background: #fff;
+    }
+    .notices-page.notices-page--list .notices-page__list {
+        width: 100%;
+        padding: 0;
+    }
+    .notices-page.notices-page--list .notices-page__row {
+        grid-template-columns: auto minmax(0, 1fr) 20px;
+        gap: 8px 10px;
+        min-height: 0;
+        padding: 18px 15px;
+        border-bottom: 1px solid #dedede;
+    }
+    .notices-page.notices-page--list .notices-page__number {
+        grid-column: 1;
+        grid-row: 1;
+        color: #111;
+        font: 500 14px/1.4 var(--font-ko);
+    }
+    .notices-page.notices-page--list .notices-page__category {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: start;
+        width: 56px;
+        height: 26px;
+        border-color: #ccc;
+        color: #111;
+        font: 500 13px/1.4 var(--font-ko);
+        white-space: nowrap;
+    }
+    .notices-page.notices-page--list .notices-page__row--pinned .notices-page__category {
+        border-color: #111;
+        color: #fff;
+        background: #111;
+    }
+    .notices-page.notices-page--list .notices-page__title {
+        display: -webkit-box;
+        grid-column: 1 / 3;
+        grid-row: 2;
+        overflow: hidden;
+        color: #111;
+        font: 500 15px/1.4 var(--font-ko);
+        white-space: normal;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+    }
+    .notices-page.notices-page--list .notices-page__row time {
+        grid-column: 1 / 3;
+        grid-row: 3;
+        color: #848484;
+        font: 500 13px/1.4 var(--font-ko);
+    }
+    .notices-page.notices-page--list .notices-page__arrow {
+        grid-column: 3;
+        grid-row: 1 / 4;
+        align-self: center;
+        justify-self: end;
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Pagination: 40x40 touch targets, gap 4, groups of 5 with previous/next only. */
+    .notices-page.notices-page--list .notices-page__pagination {
+        gap: 4px;
+        height: auto;
+        margin-top: 32px;
+        padding: 0;
+        background: none;
+    }
+    .notices-page.notices-page--list .notices-page__pagination button {
+        width: 40px;
+        height: 40px;
+        color: #777;
+        font: 500 15px/1.4 var(--font-ko);
+    }
+    .notices-page.notices-page--list .notices-page__pagination button[aria-current='page'],
+    .notices-page.notices-page--list .notices-page__pagination .notices-page__pagination-arrow {
+        color: #111;
+    }
+    .notices-page.notices-page--list .notices-page__pagination .notices-page__pagination-edge {
+        display: none;
+    }
+}

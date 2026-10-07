@@ -6,10 +6,24 @@ import './NoticesPage.css';
 
 const categories = ['전체', '알림', '보도기사'];
 const pageSize = 10;
+const MOBILE_QUERY = '(max-width: 767px)';
 
-function NoticePagination({ page, count, onChange }) {
-    const groupStart = Math.floor((page - 1) / 10) * 10 + 1;
-    const groupEnd = Math.min(groupStart + 9, count);
+function useMediaQuery(query) {
+    const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+    useEffect(() => {
+        const media = window.matchMedia(query);
+        const update = () => setMatches(media.matches);
+        update();
+        media.addEventListener('change', update);
+        return () => media.removeEventListener('change', update);
+    }, [query]);
+    return matches;
+}
+
+// Page numbers are shown in groups (10 on PC, 5 on mobile).
+function NoticePagination({ page, count, onChange, groupSize = 10 }) {
+    const groupStart = Math.floor((page - 1) / groupSize) * groupSize + 1;
+    const groupEnd = Math.min(groupStart + groupSize - 1, count);
     const pages = Array.from({ length: groupEnd - groupStart + 1 }, (_, index) => groupStart + index);
     const hasPrev = page > 1;
     const hasNext = page < count;
@@ -18,7 +32,7 @@ function NoticePagination({ page, count, onChange }) {
         <nav className="notices-page__pagination" aria-label="공지사항 페이지">
             {hasPrev && (
                 <>
-                    <button type="button" className="notices-page__pagination-arrow" aria-label="첫 페이지" onClick={() => onChange(1)}>«</button>
+                    <button type="button" className="notices-page__pagination-arrow notices-page__pagination-edge" aria-label="첫 페이지" onClick={() => onChange(1)}>«</button>
                     <button type="button" className="notices-page__pagination-arrow" aria-label="이전 페이지" onClick={() => onChange(page - 1)}>‹</button>
                 </>
             )}
@@ -28,7 +42,7 @@ function NoticePagination({ page, count, onChange }) {
             {hasNext && (
                 <>
                     <button type="button" className="notices-page__pagination-arrow" aria-label="다음 페이지" onClick={() => onChange(page + 1)}>›</button>
-                    <button type="button" className="notices-page__pagination-arrow" aria-label="마지막 페이지" onClick={() => onChange(count)}>»</button>
+                    <button type="button" className="notices-page__pagination-arrow notices-page__pagination-edge" aria-label="마지막 페이지" onClick={() => onChange(count)}>»</button>
                 </>
             )}
         </nav>
@@ -62,6 +76,7 @@ export default function NoticesListing() {
     const searchInputRef = useRef(null);
     const searchToggleRef = useRef(null);
     const focusSearchRef = useRef(false);
+    const isMobile = useMediaQuery(MOBILE_QUERY);
 
     useEffect(() => {
         if (searchOpen && focusSearchRef.current) searchInputRef.current?.focus();
@@ -83,7 +98,7 @@ export default function NoticesListing() {
 
     return (
         <main className="notices-page notices-page--list">
-            <header className="notices-page__hero">
+            <header className="notices-page__hero" data-header-theme="dark">
                 <img className="notices-page__hero-image" src="/images/notices/notice-hero.png" alt="" fetchPriority="high" />
                 <nav className="notices-page__breadcrumb" aria-label="현재 위치">
                     <Link to={paths.home}>HOME</Link>
@@ -214,6 +229,7 @@ export default function NoticesListing() {
                         <NoticePagination
                             page={page}
                             count={pageCount}
+                            groupSize={isMobile ? 5 : 10}
                             onChange={(nextPage) => {
                                 setParams((previous) => {
                                     const next = new URLSearchParams(previous);
