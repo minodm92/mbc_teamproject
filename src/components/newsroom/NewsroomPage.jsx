@@ -3,7 +3,7 @@ import heroNight from './assets/hero-night.png';
 import { Link, useSearchParams } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
 import { newsroomArticles } from './data/newsroomData';
-import FeaturedNewsCard from './components/FeaturedNewsCard';
+import FeaturedNewsCarousel from './components/FeaturedNewsCarousel';
 import NewsCard from './components/NewsCard';
 import NewsroomPagination from './components/NewsroomPagination';
 import PromotionalVideo from './components/PromotionalVideo';
@@ -46,11 +46,7 @@ export function NewsroomPage() {
                     </div>
                 </div>
 
-                <div className="newsroom-featured" aria-label="주요 뉴스">
-                    {newsroomArticles.slice(0, 4).map((article) => (
-                        <FeaturedNewsCard key={article.id} article={article} />
-                    ))}
-                </div>
+                <FeaturedNewsCarousel articles={newsroomArticles.slice(0, 4)} />
             </section>
 
             <PromotionalVideo />

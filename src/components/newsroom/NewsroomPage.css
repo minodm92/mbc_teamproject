@@ -283,6 +283,20 @@
     outline-offset: -6px;
 }
 
+/* Mouse/touch focus (e.g. after a tap or coming back from the article) shows no ring; keyboard Tab keeps it. */
+.newsroom-feature-card__link:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* The rolling track only lays out on mobile; elsewhere the cards stay direct items of .newsroom-featured. */
+.newsroom-featured__track {
+    display: contents;
+}
+
+.newsroom-feature-card--clone {
+    display: none;
+}
+
 .newsroom-card__link {
     display: block;
     color: inherit;
@@ -525,24 +539,27 @@
         font: 500 14px/1.3 var(--font-ko);
     }
 
-    /* Featured cards: horizontal scroll row like the home vehicle row (gap 20, starts at 15). */
+    /* Featured cards: rolling row like the home vehicle row (gap 20, starts at 15). FeaturedNewsCarousel moves the track. */
     .newsroom-featured {
         position: static;
-        display: flex;
+        display: block;
         width: auto;
-        gap: 20px;
         margin: 40px 0 0;
         padding: 0 15px;
-        overflow-x: auto;
-        overscroll-behavior-x: contain;
-        scroll-snap-type: x mandatory;
-        scroll-padding-inline: 15px;
-        scrollbar-width: none;
+        overflow: hidden;
+        touch-action: pan-y;
         transform: none;
     }
 
-    .newsroom-featured::-webkit-scrollbar {
-        display: none;
+    .newsroom-featured__track {
+        display: flex;
+        gap: 20px;
+        user-select: none;
+        will-change: transform;
+    }
+
+    .newsroom-feature-card--clone {
+        display: block;
     }
 
     .newsroom-feature-card {
@@ -550,7 +567,10 @@
         width: auto;
         height: auto;
         aspect-ratio: 260 / 340;
-        scroll-snap-align: start;
+    }
+
+    .newsroom-feature-card img {
+        -webkit-user-drag: none;
     }
 
     .newsroom-feature-card__title {
