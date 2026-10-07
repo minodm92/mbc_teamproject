@@ -1,4 +1,5 @@
-﻿import { useSearchParams, Link } from 'react-router-dom';
+﻿import { useEffect, useRef, useState } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import { notices } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import './NoticesPage.css';
@@ -57,6 +58,15 @@ export default function NoticesListing() {
     );
     const offset = (page - 1) * pageSize;
     const visible = [...pinned, ...regular.slice(offset, offset + pageSize)];
+    const [searchOpen, setSearchOpen] = useState(Boolean(search));
+    const searchInputRef = useRef(null);
+    const searchToggleRef = useRef(null);
+    const focusSearchRef = useRef(false);
+
+    useEffect(() => {
+        if (searchOpen && focusSearchRef.current) searchInputRef.current?.focus();
+        focusSearchRef.current = false;
+    }, [searchOpen]);
 
     function updateFilter(key, value) {
         setParams(
@@ -72,8 +82,9 @@ export default function NoticesListing() {
     }
 
     return (
-        <main className="notices-page">
+        <main className="notices-page notices-page--list">
             <header className="notices-page__hero">
+                <img className="notices-page__hero-image" src="/images/notices/notice-hero.png" alt="" fetchPriority="high" />
                 <nav className="notices-page__breadcrumb" aria-label="현재 위치">
                     <Link to={paths.home}>HOME</Link>
                     <span aria-hidden="true">/</span>
@@ -85,7 +96,7 @@ export default function NoticesListing() {
                     <h1>
                         NOTICE
                     </h1>
-                    <p className="notices-page__intro">운영 시간부터 휴관 일정까지,<br />방문 전 필요한 소식을 확인해보세요.</p>
+                    <p className="notices-page__intro">운영 시간부터 휴관 일정까지,<br />방문 전 필요한 소식을 확인해보세요</p>
                 </div>
             </header>
             <section aria-label="공지사항 목록">
@@ -103,41 +114,52 @@ export default function NoticesListing() {
                             </button>
                         ))}
                     </div>
+                    {/* The magnifier opens a title search field to its left; Esc or leaving it empty closes it. */}
                     <form
-                        className="notices-page__search"
+                        className={`notices-page__search${searchOpen ? ' notices-page__search--open' : ''}`}
                         role="search"
                         onSubmit={(event) => event.preventDefault()}
                     >
-                        <div className="notices-page__search-category">
-                            <select
-                                aria-label="검색할 공지사항 분류"
-                                value={category}
-                                onChange={(event) => updateFilter('category', event.target.value)}
-                            >
-                                {categories.map((label) => (
-                                    <option key={label} value={label}>
-                                        {label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="notices-page__search-field">
-                            <input
-                                placeholder="검색어를 입력하세요."
-                                type="search"
-                                aria-label="공지사항 제목 검색"
-                                value={search}
-                                onChange={(event) => updateFilter('q', event.target.value)}
-                            />
-                            <button type="submit" aria-label="검색">
-                                <img
-                                    src="/images/notices/search.svg"
-                                    width="24"
-                                    height="24"
-                                    alt=""
-                                />
-                            </button>
-                        </div>
+                        <input
+                            ref={searchInputRef}
+                            id="notice-search"
+                            placeholder="검색어를 입력하세요."
+                            type="search"
+                            aria-label="공지사항 제목 검색"
+                            aria-hidden={!searchOpen}
+                            tabIndex={searchOpen ? undefined : -1}
+                            value={search}
+                            onChange={(event) => updateFilter('q', event.target.value)}
+                            onKeyDown={(event) => {
+                                if (event.key !== 'Escape') return;
+                                event.preventDefault();
+                                updateFilter('q', '');
+                                setSearchOpen(false);
+                                searchToggleRef.current?.focus();
+                            }}
+                            onBlur={(event) => {
+                                if (!event.target.value.trim() && event.relatedTarget !== searchToggleRef.current) setSearchOpen(false);
+                            }}
+                        />
+                        <button
+                            ref={searchToggleRef}
+                            type="button"
+                            aria-label={searchOpen && !search.trim() ? '검색창 닫기' : '공지사항 검색'}
+                            aria-expanded={searchOpen}
+                            aria-controls="notice-search"
+                            onClick={() => {
+                                if (!searchOpen) {
+                                    focusSearchRef.current = true;
+                                    setSearchOpen(true);
+                                } else if (!search.trim()) {
+                                    setSearchOpen(false);
+                                } else {
+                                    searchInputRef.current?.focus();
+                                }
+                            }}
+                        >
+                            <img src="/images/notices/search.svg" width="24" height="24" alt="" />
+                        </button>
                     </form>
                 </div>
                 <div className="notices-page__results" id="notice-results">
