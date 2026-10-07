@@ -510,10 +510,11 @@
         top: 379px;
     }
 
-    /* Figma Wrap 4180:12810: 1280x400 at x 537.5-1817.5 (right 102.5), y 432-832: 226 inside the 658 photo, 174 below it. */
+    /* Figma Wrap 4180:12810: 1280x400, y 432-832 (226 inside the 658 photo, 174 below it).
+       Right edge follows the header profile icon (Header.css bar padding): 1820 at 1920. */
     .newsroom-featured {
         top: 432px;
-        right: 102.5px;
+        right: clamp(24px, 5.208vw, 100px);
         left: auto;
         display: flex;
         width: auto;
@@ -594,6 +595,11 @@
         justify-content: stretch;
         column-gap: calc(100% * 132.5 / 1660);
         margin: 80.6px 0 0 calc(100% * 34 / 1720);
+    }
+
+    /* The img height="450" attribute would otherwise keep it 450 tall when the column is narrower than 465. */
+    .newsroom-card__image {
+        height: auto;
     }
 
     /* Figma info frame is 86 tall with its text starting 3px above it: 450 + 15 + 86 = 551. */
