@@ -489,7 +489,7 @@
 /* Figma 4181:68 뉴스룸_수정본 (1920 기준). Desktop only; ≤1100px rules above stay as they are. */
 @media (min-width: 1101px) {
     .newsroom-intro {
-        height: 851px;
+        height: 832px;
     }
 
     .newsroom-hero::after {
@@ -510,9 +510,10 @@
         top: 379px;
     }
 
+    /* Cards span x 535-1815 at 1920 (right 105), y 432-832: 226 inside the 658 photo, 174 below it. */
     .newsroom-featured {
-        top: 451px;
-        right: 40px;
+        top: 432px;
+        right: 105px;
         left: auto;
         display: flex;
         width: auto;
@@ -521,8 +522,28 @@
     }
 
     .newsroom-feature-card {
-        width: 320px;
+        width: 305px;
         flex-shrink: 0;
+    }
+
+    .newsroom-feature-card__image--cropped {
+        position: absolute;
+        top: var(--crop-top);
+        left: var(--crop-left);
+        width: var(--crop-width);
+        max-width: none;
+        height: var(--crop-height);
+        object-fit: fill;
+    }
+
+    /* Keep the gradient and text above the absolutely positioned image. */
+    .newsroom-feature-card__link::before {
+        z-index: 1;
+    }
+
+    .newsroom-feature-card__title,
+    .newsroom-feature-card__location {
+        z-index: 2;
     }
 
     .newsroom-promo {

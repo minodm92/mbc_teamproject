@@ -1,21 +1,33 @@
 import { Link } from 'react-router-dom';
 import { paths } from '../../../common/router/routePaths';
 
+// Keys are compared without spaces, so "스나얀 파크" and "스나얀파크" are the same branch.
 const branchNames = {
     서울: 'SEOUL',
     하남: 'HANAM',
     고양: 'GOYANG',
     부산: 'BUSAN',
+    스나얀파크: 'SENAYAN PARK',
+    메타버스: 'METAVERSE',
 };
 
-// Figma shows the branch in English; articles without a branch in `location` (e.g. news-01) name it in the title.
-function getBranchLabel({ location, title }) {
-    const branch = Object.keys(branchNames).find((name) => location.includes(name))
-        ?? (/^현대 모터\s?스튜디오$/.test(location) ? Object.keys(branchNames).find((name) => title.includes(`모터스튜디오 ${name}`)) : undefined);
-    return branch ? branchNames[branch] : location;
+const warnedLocations = new Set();
+
+// Figma shows branches in English capitals. Unknown branches show the original text and warn once.
+function getBranchLabel(location) {
+    const key = location.replace(/^현대\s*모터\s*스튜디오/, '').replace(/\s/g, '');
+    if (!key) return '';
+    if (branchNames[key]) return branchNames[key];
+    if (!warnedLocations.has(location)) {
+        warnedLocations.add(location);
+        console.warn(`[NewsCard] 지점 변환표에 없는 지점입니다: "${location}"`);
+    }
+    return location;
 }
 
 export default function NewsCard({ article, variant = 'default', listPage = 1 }) {
+    const branchLabel = getBranchLabel(article.location);
+
     return (
         <article className={`newsroom-card${variant === 'related' ? ' newsroom-card--related' : ''}`}>
             <Link
@@ -42,7 +54,7 @@ export default function NewsCard({ article, variant = 'default', listPage = 1 })
                             {article.date}
                         </time>
                     </div>
-                    <p className="newsroom-card__location">{getBranchLabel(article)}</p>
+                    {branchLabel && <p className="newsroom-card__location">{branchLabel}</p>}
                 </div>
             </Link>
         </article>
