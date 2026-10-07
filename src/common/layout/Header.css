@@ -1,3 +1,7 @@
+#root {
+  --site-header-expanded-height: 210px;
+}
+
 .site-header {
   position: fixed;
   z-index: 40;
@@ -16,7 +20,7 @@
 #root .site-header:hover,
 #root .site-header:focus-within,
 #root .site-header.site-header--expanded { color: #fff; }
-.site-header--expanded { height: 210px; }
+.site-header--expanded { height: var(--site-header-expanded-height); }
 .site-header__bar {
   position: relative;
   display: flex;
@@ -166,6 +170,13 @@
   pointer-events: none;
 }
 .site-header__reservation-switch .reservation-select__trigger:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+
+@media (min-width: 1001px) {
+  #root > main.notice-operating-page .notice-operating-page__inner {
+    padding-top: calc(var(--site-header-expanded-height) + 30px);
+  }
+}
+
 @media (min-width: 1001px) and (max-width: 1500px) {
   .site-header--reservation .site-header__bar { gap: 24px; }
   .site-header--reservation .site-header__reservation-switch { margin-left: 0; }
@@ -401,7 +412,6 @@
   #root .site-header.site-header {
     position: fixed; top: 0; z-index: 60;
     background: transparent; border-bottom: 0;
-    transform: none !important; opacity: 1 !important; visibility: visible !important;
     pointer-events: auto; animation: none; transition: none;
   }
   .site-header__reveal-zone { display: none; }
