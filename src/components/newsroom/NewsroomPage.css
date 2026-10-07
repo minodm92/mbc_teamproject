@@ -510,10 +510,10 @@
         top: 379px;
     }
 
-    /* Cards span x 535-1815 at 1920 (right 105), y 432-832: 226 inside the 658 photo, 174 below it. */
+    /* Figma Wrap 4180:12810: 1280x400 at x 537.5-1817.5 (right 102.5), y 432-832: 226 inside the 658 photo, 174 below it. */
     .newsroom-featured {
         top: 432px;
-        right: 105px;
+        right: 102.5px;
         left: auto;
         display: flex;
         width: auto;
