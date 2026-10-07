@@ -662,16 +662,6 @@ body:has(.notices-page) .site-header { background: transparent; }
         min-height: 74px;
         padding: 0 calc(var(--notice-gutter) + 24px) 0 calc(var(--notice-gutter) + 115px);
     }
-    /* 1px #111 line under the tab row, across the full width. */
-    .notices-page--list .notices-page__toolbar::after {
-        content: '';
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        height: 1px;
-        background: #111;
-    }
     .notices-page--list .notices-page__filters {
         position: relative;
         z-index: 1;
