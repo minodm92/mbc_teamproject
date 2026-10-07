@@ -979,3 +979,21 @@
         background-position: 0 0, 0 0, center;
     }
 }
+
+/* Phones (≤767): body content on the same 15px gutters as the hero copy (content width = screen - 30), on every tab. */
+@media (max-width: 767px) {
+    .membership-page--tabs .membership-content,
+    .membership-page--tabs .membership-content:has(#membership-panel-intro:not([hidden])) {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .membership-page--tabs .membership-category-grid {
+        padding: 0;
+    }
+    /* The PC 75px side margins made this box wider than the screen (the page laid out 465 wide at 390). */
+    .membership-page--tabs .membership-intro__copy {
+        width: auto;
+        margin-right: 0;
+        margin-left: 0;
+    }
+}
