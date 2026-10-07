@@ -59,7 +59,7 @@ export function NewsroomPage() {
                 <h2 className="newsroom-news__title" id="newsroom-news-title">
                     NEWS
                 </h2>
-                <p className="newsroom-news__description">현대 모터스튜디오의 새로운 소식을<br />가장 먼저 만나보세요.</p>
+                <p className="newsroom-news__description">일상 너머의 새로운 모빌리티 경험이 이곳에서 시작됩니다.</p>
                 <div className="newsroom-news__grid">
                     {pageArticles[currentPage - 1].map((article) => (
                         <NewsCard key={`${article.id}-${currentPage}`} article={article} listPage={currentPage} />

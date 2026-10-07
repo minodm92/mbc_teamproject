@@ -410,7 +410,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+    background: linear-gradient(180deg, transparent 53%, rgba(0, 0, 0, 0.4) 100%);
     pointer-events: none;
 }
 
@@ -483,5 +483,88 @@
     .newsroom-pagination button {
         width: 32px;
         height: 32px;
+    }
+}
+
+/* Figma 4181:68 뉴스룸_수정본 (1920 기준). Desktop only; ≤1100px rules above stay as they are. */
+@media (min-width: 1101px) {
+    .newsroom-intro {
+        height: 851px;
+    }
+
+    .newsroom-hero::after {
+        background:
+            linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+            linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+    }
+
+    .newsroom-hero__image {
+        top: -37.2%;
+        left: -19.74%;
+        width: 123.82%;
+        height: 203.34%;
+        margin-top: 0;
+    }
+
+    .newsroom-hero__copy {
+        top: 379px;
+    }
+
+    .newsroom-featured {
+        top: 451px;
+        right: 40px;
+        left: auto;
+        display: flex;
+        width: auto;
+        gap: 20px;
+        transform: none;
+    }
+
+    .newsroom-feature-card {
+        width: 320px;
+        flex-shrink: 0;
+    }
+
+    .newsroom-promo {
+        height: 616px;
+        margin-top: 120px;
+        padding: 0;
+    }
+
+    .newsroom-promo__copy {
+        position: absolute;
+        z-index: 1;
+        top: 60px;
+        left: 100px;
+        color: #fff;
+        pointer-events: none;
+    }
+
+    .newsroom-promo__title {
+        color: inherit;
+    }
+
+    .newsroom-promo__description {
+        margin-top: 20px;
+        color: inherit;
+    }
+
+    .newsroom-promo__link {
+        top: 0;
+        height: 616px;
+    }
+
+    .newsroom-news {
+        margin-top: 120px;
+        padding-top: 0;
+    }
+
+    .newsroom-news__description {
+        margin-top: 20px;
+        white-space: nowrap;
+    }
+
+    .newsroom-news__grid {
+        margin-top: 80px;
     }
 }
