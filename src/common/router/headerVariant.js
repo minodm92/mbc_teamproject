@@ -17,6 +17,7 @@ export function getHeaderVariant(pathname) {
   if (darkForegroundRoutes.has(normalizedPath)) return 'dark';
   if (/^\/mypage(?:\/|$)/.test(normalizedPath)) return 'dark';
   if (/^\/reservations(?:\/|$)/.test(normalizedPath)) return 'dark';
+  if (/^\/notices\/[^/]+$/.test(normalizedPath)) return 'dark';
   if (/^\/newsroom\/[^/]+$/.test(normalizedPath)) return 'dark';
   if (/^\/programs\/[^/]+$/.test(normalizedPath)) return 'dark';
   if (/^\/exhibitions\/[^/]+$/.test(normalizedPath)) return 'dark';

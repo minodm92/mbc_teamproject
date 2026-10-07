@@ -32,7 +32,7 @@ export default function Header({ variant = 'light' }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isReservation = pathname === paths.reservations || pathname.startsWith(`${paths.reservations}/`);
-  const isNewsroom = /^\/newsroom(?:\/|$)/.test(pathname);
+  const isNewsroom = pathname === paths.newsroom;
   const reservationPage = reservationPages.find((page) => page.to === pathname) || reservationPages[0];
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
