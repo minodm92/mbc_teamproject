@@ -410,7 +410,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
+    background: linear-gradient(180deg, transparent 53%, rgba(0, 0, 0, 0.4) 100%);
     pointer-events: none;
 }
 
@@ -483,5 +483,133 @@
     .newsroom-pagination button {
         width: 32px;
         height: 32px;
+    }
+}
+
+/* Figma 4181:68 뉴스룸_수정본 (1920 기준). Desktop only; ≤1100px rules above stay as they are. */
+@media (min-width: 1101px) {
+    .newsroom-intro {
+        height: 832px;
+    }
+
+    .newsroom-hero::after {
+        background:
+            linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+            linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+    }
+
+    .newsroom-hero__image {
+        top: -37.2%;
+        left: -19.74%;
+        width: 123.82%;
+        height: 203.34%;
+        margin-top: 0;
+    }
+
+    .newsroom-hero__copy {
+        top: 379px;
+    }
+
+    /* Figma Wrap 4180:12810: 1280x400, y 432-832 (226 inside the 658 photo, 174 below it).
+       Right edge follows the header profile icon (Header.css bar padding): 1820 at 1920. */
+    .newsroom-featured {
+        top: 432px;
+        right: clamp(24px, 5.208vw, 100px);
+        left: auto;
+        display: flex;
+        width: auto;
+        gap: 20px;
+        transform: none;
+    }
+
+    .newsroom-feature-card {
+        width: 305px;
+        flex-shrink: 0;
+    }
+
+    .newsroom-feature-card__image--cropped {
+        position: absolute;
+        top: var(--crop-top);
+        left: var(--crop-left);
+        width: var(--crop-width);
+        max-width: none;
+        height: var(--crop-height);
+        object-fit: fill;
+    }
+
+    /* Keep the gradient and text above the absolutely positioned image. */
+    .newsroom-feature-card__link::before {
+        z-index: 1;
+    }
+
+    .newsroom-feature-card__title,
+    .newsroom-feature-card__location {
+        z-index: 2;
+    }
+
+    .newsroom-promo {
+        height: 616px;
+        margin-top: 120px;
+        padding: 0;
+    }
+
+    .newsroom-promo__copy {
+        position: absolute;
+        z-index: 1;
+        top: 60px;
+        left: 100px;
+        color: #fff;
+        pointer-events: none;
+    }
+
+    .newsroom-promo__title {
+        color: inherit;
+    }
+
+    .newsroom-promo__description {
+        margin-top: 20px;
+        color: inherit;
+    }
+
+    .newsroom-promo__link {
+        top: 0;
+        height: 616px;
+    }
+
+    .newsroom-news {
+        margin-top: 120px;
+        padding-top: 0;
+        padding-bottom: 120px;
+    }
+
+    .newsroom-news__description {
+        margin-top: 20px;
+        white-space: nowrap;
+    }
+
+    /* Cards start at 134 (title at 100) and end at 1794: 1660 of the 1720 content width, scaling below 1920. */
+    .newsroom-news__grid {
+        width: calc(100% * 1660 / 1720);
+        max-width: 1660px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        justify-content: stretch;
+        column-gap: calc(100% * 132.5 / 1660);
+        margin: 80.6px 0 0 calc(100% * 34 / 1720);
+    }
+
+    /* The img height="450" attribute would otherwise keep it 450 tall when the column is narrower than 465. */
+    .newsroom-card__image {
+        height: auto;
+    }
+
+    /* Figma info frame is 86 tall with its text starting 3px above it: 450 + 15 + 86 = 551. */
+    .newsroom-card__information {
+        gap: 9px;
+        min-height: 89px;
+        margin-top: 12px;
+    }
+
+    .newsroom-pagination {
+        margin-top: 28px;
     }
 }
