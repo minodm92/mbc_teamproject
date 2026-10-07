@@ -138,7 +138,8 @@ export default function MembershipPage() {
             <section
                 className="membership-hero"
                 aria-labelledby="membership-title"
-                style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0) 26%, rgba(0,0,0,.4) 74%), linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.2)), url("${membershipHeroImage}")` }}
+                data-header-theme="dark"
+                style={{ '--membership-hero-image': `url("${membershipHeroImage}")` }}
             >
                 <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
                     <Link to={paths.home}>HOME</Link>

@@ -832,6 +832,10 @@
     min-height: 0;
     padding: 0 100px 80px;
     color: #fff;
+    background-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0.4) 74%),
+        linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        var(--membership-hero-image);
     background-size: auto, auto, 140.8% auto;
     background-position: 0 0, 0 0, -27.48vw -5.1vw;
 }
@@ -957,5 +961,21 @@
 @media (max-width: 600px) {
     .membership-page--tabs .membership-category-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Phones (≤767): hero like the exhibitions mobile hero — 520 tall, photo cover/centre, copy 15 from the left and 30 above the bottom.
+   Overlay: 30% black + fade from 53% to 80% black. 768–1100 keeps the rules above. */
+@media (max-width: 767px) {
+    .membership-page--tabs .membership-hero {
+        height: 520px;
+        min-height: 0;
+        padding: 0 15px 30px;
+        background-image:
+            linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+            linear-gradient(180deg, rgba(0, 0, 0, 0) 53%, rgba(0, 0, 0, 0.8) 100%),
+            var(--membership-hero-image);
+        background-size: auto, auto, cover;
+        background-position: 0 0, 0 0, center;
     }
 }
