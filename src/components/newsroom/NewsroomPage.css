@@ -575,8 +575,11 @@
         margin: 80.6px 0 0 calc(100% * 34 / 1720);
     }
 
+    /* Figma info frame is 86 tall with its text starting 3px above it: 450 + 15 + 86 = 551. */
     .newsroom-card__information {
-        min-height: 86px;
+        gap: 9px;
+        min-height: 89px;
+        margin-top: 12px;
     }
 
     .newsroom-pagination {
