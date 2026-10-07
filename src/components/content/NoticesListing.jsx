@@ -54,14 +54,19 @@ export default function NoticesListing() {
     const category = categories.includes(params.get('category')) ? params.get('category') : '전체';
     const search = params.get('q') || '';
     const query = search.trim().toLocaleLowerCase('ko-KR');
-    const filtered = notices.filter(
-        (notice) =>
-            (category === '전체' ||
-                (category === '알림'
-                    ? notice.category !== '보도기사'
-                    : notice.category === category)) &&
-            notice.title.toLocaleLowerCase('ko-KR').includes(query)
-    );
+    const filtered = notices
+        .filter(
+            (notice) =>
+                (category === '전체' ||
+                    (category === '알림'
+                        ? notice.category !== '보도기사'
+                        : notice.category === category)) &&
+                notice.title.toLocaleLowerCase('ko-KR').includes(query)
+        )
+        // Sort the full filtered set by date (newest first) before paginating, so a page
+        // boundary never splits a date out of order. Equal dates keep a stable, deterministic
+        // order via the notice id so the list doesn't reshuffle between renders.
+        .sort((a, b) => Number(b.date.replaceAll('.', '')) - Number(a.date.replaceAll('.', '')) || a.id.localeCompare(b.id));
     const pinned = filtered.filter((notice) => notice.pinned);
     const regular = filtered.filter((notice) => !notice.pinned);
     const pageCount = Math.max(1, Math.ceil(regular.length / pageSize));
