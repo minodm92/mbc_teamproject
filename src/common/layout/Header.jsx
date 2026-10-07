@@ -8,7 +8,7 @@ import experienceFindingIcon from './assets/experience-finding.svg';
 import './Header.css';
 
 const nav = [
-  { label: '현대모터스튜디오', to: paths.motorstudio },
+  { label: '현대모터스튜디오', to: paths.motorstudio, children: [{ label: '소개', to: paths.motorstudio }] },
   { label: '모빌리티', to: paths.mobility },
   { label: '전시/프로그램', to: paths.exhibitions, children: [{ label: '전시', to: paths.exhibitions }, { label: '프로그램', to: paths.programs }] },
   { label: '예약', to: paths.reservations },
@@ -67,11 +67,16 @@ export default function Header({ variant = 'light' }) {
 
   useEffect(() => {
     let frame = 0;
+    let wasScrolled = false;
     const update = () => {
       frame = 0;
       const nextScrolled = window.scrollY > 80;
       setScrolled(nextScrolled);
-      if (nextScrolled) setTopHovered(false);
+      if (nextScrolled && !wasScrolled) {
+        setTopHovered(false);
+        setSubnavOpen(false);
+      }
+      wasScrolled = nextScrolled;
     };
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(update); };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -165,7 +170,9 @@ export default function Header({ variant = 'light' }) {
       </div>}
       <nav className={`site-header__nav${open ? ' site-header__nav--open' : ''}`} aria-label="주 메뉴">
         {nav.map((item) => <div className="site-header__group" key={item.label} onPointerEnter={() => setSubnavOpen(Boolean(item.children))}>
-          {item.children
+          {item.to === paths.exhibitions || item.to === paths.motorstudio
+            ? <NavLink to={item.to} onClick={closeMenus} onFocus={() => setSubnavOpen(true)} className="site-header__link">{item.label}</NavLink>
+            : item.children
             ? <button className="site-header__link" type="button" aria-expanded={subnavOpen} onFocus={() => setSubnavOpen(true)} onClick={() => setSubnavOpen((value) => !value)}>{item.label}</button>
             : <NavLink to={item.to} onClick={closeMenus} className="site-header__link">{item.label}</NavLink>}
           {item.children && <div className="site-header__submenu">{item.children.map((child) => <NavLink key={child.to} to={child.to} onClick={closeMenus}>{child.label}</NavLink>)}</div>}
@@ -202,7 +209,12 @@ export default function Header({ variant = 'light' }) {
           const label = item.to === paths.exhibitions ? '전시 / 프로그램' : item.to === paths.motorstudio ? '현대 모터스튜디오' : item.label;
           const expanded = mobileGroup === index;
           return <div key={item.to}>
-            {children.length ? <button className="site-header__mobile-category" type="button" aria-expanded={expanded} aria-controls={`mobile-navigation-${index}`} onClick={() => setMobileGroup(expanded ? null : index)}>
+            {item.to === paths.exhibitions || item.to === paths.motorstudio ? <div className="site-header__mobile-category" aria-expanded={expanded}>
+              <NavLink to={item.to} onClick={closeMenus}>{label}</NavLink>
+              <button className="site-header__mobile-category-icon" type="button" aria-label={label} aria-expanded={expanded} aria-controls={`mobile-navigation-${index}`} onClick={() => setMobileGroup(expanded ? null : index)}>
+                <img src={expanded ? '/images/common/mobile-menu/minus.svg' : '/images/common/mobile-menu/plus.svg'} width="24" height="24" alt="" />
+              </button>
+            </div> : children.length ? <button className="site-header__mobile-category" type="button" aria-expanded={expanded} aria-controls={`mobile-navigation-${index}`} onClick={() => setMobileGroup(expanded ? null : index)}>
               <span>{label}</span>
               <img src={expanded ? '/images/common/mobile-menu/minus.svg' : '/images/common/mobile-menu/plus.svg'} width="24" height="24" alt="" />
             </button> : <div className="site-header__mobile-category">

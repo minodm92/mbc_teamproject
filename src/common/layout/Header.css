@@ -1,5 +1,5 @@
 .site-header {
-  position: absolute;
+  position: fixed;
   z-index: 40;
   top: 0;
   left: 0;
@@ -7,14 +7,16 @@
   height: 80px;
   color: #fff;
   background: transparent;
-  transition: height .25s ease;
+  transition: transform .25s ease, height .25s ease;
 }
 .site-header--dark,
 .site-header--responsive { color: #111; }
+#root .site-header.site-header { background: transparent; }
+#root .site-header.site-header:hover { background: #363636; }
 #root .site-header:hover,
 #root .site-header:focus-within,
-#root .site-header.site-header--expanded { background: #363636; color: #fff; }
-.site-header--expanded { height: 292px; }
+#root .site-header.site-header--expanded { color: #fff; }
+.site-header--expanded { height: 210px; }
 .site-header__bar {
   position: relative;
   display: flex;
@@ -98,11 +100,9 @@
 
 #root .site-header.site-header--reservation {
   position: fixed;
-  background: #0e0e0e;
   color: #fff;
   border-bottom: 1px solid #ffffff26;
 }
-.site-header--reservation .site-header__actions { gap: 23px; }
 .site-header__reservation-switch {
   position: relative;
   margin-left: 45px;
@@ -167,7 +167,7 @@
 }
 .site-header__reservation-switch .reservation-select__trigger:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
 @media (min-width: 1001px) and (max-width: 1500px) {
-  .site-header--reservation .site-header__bar { gap: 24px; padding-inline: 30px; }
+  .site-header--reservation .site-header__bar { gap: 24px; }
   .site-header--reservation .site-header__reservation-switch { margin-left: 0; }
   .site-header--reservation .site-header__nav { position: static; margin-left: auto; gap: 24px; transform: none; }
   .site-header--reservation .site-header__actions { margin-left: 0; }
@@ -329,7 +329,7 @@
   transform: translateY(-100%);
   pointer-events: none;
 }
-#root .site-header--scroll-hidden:focus-within {
+#root .site-header--scroll-hidden:has(:focus-visible) {
   transform: translateY(0);
   pointer-events: auto;
 }
@@ -345,44 +345,38 @@
   background: transparent;
 }
 @media (prefers-reduced-motion: reduce) {
-  #root .site-header--scrolled { transition: none; }
+  #root .site-header { transition: none; }
 }
 
 @media (max-width: 1000px) {
   .site-header__reveal-zone { height: 72px; }
 }
 
-/* Set the solid background before the scrolled header slides into view. */
 #root .site-header:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) {
-  background: #363636;
   color: #fff;
 }
 #root .site-header--scrolled .site-header__asset--dark { opacity: 0; }
 #root .site-header--scrolled .site-header__asset--light { opacity: 1; }
-/* Newsroom keeps a black background until the shared hover state. */
 #root .site-header.site-header--newsroom {
-  background: #000;
   color: #fff;
+}
+
+#root .site-header.site-header--newsroom .site-header__actions .site-header__experience-finding {
+  filter: none;
 }
 
 #root .site-header.site-header--newsroom:is(:hover, :focus-within, .site-header--expanded) {
-  background: #363636;
   color: #fff;
 }
 
-/* Reservation headers keep their original background during hover and scrolling. */
 #root .site-header.site-header--reservation:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) {
-  background: #0e0e0e;
   color: #fff;
 }
 
-/* Header remounts on pathname changes; translate stays separate from scroll transforms. */
-@keyframes site-header-page-enter {
-  from { translate: 0 -100%; }
-  to { translate: 0 0; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .site-header { animation: site-header-page-enter .45s cubic-bezier(.22, 1, .36, 1); }
+#root .site-header--reservation:not(:hover) .site-header__link,
+#root .site-header--reservation:not(:hover) .site-header__submenu a,
+#root .site-header--reservation:not(:hover) .site-header__reservation-switch .reservation-select__trigger {
+  color: #111111;
 }
 
 .site-header__logo .site-header__mobile-header-logo { display: none; }
@@ -421,5 +415,33 @@
 }
 
 @media (max-width: 1000px) {
-  #root .site-header.site-header:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) { background: transparent; }
+  #root .site-header.site-header:not(:hover) { background: transparent; }
+}
+
+#root .site-header.site-header--reservation:not(:hover) .site-header__logo img,
+#root .site-header.site-header--reservation:not(:hover) .site-header__account img,
+#root .site-header.site-header--reservation:not(:hover) .site-header__experience-finding,
+#root .site-header.site-header--reservation:not(:hover) .site-header__reservation-switch > img,
+#root .site-header.site-header--reservation:not(:hover) .site-header__toggle img {
+  filter: brightness(0) invert(.066667);
+}
+#root .site-header.site-header--reservation:not(:hover) .site-header__toggle {
+  color: #111111;
+}
+
+#root .site-header.site-header--reservation:hover .site-header__link,
+#root .site-header.site-header--reservation:hover .site-header__submenu a,
+#root .site-header.site-header--reservation:hover .reservation-select__trigger,
+#root .site-header.site-header--reservation:hover .site-header__toggle {
+  color: #fff;
+}
+#root .site-header.site-header--reservation:hover .site-header__logo img,
+#root .site-header.site-header--reservation:hover .site-header__account img,
+#root .site-header.site-header--reservation:hover .site-header__reservation-switch > img,
+#root .site-header.site-header--reservation:hover .site-header__toggle img {
+  filter: brightness(0) invert(1);
+}
+
+#root .site-header.site-header:hover .site-header__actions .site-header__experience-finding {
+  filter: none;
 }
