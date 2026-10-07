@@ -674,8 +674,12 @@ body:has(.notices-page) .site-header { background: transparent; }
         position: relative;
         z-index: 1;
     }
+    /* KOR_Sub1: SUIT Bold 24/1.4. The button stays 64 tall (text from 20) so the 3px bar keeps sitting on the line. */
     .notices-page--list .notices-page__filters button {
+        height: 64px;
+        padding: 20px 0 0;
         color: #a8a7ac;
+        font: 700 24px/1.4 var(--font-ko);
     }
     .notices-page--list .notices-page__filters button[aria-pressed='true'] {
         color: #0e0e0e;
@@ -703,10 +707,12 @@ body:has(.notices-page) .site-header { background: transparent; }
         color: #0e0e0e;
         font: 500 15px/1.4 var(--font-ko);
     }
+    /* KOR_Sub6: SUIT Medium 18/1.4 for the badge text; the badge stays 80x37. */
     .notices-page--list .notices-page__category {
         border-color: #ccc;
         color: #0e0e0e;
-        font: 500 15px/1.4 var(--font-ko);
+        font: 500 18px/1.4 var(--font-ko);
+        white-space: nowrap;
     }
     .notices-page--list .notices-page__row--pinned .notices-page__category {
         border-color: #0e0e0e;
@@ -717,7 +723,7 @@ body:has(.notices-page) .site-header { background: transparent; }
         display: block;
         overflow: hidden;
         color: #0e0e0e;
-        font: 500 15px/1.4 var(--font-ko);
+        font: 500 18px/1.4 var(--font-ko);
         text-overflow: ellipsis;
         white-space: nowrap;
     }
