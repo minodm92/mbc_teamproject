@@ -66,7 +66,7 @@
     display: flex;
     gap: 4px;
     color: #a8a7ac;
-    font: 700 22px/1.4 var(--font-ko);
+    font: 500 18px/1.4 var(--font-ko);
 }
 
 .newsroom-hero__breadcrumb a {
@@ -82,7 +82,7 @@
 
 .newsroom-hero__description {
     margin: 28px 0 0;
-    font: 700 22px/1.4 var(--font-ko);
+    font: 500 18px/1.4 var(--font-ko);
 }
 
 .newsroom-featured {
