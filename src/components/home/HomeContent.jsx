@@ -493,6 +493,11 @@ export default function HomeContent() {
             let isSloganTyping = false;
             let sloganAdvanceFrame;
             let removeSloganBoundary;
+            const resetSloganPresentation = () => {
+                typingSequence?.pause(0);
+                if (sloganTextRef.current) gsap.set(sloganTextRef.current, { text: '' });
+                if (sloganCursorRef.current) gsap.set(sloganCursorRef.current, { opacity: 0 });
+            };
             const holdSloganPosition = () => {
                 if (!isSloganTyping || !sloganPin) return;
                 const target = sloganPin.start + 1;
@@ -815,7 +820,10 @@ export default function HomeContent() {
                     invalidateOnRefresh: true,
                     onUpdate: updateLocation,
                     onEnter: syncLocationRail,
-                    onEnterBack: syncLocationRail,
+                    onEnterBack: (self) => {
+                        syncLocationRail(self);
+                        resetSloganPresentation();
+                    },
                     onLeaveBack: syncLocationRail,
                     onRefresh: (self) => {
                         locationNavigationRef.current = null;
@@ -882,6 +890,7 @@ export default function HomeContent() {
                         isSloganTyping = true;
                         setHomeScrollLocked(true);
                         holdSloganPosition();
+                        resetSloganPresentation();
                         typingSequence.restart();
                     },
                     onLeaveBack: () => {
@@ -891,9 +900,6 @@ export default function HomeContent() {
                         }
                         isSloganTyping = false;
                         setHomeScrollLocked(false);
-                        typingSequence.pause(0);
-                        gsap.set(sloganText, { text: '' });
-                        gsap.set(sloganCursor, { opacity: 0 });
                     },
                 });
                 window.addEventListener('scroll', holdSloganPosition);
