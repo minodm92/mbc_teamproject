@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import heroNight from './assets/hero-night.png';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { paths } from '../../common/router/routePaths';
 import { newsroomArticles } from './data/newsroomData';
 import FeaturedNewsCard from './components/FeaturedNewsCard';
 import NewsCard from './components/NewsCard';
@@ -36,10 +37,13 @@ export function NewsroomPage() {
                         alt=""
                         fetchPriority="high"
                     />
-                    <h1 className="newsroom-visually-hidden">NEWSROOM</h1>
-                    <p className="newsroom-visually-hidden">
-                        공간과 모빌리티, 문화가 만나는 최신 소식을 확인해보세요.
-                    </p>
+                    <div className="newsroom-hero__copy">
+                        <nav className="newsroom-hero__breadcrumb" aria-label="현재 위치">
+                            <Link to={paths.home}>HOME</Link><span aria-hidden="true"> / </span><span>안내</span><span aria-hidden="true"> / </span><span aria-current="page">뉴스룸</span>
+                        </nav>
+                        <h1 className="newsroom-hero__title">NEWSROOM</h1>
+                        <p className="newsroom-hero__description">공간과 모빌리티, 문화가 만나는<br />최신 소식을 확인해보세요.</p>
+                    </div>
                 </div>
 
                 <div className="newsroom-featured" aria-label="주요 뉴스">
@@ -55,6 +59,7 @@ export function NewsroomPage() {
                 <h2 className="newsroom-news__title" id="newsroom-news-title">
                     NEWS
                 </h2>
+                <p className="newsroom-news__description">현대 모터스튜디오의 새로운 소식을<br />가장 먼저 만나보세요.</p>
                 <div className="newsroom-news__grid">
                     {pageArticles[currentPage - 1].map((article) => (
                         <NewsCard key={`${article.id}-${currentPage}`} article={article} listPage={currentPage} />
