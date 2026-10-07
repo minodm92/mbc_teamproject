@@ -557,6 +557,7 @@
     .newsroom-news {
         margin-top: 120px;
         padding-top: 0;
+        padding-bottom: 120px;
     }
 
     .newsroom-news__description {
@@ -564,7 +565,21 @@
         white-space: nowrap;
     }
 
+    /* Cards start at 134 (title at 100) and end at 1794: 1660 of the 1720 content width, scaling below 1920. */
     .newsroom-news__grid {
-        margin-top: 80px;
+        width: calc(100% * 1660 / 1720);
+        max-width: 1660px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        justify-content: stretch;
+        column-gap: calc(100% * 132.5 / 1660);
+        margin: 80.6px 0 0 calc(100% * 34 / 1720);
+    }
+
+    .newsroom-card__information {
+        min-height: 86px;
+    }
+
+    .newsroom-pagination {
+        margin-top: 28px;
     }
 }
