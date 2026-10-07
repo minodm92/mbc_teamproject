@@ -76,7 +76,7 @@
     height: 798px;
     overflow: hidden;
     padding: 116px 100px 0;
-    background: #111;
+    background: #111 url('../../../public/images/footer/footer-background.svg') center / 100% 100% no-repeat;
     color: #fff;
 }
 .reservation-footer__meta {
@@ -352,4 +352,46 @@
     .reservation-footer__rock {
         will-change: auto;
     }
+}
+
+.reservation-footer__fixed-cars {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    pointer-events: none;
+}
+.reservation-footer__fixed-car {
+    position: absolute;
+    bottom: 0;
+    overflow: hidden;
+}
+.reservation-footer__fixed-car img {
+    position: absolute;
+    max-width: none;
+}
+.reservation-footer__fixed-car--two {
+    left: 13.6979%;
+    width: 14.84375%;
+    aspect-ratio: 285 / 133;
+    transform: scaleX(-1);
+}
+.reservation-footer__fixed-car--two img {
+    width: 157.57%;
+    height: 168.79%;
+    left: -28.79%;
+    top: -39.02%;
+}
+.reservation-footer__fixed-car--three {
+    left: 63.2292%;
+    width: 27.7083%;
+    aspect-ratio: 532 / 198;
+}
+.reservation-footer__fixed-car--three img {
+    width: 116.45%;
+    height: 156.57%;
+    left: -7.16%;
+    top: -29.71%;
+}
+@media (max-width: 767px) {
+    .reservation-footer__fixed-cars { display: none; }
 }

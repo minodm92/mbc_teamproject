@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom';
 import Matter from 'matter-js';
 import { Instagram, Youtube, Facebook } from 'lucide-react';
 import carOneUrl from '../../../public/images/footer/car-1.png';
-import carTwoUrl from '../../../public/images/footer/car-2.png';
-import carThreeUrl from '../../../public/images/footer/car-3.png';
+import carTwoUrl from '../../../public/images/footer/fixed-car-2.png';
+import carThreeUrl from '../../../public/images/footer/fixed-car-3.png';
 import carFourUrl from '../../../public/images/footer/car-4.png';
 import carFiveUrl from '../../../public/images/footer/car-5.png';
 import carSixUrl from '../../../public/images/footer/car-6.png';
@@ -22,6 +22,7 @@ import carRockUrl from '../../../public/images/footer/car-rock.png';
 import carRockEyeUrl from '../../../public/images/footer/car-rock-eye.svg';
 import carRockTwoUrl from '../../../public/images/footer/car-rock-2.png';
 import wordmarkUrl from '../../../public/images/footer/wordmark.svg';
+import toyCarRockUrl from '../../../public/images/footer/toy-cars/toy-car-rock.png';
 import './Footer.css';
 
 const randomBetween = (min, max) => min + Math.random() * (max - min);
@@ -33,8 +34,8 @@ const COLLISION_CATEGORY = {
   wordmark: 0x0008,
 };
 const toyCarUrls = [
-  toyCar01Url, toyCar02Url, toyCar03Url, toyCar04Url, toyCar05Url, toyCar06Url,
-  toyCar07Url, toyCar08Url, toyCar09Url,
+  toyCar01Url, toyCar02Url, toyCar03Url, toyCar04Url, toyCarRockUrl,
+  toyCar05Url, toyCar06Url, toyCar07Url, toyCar08Url, toyCar09Url,
 ];
 
 function getOpaqueHull(image, displayWidth, displayHeight, Vertices) {
@@ -239,6 +240,19 @@ export default function Footer() {
         Bodies.rectangle(stageRect.width + 35, stageRect.height / 2, 70, stageRect.height * 3, boundaryOptions),
       ];
 
+      // Fixed vehicles support falling cars instead of letting them pass in front.
+      const fixedVehicleBodies = [...footer.querySelectorAll('.reservation-footer__fixed-car')]
+        .filter((element) => element.offsetWidth > 0 && element.offsetHeight > 0)
+        .map((element) => {
+          const rect = element.getBoundingClientRect();
+          return Bodies.rectangle(
+            rect.left - stageRect.left + rect.width / 2,
+            rect.top - stageRect.top + rect.height / 2,
+            rect.width,
+            rect.height,
+            { ...boundaryOptions, label: 'footer-fixed-vehicle' },
+          );
+        });
       const wordmarkRect = wordmark?.getBoundingClientRect();
       const wordmarkOptions = {
         isStatic: true,
@@ -295,6 +309,7 @@ export default function Footer() {
 
       Composite.add(engine.world, [
         ...boundaries,
+        ...fixedVehicleBodies,
         ...wordmarkBodies,
         ...mainBodies.map(({ matterBody }) => matterBody),
       ]);
@@ -419,10 +434,12 @@ export default function Footer() {
     </div>
     <img className="reservation-footer__wordmark" src={wordmarkUrl} alt="HYUNDAI MOTORSTUDIO" />
     <small>© HYUNDAI MOTOR COMPANY. ALL RIGHTS RESERVED.</small>
+    <div className="reservation-footer__fixed-cars" aria-hidden="true">
+      <div className="reservation-footer__fixed-car reservation-footer__fixed-car--two"><img src={carTwoUrl} alt="" /></div>
+      <div className="reservation-footer__fixed-car reservation-footer__fixed-car--three"><img src={carThreeUrl} alt="" /></div>
+    </div>
     <div className="reservation-footer__cars" ref={stageRef} aria-hidden="true">
       <img data-physics-body className="reservation-footer__car reservation-footer__car--one" src={carOneUrl} alt="" />
-      <img data-physics-body className="reservation-footer__car reservation-footer__car--two" src={carTwoUrl} alt="" />
-      <img data-physics-body className="reservation-footer__car reservation-footer__car--three" src={carThreeUrl} alt="" />
       <div data-physics-body className="reservation-footer__rock">
         <img className="reservation-footer__rock-image" src={carRockUrl} alt="" />
         <img className="reservation-footer__rock-eye" src={carRockEyeUrl} alt="" />
