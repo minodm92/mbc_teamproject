@@ -538,3 +538,243 @@ body:has(.notices-page) .site-header { background: transparent; }
     .notices-page .notices-page__hero .notices-page__heading h1 { font-size: clamp(36px, 6vw, 60px); }
     .notices-page .notices-page__hero .notices-page__heading .notices-page__intro { font-size: clamp(15px, 2vw, 22px); }
 }
+
+/* ===== Notices list (Figma 4181:239 공지사항_수정본). Scoped to the list page; the detail page shares these classes. ===== */
+
+/* Hero photo as an image so the Figma crop can be applied; below 1024 it covers like the old background did. */
+.notices-page--list .notices-page__hero {
+    background-image: none;
+}
+.notices-page--list .notices-page__hero > .notices-page__hero-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Hero heading rule shared with newsroom/membership: breadcrumb → title 6, title → description 28, 80 to the hero bottom. */
+@media (max-width: 1023px) {
+    .notices-page.notices-page--list .notices-page__hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding-top: 0;
+        padding-bottom: 80px;
+    }
+    .notices-page.notices-page--list .notices-page__hero .notices-page__heading {
+        margin-top: 6px;
+    }
+    .notices-page.notices-page--list .notices-page__hero .notices-page__heading .notices-page__intro {
+        margin-top: 28px;
+    }
+}
+
+/* Search: a 24px magnifier that opens a 310px underlined field to its left. */
+.notices-page--list .notices-page__search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: auto;
+    gap: 0;
+    margin: 0;
+}
+.notices-page--list .notices-page__search input {
+    width: 0;
+    min-width: 0;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: #0e0e0e;
+    font: 500 15px/1.4 var(--font-ko);
+    opacity: 0;
+    visibility: hidden;
+    transition: width 0.3s ease, opacity 0.2s ease, visibility 0s linear 0.3s;
+}
+.notices-page--list .notices-page__search input::placeholder {
+    color: #a8a7ac;
+    opacity: 1;
+}
+.notices-page--list .notices-page__search input:focus {
+    outline: none;
+}
+.notices-page--list .notices-page__search--open input {
+    width: 310px;
+    margin-right: 8px;
+    padding: 0 4px;
+    border-bottom-color: #111;
+    opacity: 1;
+    visibility: visible;
+    transition: width 0.3s ease, opacity 0.2s ease, visibility 0s;
+}
+.notices-page--list .notices-page__search button {
+    display: flex;
+    flex: 0 0 24px;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+}
+.notices-page--list .notices-page__search img {
+    width: 24px;
+    height: 24px;
+}
+@media (max-width: 767px) {
+    .notices-page--list .notices-page__search {
+        width: 100%;
+        min-height: 44px;
+        margin: 8px 0;
+    }
+    .notices-page--list .notices-page__search--open input {
+        flex: 1;
+        width: auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    /* Hero 658: photo crop + 30% dim and a bottom fade; copy at left 100, bottom-aligned 80 up (heading rule shared with newsroom/membership). */
+    .notices-page--list .notices-page__hero {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0 100px 80px;
+    }
+    .notices-page--list .notices-page__hero > .notices-page__hero-image {
+        inset: auto;
+        top: -15.57%;
+        left: -3.95%;
+        width: 116.42%;
+        height: 116.35%;
+        object-fit: fill;
+    }
+    .notices-page--list .notices-page__hero::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+            linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+        pointer-events: none;
+    }
+    .notices-page--list .notices-page__hero > nav,
+    .notices-page--list .notices-page__hero > .notices-page__heading {
+        z-index: 1;
+    }
+    .notices-page--list .notices-page__heading {
+        margin-top: 6px;
+    }
+    .notices-page--list .notices-page__hero .notices-page__heading .notices-page__intro {
+        margin-top: 28px;
+    }
+
+    /* Tabs 64 tall: selected #0e0e0e with a 3px underline, others #a8a7ac, gap 38. */
+    .notices-page--list .notices-page__toolbar {
+        position: relative;
+        align-items: center;
+        flex-wrap: nowrap;
+        min-height: 74px;
+        padding: 0 calc(var(--notice-gutter) + 24px) 0 calc(var(--notice-gutter) + 115px);
+    }
+    .notices-page--list .notices-page__filters {
+        position: relative;
+        z-index: 1;
+        gap: 32px;
+    }
+    /* KOR_Sub2: SUIT Bold 22/1.4 in a 74 tall row (text from 20). Selected tab: 3px #111 bar 6px under the text, as wide as the text. */
+    .notices-page--list .notices-page__filters button {
+        display: flex;
+        align-items: flex-start;
+        height: 74px;
+        padding: 20px 0 0;
+        color: #a8a7ac;
+        font: 700 22px/1.4 var(--font-ko);
+    }
+    .notices-page--list .notices-page__filters button[aria-pressed='true'] {
+        color: #111;
+    }
+    .notices-page--list .notices-page__filters button[aria-pressed='true']::after {
+        top: calc(20px + 1.4em + 6px);
+        bottom: auto;
+        height: 3px;
+        background: #111;
+    }
+
+    /* List: 1290 centered on white, 20 above/below, 1px #dedede under every row; rows 94. Pagination: no background, then 120 to the footer. */
+    .notices-page--list section[aria-label='공지사항 목록'] {
+        padding: 40px 0 120px;
+    }
+    .notices-page--list .notices-page__results {
+        background: #fff;
+    }
+    .notices-page--list .notices-page__list {
+        padding: 20px 0;
+    }
+    .notices-page--list .notices-page__row,
+    .notices-page--list .notices-page__list li:first-child .notices-page__row {
+        background: #fff;
+        border-bottom: 1px solid #dedede;
+    }
+    .notices-page--list .notices-page__row {
+        grid-template-columns: 65px 96px minmax(0, 1fr) 115px 35px;
+    }
+    .notices-page--list .notices-page__number {
+        color: #111;
+        font: 500 18px/1.4 var(--font-ko);
+    }
+    /* KOR_Sub6: SUIT Medium 18/1.4 for the badge text; the badge stays 80x37. */
+    .notices-page--list .notices-page__category {
+        border-color: #ccc;
+        color: #111;
+        font: 500 18px/1.4 var(--font-ko);
+        white-space: nowrap;
+    }
+    .notices-page--list .notices-page__row--pinned .notices-page__category {
+        border-color: #111;
+        color: #fff;
+        background: #111;
+    }
+    .notices-page--list .notices-page__title {
+        display: block;
+        overflow: hidden;
+        color: #111;
+        font: 500 18px/1.4 var(--font-ko);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .notices-page--list .notices-page__row time {
+        color: #111;
+        font: 500 18px/1.4 var(--font-ko);
+    }
+    .notices-page--list .notices-page__arrow {
+        justify-self: center;
+        align-self: center;
+    }
+    .notices-page--list .notices-page__pagination {
+        height: 36px;
+        padding: 0;
+        background: none;
+    }
+    .notices-page--list .notices-page__pagination button,
+    .notices-page--list .notices-page__pagination .notices-page__pagination-arrow {
+        color: #777;
+        font: 500 15px/1.4 var(--font-ko);
+    }
+    .notices-page--list .notices-page__pagination button[aria-current='page'],
+    .notices-page--list .notices-page__pagination .notices-page__pagination-arrow {
+        color: #0e0e0e;
+    }
+}
+
+/* Notices list content is 1294 wide (313 gutters at 1920). */
+@media (min-width: 1441px) {
+    .notices-page--list {
+        --notice-gutter: max(75px, calc((100vw - 1294px) / 2));
+    }
+}
