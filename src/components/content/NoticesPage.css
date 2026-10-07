@@ -788,21 +788,22 @@ body:has(.notices-page) .site-header { background: transparent; }
         --notice-gutter: 15px;
     }
 
-    /* Hero: 519 at 430, 20% dim + bottom fade, copy stacked up from the bottom (shared heading rule: 6 / 28 / 80). */
+    /* Hero like the exhibitions mobile hero: 520 tall, photo cover/centre, copy 15 from the left and 30 above the bottom.
+       Overlay: 30% black + fade from 53% to 80% black (same as PC). Heading gaps 6 / 28. */
     .notices-page.notices-page--list .notices-page__hero {
         display: flex;
-        height: clamp(434px, 120.7vw, 658px);
+        height: 520px;
         min-height: 0;
         flex-direction: column;
         justify-content: flex-end;
-        padding: 0 15px 80px;
+        padding: 0 15px 30px;
     }
     .notices-page.notices-page--list .notices-page__hero::after {
         content: '';
         position: absolute;
         inset: 0;
         background:
-            linear-gradient(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.2)),
+            linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
             linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
         pointer-events: none;
     }
