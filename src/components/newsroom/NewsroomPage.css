@@ -262,142 +262,6 @@
     color: #848484;
 }
 
-@media (max-width: 1100px) {
-    .newsroom-intro {
-        display: flex;
-        height: auto;
-        flex-direction: column;
-        padding: 72px 24px 48px;
-    }
-
-    .newsroom-hero {
-        position: relative;
-        top: auto;
-        left: auto;
-        height: auto;
-        aspect-ratio: 1919 / 578;
-        transform: none;
-    }
-
-    .newsroom-hero__image {
-        position: static;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        object-fit: cover;
-    }
-
-    .newsroom-featured {
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 100%;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-        margin: -48px auto 0;
-        transform: none;
-    }
-
-    .newsroom-feature-card {
-        height: auto;
-        aspect-ratio: 306 / 400;
-    }
-
-    .newsroom-promo {
-        height: auto;
-        padding: 56px 24px 72px;
-    }
-
-    .newsroom-hero__copy {
-        top: 32px;
-        left: 24px;
-        right: 24px;
-    }
-
-    .newsroom-hero__breadcrumb {
-        font-size: 14px;
-    }
-
-    .newsroom-hero__title {
-        font-size: clamp(36px, 6vw, 60px);
-    }
-
-    .newsroom-hero__description {
-        font-size: clamp(15px, 2vw, 22px);
-    }
-
-    .newsroom-promo__link {
-        position: relative;
-        top: auto;
-        left: auto;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 1920 / 415;
-        margin: 56px auto 0;
-    }
-
-    .newsroom-news {
-        height: auto;
-        padding: 20px 24px 80px;
-    }
-
-    .newsroom-news__grid {
-        position: static;
-        width: 100%;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 52px 24px;
-        margin: 72px auto 0;
-        transform: none;
-    }}
-
-@media (max-width: 760px) {
-    .newsroom-intro {
-        padding-inline: 16px;
-    }
-
-    .newsroom-featured {
-        grid-template-columns: 1fr;
-        max-width: 440px;
-        margin-top: -24px;
-    }
-
-    .newsroom-feature-card {
-        aspect-ratio: 306 / 260;
-    }
-
-    .newsroom-promo {
-        padding: 48px 16px 56px;
-    }
-
-    .newsroom-promo__title,
-    .newsroom-news__title {
-        font-size: clamp(30px, 8vw, 42px);
-    }
-
-    .newsroom-promo__description {
-        margin-top: 18px;
-        font-size: 17px;
-    }
-
-    .newsroom-promo__link {
-        margin-top: 40px;
-    }
-
-    .newsroom-news {
-        padding-inline: 16px;
-    }
-
-    .newsroom-news__grid {
-        grid-template-columns: 1fr;
-        gap: 44px;
-        max-width: 420px;
-    }
-
-    .newsroom-card__title {
-        font-size: 18px;
-    }
-}
-
 .newsroom-feature-card__link {
     position: absolute;
     inset: 0;
@@ -475,17 +339,6 @@
     outline: 2px solid #d00000;
     outline-offset: 3px;
 }
-@media (max-width: 767px) {
-    .newsroom-pagination {
-        gap: 4px;
-    }
-
-    .newsroom-pagination button {
-        width: 32px;
-        height: 32px;
-    }
-}
-
 /* Figma 4181:68 뉴스룸_수정본 (1920 기준). Desktop only; ≤1100px rules above stay as they are. */
 @media (min-width: 1101px) {
     .newsroom-intro {
@@ -611,5 +464,214 @@
 
     .newsroom-pagination {
         margin-top: 28px;
+    }
+}
+
+/*
+ * Mobile (≤1100px). No newsroom mobile design exists, so this follows the home mobile design (Figma 2306:3508, 430 wide):
+ * 15px side gutter, sizes scale with the viewport from 430 and are clamped for 360–1100.
+ */
+@media (max-width: 1100px) {
+    .newsroom-intro {
+        display: block;
+        height: auto;
+        padding: 0;
+    }
+
+    /* Home hero: 430x519, 20% dim; the bottom gradient keeps the gray breadcrumb readable on this brighter photo. */
+    .newsroom-hero {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        height: clamp(434px, 120.7vw, 658px);
+        aspect-ratio: auto;
+        transform: none;
+    }
+
+    .newsroom-hero::after {
+        background:
+            linear-gradient(rgb(0 0 0 / 0.2), rgb(0 0 0 / 0.2)),
+            linear-gradient(180deg, rgb(0 0 0 / 0) 53%, rgb(0 0 0 / 0.8) 100%);
+    }
+
+    .newsroom-hero__image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        object-fit: cover;
+    }
+
+    .newsroom-hero__copy {
+        top: auto;
+        right: 15px;
+        bottom: 28px;
+        left: 15px;
+    }
+
+    .newsroom-hero__breadcrumb {
+        font-size: 13px;
+    }
+
+    .newsroom-hero__title {
+        margin-top: 8px;
+        font: 600 30px/1.1 var(--font-en);
+    }
+
+    .newsroom-hero__description {
+        margin-top: 6px;
+        font: 500 14px/1.3 var(--font-ko);
+    }
+
+    /* Featured cards: horizontal scroll row like the home vehicle row (gap 20, starts at 15). */
+    .newsroom-featured {
+        position: static;
+        display: flex;
+        width: auto;
+        gap: 20px;
+        margin: 40px 0 0;
+        padding: 0 15px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scroll-snap-type: x mandatory;
+        scroll-padding-inline: 15px;
+        scrollbar-width: none;
+        transform: none;
+    }
+
+    .newsroom-featured::-webkit-scrollbar {
+        display: none;
+    }
+
+    .newsroom-feature-card {
+        flex: 0 0 clamp(220px, 60.47vw, 320px);
+        width: auto;
+        height: auto;
+        aspect-ratio: 260 / 340;
+        scroll-snap-align: start;
+    }
+
+    .newsroom-feature-card__title {
+        right: 16px;
+        bottom: 42px;
+        left: 16px;
+        font: 500 18px/1.4 var(--font-ko);
+    }
+
+    .newsroom-feature-card__location {
+        bottom: 20px;
+        left: 16px;
+        font: 500 13px/1.4 var(--font-en);
+    }
+
+    /* Promotional video: full-width photo (240 at 430) with white copy on top. */
+    .newsroom-promo {
+        position: relative;
+        height: auto;
+        margin-top: 60px;
+        padding: 0;
+    }
+
+    .newsroom-promo__copy {
+        position: absolute;
+        z-index: 1;
+        top: 24px;
+        right: 15px;
+        left: 15px;
+        color: #fff;
+        pointer-events: none;
+    }
+
+    .newsroom-promo__title {
+        color: inherit;
+        font: 600 30px/1.1 var(--font-en);
+    }
+
+    .newsroom-promo__description {
+        margin-top: 10px;
+        color: inherit;
+        font: 500 14px/1.3 var(--font-ko);
+    }
+
+    .newsroom-promo__link {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        height: clamp(200px, 55.81vw, 616px);
+        aspect-ratio: auto;
+        margin: 0;
+    }
+
+    .newsroom-promo__link::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: rgb(0 0 0 / 0.2);
+    }
+
+    /* News: home "Tilte section" heading, one column of cards. */
+    .newsroom-news {
+        height: auto;
+        margin-top: 60px;
+        padding: 0 15px 60px;
+    }
+
+    .newsroom-news__title {
+        font: 600 30px/1.1 var(--font-en);
+    }
+
+    .newsroom-news__description {
+        margin-top: 15px;
+        color: #0e0e0e;
+        font: 500 16px/1.4 var(--font-ko);
+        word-break: keep-all;
+    }
+
+    .newsroom-news__grid {
+        width: 100%;
+        max-width: none;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 40px;
+        margin: 32px 0 0;
+    }
+
+    /* The img height="450" attribute would otherwise stretch it when the column is not 465 wide. */
+    .newsroom-card__image {
+        height: auto;
+    }
+
+    /* Home "Studio Story" card text: image 16, title 15, detail lines 6. */
+    .newsroom-card__information {
+        gap: 6px;
+        margin-top: 16px;
+    }
+
+    .newsroom-card__text {
+        gap: 15px;
+    }
+
+    .newsroom-card__title {
+        font: 700 16px/1.2 var(--font-ko);
+    }
+
+    .newsroom-card__date {
+        font: 500 13px/1.3 var(--font-ko);
+    }
+
+    .newsroom-card__location {
+        font: 700 13px/1.3 var(--font-ko);
+    }
+
+    .newsroom-pagination {
+        gap: 4px;
+        margin-top: 40px;
+    }
+
+    .newsroom-pagination button {
+        min-width: 40px;
+        min-height: 40px;
     }
 }
