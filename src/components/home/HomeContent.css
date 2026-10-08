@@ -3358,6 +3358,119 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         visibility: visible;
     }
 }
+.renewal-vehicle-exhibition-slogan,
+.renewal-vehicle-exhibition-card-list__model-name {
+    display: none;
+}
+.renewal-vehicle-exhibition-floating-title span {
+    display: block;
+}
+@media (min-width: 901px) {
+    .renewal-vehicle-exhibition-slogan {
+        display: grid;
+        height: 100svh;
+        padding-top: 0;
+        align-content: center;
+        justify-items: center;
+        margin-bottom: 40svh;
+        background: var(--color-main-1);
+        color: #0e0e0e;
+    }
+    .renewal-vehicle-exhibition-slogan h2 {
+        margin: 0;
+        font: 600 min(4.16667vw, 80px)/1.1 var(--font-en);
+        text-align: center;
+    }
+    .renewal-vehicle-exhibition-slogan h2 span {
+        display: block;
+    }
+    .renewal-vehicle-exhibition-card-list {
+        --vehicle-exhibition-extra-gap: max(
+            0px,
+            calc(100svh + 160px - min(25.83333vw, 496px))
+        );
+        height: calc(min(293.95833vw, 5644px) + var(--vehicle-exhibition-extra-gap));
+        margin-top: 0;
+        padding: 0;
+    }
+    .renewal-vehicle-exhibition-card-list__items {
+        top: var(--vehicle-exhibition-extra-gap);
+        height: min(293.95833vw, 5644px);
+    }
+    .renewal-vehicle-exhibition-card-list__header h2 {
+        font-weight: 600;
+    }
+    .renewal-vehicle-exhibition-card-list__header p {
+        width: min(30.46875vw, 585px);
+        margin-top: min(1.5625vw, 30px);
+        white-space: normal;
+    }
+    .renewal-vehicle-exhibition-card-list__item h3 {
+        font-weight: 700;
+    }
+    .renewal-vehicle-exhibition-card-list__item.is-avante-n {
+        top: min(25.83333vw, 496px);
+        left: calc(62.5% + min(0.26042vw, 5px));
+    }
+    .renewal-vehicle-exhibition-card-list__item.is-grandeur {
+        top: min(70.20833vw, 1348px);
+        left: min(6.77083vw, 130px);
+    }
+    .renewal-vehicle-exhibition-card-list__item.is-ioniq-9 {
+        top: min(113.95833vw, 2188px);
+        left: calc(62.5% + min(0.26042vw, 5px));
+    }
+    .renewal-vehicle-exhibition-card-list__item.is-ioniq-5 {
+        top: min(154.27083vw, 2962px);
+        left: min(6.77083vw, 130px);
+    }
+    .renewal-vehicle-exhibition-card-list__item.is-gv80 {
+        top: min(194.79167vw, 3740px);
+        left: calc(81.25% - min(2.94271vw, 56.5px));
+        transform: translateX(-50%);
+    }
+    .renewal-vehicle-exhibition-card-list__item.is-elantra {
+        top: min(234.89583vw, 4510px);
+        left: min(6.77083vw, 130px);
+    }
+    .renewal-vehicle-exhibition-card-list__model-name {
+        position: absolute;
+        z-index: 1;
+        display: block;
+        top: min(17.8125vw, 342px);
+        left: min(42.29167vw, 812px);
+        color: var(--color-sub-1);
+        opacity: 0.24;
+        font: italic 600 min(6.25vw, 120px)/1.1 var(--font-en);
+        white-space: nowrap;
+        pointer-events: none;
+    }
+    .renewal-vehicle-exhibition-card-list__item > img {
+        position: relative;
+        z-index: 2;
+    }
+    .is-avante-n .renewal-vehicle-exhibition-card-list__model-name {
+        top: min(17.1875vw, 330px);
+        left: max(-33.75vw, -648px);
+        line-height: 1.3;
+    }
+    .is-grandeur .renewal-vehicle-exhibition-card-list__model-name {
+        top: min(14.375vw, 276px);
+        left: min(34.58333vw, 664px);
+    }
+    .is-ioniq-9 .renewal-vehicle-exhibition-card-list__model-name {
+        left: max(-26.875vw, -516px);
+    }
+    .is-ioniq-5 .renewal-vehicle-exhibition-card-list__model-name,
+    .is-elantra .renewal-vehicle-exhibition-card-list__model-name {
+        left: min(34.58333vw, 664px);
+    }
+    .is-gv80 .renewal-vehicle-exhibition-card-list__model-name {
+        top: min(17.60417vw, 338px);
+        left: max(-9.32292vw, -179px);
+        transform: translateX(-100%);
+    }
+}
 /* Home component styles. */
 /* Keep the desktop handoff after the shared and fallback rules. */
 @media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
