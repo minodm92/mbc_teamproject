@@ -639,7 +639,9 @@ body:has(.notices-page) .site-header { background: transparent; }
 }
 
 @media (min-width: 1024px) {
-    /* Hero 658: photo crop + 30% dim and a bottom fade; copy at left 100, bottom-aligned 80 up (heading rule shared with newsroom/membership). */
+    /* Hero 658: photo crop + 30% dim and a bottom fade; copy at left 100, bottom-aligned 80 up.
+       Figma 4318:4367: breadcrumb/title/description sit in one column with a uniform 20px gap
+       (not the 6/28 split newsroom/membership use). */
     .notices-page--list .notices-page__hero {
         display: flex;
         flex-direction: column;
@@ -668,10 +670,10 @@ body:has(.notices-page) .site-header { background: transparent; }
         z-index: 1;
     }
     .notices-page--list .notices-page__heading {
-        margin-top: 6px;
+        margin-top: 20px;
     }
     .notices-page--list .notices-page__hero .notices-page__heading .notices-page__intro {
-        margin-top: 28px;
+        margin-top: 20px;
     }
 
     /* Tabs 64 tall: selected #0e0e0e with a 3px underline, others #a8a7ac, gap 38. */
