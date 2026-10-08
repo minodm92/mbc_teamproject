@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { isDemoEmailRegistered } from '../../common/auth/demoAccounts';
@@ -27,6 +27,9 @@ export default function SignUpPageView() {
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState('');
   const errorMessage = formError || authError;
+  const completedSteps = [values.name, values.email, values.phone, values.password]
+    .findIndex((value) => !value.trim());
+  const progressCount = completedSteps === -1 ? 4 : completedSteps;
 
   useEffect(() => { clearAuthError(); }, [clearAuthError]);
 
@@ -66,7 +69,12 @@ export default function SignUpPageView() {
     </section>
     <section className="signup-page__panel" aria-labelledby="signup-heading">
       <Link className="signup-page__home" to={paths.home}>BACK TO HOME<img src="/images/login/home-arrow.svg" width="14" height="14" alt="" /></Link>
-      <img className="signup-page__progress" src="/images/signup/progress.svg" width="780" height="16" alt="" aria-hidden="true" />
+      <div className="signup-page__progress" aria-hidden="true">
+        {Array.from({ length: 4 }, (_, index) => <Fragment key={index}>
+          <span className={`signup-page__progress-dot${index < progressCount ? ' is-complete' : ''}`} />
+          {index < 3 && <span className={`signup-page__progress-line${index < progressCount - 1 ? ' is-complete' : ''}`} />}
+        </Fragment>)}
+      </div>
       <div className="signup-page__content">
         <p className="signup-page__eyebrow">MEMBERSHIP</p>
         <h1 id="signup-heading">CREATE ACCOUNT</h1>
