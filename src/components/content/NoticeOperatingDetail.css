@@ -196,17 +196,22 @@
     outline-offset: 4px;
 }
 @media (max-width: 767px) {
+    /* PREV / 목록 / NEXT: one row, each centered in its own track at the 목록
+       버튼의 48px 높이에 맞춰 세로 중앙 정렬. 모바일에서는 게시글 제목 텍스트
+       없이 PREV/NEXT 라벨 + 화살표만 표시하므로 제목은 완전히 display:none 처리해
+       공간 자체를 차지하지 않도록 함. */
     .notice-operating-page__actions {
-        flex-wrap: wrap;
-        gap: 24px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        min-height: 48px;
+        gap: 12px;
     }
     .notice-operating-page__next {
         position: static;
-        width: 100%;
-    }
-    .notice-operating-page__next-title {
-        white-space: normal;
-        overflow-wrap: anywhere;
+        width: auto;
+        min-width: 0;
+        justify-self: center;
     }
 }
 
@@ -232,7 +237,6 @@
 @media (max-width: 767px) {
     .notice-operating-page__previous {
         position: static;
-        margin-right: auto;
     }
 }
 
@@ -253,7 +257,9 @@
 }
 @media (max-width: 767px) {
     .notice-operating-page__previous {
-        width: 100%;
+        width: auto;
+        min-width: 0;
+        justify-self: center;
     }
 }
 
@@ -275,5 +281,13 @@
 @media (max-width: 767px) {
     #root > main.notice-operating-page .detail-hero + .notice-operating-page__inner {
         padding-top: 40px;
+    }
+}
+
+/* Must come after the unconditional display:block rule above so this actually
+   wins the cascade on mobile (equal specificity, source order decides). */
+@media (max-width: 767px) {
+    .notice-operating-page__next-title {
+        display: none;
     }
 }
