@@ -156,7 +156,7 @@ export default function Header({ variant = 'light' }) {
 
   return <>
     {scrolled && <button className="site-header__reveal-zone" type="button" aria-label="상단 메뉴 표시" onFocus={() => setTopHovered(true)} onClick={() => setTopHovered(true)} />}
-    <header data-mobile-theme={mobileDarkBackground ? 'light' : 'dark'} onPointerEnter={() => setTopHovered(true)} onPointerLeave={event => { if (event.clientY > (headerRef.current?.offsetHeight || 80)) { setTopHovered(false); setSubnavOpen(false); } }} ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${isNewsroom ? ' site-header--newsroom' : ''}${subnavOpen ? ' site-header--expanded' : ''}${scrolled ? ' site-header--scrolled' : ''}${scrolled && !topHovered && !open ? ' site-header--scroll-hidden' : ''}`}>
+    <header data-mobile-theme={mobileDarkBackground ? 'light' : 'dark'} onPointerEnter={() => setTopHovered(true)} onPointerLeave={() => { setTopHovered(false); setSubnavOpen(false); }} ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${isNewsroom ? ' site-header--newsroom' : ''}${subnavOpen ? ' site-header--expanded' : ''}${scrolled ? ' site-header--scrolled' : ''}${scrolled && !topHovered && !open ? ' site-header--scroll-hidden' : ''}`}>
     <div className="site-header__bar">
       <Link className="site-header__logo" to={paths.home} onClick={closeMenus} aria-label="현대 모터스튜디오 홈">
         {renderAsset('hyundai-motorstudio-logo', 'site-header__logo-image')}

@@ -363,7 +363,7 @@
   .site-header__reveal-zone { height: 72px; }
 }
 
-#root .site-header:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) {
+#root .site-header:is(:hover, :focus-within, .site-header--expanded) {
   color: #fff;
 }
 #root .site-header--scrolled .site-header__asset--dark { opacity: 0; }
@@ -454,4 +454,21 @@
 
 #root .site-header.site-header:hover .site-header__actions .site-header__experience-finding {
   filter: none;
+}
+
+@media (min-width: 1001px) {
+  #root .site-header.site-header--scrolled:not(.site-header--scroll-hidden) {
+    background: #363636;
+    color: #fff;
+  }
+  #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__link,
+  #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__reservation-switch .reservation-select__trigger {
+    color: #fff;
+  }
+  #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__logo img,
+  #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__account img,
+  #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__experience-finding,
+  #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__reservation-switch > img {
+    filter: brightness(0) invert(1);
+  }
 }
