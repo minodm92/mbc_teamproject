@@ -4,6 +4,7 @@ import { Flip } from "gsap/Flip";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { locationShowcase } from "./data/locationShowcase";
 import LocationDetails from "./LocationDetails";
+import mobileWordmarkUrl from "../../assets/images/locations/figma/mobile-wordmark.svg";
 import "./LocationShowcase.css";
 
 gsap.registerPlugin(ScrollTrigger, Flip);
@@ -79,7 +80,7 @@ export default function LocationShowcase({ intro = false }) {
       const header = document.querySelector(".site-header");
       if (hero && title && titleImage) {
         media.add(
-          "(prefers-reduced-motion: no-preference)",
+          "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
           () => {
             // State A: black background, small white logo at the centre, header hidden. The photo is not touched here.
             const mainColor =
@@ -116,14 +117,17 @@ export default function LocationShowcase({ intro = false }) {
               () => {
                 root.classList.remove("location-showcase--intro");
                 const W = hero.clientWidth;
-                const bigW = W - 40;
+                const mobile = W <= 767;
+                const finalInset = mobile ? 15 : 20;
+                const finalTop = mobile ? 117 : 101;
+                const bigW = W - finalInset * 2;
                 const smallW = W * 0.551042;
                 const s0 = smallW / bigW;
                 const smallLeft = (W - smallW) / 2;
                 const smallTop = document.documentElement.clientHeight * 0.527 - (smallW * 113) / 1880 / 2;
                 // The transform is written as a string from a plain progress object, so GSAP never reads the
                 // intro CSS transform. Only transform changes during the move.
-                const move = { x: smallLeft - 20, y: smallTop - 101, s: s0 };
+                const move = { x: smallLeft - finalInset, y: smallTop - finalTop, s: s0 };
                 const writeMove = () => {
                   title.style.transformOrigin = "0 0";
                   title.style.transform = `translate3d(${move.x}px, ${move.y}px, 0) scale(${move.s})`;
@@ -221,6 +225,114 @@ export default function LocationShowcase({ intro = false }) {
           root,
         );
         media.add(
+          "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+          () => {
+            // Mobile keeps all geometry fixed. The intro fades the centered wordmark in on black,
+            // then cross-fades the hero and header artwork from white-on-black to black-on-white.
+            const mainColor =
+              getComputedStyle(root).getPropertyValue("--color-main-1").trim() || "#fff";
+            const main2Color =
+              getComputedStyle(root).getPropertyValue("--color-main-2").trim() || "#111";
+            const main2Hex = main2Color.match(/^#([\da-f]{3}|[\da-f]{6})$/i)?.[1];
+            const normalizedMain2 = main2Hex?.length === 3
+              ? [...main2Hex].map((value) => value + value).join("")
+              : main2Hex;
+            const main2Channel = normalizedMain2
+              ? Number.parseInt(normalizedMain2.slice(0, 2), 16) / 255
+              : 17 / 255;
+            const main2Filter = `brightness(0) invert(${main2Channel})`;
+            const mobileTransitionEase = "sine.inOut";
+            const headerAssets = header
+              ? header.querySelectorAll(".site-header__mobile-header-logo, .site-header__toggle img")
+              : [];
+            const heroPhoto = root.querySelector(".location-hero__visual");
+            gsap.set(hero, { backgroundColor: INTRO_TIMING.from });
+            gsap.set(titleImage, { filter: "brightness(0) invert(1)" });
+            gsap.set(title, { opacity: 0 });
+            if (heroPhoto) gsap.set(heroPhoto, { opacity: 0 });
+            gsap.set(headerAssets, { filter: "brightness(0) invert(1)" });
+            if (header) gsap.set(header, { autoAlpha: 1 });
+
+            let disposed = false;
+            const timeline = gsap.timeline({
+              paused: true,
+              onComplete: () => {
+                if (disposed) return;
+                hero.setAttribute("data-header-theme", "light");
+                root.classList.remove("location-showcase--intro");
+                setIntroVisible(false);
+              },
+            });
+            timeline
+              .to(title, {
+                opacity: 1,
+                duration: 1.4,
+                ease: mobileTransitionEase,
+              })
+              .to(
+                heroPhoto,
+                {
+                  opacity: 1,
+                  duration: 1.4,
+                  ease: mobileTransitionEase,
+                },
+                0,
+              )
+              .to(
+                hero,
+                {
+                  backgroundColor: mainColor,
+                  duration: 1.8,
+                  ease: mobileTransitionEase,
+                },
+                ">",
+              )
+              .to(
+                titleImage,
+                {
+                  filter: main2Filter,
+                  duration: 1.8,
+                  ease: mobileTransitionEase,
+                },
+                "<",
+              )
+              .to(
+                headerAssets,
+                {
+                  filter: "brightness(0) invert(0.066667)",
+                  duration: 1.8,
+                  ease: mobileTransitionEase,
+                },
+                "<",
+              );
+
+            const reveal = () => {
+              if (disposed) return;
+              timeline.play(0);
+            };
+
+            const decoded = titleImage.decode
+              ? titleImage.decode().catch(() => {})
+              : Promise.resolve();
+            decoded.then(() => window.requestAnimationFrame(reveal));
+
+            return () => {
+              disposed = true;
+              timeline.kill();
+              gsap.set(title, { clearProps: "opacity" });
+              if (heroPhoto) gsap.set(heroPhoto, { clearProps: "opacity" });
+              gsap.set(hero, { clearProps: "backgroundColor" });
+              gsap.set(titleImage, { clearProps: "filter" });
+              gsap.set(headerAssets, { clearProps: "filter" });
+              if (header) gsap.set(header, { clearProps: "opacity,visibility" });
+              hero.setAttribute("data-header-theme", "dark");
+              document.documentElement.style.scrollbarGutter = "";
+              document.documentElement.style.background = "";
+            };
+          },
+          root,
+        );
+        media.add(
           "(prefers-reduced-motion: reduce)",
           () => {
             root.classList.remove("location-showcase--intro");
@@ -247,6 +359,219 @@ export default function LocationShowcase({ intro = false }) {
             ease: "power2.out",
           });
         }
+      },
+      root,
+    );
+
+    media.add(
+      "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        const avante = root.querySelector(".studio-avante");
+        const avanteImage = avante?.querySelector(".studio-avante__media");
+        const avanteCopy = avante?.querySelector(".studio-avante__copy");
+        if (!avante || !avanteImage || !avanteCopy) return undefined;
+
+        const reveal = gsap.timeline({
+          scrollTrigger: {
+            trigger: avante,
+            start: "top 70%",
+            once: true,
+          },
+        });
+        reveal
+          .fromTo(
+            avanteImage,
+            { autoAlpha: 0 },
+            { autoAlpha: 1, duration: 0.75, ease: "power1.inOut" },
+          )
+          .fromTo(
+            avanteCopy,
+            { autoAlpha: 0, y: 18 },
+            { autoAlpha: 1, y: 0, duration: 0.65, ease: "power3.out" },
+            0.25,
+          );
+
+        return () => reveal.kill();
+      },
+      root,
+    );
+
+    media.add(
+      "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        const description = root.querySelector(".studio-intro");
+        const descriptionTitle = description?.querySelector("h2");
+        const descriptionBody = description?.querySelectorAll(".studio-intro__columns p");
+        if (!description || !descriptionTitle || !descriptionBody?.length) return undefined;
+
+        const reveal = gsap.timeline({
+          scrollTrigger: {
+            trigger: description,
+            start: "top 62%",
+            once: true,
+          },
+        });
+        reveal
+          .fromTo(
+            descriptionTitle,
+            { autoAlpha: 0, y: 18 },
+            { autoAlpha: 1, y: 0, duration: 0.6, ease: "power3.out" },
+          )
+          .fromTo(
+            descriptionBody,
+            { autoAlpha: 0, y: 16 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.6,
+              stagger: 0.04,
+              ease: "power3.out",
+            },
+            0.06,
+          );
+
+        return () => reveal.kill();
+      },
+      root,
+    );
+
+    media.add(
+      "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        const vehicles = root.querySelector(".studio-vehicles");
+        const vehiclesTitle = vehicles?.querySelector(".studio-section-title");
+        const vehicleCards = vehicles?.querySelectorAll(".studio-vehicle");
+        if (!vehicles || !vehiclesTitle || !vehicleCards?.length) {
+          return undefined;
+        }
+
+        const reveals = [
+          gsap.fromTo(
+            vehiclesTitle,
+            { autoAlpha: 0, y: 18 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: vehiclesTitle,
+                start: "top bottom",
+                once: true,
+              },
+            },
+          ),
+          ...[...vehicleCards].flatMap((card) => {
+            const image = card.querySelector(".studio-vehicle__image");
+            const copy = card.querySelector(".studio-vehicle__copy");
+            return [
+              gsap.fromTo(
+                image,
+                { autoAlpha: 0 },
+                {
+                  autoAlpha: 1,
+                  duration: 0.48,
+                  ease: "power2.out",
+                  scrollTrigger: {
+                    trigger: image,
+                    start: "top bottom",
+                    once: true,
+                  },
+                },
+              ),
+              gsap.fromTo(
+                copy,
+                { autoAlpha: 0, y: 14 },
+                {
+                  autoAlpha: 1,
+                  y: 0,
+                  duration: 0.63,
+                  ease: "power3.out",
+                  scrollTrigger: {
+                    trigger: copy,
+                    start: "top bottom",
+                    once: true,
+                  },
+                },
+              ),
+            ];
+          }),
+        ];
+
+        return () => reveals.forEach((reveal) => reveal.kill());
+      },
+      root,
+    );
+
+    media.add(
+      "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        const programs = root.querySelector(".studio-programs");
+        const programsTitle = programs?.querySelector(".studio-section-title");
+        const programCopies = programs?.querySelectorAll(".studio-program h3");
+        const programImages = programs?.querySelectorAll(".studio-program__image");
+        if (
+          !programs ||
+          !programsTitle ||
+          !programCopies?.length ||
+          !programImages?.length
+        ) return undefined;
+
+        const reveals = [
+          gsap.fromTo(
+            programsTitle,
+            { autoAlpha: 0, y: 18 },
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.75,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: programsTitle,
+                start: "top 96%",
+                once: true,
+              },
+            },
+          ),
+          ...[...programCopies].map((copy) =>
+            gsap.fromTo(
+              copy,
+              { autoAlpha: 0, y: 14 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.7,
+                delay: 0.04,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: copy,
+                  start: "top 96%",
+                  once: true,
+                },
+              },
+            ),
+          ),
+          ...[...programImages].map((image) =>
+            gsap.fromTo(
+              image,
+              { autoAlpha: 0, y: 12 },
+              {
+                autoAlpha: 1,
+                y: 0,
+                duration: 0.7,
+                delay: 0.08,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: image,
+                  start: "top 96%",
+                  once: true,
+                },
+              },
+            ),
+          ),
+        ];
+
+        return () => reveals.forEach((reveal) => reveal.kill());
       },
       root,
     );
@@ -821,14 +1146,17 @@ export default function LocationShowcase({ intro = false }) {
       className={`location-showcase${introVisible ? " location-showcase--intro" : ""}${intro ? " location-showcase--motorstudio" : ""}`}
       ref={rootRef}
     >
-      <section className="location-hero" aria-label="현대 모터스튜디오">
+      <section className="location-hero" aria-label="현대 모터스튜디오" data-header-theme="dark">
         <h1 className="location-hero__wordmark">
-          <img
-            src="/images/locations/figma/wordmark.svg"
-            alt="HYUNDAI MOTORSTUDIO"
-            width="1880"
-            height="113"
-          />
+          <picture>
+            <source media="(max-width: 767px)" srcSet={mobileWordmarkUrl} />
+            <img
+              src="/images/locations/figma/wordmark.svg"
+              alt="HYUNDAI MOTORSTUDIO"
+              width="1880"
+              height="113"
+            />
+          </picture>
         </h1>
         <div className="location-hero__visual">
           <div className="location-hero__crop">

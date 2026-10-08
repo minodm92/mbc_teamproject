@@ -33,14 +33,18 @@ const driveTabs = [
 
 export default function LocationDetails() {
   const [activeView, setActiveView] = useState(0);
+  const [displayedView, setDisplayedView] = useState(0);
+  const [viewFading, setViewFading] = useState(false);
   const [activeDriveIndex, setActiveDriveIndex] = useState(0);
   const driveWrapperRef = useRef(null);
+  const viewTimerRef = useRef(0);
   const displayDrive = driveTabs[activeDriveIndex];
   useEffect(() => {
     let frame = 0;
     // Scroll progress through the DRIVE TEST wrapper (0 at its top, 1 at its end) picks the active item.
     const update = () => {
       frame = 0;
+      if (window.matchMedia("(max-width: 767px)").matches) return;
       const wrapper = driveWrapperRef.current;
       if (!wrapper || wrapper.offsetParent === null) return;
       const travel = wrapper.offsetHeight - window.innerHeight;
@@ -62,8 +66,31 @@ export default function LocationDetails() {
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
+  useEffect(() => () => {
+    window.clearTimeout(viewTimerRef.current);
+  }, []);
+
+  const changeAvanteView = (nextView) => {
+    setActiveView(nextView);
+    if (!window.matchMedia("(max-width: 767px)").matches) {
+      setDisplayedView(nextView);
+      return;
+    }
+    window.clearTimeout(viewTimerRef.current);
+    setViewFading(true);
+    viewTimerRef.current = window.setTimeout(() => {
+      setDisplayedView(nextView);
+      window.requestAnimationFrame(() => setViewFading(false));
+    }, 200);
+  };
+
   // Clicking a item scrolls to the middle of its third of the DRIVE TEST wrapper.
   const scrollToDrive = (index) => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      if (index === activeDriveIndex) return;
+      setActiveDriveIndex(index);
+      return;
+    }
     const wrapper = driveWrapperRef.current;
     if (!wrapper) return;
     const travel = wrapper.offsetHeight - window.innerHeight;
@@ -79,10 +106,9 @@ export default function LocationDetails() {
       <section className="studio-avante" aria-labelledby="studio-avante-title">
         <div className="studio-avante__media studio-mask">
           <img
-            key={activeView}
-            src={asset(views[activeView])}
+            src={asset(views[displayedView])}
             alt="현대 모터스튜디오 아반떼 전시"
-            className={activeView === 0 ? "studio-avante__original" : ""}
+            className={`${displayedView === 0 ? "studio-avante__original" : ""}${viewFading ? " is-switching" : ""}`}
           />
         </div>
         <div className="studio-avante__views" aria-label="아반떼 이미지 선택">
@@ -92,7 +118,7 @@ export default function LocationDetails() {
               type="button"
               aria-label={`아반떼 전시 이미지 ${number}`}
               aria-pressed={activeView === number}
-              onClick={() => setActiveView(activeView === number ? 0 : number)}
+              onClick={() => changeAvanteView(activeView === number ? 0 : number)}
             >
               <img src={asset(`avante-${number}`)} alt="" />
             </button>
@@ -166,6 +192,7 @@ export default function LocationDetails() {
                 <button
                   className={`studio-drive__tab${isActive ? " is-active" : ""}`}
                   key={tab.id}
+                  style={{ order: index * 2 + 1 }}
                   type="button"
                   role="tab"
                   aria-selected={isActive}
@@ -186,6 +213,21 @@ export default function LocationDetails() {
                 </button>
               );
             })}
+            <div
+              className="studio-drive__mobile-image"
+              style={{ order: activeDriveIndex * 2 + 2 }}
+              aria-live="polite"
+            >
+              {driveTabs.map((tab, index) => (
+                <img
+                  className={`studio-drive__mobile-photo studio-drive__mobile-photo--${tab.id}${index === activeDriveIndex ? " is-active" : ""}`}
+                  key={tab.id}
+                  src={tab.image}
+                  alt={index === activeDriveIndex ? tab.alt : ""}
+                  aria-hidden={index !== activeDriveIndex}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>

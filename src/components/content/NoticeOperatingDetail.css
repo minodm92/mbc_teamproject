@@ -268,3 +268,12 @@
 .notice-operating-page__next .notice-operating-page__next-title {
     margin-left: auto;
 }
+/* Under the detail hero the header no longer overlaps the content: hero → title 80 (PC/tablet), 40 (mobile). */
+#root > main.notice-operating-page .detail-hero + .notice-operating-page__inner {
+    padding-top: 80px;
+}
+@media (max-width: 767px) {
+    #root > main.notice-operating-page .detail-hero + .notice-operating-page__inner {
+        padding-top: 40px;
+    }
+}
