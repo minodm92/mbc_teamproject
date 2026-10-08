@@ -200,7 +200,7 @@ export function HomeStories({ stories }) {
       }
       document.fonts?.ready.then(refreshAfterLayout);
 
-      if (titleLine) {
+      if (titleLine && !window.matchMedia('(max-width: 767px)').matches) {
         const lineTween = gsap.fromTo(lineState, { progress: 0 }, {
           progress: 1,
           duration: 1,
@@ -217,6 +217,24 @@ export function HomeStories({ stories }) {
           },
         });
         lineTrigger = lineTween.scrollTrigger;
+      }
+
+      let mobileScrollFrame = 0;
+      const updateMobileLine = () => {
+        mobileScrollFrame = 0;
+        if (!titleLineFill) return;
+        const distance = section.scrollWidth - section.clientWidth;
+        const progress = distance > 0 ? Math.min(1, Math.max(0, section.scrollLeft / distance)) : 0;
+        titleLineFill.style.transform = `scaleX(${progress})`;
+      };
+      const requestMobileLineUpdate = () => {
+        if (!mobileScrollFrame) mobileScrollFrame = requestAnimationFrame(updateMobileLine);
+      };
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        titleLineFill?.style.removeProperty('clip-path');
+        section.addEventListener('scroll', requestMobileLineUpdate, { passive: true });
+        window.addEventListener('resize', requestMobileLineUpdate);
+        updateMobileLine();
       }
 
       rows.forEach((row, index) => {
@@ -264,6 +282,10 @@ export function HomeStories({ stories }) {
         images.forEach((image) => image.removeEventListener('load', refreshOnImageLoad));
         contentObserver?.disconnect();
         lineTrigger?.kill();
+        section.removeEventListener('scroll', requestMobileLineUpdate);
+        window.removeEventListener('resize', requestMobileLineUpdate);
+        cancelAnimationFrame(mobileScrollFrame);
+        if (isMobile) titleLineFill?.style.removeProperty('transform');
       };
     };
 

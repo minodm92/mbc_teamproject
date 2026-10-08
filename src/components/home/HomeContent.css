@@ -3241,28 +3241,52 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         font-size: 13px;
     }
     .renewal-story-title__line-track {
+        display: block;
+        bottom: -17px;
+        left: 20px;
+        z-index: 2;
+        width: calc(100% - 40px);
+        height: 4px;
+        transform: none;
+        background: #d1d1d1;
+    }
+    .renewal-story-title__line-track img {
         display: none;
+    }
+    .renewal-story-title__line-fill {
+        clip-path: none;
+        background: #848484;
+        transform: scaleX(0);
+        transform-origin: left;
     }
     .renewal-stories {
         display: flex;
         width: 100%;
-        padding: 51px 0 36px 32px;
+        padding: 51px 20px 36px;
         flex-direction: row;
-        gap: 57px;
+        gap: 16px;
         overflow-x: auto;
-        scroll-snap-type: none;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline-start: 20px;
+        scrollbar-width: none;
+        overscroll-behavior-x: contain;
+    }
+    .renewal-stories::-webkit-scrollbar {
+        display: none;
     }
     .renewal-story,
     .renewal-story--2,
     .renewal-story--3,
     .renewal-story--4 {
-        flex: 0 0 366px;
-        width: 366px;
+        flex: 0 0 62vw;
+        width: 62vw;
         margin: 0;
+        scroll-snap-align: start;
     }
     .renewal-story img {
-        width: 366px;
-        height: 252px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 366 / 252;
         object-fit: cover;
     }
     .renewal-story .renewal-story__copy {
