@@ -1,13 +1,50 @@
-﻿import { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowUpRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
 import membershipHeroImage from '../../assets/images/membership/membership-hero.png';
-import categoryIntroImage from '../../assets/images/membership/category-intro.png';
 import categoryJoinImage from '../../assets/images/membership/category-join.png';
 import categoryBenefitsImage from '../../assets/images/membership/category-benefits.png';
 import categoryLocationsImage from '../../assets/images/membership/category-locations.png';
 import './MembershipPage.css';
+
+/*
+ * 멤버십 페이지 — 제네시스 멤버십 소개 페이지 구조(탭 → 혜택 카테고리 → 가입 대상 표 → 가입 방법)를
+ * 따르고, 타이포·여백·탭·리스트 행·배지는 공지사항(NoticesPage.css)과 뉴스룸(NewsroomPage.css) 값을 그대로 쓴다.
+ */
+
+const membershipTabs = [
+    ['intro', '멤버십 안내'],
+    ['benefits', '혜택 안내'],
+    ['locations', '이용·라운지 안내'],
+];
+// 탭별 히어로 제목·사진 (feature/motorstudio-mobile.v2 708ab11과 동일한 동작)
+const membershipHeroByTab = {
+    intro: ['MEMBERSHIP', membershipHeroImage],
+    benefits: ['혜택 안내', categoryBenefitsImage],
+    locations: ['이용·라운지 안내', categoryLocationsImage],
+};
+
+const categories = [
+    [
+        'join',
+        '가입 안내',
+        categoryJoinImage,
+        '멤버십 가입 대상과 방법, Basic·Plus 회원 유형을 확인해 보세요.',
+    ],
+    [
+        'benefits',
+        '혜택 안내',
+        categoryBenefitsImage,
+        '주차권부터 특별한 프로그램까지, HMS Club의 다양한 혜택을 만나보세요.',
+    ],
+    [
+        'locations',
+        '이용·라운지 안내',
+        categoryLocationsImage,
+        '현대 모터스튜디오의 각 거점과 라운지에서 즐길 수 있는 경험을 확인해 보세요.',
+    ],
+];
 
 const membershipTypes = [
     ['Basic', 'HMS Club 가입 고객', '별도의 조건 없이 누구나 가입 가능'],
@@ -18,19 +55,41 @@ const membershipTypes = [
     ],
 ];
 
+const joinNotes = [
+    '기존 현대 모터스튜디오 회원은 로그인 후 약관 동의를 통해 HMS Club 멤버십으로 전환됩니다.',
+    '가입 시 본인 인증이 필요합니다.',
+    '렌트·리스 고객은 계약 기간 12개월 이상이며 실운행자 명의로 가입 시 Plus가 적용됩니다.',
+    'Basic 회원이 현대·제네시스 차량을 구매하면 차량 등록 익일부터 Plus 혜택이 제공됩니다. 시스템 반영 일정에 따라 지연될 수 있습니다.',
+];
+
+const joinMethods = [
+    [
+        'WEB',
+        '모바일 / PC',
+        [
+            '현대 모터스튜디오 홈페이지에 접속한 뒤 오른쪽 위의 프로필 아이콘을 누릅니다.',
+            '프로필에서 ‘멤버십 가입’을 선택합니다.',
+            'HMS Club 가입 절차를 진행합니다.',
+        ],
+    ],
+    [
+        'APP',
+        '마이현대',
+        [
+            '마이현대 앱에서 현대자동차 통합 계정으로 로그인합니다. 계정이 없다면 먼저 계정을 만들어 주세요.',
+            '서비스 바로가기에서 ‘현대 모터스튜디오’를 선택합니다.',
+            'HMS Club 가입 약관에 동의합니다.',
+        ],
+    ],
+];
+
 const benefits = [
     [
-        '01',
         '웰컴 패키지',
         '해비치 커피 쿠폰 1매와 1시간 주차권 2매, 상설전시 30% 할인권 2매와 CX프로그램 10% 할인권 2매를 제공합니다.',
     ],
+    ['주차 서비스', '현대 모터스튜디오 고양·서울에서 사용할 수 있는 1시간 주차권을 분기별 1매 제공합니다.'],
     [
-        '02',
-        '주차 서비스',
-        '현대 모터스튜디오 고양·서울에서 사용할 수 있는 1시간 주차권을 분기별 1매 제공합니다.',
-    ],
-    [
-        '03',
         '멤버십 라운지 이용',
         '서울·부산의 HMS Club Lounge를 이용할 수 있습니다. 동반 2인을 포함하여 최대 3시간 이용이 가능합니다.',
     ],
@@ -46,6 +105,7 @@ const plusBenefits = [
     ],
     ['Plus 회원 전용 프로그램', '시즌별 이벤트 및 프로모션에 초청합니다.'],
 ];
+
 const locations = [
     [
         'SEOUL',
@@ -69,6 +129,7 @@ const locations = [
 ];
 const lounges = {
     seoul: {
+        label: '서울',
         title: 'HMS Club Lounge (서울)',
         description:
             '편안하게 머물며 새로운 영감을 나누는 멤버십 공간입니다. 라운지 및 코워킹 스페이스를 이용할 수 있습니다.',
@@ -79,6 +140,7 @@ const lounges = {
         ],
     },
     busan: {
+        label: '부산',
         title: 'HMS Club Lounge (부산 1층)',
         description:
             '현대자동차와 협업한 게임 콘텐츠를 경험할 수 있는 체험형 라운지입니다. 멤버십 회원을 대상으로 다채로운 레이싱 게임과 가챠·벤딩 머신, 그리고 락커룸 서비스를 제공합니다.',
@@ -91,31 +153,39 @@ const lounges = {
         ],
     },
 };
-const membershipTabs = [
-    ['intro', '멤버십 안내'],
-    ['join', '가입 안내'],
-    ['benefits', '혜택 안내'],
-    ['locations', '이용·라운지 안내'],
-];
+
+function SectionHeading({ id, title, description }) {
+    return (
+        <header className="membership-heading">
+            <h2 id={id}>{title}</h2>
+            {description && <p>{description}</p>}
+        </header>
+    );
+}
 
 export default function MembershipPage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const tabParam = searchParams.get('tab');
+    // 예전 '가입 안내' 탭 링크(?tab=join)는 멤버십 안내 탭의 가입 안내 섹션으로 보낸다.
     const activeTab = membershipTabs.some(([id]) => id === tabParam) ? tabParam : 'intro';
     const currentTabLabel = membershipTabs.find(([id]) => id === activeTab)[1];
+    const [heroTitle, heroImage] = membershipHeroByTab[activeTab] || membershipHeroByTab.intro;
     const [activeLounge, setActiveLounge] = useState('seoul');
-    const contentRef = useRef(null);
+    const tabsRef = useRef(null);
+    const joinRef = useRef(null);
     const previousTab = useRef(null);
 
+    const scrollBehavior = () =>
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+
     useEffect(() => {
-        if (previousTab.current !== null && previousTab.current !== activeTab) {
-            contentRef.current?.scrollIntoView({
-                block: 'start',
-                behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-            });
+        if (tabParam === 'join') {
+            joinRef.current?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
+        } else if (previousTab.current !== null && previousTab.current !== activeTab) {
+            tabsRef.current?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
         }
         previousTab.current = activeTab;
-    }, [activeTab]);
+    }, [activeTab, tabParam]);
 
     function setActiveTab(id) {
         setSearchParams(id === 'intro' ? {} : { tab: id });
@@ -124,8 +194,7 @@ export default function MembershipPage() {
     function handleTabKeyDown(event, index) {
         let nextIndex;
         if (event.key === 'ArrowRight') nextIndex = (index + 1) % membershipTabs.length;
-        else if (event.key === 'ArrowLeft')
-            nextIndex = (index - 1 + membershipTabs.length) % membershipTabs.length;
+        else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + membershipTabs.length) % membershipTabs.length;
         else if (event.key === 'Home') nextIndex = 0;
         else if (event.key === 'End') nextIndex = membershipTabs.length - 1;
         else return;
@@ -133,30 +202,40 @@ export default function MembershipPage() {
         setActiveTab(membershipTabs[nextIndex][0]);
         event.currentTarget.parentElement.children[nextIndex].focus();
     }
+
+    function openCategory(target) {
+        if (target === 'join') {
+            if (activeTab === 'intro') joinRef.current?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
+            else setSearchParams({ tab: 'join' });
+            return;
+        }
+        setActiveTab(target);
+    }
+
     return (
-        <main className="membership-page membership-page--tabs">
+        <main className="membership-page">
             <section
                 className="membership-hero"
                 aria-labelledby="membership-title"
                 data-header-theme="dark"
-                style={{ '--membership-hero-image': `url("${membershipHeroImage}")` }}
+                style={{ '--membership-hero-image': `url("${heroImage}")` }}
             >
                 <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
                     <Link to={paths.home}>HOME</Link>
-                    <span aria-hidden="true"> / </span>
+                    <span aria-hidden="true">/</span>
                     <span>안내</span>
-                    <span aria-hidden="true"> / </span>
+                    <span aria-hidden="true">/</span>
                     {activeTab === 'intro' ? (
                         <span aria-current="page">멤버십</span>
                     ) : (
                         <>
                             <Link to={paths.membership}>멤버십</Link>
-                            <span aria-hidden="true"> / </span>
+                            <span aria-hidden="true">/</span>
                             <span aria-current="page">{currentTabLabel}</span>
                         </>
                     )}
                 </nav>
-                <h1 id="membership-title">MEMBERSHIP</h1>
+                <h1 id="membership-title">{heroTitle}</h1>
                 <p className="membership-hero__intro">
                     공간과 모빌리티, 문화를 더 가까이
                     <br />
@@ -164,287 +243,215 @@ export default function MembershipPage() {
                 </p>
             </section>
 
-            <div className="membership-content" ref={contentRef}>
-                <div
-                    className="membership-nav"
-                    id="membership-tabs"
-                    role="tablist"
-                    aria-label="멤버십 안내"
-                >
-                    {membershipTabs.map(([id, label], index) => (
-                        <button
-                            key={id}
-                            type="button"
-                            role="tab"
-                            id={`membership-tab-${id}`}
-                            aria-selected={activeTab === id}
-                            aria-controls={`membership-panel-${id}`}
-                            tabIndex={activeTab === id ? 0 : -1}
-                            onClick={() => setActiveTab(id)}
-                            onKeyDown={(event) => handleTabKeyDown(event, index)}
-                        >
-                            {label}
-                        </button>
-                    ))}
-                </div>
+            <div className="membership-tabs" ref={tabsRef} role="tablist" aria-label="멤버십 안내">
+                {membershipTabs.map(([id, label], index) => (
+                    <button
+                        key={id}
+                        type="button"
+                        role="tab"
+                        id={`membership-tab-${id}`}
+                        aria-selected={activeTab === id}
+                        aria-controls={`membership-panel-${id}`}
+                        tabIndex={activeTab === id ? 0 : -1}
+                        onClick={() => setActiveTab(id)}
+                        onKeyDown={(event) => handleTabKeyDown(event, index)}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
 
-                <section
-                    hidden={activeTab !== 'intro'}
-                    role="tabpanel"
-                    tabIndex={0}
-                    id="membership-panel-intro"
-                    aria-labelledby="membership-tab-intro"
-                    className="membership-intro"
-                >
-                    <p className="membership-eyebrow">WELCOME TO HMS CLUB</p>
-                    <h2 id="membership-intro-title">HMS CLUB CATEGORY</h2>
-                    <div className="membership-category-grid">
-                        {[
-                            [
-                                '멤버십 안내',
-                                categoryIntroImage,
-                                'HMS Club이 어떤 멤버십인지, 현대 모터스튜디오 전용 혜택을 소개합니다.',
-                                'intro',
-                            ],
-                            [
-                                '가입 안내',
-                                categoryJoinImage,
-                                '멤버십 가입 대상과 방법, Basic·Plus 회원 유형을 확인해 보세요.',
-                                'join',
-                            ],
-                            [
-                                '혜택 안내',
-                                categoryBenefitsImage,
-                                '주차권부터 특별한 프로그램까지, HMS Club의 다양한 혜택을 만나보세요.',
-                                'benefits',
-                            ],
-                            [
-                                '이용·라운지 안내',
-                                categoryLocationsImage,
-                                '현대 모터스튜디오의 각 거점과 라운지에서 즐길 수 있는 경험을 확인해 보세요.',
-                                'locations',
-                            ],
-                        ].map(([title, image, description, target]) => (
-                            <article key={target}>
-                                <span
-                                    className="membership-category-grid__media"
-                                    aria-hidden="true"
-                                    style={{ backgroundImage: `url("${image}")` }}
-                                />
+            {/* ===== 멤버십 안내: 혜택 카테고리 + 가입 안내 (제네시스 '멤버십 안내' 탭 구조) ===== */}
+            <div
+                hidden={activeTab !== 'intro'}
+                role="tabpanel"
+                id="membership-panel-intro"
+                aria-labelledby="membership-tab-intro"
+                className="membership-panel"
+            >
+                <section className="membership-section" aria-labelledby="membership-category-title">
+                    <SectionHeading
+                        id="membership-category-title"
+                        title="HMS CLUB CATEGORY"
+                        description="HMS Club은 현대 모터스튜디오의 전용 멤버십 프로그램입니다."
+                    />
+                    <div className="membership-category">
+                        {categories.map(([target, title, image, description]) => (
+                            <article key={target} className="membership-category__item">
+                                <img src={image} alt="" className="membership-category__image" />
                                 <h3>{title}</h3>
                                 <p>{description}</p>
-                                <Link
-                                    className="membership-category-grid__link"
-                                    to={target === 'intro' ? paths.membership : `${paths.membership}?tab=${target}`}
-                                >
-                                    {title} 바로가기 <ArrowUpRight aria-hidden="true" />
-                                </Link>
+                                <button type="button" onClick={() => openCategory(target)}>
+                                    바로가기 <ChevronRight aria-hidden="true" />
+                                </button>
                             </article>
                         ))}
-                    </div>
-                    <div className="membership-intro__copy">
-                        <p>
-                            HMS Club은 현대 모터스튜디오의 전용 멤버십 프로그램입니다. 현대
-                            모터스튜디오를 더 깊이 경험하고 싶다면, HMS Club 멤버가 되어보세요.
-                        </p>
-                        <p>
-                            새로운 소식을 가장 먼저 접하고, 큐레이션된 콘텐츠와 전용 혜택을
-                            우선적으로 만나볼 수 있습니다.
-                        </p>
                     </div>
                 </section>
 
                 <section
-                    hidden={activeTab !== 'join'}
-                    role="tabpanel"
-                    tabIndex={0}
-                    id="membership-panel-join"
-                    aria-labelledby="membership-tab-join"
-                    className="membership-join"
+                    className="membership-section membership-join"
+                    ref={joinRef}
+                    aria-labelledby="membership-join-title"
                 >
-                    <header className="membership-section-heading">
-                        <p>HOW TO JOIN</p>
-                        <h2 id="membership-join-title">가입 안내</h2>
-                    </header>
-                    <div className="membership-join__audience">
+                    <SectionHeading
+                        id="membership-join-title"
+                        title="HOW TO JOIN"
+                        description="가입 안내"
+                    />
+
+                    <div className="membership-block">
                         <h3>가입 대상</h3>
-                        <p>
-                            국내에서 본인 인증이 가능한 고객이라면 누구나 HMS Club에 가입할 수
-                            있습니다.
+                        <p className="membership-block__lead">
+                            국내에서 본인 인증이 가능한 고객이라면 누구나 HMS Club에 가입할 수 있습니다.
                         </p>
-                        <small>
-                            기존 현대 모터스튜디오 회원은 로그인 후 약관 동의를 통해 HMS Club
-                            멤버십으로 전환됩니다.
-                        </small>
+                        <table className="membership-table">
+                            <caption className="membership-sr-only">회원 유형별 가입 조건</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">회원 유형</th>
+                                    <th scope="col">가입 조건</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {membershipTypes.map(([grade, description, note]) => (
+                                    <tr key={grade}>
+                                        <th scope="row">
+                                            <span
+                                                className={`membership-badge${grade === 'Plus' ? ' membership-badge--fill' : ''}`}
+                                            >
+                                                {grade}
+                                            </span>
+                                        </th>
+                                        <td>
+                                            <strong>{description}</strong>
+                                            <span className="membership-table__note">{note}</span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <ul className="membership-notes">
+                            {joinNotes.map((note) => (
+                                <li key={note}>{note}</li>
+                            ))}
+                        </ul>
                     </div>
-                    <div className="membership-join__methods">
-                        <article>
-                            <span>01</span>
-                            <h3>WEB</h3>
-                            <p>모바일 / PC</p>
-                            <ol>
-                                <li>
-                                    현대 모터스튜디오 홈페이지에 접속한 뒤 오른쪽 위의 프로필
-                                    아이콘을 누릅니다.
-                                </li>
-                                <li>프로필에서 ‘멤버십 가입’을 선택합니다.</li>
-                                <li>HMS Club 가입 절차를 진행합니다.</li>
-                            </ol>
-                        </article>
-                        <article>
-                            <span>02</span>
-                            <h3>APP</h3>
-                            <p>마이현대</p>
-                            <ol>
-                                <li>
-                                    마이현대 앱에서 현대자동차 통합 계정으로 로그인합니다. 계정이
-                                    없다면 먼저 계정을 만들어 주세요.
-                                </li>
-                                <li>서비스 바로가기에서 ‘현대 모터스튜디오’를 선택합니다.</li>
-                                <li>HMS Club 가입 약관에 동의합니다.</li>
-                            </ol>
-                        </article>
-                    </div>
-                    <div className="membership-types" aria-labelledby="membership-types-title">
-                        <h3 id="membership-types-title">멤버십 구분</h3>
-                        <div className="membership-types__table">
-                            {membershipTypes.map(([name, description, note]) => (
+
+                    <div className="membership-block">
+                        <h3>가입 방법</h3>
+                        <div className="membership-methods">
+                            {joinMethods.map(([name, channel, steps], index) => (
                                 <article key={name}>
-                                    <h4>{name}</h4>
-                                    <div>
-                                        <strong>{description}</strong>
-                                        <p>{note}</p>
-                                    </div>
+                                    <header>
+                                        <span>{String(index + 1).padStart(2, '0')}</span>
+                                        <h4>{name}</h4>
+                                        <p>{channel}</p>
+                                    </header>
+                                    <ol>
+                                        {steps.map((step, stepIndex) => (
+                                            <li key={step}>
+                                                <span aria-hidden="true">{stepIndex + 1}</span>
+                                                {step}
+                                            </li>
+                                        ))}
+                                    </ol>
                                 </article>
                             ))}
                         </div>
-                        <ul className="membership-notes">
-                            <li>가입 시 본인 인증이 필요합니다.</li>
-                            <li>
-                                렌트·리스 고객은 계약 기간 12개월 이상이며 실운행자 명의로 가입 시
-                                Plus가 적용됩니다.
-                            </li>
-                            <li>
-                                Basic 회원이 현대·제네시스 차량을 구매하면 차량 등록 익일부터 Plus
-                                혜택이 제공됩니다. 시스템 반영 일정에 따라 지연될 수 있습니다.
-                            </li>
-                        </ul>
+                        <Link className="membership-cta" to={paths.signup}>
+                            HMS Club 가입하기 <ArrowUpRight aria-hidden="true" />
+                        </Link>
                     </div>
                 </section>
+            </div>
 
-                <section
-                    hidden={activeTab !== 'benefits'}
-                    role="tabpanel"
-                    tabIndex={0}
-                    id="membership-panel-benefits"
-                    aria-labelledby="membership-tab-benefits"
-                    className="membership-benefits"
-                >
-                    <header className="membership-section-heading">
-                        <p>MEMBERSHIP BENEFITS</p>
-                        <h2 id="membership-benefits-title">혜택 안내</h2>
-                    </header>
-                    <p className="membership-benefits__lead">
-                        일상 가까이에서 현대 모터스튜디오를 경험할 수 있도록
-                        <br />
-                        HMS Club만의 혜택을 준비했습니다.
-                    </p>
-                    <div className="membership-detail-heading">
+            {/* ===== 혜택 안내: 공지사항 리스트 행 + 배지 재사용 ===== */}
+            <div
+                hidden={activeTab !== 'benefits'}
+                role="tabpanel"
+                id="membership-panel-benefits"
+                aria-labelledby="membership-tab-benefits"
+                className="membership-panel"
+            >
+                <section className="membership-section" aria-labelledby="membership-benefits-title">
+                    <SectionHeading
+                        id="membership-benefits-title"
+                        title="MEMBERSHIP BENEFITS"
+                        description="일상 가까이에서 현대 모터스튜디오를 경험할 수 있도록 HMS Club만의 혜택을 준비했습니다."
+                    />
+                    <div className="membership-block">
                         <h3>공통 혜택</h3>
-                        <p>HMS Club 가입 시 모든 멤버십 회원에게 제공되는 혜택입니다.</p>
+                        <p className="membership-block__lead">HMS Club 가입 시 모든 멤버십 회원에게 제공되는 혜택입니다.</p>
+                        <ol className="membership-rows">
+                            {benefits.map(([title, description], index) => (
+                                <li key={title} className="membership-row">
+                                    <span className="membership-row__number">{String(index + 1).padStart(2, '0')}</span>
+                                    <span className="membership-badge membership-badge--fill">전체</span>
+                                    <strong className="membership-row__title">{title}</strong>
+                                    <p className="membership-row__text">{description}</p>
+                                </li>
+                            ))}
+                        </ol>
+                        <ul className="membership-notes">
+                            <li>웰컴 패키지는 가입 시 선택한 항목에 추가 동의한 고객에게 최초 가입 1회에 한하여 제공됩니다.</li>
+                        </ul>
                     </div>
-                    <div className="membership-benefits__grid">
-                        {benefits.map(([number, title, description]) => (
-                            <article key={number}>
-                                <span>{number}</span>
-                                <h3>{title}</h3>
-                                <p>{description}</p>
-                            </article>
-                        ))}
-                    </div>
-                    <p className="membership-detail-note">
-                        웰컴 패키지는 가입 시 선택한 항목에 추가 동의한 고객에게 최초 가입 1회에
-                        한하여 제공됩니다.
-                    </p>
-                    <div className="membership-detail-heading">
+                    <div className="membership-block">
                         <h3>추가 혜택</h3>
-                        <p>Plus 멤버십 회원에게 더욱 특별한 혜택을 제공합니다.</p>
-                    </div>
-                    <div className="membership-plus">
-                        <div>
-                            <p>FOR PLUS MEMBERS</p>
-                            <h3>
-                                PLUS
-                                <br />
-                                BENEFITS
-                            </h3>
-                        </div>
-                        <ol>
+                        <p className="membership-block__lead">Plus 멤버십 회원에게 더욱 특별한 혜택을 제공합니다.</p>
+                        <ol className="membership-rows">
                             {plusBenefits.map(([title, description], index) => (
-                                <li key={title}>
-                                    <span>{String(index + 1).padStart(2, '0')}</span>
-                                    <div>
-                                        <strong>{title}</strong>
-                                        <p>{description}</p>
-                                    </div>
+                                <li key={title} className="membership-row">
+                                    <span className="membership-row__number">{String(index + 1).padStart(2, '0')}</span>
+                                    <span className="membership-badge membership-badge--fill">Plus</span>
+                                    <strong className="membership-row__title">{title}</strong>
+                                    <p className="membership-row__text">{description}</p>
                                 </li>
                             ))}
                         </ol>
                     </div>
                 </section>
+            </div>
 
-                <section
-                    hidden={activeTab !== 'locations'}
-                    role="tabpanel"
-                    tabIndex={0}
-                    id="membership-panel-locations"
-                    aria-labelledby="membership-tab-locations"
-                    className="membership-locations"
-                >
-                    <header className="membership-section-heading">
-                        <p>USE YOUR MEMBERSHIP</p>
-                        <h2 id="membership-locations-title">HMS Club 이용</h2>
-                    </header>
-                    <p className="membership-locations__lead">
-                        HMS Club 회원은 현대 모터스튜디오 거점별 프로그램과 라운지를 이용할 수
-                        있습니다.
-                    </p>
-                    <p className="membership-detail-note">
-                        차량 전시, 미디어 월 등 거점별 무료 전시는 HMS Club 회원이 아니어도 누구나
-                        이용할 수 있습니다.
-                    </p>
-                    <div className="membership-locations__grid">
-                        {locations.map(([name, ...services]) => (
-                            <article key={name}>
-                                <h3>
-                                    HYUNDAI
-                                    <br />
-                                    MOTORSTUDIO
-                                    <br />
-                                    <strong>{name}</strong>
-                                </h3>
-                                <ul>
-                                    {services.map(([title, description]) => (
-                                        <li key={title}>
-                                            <strong>{title}</strong>
-                                            <p>{description}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </article>
-                        ))}
+            {/* ===== 이용·라운지 안내 ===== */}
+            <div
+                hidden={activeTab !== 'locations'}
+                role="tabpanel"
+                id="membership-panel-locations"
+                aria-labelledby="membership-tab-locations"
+                className="membership-panel"
+            >
+                <section className="membership-section" aria-labelledby="membership-locations-title">
+                    <SectionHeading
+                        id="membership-locations-title"
+                        title="USE YOUR MEMBERSHIP"
+                        description="HMS Club 회원은 현대 모터스튜디오 거점별 프로그램과 라운지를 이용할 수 있습니다."
+                    />
+                    <div className="membership-block">
+                        <p className="membership-block__lead membership-block__lead--first">
+                            차량 전시, 미디어 월 등 거점별 무료 전시는 HMS Club 회원이 아니어도 누구나 이용할 수 있습니다.
+                        </p>
+                        <div className="membership-locations">
+                            {locations.map(([name, ...services]) => (
+                                <article key={name}>
+                                    <h4>{name}</h4>
+                                    <ul>
+                                        {services.map(([title, description]) => (
+                                            <li key={title}>
+                                                <strong>{title}</strong>
+                                                <p>{description}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </article>
+                            ))}
+                        </div>
                     </div>
-                    <div className="membership-lounge">
+                    <div className="membership-block">
                         <h3>멤버십 라운지</h3>
-                        <div
-                            className="membership-lounge-switch"
-                            role="group"
-                            aria-label="라운지 지역 선택"
-                        >
-                            {[
-                                ['seoul', '서울'],
-                                ['busan', '부산'],
-                            ].map(([id, label]) => (
+                        <div className="membership-lounge-switch" role="group" aria-label="라운지 지역 선택">
+                            {Object.entries(lounges).map(([id, lounge]) => (
                                 <button
                                     key={id}
                                     type="button"
@@ -452,37 +459,20 @@ export default function MembershipPage() {
                                     aria-controls="membership-lounge-detail"
                                     onClick={() => setActiveLounge(id)}
                                 >
-                                    {label}
+                                    {lounge.label}
                                 </button>
                             ))}
                         </div>
-                        <div id="membership-lounge-detail">
+                        <div id="membership-lounge-detail" className="membership-lounge">
                             <h4>{lounges[activeLounge].title}</h4>
                             <p>{lounges[activeLounge].description}</p>
-                            <h4>이용 안내</h4>
-                            <ul>
+                            <ul className="membership-notes membership-notes--dark">
                                 {lounges[activeLounge].rules.map((rule) => (
                                     <li key={rule}>{rule}</li>
                                 ))}
                             </ul>
                         </div>
                     </div>
-                </section>
-
-                <section
-                    hidden={activeTab !== 'join'}
-                    className="membership-cta"
-                    aria-labelledby="membership-cta-title"
-                >
-                    <p>READY TO JOIN?</p>
-                    <h2 id="membership-cta-title">
-                        더 많은 경험을
-                        <br />
-                        가까이에서 만나보세요.
-                    </h2>
-                    <Link className="membership-cta__link" to={paths.signup}>
-                        HMS Club 가입하기 <ArrowUpRight aria-hidden="true" />
-                    </Link>
                 </section>
             </div>
         </main>
