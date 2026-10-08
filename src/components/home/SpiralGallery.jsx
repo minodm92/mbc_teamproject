@@ -16,7 +16,7 @@ const spiralImages = [
 ];
 
 const exhibitionLabels = [
-    'The all-new AVANTE',
+    'The All-New AVANTE',
     '미니카 전시',
     'TCR 특별 전시',
     'GV60 마그마',
@@ -99,6 +99,7 @@ const SpiralGallery = forwardRef(function SpiralGallery(_, ref) {
                 {exhibitionLabels.map((label, index) => (
                     <p
                         key={label}
+                        className={/[가-힣]/.test(label) ? 'is-ko' : undefined}
                         style={{
                             '--copy-left': `${labelPositions[index].left / 19.2}%`,
                             '--copy-top': `${labelPositions[index].top / 10.8}%`,
@@ -112,7 +113,9 @@ const SpiralGallery = forwardRef(function SpiralGallery(_, ref) {
                 {spiralImages.slice(0, 6).map((image, index) => (
                     <figure key={image}>
                         <img src={image} alt="" />
-                        <figcaption>{exhibitionLabels[index]}</figcaption>
+                        <figcaption className={/[가-힣]/.test(exhibitionLabels[index]) ? 'is-ko' : undefined}>
+                            {exhibitionLabels[index]}
+                        </figcaption>
                     </figure>
                 ))}
             </div>
