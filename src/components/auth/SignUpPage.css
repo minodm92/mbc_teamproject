@@ -93,6 +93,44 @@
     width: calc(100% - 224px);
     max-width: 780px;
     height: 16px;
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr) 16px minmax(0, 1fr) 16px minmax(0, 1fr) 16px;
+    align-items: center;
+}
+.signup-page__progress-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #aaa9ad;
+    transition: background-color 0.3s ease;
+}
+.signup-page__progress-dot.is-complete {
+    background: #171717;
+}
+.signup-page__progress-line {
+    position: relative;
+    height: 1px;
+    margin: 0 10px;
+    overflow: hidden;
+    background: #aaa9ad;
+}
+.signup-page__progress-line::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background: #171717;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+}
+.signup-page__progress-line.is-complete::after {
+    transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+    .signup-page__progress-dot,
+    .signup-page__progress-line::after {
+        transition: none;
+    }
 }
 .signup-page__content {
     width: 100%;
