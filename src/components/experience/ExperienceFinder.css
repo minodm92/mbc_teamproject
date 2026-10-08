@@ -133,6 +133,18 @@ body:has(.match-page) .reservation-footer{display:none}
     height: 150px;
     object-fit: cover;
 }
+.match-result__card > img[src$="/GGBSTRK.png"] {
+    object-position: center 10%;
+}
+.match-result__card > img[src$="/GGBSTSK.png"] {
+    object-position: center 35%;
+}
+.match-result__card > img[src$="/FWKIDKO.png"] {
+    object-position: center 12%;
+}
+.match-result__card > img[src$="/BEBIFFS.png"] {
+    object-position: center 5%;
+}
 .match-result__card-body {
     padding: 16px;
 }
