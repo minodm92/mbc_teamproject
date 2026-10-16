@@ -4,6 +4,8 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { isDemoEmailRegistered } from '../../common/auth/demoAccounts';
 import { paths } from '../../common/router/routePaths';
 import { AuthSocialButtons, PasswordToggle } from './AuthControls';
+import { MoveLeft } from 'lucide-react';
+import './AuthHomeLink.css';
 import './SignUpPage.css';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,7 +70,7 @@ export default function SignUpPageView() {
       <div className="signup-page__locations"><span>HYUNDAI MOTORSTUDIO</span><span>SEOUL · GOYANG · HANAM · BUSAN</span></div>
     </section>
     <section className="signup-page__panel" aria-labelledby="signup-heading">
-      <Link className="signup-page__home" to={paths.home}>BACK TO HOME<img src="/images/login/home-arrow.svg" width="14" height="14" alt="" /></Link>
+      <Link className="signup-page__home auth-home-link" to={paths.home} aria-label="홈으로 이동"><MoveLeft className="auth-home-link__mobile-icon" size={24} aria-hidden="true" /><span>BACK TO HOME</span><img src="/images/login/home-arrow.svg" width="14" height="14" alt="" /></Link>
       <div className="signup-page__progress" aria-hidden="true">
         {Array.from({ length: 4 }, (_, index) => <Fragment key={index}>
           <span className={`signup-page__progress-dot${index < progressCount ? ' is-complete' : ''}`} />

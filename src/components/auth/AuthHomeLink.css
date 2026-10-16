@@ -1,0 +1,28 @@
+.auth-home-link .auth-home-link__mobile-icon {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .auth-home-link.auth-home-link {
+        top: 20px;
+        left: 20px;
+        right: auto;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        padding: 0;
+        color: #848484;
+    }
+
+    .auth-home-link > span,
+    .auth-home-link > img {
+        display: none;
+    }
+
+    .auth-home-link .auth-home-link__mobile-icon {
+        display: block;
+        width: 24px;
+        height: 24px;
+    }
+}

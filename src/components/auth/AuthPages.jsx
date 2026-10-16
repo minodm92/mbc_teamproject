@@ -4,6 +4,8 @@ import { useAuthStore } from '../../store/useAuthStore';
 import { paths } from '../../common/router/routePaths';
 import SignUpPageView from './SignUpPage';
 import { AuthSocialButtons, PasswordToggle } from './AuthControls';
+import { MoveLeft } from 'lucide-react';
+import './AuthHomeLink.css';
 import './AuthPages.css';
 import './LoginPage.css';
 
@@ -40,7 +42,7 @@ export function LoginPage() {
       <div className="login-page__locations"><span>HYUNDAI MOTORSTUDIO</span><span>SEOUL · GOYANG · HANAM · BUSAN</span></div>
     </section>
     <section className="login-page__panel" aria-labelledby="login-heading">
-      <Link className="login-page__home" to={paths.home}>BACK TO HOME<img src="/images/login/home-arrow.svg" width="14" height="14" alt="" /></Link>
+      <Link className="login-page__home auth-home-link" to={paths.home} aria-label="홈으로 이동"><MoveLeft className="auth-home-link__mobile-icon" size={24} aria-hidden="true" /><span>BACK TO HOME</span><img src="/images/login/home-arrow.svg" width="14" height="14" alt="" /></Link>
       <div className="login-page__content">
         <h1 id="login-heading">WELCOME BACK</h1>
         <p className="login-page__intro">현대 모터스튜디오 서비스를 계속 이용하려면 로그인해주세요.</p>
