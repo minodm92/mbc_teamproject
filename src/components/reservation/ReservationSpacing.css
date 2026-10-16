@@ -1,0 +1,65 @@
+/* Red Hat Display handles Latin characters; SUIT handles Korean. */
+.booking-page.booking-page,
+.checkout-page.checkout-page {
+    --font-en: 'Red Hat Display', 'SUIT Variable', 'SUIT', sans-serif;
+    --font-ko: 'Red Hat Display', 'SUIT Variable', 'SUIT', sans-serif;
+    font-family: 'Red Hat Display', 'SUIT Variable', 'SUIT', sans-serif;
+}
+
+/* Keep the final reservation fields clear of the bottom booking bar. */
+.booking-page .time-picker h3 {
+    font-weight: 600;
+}
+
+.booking-page .program-card > div {
+    padding-block: 4.5px;
+}
+
+.booking-page .exhibition-select__copy dl {
+    margin-top: 20px;
+}
+
+.booking-page .exhibition-select__copy dl > div + div {
+    margin-top: 8px;
+}
+
+.booking-page .exhibition-select__copy dd {
+    line-height: calc(1.4em + 3px);
+}
+
+.booking-page .ticket-box {
+    margin-top: 27px;
+}
+
+.booking-page .ticket-counter small {
+    position: relative;
+    top: 3px;
+}
+
+@media (max-width: 1180px) {
+    .booking-page .ticket-box {
+        margin-top: 30px;
+    }
+}
+
+.booking-page.booking-page {
+    padding-top: 166px;
+    padding-bottom: 222px;
+}
+
+.checkout-page.checkout-page {
+    padding-top: 182px;
+    padding-bottom: 220px;
+}
+
+@media (max-width: 760px) {
+    .booking-page.booking-page {
+        padding-top: 122px;
+        padding-bottom: 238px;
+    }
+
+    .checkout-page.checkout-page {
+        padding-top: 135px;
+        padding-bottom: 200px;
+    }
+}

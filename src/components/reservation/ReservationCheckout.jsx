@@ -12,6 +12,7 @@ import { paths } from '../../common/router/routePaths';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useReservationStore } from '../../store/useReservationStore';
 import './ReservationCheckout.css';
+import './ReservationSpacing.css';
 
 const paymentMethods = [
   { id: 'domestic-card', label: '신용카드(국내 발급)' },
