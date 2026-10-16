@@ -124,13 +124,11 @@ export default function ExperienceFinder() {
         setExperienceType(value);
         setLocation('');
         setPreference('');
-        requestAnimationFrame(() => scrollToStep(step2Ref));
     }
     function selectLocation(value) {
         if (!experienceType) return;
         setLocation(value);
         setPreference('');
-        requestAnimationFrame(() => scrollToStep(step3Ref));
     }
     function selectPreference(value) {
         if (!experienceType || !location) return;

@@ -28,12 +28,6 @@ const preferenceLabels = {
     together: '함께 즐기는 경험',
     discover: '새로운 발견의 경험',
 };
-const dashboardPanels = {
-    reservations: 'RESERVATION HISTORY',
-    inquiries: 'INQUIRY HISTORY',
-    inquiryWrite: 'WRITE AN INQUIRY',
-    profile: 'PROFILE EDIT',
-};
 const periodOptions = [
     { label: '1개월', months: 1 },
     { label: '3개월', months: 3 },
@@ -221,61 +215,53 @@ export function MyPage() {
                         <p>{user?.email}</p>
                     </header>
 
-                    <section className="mypage-finding" aria-label="경험 찾기 결과">
-                        <span>관심 분야</span>
-                        <strong>{experienceSummary}</strong>
-                    </section>
+                    {!activePanel && (
+                        <>
+                            <section className="mypage-finding" aria-label="경험 찾기 결과">
+                                <span>관심 분야</span>
+                                <strong>{experienceSummary}</strong>
+                            </section>
 
-                    <section
-                        className="mypage-information"
-                        aria-labelledby="mypage-information-title"
-                    >
-                        <p className="mypage-information__eyebrow">
-                            {activePanel ? dashboardPanels[activePanel] : 'HYUNDAI MOTORSTUDIO CLUB'}
-                        </p>
-                        <h2 id="mypage-information-title">
-                            {activePanel ? '제작 중인 페이지입니다.' : 'BASIC'}
-                        </h2>
-                        <p className="mypage-information__description">
-                            {activePanel ? (
-                                <>
-                                    상세 페이지는 현재 작업 중인 페이지입니다.
-                                    <br />
-                                    이용에 불편을 드려 죄송합니다.
-                                </>
-                            ) : (
+                            <section
+                                className="mypage-information"
+                                aria-labelledby="mypage-information-title"
+                            >
+                                <p className="mypage-information__eyebrow">
+                                    HYUNDAI MOTORSTUDIO CLUB
+                                </p>
+                                <h2 id="mypage-information-title">BASIC</h2>
+                                <p className="mypage-information__description">
                                 <>
                                     현대 모터스튜디오의 기본 멤버십 전시와 프로그램,
                                     <br />
                                     다양한 멤버십 혜택을 경험해보세요.
                                 </>
-                            )}
-                        </p>
-                        {!activePanel && (
-                            <div className="mypage-information__footer">
-                                <ul className="mypage-information__benefits" aria-label="멤버십 혜택">
-                                    {['PROGRAM BENEFIT', 'MEMBER CONTENT', 'EVENT ACCESS'].map(
-                                        (benefit, index) => (
-                                            <li key={benefit}>
-                                                {index > 0 && (
-                                                    <img
-                                                        src={membershipSeparator}
-                                                        alt=""
-                                                        aria-hidden="true"
-                                                    />
-                                                )}
-                                                <span>{benefit}</span>
-                                            </li>
-                                        )
-                                    )}
-                                </ul>
-                                <Link className="mypage-information__link" to={paths.membership}>
-                                    멤버십 혜택 확인하기
-                                    <img src={membershipArrow} alt="" aria-hidden="true" />
-                                </Link>
-                            </div>
-                        )}
-                    </section>
+                                </p>
+                                <div className="mypage-information__footer">
+                                    <ul className="mypage-information__benefits" aria-label="멤버십 혜택">
+                                        {['PROGRAM BENEFIT', 'MEMBER CONTENT', 'EVENT ACCESS'].map(
+                                            (benefit, index) => (
+                                                <li key={benefit}>
+                                                    {index > 0 && (
+                                                        <img
+                                                            src={membershipSeparator}
+                                                            alt=""
+                                                            aria-hidden="true"
+                                                        />
+                                                    )}
+                                                    <span>{benefit}</span>
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+                                    <Link className="mypage-information__link" to={paths.membership}>
+                                        멤버십 혜택 확인하기
+                                        <img src={membershipArrow} alt="" aria-hidden="true" />
+                                    </Link>
+                                </div>
+                            </section>
+                        </>
+                    )}
 
                     {activePanel ? (
                         <section className="mypage-empty mypage-empty--construction">
@@ -379,20 +365,20 @@ export function MyPage() {
                         </section>
 
                         <section className="mypage-quick-links">
-                            <Link to={paths.myReservations}>
+                            <div className="mypage-quick-link">
                                 <CalendarDays />
                                 <span>
                                     나의 예약<strong>{reservations.length}건</strong>
                                 </span>
                                 <ChevronRight />
-                            </Link>
-                            <Link to={paths.inquiries}>
+                            </div>
+                            <div className="mypage-quick-link">
                                 <FileText />
                                 <span>
                                     고객문의<strong>{inquiries.length}건</strong>
                                 </span>
                                 <ChevronRight />
-                            </Link>
+                            </div>
                         </section>
                         <button className="mypage-mobile-logout" type="button" onClick={() => {
                             sessionStorage.setItem('hms-logout-notice', 'true');

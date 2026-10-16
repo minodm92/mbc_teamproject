@@ -11,7 +11,9 @@ import SpiralGallery from './SpiralGallery';
 import HomeProgramSequence from './HomeProgramSequence';
 import { homeAsset as asset } from './homeAssets';
 import {
-    setHomeScrollLocked,
+    acquireHomeScrollLock,
+    releaseHomeScrollLock,
+    resetHomeScrollLocks,
     setupHomeScrollControls,
     registerHomeScrollBoundary,
 } from './homeScrollControls';
@@ -491,10 +493,6 @@ export default function HomeContent() {
     useLayoutEffect(() => {
         const transition = locationTransitionRef.current;
         if (!transition) return undefined;
-        const navigationEntry = performance.getEntriesByType('navigation')[0];
-        if (navigationEntry?.type === 'reload' && window.scrollY > 0) {
-            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-        }
         const media = gsap.matchMedia();
         let refreshFrame;
         let disposed = false;
@@ -510,6 +508,8 @@ export default function HomeContent() {
             let isSloganTyping = false;
             let sloganAdvanceFrame;
             let removeSloganBoundary;
+            const sloganScrollLock = Symbol('home-slogan-typing');
+            const driveExitScrollLock = Symbol('home-drive-exit');
             const resetSloganPresentation = () => {
                 typingSequence?.pause(0);
                 if (sloganTextRef.current) gsap.set(sloganTextRef.current, { text: '' });
@@ -970,9 +970,13 @@ export default function HomeContent() {
                             sloganAdvanceFrame = requestAnimationFrame(() => {
                                 if (!isSloganTyping || !sloganPin) return;
                                 isSloganTyping = false;
-                                setHomeScrollLocked(false);
+                                releaseHomeScrollLock(sloganScrollLock);
                                 sloganPin.scroll(sloganPin.end + 1);
                             });
+                        },
+                        onInterrupt: () => {
+                            isSloganTyping = false;
+                            releaseHomeScrollLock(sloganScrollLock);
                         },
                     })
                     .to({}, { duration: 0.4 })
@@ -1001,7 +1005,7 @@ export default function HomeContent() {
                     onEnter: () => {
                         if (isSloganTyping) return;
                         isSloganTyping = true;
-                        setHomeScrollLocked(true);
+                        acquireHomeScrollLock(sloganScrollLock);
                         holdSloganPosition();
                         resetSloganPresentation();
                         typingSequence.restart();
@@ -1012,7 +1016,7 @@ export default function HomeContent() {
                             return;
                         }
                         isSloganTyping = false;
-                        setHomeScrollLocked(false);
+                        releaseHomeScrollLock(sloganScrollLock);
                     },
                 });
                 window.addEventListener('scroll', holdSloganPosition);
@@ -1156,13 +1160,13 @@ export default function HomeContent() {
                 const holdDriveExit = (trigger) => {
                     if (driveExitAllowed || driveExitLocked) return;
                     driveExitLocked = true;
-                    setHomeScrollLocked(true);
+                    acquireHomeScrollLock(driveExitScrollLock);
                     withInstantScroll(() => trigger.scroll(trigger.end - 1));
                     ScrollTrigger.update();
                     driveExitTimer = window.setTimeout(() => {
                         driveExitLocked = false;
                         driveExitAllowed = true;
-                        setHomeScrollLocked(false);
+                        releaseHomeScrollLock(driveExitScrollLock);
                     }, 300);
                 };
                 const driveTimeline = gsap.timeline({
@@ -1223,7 +1227,7 @@ export default function HomeContent() {
                 updateDriveCopy();
                 cleanupDriveInteraction = () => {
                     window.clearTimeout(driveExitTimer);
-                    if (driveExitLocked) setHomeScrollLocked(false);
+                    releaseHomeScrollLock(driveExitScrollLock);
                     driveExitLocked = false;
                     removeDriveBoundary();
                     window.removeEventListener('scroll', keepDriveExitPosition);
@@ -1491,7 +1495,8 @@ export default function HomeContent() {
                 removeSloganBoundary?.();
                 window.removeEventListener('scroll', holdSloganPosition);
                 isSloganTyping = false;
-                setHomeScrollLocked(false);
+                releaseHomeScrollLock(sloganScrollLock);
+                releaseHomeScrollLock(driveExitScrollLock);
                 sloganPin?.kill();
                 sloganPin = null;
                 typingSequence?.kill();
@@ -1519,7 +1524,10 @@ export default function HomeContent() {
             media.revert();
         };
     }, []);
-    useLayoutEffect(() => setupHomeScrollControls(), []);
+    useLayoutEffect(() => {
+        resetHomeScrollLocks();
+        return setupHomeScrollControls();
+    }, []);
 
     return (
         <main className="renewal-home" id="top">

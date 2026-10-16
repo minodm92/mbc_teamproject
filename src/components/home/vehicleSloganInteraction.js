@@ -1,7 +1,11 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { withInstantScroll } from '../../common/utils/scrollPosition';
-import { registerHomeScrollBoundary, setHomeScrollLocked } from './homeScrollControls';
+import {
+    acquireHomeScrollLock,
+    registerHomeScrollBoundary,
+    releaseHomeScrollLock,
+} from './homeScrollControls';
 
 export function setupVehicleSlogan(section) {
     const source = section.querySelector('h2');
@@ -17,6 +21,7 @@ export function setupVehicleSlogan(section) {
     let touchY = null;
     let animation;
     let floating;
+    const scrollLock = Symbol('home-vehicle-slogan');
     const joinedY = () => cards.getBoundingClientRect().top + window.scrollY;
     const setPresentation = () => {
         gsap.set(source, { autoAlpha: stage < 5 ? 1 : 0 });
@@ -33,8 +38,15 @@ export function setupVehicleSlogan(section) {
         floating = null;
         moving = false;
         busy = false;
-        setHomeScrollLocked(false);
+        releaseHomeScrollLock(scrollLock);
         lastInput = performance.now();
+    };
+    const interrupt = () => {
+        floating?.remove();
+        floating = null;
+        moving = false;
+        busy = false;
+        releaseHomeScrollLock(scrollLock);
     };
     const pin = ScrollTrigger.create({
         trigger: section,
@@ -91,7 +103,10 @@ export function setupVehicleSlogan(section) {
         }));
         gsap.set([source, target], { autoAlpha: 0 });
         const position = { y: window.scrollY };
-        animation = gsap.timeline({ onComplete: () => finish(forward ? 5 : 4) })
+        animation = gsap.timeline({
+            onComplete: () => finish(forward ? 5 : 4),
+            onInterrupt: interrupt,
+        })
             .to(position, {
                 y: scrollTarget, duration: 1.5, ease: 'power2.inOut',
                 onUpdate: () => {
@@ -110,7 +125,7 @@ export function setupVehicleSlogan(section) {
         const nextStage = Math.max(0, Math.min(6, stage + direction));
         if (nextStage === stage) return;
         busy = true;
-        setHomeScrollLocked(true);
+        acquireHomeScrollLock(scrollLock);
         if ((stage === 4 && nextStage === 5) || (stage === 5 && nextStage === 4)) {
             moveTitle(direction > 0);
             return;
@@ -119,6 +134,7 @@ export function setupVehicleSlogan(section) {
             animation = gsap.to(description, {
                 autoAlpha: nextStage === 6 ? 1 : 0, duration: 0.8,
                 onComplete: () => finish(nextStage),
+                onInterrupt: interrupt,
             });
             return;
         }
@@ -126,7 +142,10 @@ export function setupVehicleSlogan(section) {
         if (lineIndex === 0 || lineIndex === 1) {
             animation = gsap.to(lines[lineIndex], {
                 clipPath: direction > 0 ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
-                duration: 1.4, ease: 'power2.inOut', onComplete: () => finish(nextStage),
+                duration: 1.4,
+                ease: 'power2.inOut',
+                onComplete: () => finish(nextStage),
+                onInterrupt: interrupt,
             });
         } else finish(nextStage);
     };
@@ -194,7 +213,7 @@ export function setupVehicleSlogan(section) {
         window.removeEventListener('touchstart', touchStart);
         window.removeEventListener('touchmove', touchMove);
         animation?.kill();
-        setHomeScrollLocked(false);
+        releaseHomeScrollLock(scrollLock);
         floating?.remove();
         pin.kill();
         lines.forEach((line) => line.style.removeProperty('clip-path'));

@@ -3,9 +3,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { withInstantScroll } from '../../common/utils/scrollPosition';
 
 const SCROLL_KEYS = new Set(['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', ' ']);
-let homeScrollLocked = false;
+const scrollLockOwners = new Set();
+const legacyScrollLockOwner = Symbol('legacy-home-scroll-lock');
 const boundaries = new Set();
 let stopScrollMotion;
+
+const isHomeScrollLocked = () => scrollLockOwners.size > 0;
 
 export const registerHomeScrollBoundary = (guard, getRange) => {
     const boundary = { guard, getRange };
@@ -13,9 +16,23 @@ export const registerHomeScrollBoundary = (guard, getRange) => {
     return () => boundaries.delete(boundary);
 };
 
+export const acquireHomeScrollLock = (owner) => {
+    scrollLockOwners.add(owner);
+    stopScrollMotion?.();
+};
+
+export const releaseHomeScrollLock = (owner) => {
+    scrollLockOwners.delete(owner);
+};
+
+export const resetHomeScrollLocks = () => {
+    scrollLockOwners.clear();
+    stopScrollMotion?.();
+};
+
 export const setHomeScrollLocked = (locked) => {
-    homeScrollLocked = locked;
-    if (locked) stopScrollMotion?.();
+    if (locked) acquireHomeScrollLock(legacyScrollLockOwner);
+    else releaseHomeScrollLock(legacyScrollLockOwner);
 };
 
 // Only timed holds need managed input; ordinary scrolling remains native.
@@ -51,11 +68,11 @@ export const setupHomeScrollControls = () => {
         return target;
     };
     const moveTo = (target) => {
-        if (homeScrollLocked) return false;
+        if (isHomeScrollLocked()) return false;
         target = constrainTarget(target);
         withInstantScroll(() => window.scrollTo({ top: target, left: window.scrollX }));
         ScrollTrigger.update();
-        return !homeScrollLocked;
+        return !isHomeScrollLocked();
     };
     const animateTo = (target, duration, ease) => {
         motion?.kill();
@@ -68,7 +85,7 @@ export const setupHomeScrollControls = () => {
     };
     const handleWheel = (event) => {
         if (event.ctrlKey) return;
-        if (homeScrollLocked) {
+        if (isHomeScrollLocked()) {
             event.preventDefault();
             return;
         }
@@ -87,11 +104,11 @@ export const setupHomeScrollControls = () => {
     };
     const handleTouchStart = (event) => {
         motion?.kill();
-        touch = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY, time: performance.now(), velocity: 0, controlled: false, blocked: homeScrollLocked, native: false } : null;
+        touch = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY, time: performance.now(), velocity: 0, controlled: false, blocked: isHomeScrollLocked(), native: false } : null;
     };
     const handleTouchMove = (event) => {
         if (event.touches.length !== 1) { touch = null; return; }
-        if (homeScrollLocked) {
+        if (isHomeScrollLocked()) {
             event.preventDefault();
             if (touch) touch.blocked = true;
             return;
@@ -114,7 +131,7 @@ export const setupHomeScrollControls = () => {
         moveTo(window.scrollY + delta);
     };
     const handleTouchEnd = () => {
-        if (touch?.controlled && !touch.blocked && !homeScrollLocked && performance.now() - touch.time < 80) {
+        if (touch?.controlled && !touch.blocked && !isHomeScrollLocked() && performance.now() - touch.time < 80) {
             const velocity = Math.max(-3, Math.min(3, touch.velocity));
             if (Math.abs(velocity) > 0.1) animateTo(window.scrollY + velocity * 200, 0.4, 'power2.out');
         }
@@ -131,7 +148,7 @@ export const setupHomeScrollControls = () => {
             tagName === 'SELECT';
 
         if (isEditable || !SCROLL_KEYS.has(event.key) || event.ctrlKey || event.altKey || event.metaKey) return;
-        if (homeScrollLocked) {
+        if (isHomeScrollLocked()) {
             event.preventDefault();
             return;
         }

@@ -15,6 +15,12 @@
     />
     <title>HYUNDAI MOTORSTUDIO Renewal</title>
     <script>
+      // Disable native restoration before module scripts and ScrollTrigger initialize.
+      if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      if (performance.getEntriesByType("navigation")[0]?.type === "reload") {
+        scrollTo(0, 0);
+      }
+
       // /motorstudio opens on the black intro, so paint black before React mounts (no white flash).
       // LocationShowcase restores the page background when the intro ends.
       if (location.pathname.replace(/\/+$/, "") === "/motorstudio") {
