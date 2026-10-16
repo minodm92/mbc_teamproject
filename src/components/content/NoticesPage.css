@@ -523,7 +523,7 @@ body:has(.notices-page) .site-header { background: transparent; }
     font: 500 60px/1.1 var(--font-en); letter-spacing: 0; text-transform: none;
 }
 .notices-page .notices-page__hero .notices-page__heading .notices-page__intro {
-    margin-top: 32px; color: #fff; font: 700 22px/1.4 var(--font-ko);
+        margin-top: 32px; color: #fff; font: 500 18px/1.4 var(--font-ko);
 }
 .notices-page section[aria-label='공지사항 목록'] { padding: 40px 0; }
 @media (min-width: 1441px) {
@@ -536,7 +536,7 @@ body:has(.notices-page) .site-header { background: transparent; }
     }
     .notices-page .notices-page__breadcrumb { font-size: 14px; }
     .notices-page .notices-page__hero .notices-page__heading h1 { font-size: clamp(36px, 6vw, 60px); }
-    .notices-page .notices-page__hero .notices-page__heading .notices-page__intro { font-size: clamp(15px, 2vw, 22px); }
+    .notices-page .notices-page__hero .notices-page__heading .notices-page__intro { font-size: clamp(13px, 2vw, 18px); }
 }
 
 /* ===== Notices list (Figma 4181:239 공지사항_수정본). Scoped to the list page; the detail page shares these classes. ===== */
@@ -827,7 +827,7 @@ body:has(.notices-page) .site-header { background: transparent; }
     .notices-page.notices-page--list .notices-page__hero .notices-page__heading .notices-page__intro {
         margin-top: 28px;
         color: #fff;
-        font: 500 14px/1.3 var(--font-ko);
+        font: 300 12px/1.3 var(--font-ko);
     }
 
     /* Tabs (52 tall, from 15, gap 20) + search icon (24 inside a 44x44 target, 15 from the right). */
@@ -979,5 +979,56 @@ body:has(.notices-page) .site-header { background: transparent; }
     }
     .notices-page.notices-page--list .notices-page__pagination .notices-page__pagination-edge {
         display: none;
+    }
+}
+
+/* Breadcrumb sits in a separate white strip beneath the hero. */
+.notice-operating-page .detail-hero__title {
+    font-size: 52px;
+    line-height: 1.4;
+}
+
+.notices-page.notices-page--list .notices-page__filters button {
+    font-weight: 600;
+}
+
+.notices-page.notices-page--list > section[aria-label='공지사항 목록'] {
+    padding-top: 60px;
+}
+
+.notices-page.notices-page > .notices-page__breadcrumb {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 52px;
+    padding: 12px var(--notice-gutter);
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    color: #999;
+    font: 600 14px/1.5 var(--font-ko);
+}
+
+.notices-page.notices-page > .notices-page__breadcrumb a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 28px;
+}
+
+.notices-page.notices-page > .notices-page__breadcrumb [aria-current] {
+    color: #222;
+}
+
+.notices-page.notices-page > .notices-page__breadcrumb a:focus-visible {
+    outline: 2px solid #3165b9;
+    outline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+    .notices-page.notices-page > .notices-page__breadcrumb {
+        min-height: 46px;
+        gap: 8px;
+        padding-block: 8px;
+        font-size: 13px;
     }
 }

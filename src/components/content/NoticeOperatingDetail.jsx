@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
 import { notices } from '../../common/data/content';
 import { Link } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
@@ -77,7 +77,14 @@ export default function NoticeOperatingDetail({ notice }) {
   const heroImage = contentImage || noticeHeroImage;
   return (
     <main className={`notices-page notice-operating-page${isPlaceholder ? ' notice-operating-page--placeholder' : ''}${hasShortTitle ? ' notice-operating-page--short-title' : ''}`}>
-      <DetailHero image={heroImage} title={notice.title} section="공지사항" sectionPath={paths.notices} titleTag="p" />
+      <DetailHero image={heroImage} title={notice.title} section="공지사항" sectionPath={paths.notices} titleTag="p" showBreadcrumb={false} />
+      <nav className="notices-page__breadcrumb" aria-label="현재 위치">
+        <Link to={paths.home}>HOME</Link>
+        <ChevronRight size={12} aria-hidden="true" />
+        <Link to={paths.membership}>안내</Link>
+        <ChevronRight size={12} aria-hidden="true" />
+        <Link to={paths.notices} aria-current="location">공지사항</Link>
+      </nav>
       <div className="notice-operating-page__inner">
         <article>
           <header className="notice-operating-page__heading">
