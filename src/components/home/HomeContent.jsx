@@ -1569,6 +1569,7 @@ export default function HomeContent() {
                             <button
                                 key={item.slug}
                                 type="button"
+                                data-location={item.slug}
                                 role="tab"
                                 aria-selected={selectedLocation === index}
                                 className={selectedLocation === index ? 'is-active' : ''}
