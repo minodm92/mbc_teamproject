@@ -17,6 +17,11 @@
 .site-header--responsive { color: #111; }
 #root .site-header.site-header { background: transparent; }
 #root .site-header.site-header:hover { background: #363636; }
+@media (min-width: 1001px) {
+  #root .site-header.site-header:is(:focus-within, .site-header--expanded) {
+    background: #363636;
+  }
+}
 #root .site-header:hover,
 #root .site-header:focus-within,
 #root .site-header.site-header--expanded { color: #fff; }
@@ -45,7 +50,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  transition: opacity .2s ease;
+  transition: none;
 }
 .site-header__asset--light { opacity: 0; }
 .site-header__asset--dark { opacity: 1; }
@@ -107,8 +112,8 @@
 .site-header__actions { display: flex; align-items: center; gap: 15px; margin-left: auto; }
 .site-header__experience { position: relative; display: block; width: 28px; height: 25px; }
 .site-header__experience-finding { position: absolute; inset: 0; display: block; }
-.site-header--dark:not(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) .site-header__experience-finding,
-.site-header--responsive:not(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) .site-header__experience-finding { filter: brightness(0) invert(.066667); }
+.site-header--dark:not(:hover, :focus-within, .site-header--expanded, .site-header--scrolled:not(.site-header--scroll-hidden)) .site-header__experience-finding,
+.site-header--responsive:not(:hover, :focus-within, .site-header--expanded, .site-header--scrolled:not(.site-header--scroll-hidden)) .site-header__experience-finding { filter: brightness(0) invert(.066667); }
 .site-header__account,
 .site-header__toggle { display: grid; place-items: center; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
 .site-header__account { position: relative; width: 24px; height: 24px; }
@@ -387,9 +392,9 @@
 #root .site-header:is(:hover, :focus-within, .site-header--expanded) {
   color: #fff;
 }
-#root .site-header--scrolled .site-header__asset--dark { opacity: 0; }
-#root .site-header--scrolled .site-header__asset--light { opacity: 1; }
-#root .site-header.site-header--reservation:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) {
+#root .site-header--scrolled:not(.site-header--scroll-hidden) .site-header__asset--dark { opacity: 0; }
+#root .site-header--scrolled:not(.site-header--scroll-hidden) .site-header__asset--light { opacity: 1; }
+#root .site-header.site-header--reservation:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled:not(.site-header--scroll-hidden)) {
   color: #fff;
 }
 
@@ -480,4 +485,64 @@
   #root .site-header.site-header--reservation.site-header--scrolled:not(.site-header--scroll-hidden) .site-header__reservation-switch > img {
     filter: brightness(0) invert(1);
   }
+}
+
+/* Finish sliding out before resetting the desktop header colors. */
+@media (min-width: 1001px) and (prefers-reduced-motion: no-preference) {
+  #root .site-header.site-header--scroll-hidden {
+    transition: transform .25s ease, height .25s ease, background-color 0s linear .25s, color 0s linear .25s;
+  }
+  #root .site-header--scroll-hidden .site-header__logo img,
+  #root .site-header--scroll-hidden .site-header__account img {
+    transition: opacity 0s linear .25s, filter 0s linear .25s;
+  }
+  #root .site-header--scroll-hidden .site-header__experience-finding {
+    transition: filter 0s linear .25s;
+  }
+}
+.site-header__account-wrap { position: relative; }
+.site-header__account-links {
+  position: absolute;
+  top: calc(100% + 17px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  min-width: 90px;
+  padding: 3px 0;
+  border: 1px solid #dedede;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 4px 16px rgb(0 0 0 / .1);
+}
+.site-header__account-links a,
+.site-header__account-links button {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 0;
+  background: transparent;
+  color: #111;
+  font: inherit;
+  font-size: 13px;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.site-header__account-links :is(a, button):hover { background: #f2f4f5; }
+.site-header__account-links :is(a, button):focus-visible { outline: 2px solid #3165b9; outline-offset: -2px; }
+
+.site-header__logout-notice {
+  position: fixed;
+  z-index: 1000;
+  bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  padding: 14px 24px;
+  border-radius: 4px;
+  background: rgb(17 17 17 / .9);
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  pointer-events: none;
 }
