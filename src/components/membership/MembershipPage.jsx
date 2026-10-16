@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, ChevronRight } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { paths } from '../../common/router/routePaths';
+import { useAuthStore } from '../../store/useAuthStore';
 import membershipHeroImage from '../../assets/images/membership/membership-hero.png';
-import categoryJoinImage from '../../assets/images/membership/category-join.png';
 import categoryBenefitsImage from '../../assets/images/membership/category-benefits.png';
 import categoryLocationsImage from '../../assets/images/membership/category-locations.png';
 import './MembershipPage.css';
@@ -25,26 +25,6 @@ const membershipHeroByTab = {
     locations: ['이용·라운지 안내', categoryLocationsImage],
 };
 
-const categories = [
-    [
-        'join',
-        '가입 안내',
-        categoryJoinImage,
-        '멤버십 가입 대상과 방법, Basic·Plus 회원 유형을 확인해 보세요.',
-    ],
-    [
-        'benefits',
-        '혜택 안내',
-        categoryBenefitsImage,
-        '주차권부터 특별한 프로그램까지, HMS Club의 다양한 혜택을 만나보세요.',
-    ],
-    [
-        'locations',
-        '이용·라운지 안내',
-        categoryLocationsImage,
-        '현대 모터스튜디오의 각 거점과 라운지에서 즐길 수 있는 경험을 확인해 보세요.',
-    ],
-];
 
 const membershipTypes = [
     ['Basic', 'HMS Club 가입 고객', '별도의 조건 없이 누구나 가입 가능'],
@@ -164,6 +144,7 @@ function SectionHeading({ id, title, description }) {
 }
 
 export default function MembershipPage() {
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
     const [searchParams, setSearchParams] = useSearchParams();
     const tabParam = searchParams.get('tab');
     // 예전 '가입 안내' 탭 링크(?tab=join)는 멤버십 안내 탭의 가입 안내 섹션으로 보낸다.
@@ -203,15 +184,6 @@ export default function MembershipPage() {
         event.currentTarget.parentElement.children[nextIndex].focus();
     }
 
-    function openCategory(target) {
-        if (target === 'join') {
-            if (activeTab === 'intro') joinRef.current?.scrollIntoView({ block: 'start', behavior: scrollBehavior() });
-            else setSearchParams({ tab: 'join' });
-            return;
-        }
-        setActiveTab(target);
-    }
-
     return (
         <main className="membership-page">
             <section
@@ -220,21 +192,6 @@ export default function MembershipPage() {
                 data-header-theme="dark"
                 style={{ '--membership-hero-image': `url("${heroImage}")` }}
             >
-                <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
-                    <Link to={paths.home}>HOME</Link>
-                    <span aria-hidden="true">/</span>
-                    <span>안내</span>
-                    <span aria-hidden="true">/</span>
-                    {activeTab === 'intro' ? (
-                        <span aria-current="page">멤버십</span>
-                    ) : (
-                        <>
-                            <Link to={paths.membership}>멤버십</Link>
-                            <span aria-hidden="true">/</span>
-                            <span aria-current="page">{currentTabLabel}</span>
-                        </>
-                    )}
-                </nav>
                 <h1 id="membership-title">{heroTitle}</h1>
                 <p className="membership-hero__intro">
                     공간과 모빌리티, 문화를 더 가까이
@@ -242,6 +199,21 @@ export default function MembershipPage() {
                     HMS Club 멤버십 혜택을 확인해보세요.
                 </p>
             </section>
+                <nav className="membership-hero__breadcrumb" aria-label="현재 위치">
+                    <Link to={paths.home}>HOME</Link>
+                    <ChevronRight size={12} aria-hidden="true" />
+                    <span>안내</span>
+                    <ChevronRight size={12} aria-hidden="true" />
+                    {activeTab === 'intro' ? (
+                        <span aria-current="page">멤버십</span>
+                    ) : (
+                        <>
+                            <Link to={paths.membership}>멤버십</Link>
+                            <ChevronRight size={12} aria-hidden="true" />
+                            <span aria-current="page">{currentTabLabel}</span>
+                        </>
+                    )}
+                </nav>
 
             <div className="membership-tabs" ref={tabsRef} role="tablist" aria-label="멤버십 안내">
                 {membershipTabs.map(([id, label], index) => (
@@ -269,26 +241,6 @@ export default function MembershipPage() {
                 aria-labelledby="membership-tab-intro"
                 className="membership-panel"
             >
-                <section className="membership-section" aria-labelledby="membership-category-title">
-                    <SectionHeading
-                        id="membership-category-title"
-                        title="HMS CLUB CATEGORY"
-                        description="HMS Club은 현대 모터스튜디오의 전용 멤버십 프로그램입니다."
-                    />
-                    <div className="membership-category">
-                        {categories.map(([target, title, image, description]) => (
-                            <article key={target} className="membership-category__item">
-                                <img src={image} alt="" className="membership-category__image" />
-                                <h3>{title}</h3>
-                                <p>{description}</p>
-                                <button type="button" onClick={() => openCategory(target)}>
-                                    바로가기 <ChevronRight aria-hidden="true" />
-                                </button>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-
                 <section
                     className="membership-section membership-join"
                     ref={joinRef}
@@ -359,9 +311,9 @@ export default function MembershipPage() {
                                 </article>
                             ))}
                         </div>
-                        <Link className="membership-cta" to={paths.signup}>
+                        {!isAuthenticated && <Link className="membership-cta" to={paths.signup}>
                             HMS Club 가입하기 <ArrowUpRight aria-hidden="true" />
-                        </Link>
+                        </Link>}
                     </div>
                 </section>
             </div>
