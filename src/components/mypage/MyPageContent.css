@@ -629,3 +629,250 @@
 .mypage-filter label > span {
     font-weight: 500;
 }
+
+/* =========================================================
+   마이페이지 대시보드 리디자인 (경험 찾기와 같은 기준)
+   - 라운드 12px 하나로 통일, 블랙·그레이 톤
+   - 간격 8px 단위, 폰트는 var(--font-ko) / var(--font-en)
+   ========================================================= */
+.mypage-dashboard {
+    --mp-radius: 12px;
+    --mp-line: #e2e2e2;
+    --mp-surface: #f4f5f5;
+}
+.mypage-dashboard__layout { gap: 80px; }
+
+/* 사이드바: 본문 제목 윗선에 맞춤, 현재 메뉴 강조 */
+.mypage-sidebar { margin-top: 0; position: sticky; top: 112px; align-self: start; }
+.mypage-sidebar section + section { margin-top: 40px; padding-top: 32px; border-top: 1px solid var(--mp-line); }
+.mypage-sidebar h2 { margin-bottom: 8px; color: var(--color-main-2); font: 700 16px/1.4 var(--font-ko); }
+.mypage-sidebar a,
+.mypage-sidebar button,
+.mypage-sidebar__item { padding: 8px 0; color: #6f6f6f; font: 500 15px/1.4 var(--font-ko); transition: color .2s; }
+.mypage-sidebar nav > section:first-child > a { font-size: 15px; }
+.mypage-sidebar a:hover,
+.mypage-sidebar button:hover { color: var(--color-main-2); }
+.mypage-sidebar [aria-pressed='true'] { color: var(--color-main-2); font-weight: 700; }
+.mypage-sidebar svg { width: 16px; height: 16px; }
+
+/* 상단 제목 */
+.mypage-dashboard__heading { align-items: flex-end; padding-bottom: 32px; border-bottom-color: var(--mp-line); }
+.mypage-dashboard__heading span { color: var(--color-sub-2); font: 550 13px/1.4 var(--font-en); letter-spacing: .04em; }
+.mypage-dashboard__heading h2 { margin-top: 8px; color: var(--color-main-2); font: 700 36px/1.3 var(--font-ko); letter-spacing: -.02em; }
+.mypage-dashboard__heading > p { color: var(--color-sub-2); font: 500 14px/1.4 var(--font-en); letter-spacing: 0; }
+
+/* 관심 분야 */
+.mypage-finding { min-height: 56px; margin-top: 24px; gap: 24px; padding: 0 24px; border-radius: var(--mp-radius); background: var(--mp-surface); }
+.mypage-finding span { color: var(--color-sub-2); font: 500 14px/1.4 var(--font-ko); }
+.mypage-finding strong { color: var(--color-main-2); font: 600 16px/1.4 var(--font-ko); }
+
+/* 멤버십 카드 */
+.mypage-dashboard .mypage-information {
+    margin-top: 16px;
+    padding: 40px 48px;
+    border-radius: var(--mp-radius);
+    background: radial-gradient(120% 140% at 100% 0%, #2a2a2a 0%, #111 55%);
+}
+.mypage-dashboard .mypage-information__eyebrow { color: var(--color-sub-1); font: 500 13px/1.4 var(--font-en); letter-spacing: .04em; }
+.mypage-dashboard .mypage-information h2 { margin: 16px 0 0; font: 600 40px/1 var(--font-en); }
+.mypage-dashboard .mypage-information__description { margin: 16px 0 0; color: #d6d6d6; font: 400 15px/1.6 var(--font-ko); }
+.mypage-dashboard .mypage-information__footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, .16); }
+.mypage-dashboard .mypage-information__benefits { gap: 16px; font: 500 13px/1.4 var(--font-en); letter-spacing: .02em; }
+.mypage-dashboard .mypage-information__benefits li { gap: 16px; }
+.mypage-dashboard .mypage-information__link { gap: 8px; font: 600 14px/1.4 var(--font-ko); }
+
+/* 예약 및 활동 현황 */
+.mypage-history { margin-top: 64px; border-top: 0; }
+.mypage-history__title { padding: 0 0 24px; }
+.mypage-history__title h2 { color: var(--color-main-2); font: 700 24px/1.4 var(--font-ko); }
+.mypage-history__title a { gap: 4px; color: var(--color-sub-3); font: 500 14px/1.4 var(--font-ko); }
+
+.mypage-filter { gap: 8px; padding: 16px; border-radius: var(--mp-radius); background: var(--mp-surface); }
+.mypage-filter button,
+.mypage-filter > div button,
+.mypage-filter label { min-height: 44px; border: 1px solid #d5d5d5; border-radius: var(--mp-radius); }
+.mypage-filter button { padding: 0 20px; color: var(--color-main-2); font: 500 14px/1 var(--font-ko); transition: border-color .2s, background-color .2s; }
+.mypage-filter > div button:hover { border-color: #111; }
+.mypage-filter > div button.is-active { border-color: #111; background: #111; color: #fff; }
+.mypage-filter label { gap: 8px; padding: 0 12px; font: 400 13px/1 var(--font-ko); }
+.mypage-filter label > span { color: var(--color-sub-2); font-weight: 500; }
+.mypage-filter > button[type='submit'] { border-color: #333; background: #333; color: #fff; font-weight: 600; }
+
+.mypage-empty { min-height: 280px; border-bottom: 0; }
+.mypage-empty svg { width: 40px; height: 40px; color: var(--color-sub-1); }
+.mypage-empty strong { margin-top: 16px; color: var(--color-main-2); font: 600 18px/1.4 var(--font-ko); }
+.mypage-empty p { margin-top: 8px; color: var(--color-sub-2); font: 400 14px/1.5 var(--font-ko); }
+.mypage-empty a { margin-top: 24px; padding: 12px 24px; border: 0; border-radius: var(--mp-radius); background: #333; color: #fff; font: 600 14px/1.4 var(--font-ko); }
+.mypage-empty--construction { margin-top: 48px; border-top: 0; border-radius: var(--mp-radius); background: var(--mp-surface); }
+
+.mypage-reservations { display: grid; gap: 8px; margin-top: 16px; }
+.mypage-reservations article { gap: 24px; padding: 24px; border: 1px solid var(--mp-line); border-radius: var(--mp-radius); }
+.mypage-reservations article span { display: inline-block; padding: 4px 10px; border-radius: var(--mp-radius); background: var(--mp-surface); color: var(--color-sub-3); font: 600 12px/1.4 var(--font-ko); }
+.mypage-reservations article h3 { margin: 8px 0 4px; font: 600 18px/1.4 var(--font-ko); }
+.mypage-reservations article p { color: var(--color-sub-2); font: 400 14px/1.5 var(--font-ko); }
+
+/* 바로가기 카드 */
+.mypage-quick-links { gap: 16px; margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--mp-line); }
+.mypage-quick-links > a { gap: 16px; padding: 24px 28px; border: 1px solid var(--mp-line); border-radius: var(--mp-radius); transition: border-color .2s; }
+.mypage-quick-links > a:hover { border-color: #111; }
+.mypage-quick-links > a > svg:first-child { width: 48px; height: 48px; padding: 12px; border-radius: 50%; background: var(--mp-surface); }
+.mypage-quick-links > a > svg:last-child { width: 20px; color: var(--color-sub-2); }
+.mypage-quick-links span { gap: 4px; color: var(--color-sub-2); font: 500 14px/1.4 var(--font-ko); }
+.mypage-quick-links strong { color: var(--color-main-2); font: 700 22px/1.3 var(--font-ko); }
+
+@media (max-width: 900px) {
+    .mypage-sidebar { position: static; }
+    .mypage-dashboard__heading h2 { font-size: 28px; }
+    .mypage-dashboard .mypage-information { padding: 32px; }
+    .mypage-history { margin-top: 48px; }
+}
+@media (max-width: 560px) {
+    .mypage-dashboard__heading h2 { font-size: 24px; }
+    .mypage-finding { padding: 16px; }
+    .mypage-dashboard .mypage-information { padding: 28px 24px; }
+    .mypage-dashboard .mypage-information h2 { font-size: 32px; }
+    .mypage-filter { padding: 12px; }
+    .mypage-filter label,
+    .mypage-filter > button { margin-top: 8px; }
+    .mypage-quick-links { margin-top: 40px; padding-top: 40px; }
+    .mypage-quick-links > a { padding: 20px; }
+}
+.mypage-dashboard .mypage-information__description,
+.mypage-empty p { word-break: keep-all; }
+.mypage-quick-links { margin-top: 24px; padding-top: 40px; }
+@media (max-width: 560px) {
+    .mypage-dashboard .mypage-information__benefits { gap: 8px 16px; }
+    .mypage-dashboard .mypage-information__benefits img { display: none; }
+    .mypage-history__title h2 { font-size: 20px; }
+    .mypage-empty { min-height: 240px; }
+}
+
+/* =========================================================
+   간격 정리 (PC: 64 / 32 / 24 / 16 / 8, 모바일: 48 / 24 / 16 / 8)
+   ========================================================= */
+/* PC */
+.mypage-sidebar { margin-top: 5px; } /* 사이드바 첫 제목 = 본문 eyebrow 윗선 */
+.mypage-dashboard__heading { padding-bottom: 32px; }
+.mypage-finding { margin-top: 32px; }
+.mypage-dashboard .mypage-information { margin-top: 16px; }
+.mypage-history { margin-top: 64px; }
+.mypage-history__title { padding: 0 0 24px; }
+.mypage-empty { min-height: 0; padding: 56px 0 48px; }
+.mypage-empty--construction { margin-top: 64px; padding: 56px 24px; }
+.mypage-reservations { margin-top: 16px; }
+.mypage-quick-links { margin-top: 0; padding-top: 48px; }
+.mypage-history:has(.mypage-reservations) + .mypage-quick-links { margin-top: 48px; }
+
+/* 태블릿 이하: 사이드바를 가로 스크롤 메뉴로 */
+@media (max-width: 900px) {
+    .mypage-dashboard { padding: 72px 20px 96px; }
+    .mypage-dashboard__breadcrumb { min-height: 0; padding: 24px 0 0; }
+    .mypage-sidebar {
+        display: block;
+        position: static;
+        margin: 0 -20px 32px;
+        padding: 0 20px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .mypage-sidebar::-webkit-scrollbar { display: none; }
+    .mypage-sidebar nav { display: flex; gap: 8px; width: max-content; }
+    .mypage-sidebar section,
+    .mypage-sidebar section + section { display: contents; margin: 0; padding: 0; border: 0; }
+    .mypage-sidebar h2 { display: none; }
+    .mypage-sidebar a,
+    .mypage-sidebar button,
+    .mypage-sidebar__item {
+        width: auto;
+        min-height: 40px;
+        gap: 4px;
+        padding: 0 16px;
+        border: 1px solid var(--mp-line);
+        border-radius: var(--mp-radius);
+        background: #fff;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    .mypage-sidebar svg { width: 14px; height: 14px; }
+    .mypage-sidebar__item svg { display: none; }
+    .mypage-sidebar [aria-pressed='true'] { border-color: #111; background: #111; color: #fff; }
+}
+
+/* 모바일 */
+@media (max-width: 560px) {
+    .mypage-dashboard__heading { padding-bottom: 24px; }
+    .mypage-dashboard__heading h2 { margin-top: 8px; }
+    .mypage-dashboard__heading > p { margin-top: 8px; font-size: 13px; }
+    .mypage-finding { margin-top: 24px; padding: 16px; }
+    .mypage-finding strong { margin-top: 4px; }
+    .mypage-dashboard .mypage-information { margin-top: 8px; padding: 32px 24px; }
+    .mypage-dashboard .mypage-information h2 { margin-top: 12px; }
+    .mypage-dashboard .mypage-information__description { margin-top: 12px; font-size: 14px; }
+    .mypage-dashboard .mypage-information__footer { gap: 16px; margin-top: 32px; padding-top: 20px; }
+    .mypage-history { margin-top: 48px; }
+    .mypage-history__title { padding-bottom: 16px; }
+    .mypage-filter { padding: 12px; }
+    .mypage-filter > div { gap: 8px; }
+    .mypage-filter > div button { flex: 1; padding: 0 8px; }
+    .mypage-filter label,
+    .mypage-filter > button { margin-top: 8px; }
+    .mypage-empty { padding: 40px 0; }
+    .mypage-empty--construction { margin-top: 48px; padding: 40px 16px; }
+    .mypage-quick-links { gap: 8px; padding-top: 40px; }
+    .mypage-quick-links > a { gap: 16px; padding: 20px; }
+    .mypage-quick-links > a > svg:first-child { width: 44px; height: 44px; padding: 11px; }
+    .mypage-quick-links strong { font-size: 20px; }
+}
+@media (max-width: 900px) {
+    .mypage-sidebar a svg { display: none; }
+}
+
+/* =========================================================
+   메인페이지 여백 기준
+   - PC: 좌우 clamp(24px, 5.208vw, 100px) = 헤더 로고·메인 타이틀 선, 최대 폭 제한 없음
+   - 모바일: 좌우 15px (메인 모바일 본문과 동일)
+   ========================================================= */
+.mypage-dashboard { padding-right: clamp(24px, 5.208vw, 100px); padding-left: clamp(24px, 5.208vw, 100px); }
+.mypage-dashboard__breadcrumb,
+.mypage-dashboard__layout { max-width: none; }
+
+@media (max-width: 900px) {
+    .mypage-dashboard { padding: 72px 15px 96px; }
+    /* 모바일 탭을 '마이페이지' 제목 바로 아래로 */
+    .mypage-dashboard__layout { display: flex; flex-direction: column; }
+    .mypage-dashboard__content { display: contents; }
+    .mypage-dashboard__heading { order: 0; }
+    .mypage-sidebar { order: 1; margin: 16px -15px 0; padding: 0 15px; }
+    .mypage-dashboard__content > :not(.mypage-dashboard__heading) { order: 2; }
+}
+@media (max-width: 900px) {
+    .mypage-dashboard__layout { gap: 0; }
+    .mypage-sidebar { min-width: 0; width: auto; max-width: none; align-self: stretch; }
+}
+@media (max-width: 900px) {
+    .mypage-dashboard { overflow-x: hidden; }
+}
+
+/* PC 사이드바: 섹션 사이 여백 줄임 */
+@media (min-width: 901px) {
+    .mypage-sidebar section + section { margin-top: 20px; padding-top: 20px; }
+    .mypage-sidebar h2 { margin-bottom: 4px; }
+    .mypage-sidebar a,
+    .mypage-sidebar button,
+    .mypage-sidebar__item { padding: 6px 0; }
+}
+.mypage-filter > div button { flex: none; padding: 0 16px; white-space: nowrap; }
+/* 좁은 PC(1280px 이하): 기간 버튼 한 줄, 날짜·조회 한 줄 */
+@media (min-width: 901px) and (max-width: 1280px) {
+    .mypage-filter { grid-template-columns: 1fr 1fr 96px; }
+    .mypage-filter > div { grid-column: 1 / -1; }
+}
+
+/* PC: 왼쪽 메뉴를 제목 아래 회색 선에서 시작 (선 높이 맞춤) */
+@media (min-width: 901px) {
+    .mypage-dashboard__layout { grid-template-rows: auto 1fr; column-gap: 80px; row-gap: 0; }
+    .mypage-dashboard__content { display: contents; }
+    .mypage-dashboard__heading { grid-column: 2; grid-row: 1; }
+    .mypage-dashboard__content > :not(.mypage-dashboard__heading) { grid-column: 2; }
+    .mypage-sidebar { grid-column: 1; grid-row: 2 / span 20; margin-top: 0; padding-top: 20px; border-top: 1px solid var(--mp-line); }
+}

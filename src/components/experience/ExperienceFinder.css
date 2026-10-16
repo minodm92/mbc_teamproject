@@ -279,3 +279,427 @@ body:has(.match-page) .reservation-footer{display:none}
         cursor: grabbing;
     }
 }
+
+/* =========================================================
+   경험 찾기 리디자인 — 사이트 그리드 + 마이페이지 톤
+   - 그리드: 헤더 좌우 여백 clamp(24px, 5.208vw, 100px), 콘텐츠 최대 1480px (마이페이지와 동일)
+   - 톤: 블랙(#111) 강조, 회색 면(#f4f5f5), 테두리(#d5d5d5), 라운드 7px / 알약 24px / 큰 카드 12px
+   - 타이포: 영문 크게(모빌리티 히어로), 한글 작게
+   ========================================================= */
+.match-page {
+    --mf-pad: clamp(24px, 5.208vw, 100px);
+    --mf-edge: max(var(--mf-pad), calc((100% - 1480px) / 2));
+    --mf-line: #d5d5d5;
+    --mf-surface: #f4f5f5;
+}
+
+/* 배경 사진: 흐리게 하던 필터 제거, 글자 뒤만 밝게 받침 */
+.match-page__backdrop img { filter: none; }
+.match-page__backdrop:after {
+    background: linear-gradient(90deg, rgba(246, 246, 244, .94) 0%, rgba(246, 246, 244, .82) 34%, rgba(246, 246, 244, 0) 54%);
+}
+
+/* ── 왼쪽 카피: 그리드 왼쪽 선에 맞춤 ── */
+.match-page__title {
+    top: 23.6111%;
+    left: var(--mf-edge);
+    display: block;
+    width: min(760px, 44vw);
+}
+.match-page__title > i {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 32px;
+    background: #111;
+    color: #fff;
+}
+.match-page__title > i svg { width: 24px; height: 24px; }
+.match-page__title span {
+    display: block;
+    color: var(--color-main-2);
+    font: 550 clamp(56px, 4.167vw, 80px)/1 var(--font-en);
+    text-transform: uppercase;
+}
+.match-page__title h1 {
+    margin-top: 24px;
+    color: var(--color-main-2);
+    font: 700 20px/1.4 var(--font-ko);
+    letter-spacing: -.02em;
+    word-break: keep-all;
+}
+.match-page__title p {
+    width: min(480px, 100%);
+    max-width: none;
+    margin-top: 8px;
+    color: var(--color-sub-3);
+    font: 500 15px/1.5 var(--font-ko);
+    word-break: keep-all;
+}
+
+/* ── 설문 패널: 그리드 오른쪽 선에 맞춤, 마이페이지 카드 톤 ── */
+.match-panel {
+    top: 23.6111%;
+    right: var(--mf-edge);
+    border-radius: 12px 12px 0 0;
+    background: #fff;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .14);
+    backdrop-filter: none;
+}
+.match-panel__scroll { padding: 40px 32px 168px; scrollbar-color: #ccc transparent; }
+.match-step { padding: 0 0 40px; border-bottom: 1px solid #ddd; }
+.match-step + .match-step { padding-top: 40px; }
+.match-step__heading > span { gap: 8px; color: var(--color-sub-3); font: 550 13px/1.4 var(--font-en); }
+.match-step__heading > span svg { width: 18px; height: 18px; fill: none; stroke: var(--color-sub-3); }
+.match-step__heading h2 { margin: 8px 0; color: var(--color-main-2); font: 700 22px/1.4 var(--font-ko); letter-spacing: -.02em; }
+.match-step__heading h2 em { color: var(--color-point-4); }
+.match-step__heading p { color: var(--color-sub-2); font: 500 13px/1.4 var(--font-ko); }
+.match-options { gap: 8px; margin-top: 24px; }
+
+/* 선택 카드 */
+.match-options button {
+    border: 1px solid var(--mf-line);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--color-main-2);
+    transition: border-color .2s, background-color .2s, color .2s;
+}
+.match-options button:hover { border-color: #111; }
+.match-options button.is-selected { border-color: #111; background: #111; color: #fff; box-shadow: none; }
+.match-options button.is-selected span,
+.match-options button.is-selected strong,
+.match-options button.is-selected svg { color: #fff; }
+.match-options button:disabled { background: var(--mf-surface); opacity: .6; }
+.match-options button:disabled:hover { border-color: var(--mf-line); }
+.match-options--vehicles button { min-height: 144px; gap: 8px; padding: 16px 8px; }
+.match-options--vehicles svg { color: var(--color-main-2); }
+.match-options--vehicles strong { font: 700 15px/1.4 var(--font-ko); word-break: keep-all; }
+.match-options--vehicles span { color: var(--color-sub-2); font: 500 13px/1.4 var(--font-ko); }
+/* 지점 선택: 마이페이지 기간 필터처럼 알약 버튼 */
+.match-options--ages button { height: 48px; gap: 8px; border-radius: 24px; font: 500 15px/1.4 var(--font-ko); }
+.match-options--ages button svg { width: 16px; }
+.match-options--lifestyles button { padding: 16px 8px; }
+.match-options--lifestyles strong { margin: 8px 0 4px; font: 600 15px/1.4 var(--font-en); }
+.match-options--lifestyles span { color: var(--color-sub-2); font: 500 13px/1.4 var(--font-ko); }
+
+/* 하단 버튼: 흰 바탕 + 블랙 버튼 */
+.match-panel__actions {
+    padding: 16px 32px 12px;
+    border-top: 1px solid #ddd;
+    background: #fff;
+    color: var(--color-main-2);
+    backdrop-filter: none;
+}
+.match-panel__actions > .match-panel__primary,
+.match-panel__actions > a {
+    height: 56px;
+    border-radius: 7px;
+    background: #111;
+    color: #fff;
+    font: 700 16px/1 var(--font-ko);
+}
+.match-panel__actions > .match-panel__primary:disabled { background: #e5e5e5; color: #aaa; }
+.match-panel__actions > button:not(.match-panel__primary) {
+    padding-top: 12px;
+    color: var(--color-sub-2);
+    font: 500 14px/1.4 var(--font-ko);
+}
+
+/* 결과 화면 */
+.match-result__heading > span { color: var(--color-sub-3); font: 550 13px/1.4 var(--font-en); letter-spacing: 0; }
+.match-result__heading h2 { margin: 8px 0; color: var(--color-main-2); font: 700 24px/1.4 var(--font-ko); }
+.match-result__heading p { color: var(--color-sub-3); font: 500 15px/1.5 var(--font-ko); }
+.match-result__chips { gap: 8px; margin: 24px 0; }
+.match-result__chips span { padding: 6px 12px; border-color: var(--mf-line); border-radius: 24px; background: #fff; color: var(--color-main-2); font: 500 13px/1.4 var(--font-ko); }
+.match-result__list { gap: 16px; }
+.match-result__card { border: 1px solid var(--mf-line); border-radius: 12px; }
+.match-result__card-body { padding: 16px 16px 24px; }
+.match-result__category { color: var(--color-sub-2); font: 700 13px/1.4 var(--font-ko); }
+.match-result__card h3 { margin: 8px 0; color: var(--color-main-2); font: 700 18px/1.4 var(--font-ko); }
+.match-result__card p { color: var(--color-sub-3); font: 500 14px/1.5 var(--font-ko); }
+.match-result__card .match-result__location { color: var(--color-main-2); }
+.match-result__links { gap: 8px; margin-top: 16px; }
+.match-result__links a { padding: 8px 14px; border-radius: 24px; background: #111; font: 700 13px/1.4 var(--font-ko); }
+.match-result__links a + a { border: 1px solid var(--mf-line); background: #fff; color: var(--color-main-2); }
+.match-result__empty { border-radius: 12px; background: var(--mf-surface); }
+.match-result__empty p { color: var(--color-sub-3); font: 500 14px/1.5 var(--font-ko); }
+
+.match-page__hint { font: 500 12px/1 var(--font-en); text-shadow: 0 1px 8px rgba(0, 0, 0, .45); }
+body:has(.match-page) .site-header__link.active { color: var(--color-main-2); }
+
+@media (max-width: 1000px) {
+    .match-page { padding-right: var(--mf-pad); padding-left: var(--mf-pad); }
+    .match-page__backdrop:after {
+        background: linear-gradient(180deg, rgba(246, 246, 244, .94) 0%, rgba(246, 246, 244, .6) 45%, rgba(246, 246, 244, .3) 100%);
+    }
+    .match-page__title { top: auto; left: auto; width: auto; margin: 32px 0 40px; }
+    .match-page__title p { display: block; }
+    .match-panel { top: auto; right: auto; border-radius: 12px; background: #fff; }
+}
+@media (max-width: 560px) {
+    .match-page__title > i { width: 48px; height: 48px; margin-bottom: 24px; }
+    .match-page__title span { font-size: 40px; }
+    .match-page__title h1 { margin-top: 16px; font-size: 18px; }
+    .match-panel__scroll { padding: 32px 16px 160px; }
+    .match-step__heading h2 { font-size: 19px; }
+    .match-panel__actions { padding-right: 16px; padding-left: 16px; }
+}
+
+/* 밝은 톤 조정: 검정 면을 줄이고 테두리·연회색으로 강조 */
+.match-page__title > i { background: #fff; color: var(--color-main-2); box-shadow: 0 6px 20px rgba(0, 0, 0, .08); }
+.match-options button.is-selected {
+    border-color: #111;
+    background: var(--mf-surface);
+    color: var(--color-main-2);
+    box-shadow: inset 0 0 0 1px #111;
+}
+.match-options button.is-selected strong,
+.match-options button.is-selected svg { color: var(--color-main-2); }
+.match-options button.is-selected span { color: var(--color-sub-3); }
+.match-options--ages button.is-selected { background: #111; color: #fff; box-shadow: none; }
+.match-options--ages button.is-selected svg { color: #fff; }
+.match-panel__actions > .match-panel__primary,
+.match-panel__actions > a { background: #333; }
+
+/* 글자 크기 한두 단계 낮춤 (레퍼런스 톤: 가볍고 얇은 영문 대제목, 작은 본문) */
+.match-page__title > i { width: 44px; height: 44px; margin-bottom: 28px; }
+.match-page__title > i svg { width: 20px; height: 20px; }
+.match-page__title span { font: 400 clamp(40px, 3.125vw, 60px)/1.05 var(--font-en); letter-spacing: -.02em; }
+.match-page__title h1 { margin-top: 20px; font: 600 17px/1.4 var(--font-ko); }
+.match-page__title p { width: min(420px, 100%); margin-top: 6px; font: 400 14px/1.6 var(--font-ko); }
+
+.match-step__heading > span { font: 500 12px/1.4 var(--font-en); letter-spacing: .04em; }
+.match-step__heading > span svg { width: 16px; height: 16px; }
+.match-step__heading h2 { margin: 6px 0; font: 600 18px/1.4 var(--font-ko); }
+.match-step__heading p { font: 400 12px/1.5 var(--font-ko); }
+.match-options { margin-top: 20px; }
+.match-options--vehicles button { min-height: 128px; gap: 6px; }
+.match-options--vehicles svg { width: 32px; height: 32px; }
+.match-options--vehicles strong { font: 600 14px/1.4 var(--font-ko); }
+.match-options--vehicles span { font: 400 12px/1.4 var(--font-ko); }
+.match-options--ages button { height: 44px; font: 500 14px/1.4 var(--font-ko); }
+.match-options--lifestyles button { min-height: 116px; }
+.match-options--lifestyles svg { width: 26px; height: 26px; }
+.match-options--lifestyles strong { font: 500 14px/1.4 var(--font-en); }
+.match-options--lifestyles span { font: 400 12px/1.4 var(--font-ko); }
+
+.match-panel__actions > .match-panel__primary,
+.match-panel__actions > a { height: 52px; font: 600 15px/1 var(--font-ko); }
+.match-panel__actions > button:not(.match-panel__primary) { font: 400 13px/1.4 var(--font-ko); }
+
+.match-result__heading > span { font: 500 12px/1.4 var(--font-en); letter-spacing: .04em; }
+.match-result__heading h2 { font: 600 20px/1.4 var(--font-ko); }
+.match-result__heading p { font: 400 14px/1.5 var(--font-ko); }
+.match-result__chips span { font: 400 12px/1.4 var(--font-ko); }
+.match-result__category { font: 600 12px/1.4 var(--font-ko); }
+.match-result__card h3 { font: 600 16px/1.4 var(--font-ko); }
+.match-result__card p { font: 400 13px/1.5 var(--font-ko); }
+.match-result__links a { font: 600 12px/1.4 var(--font-ko); }
+.match-page__hint { font-size: 11px; }
+
+@media (max-width: 560px) {
+    .match-page__title span { font-size: 34px; }
+    .match-page__title h1 { font-size: 16px; }
+    .match-step__heading h2 { font-size: 17px; }
+}
+
+/* 라운드 통일: 모든 박스·버튼·칩·카드를 12px 하나로 */
+.match-page { --mf-radius: 12px; }
+.match-panel { border-radius: var(--mf-radius) var(--mf-radius) 0 0; }
+.match-options button,
+.match-options--ages button,
+.match-panel__actions > .match-panel__primary,
+.match-panel__actions > a,
+.match-result__chips span,
+.match-result__card,
+.match-result__links a,
+.match-result__empty { border-radius: var(--mf-radius); }
+.match-result__card { overflow: hidden; }
+.match-result__card > img { border-radius: 0; }
+@media (max-width: 1000px) {
+    .match-panel { border-radius: var(--mf-radius); }
+}
+
+/* 설명 문장: 두 줄 글자 수를 비슷하게 */
+.match-page__title p { width: min(400px, 100%); text-wrap: balance; word-break: keep-all; }
+
+/* 흰 그라데이션을 원래보다 옅게 (사진이 더 보이게) */
+.match-page__backdrop:after {
+    background: linear-gradient(90deg, rgba(246, 246, 244, .78) 0%, rgba(246, 246, 244, .62) 32%, rgba(246, 246, 244, 0) 54%);
+}
+@media (max-width: 1000px) {
+    .match-page__backdrop:after {
+        background: linear-gradient(180deg, rgba(246, 246, 244, .8) 0%, rgba(246, 246, 244, .5) 45%, rgba(246, 246, 244, .2) 100%);
+    }
+}
+
+/* 간격 정리: 모든 여백을 8px 단위로 */
+.match-page__title > i { margin-bottom: 24px; }
+.match-page__title span { margin: 0; }
+.match-page__title h1 { margin-top: 24px; }
+.match-page__title p { margin-top: 8px; }
+.match-panel__scroll { padding: 40px 32px 168px; }
+.match-step { padding: 0 0 40px; }
+.match-step + .match-step { padding-top: 40px; }
+.match-step__heading > span { gap: 8px; }
+.match-step__heading h2 { margin: 8px 0; }
+.match-options { gap: 8px; margin-top: 24px; }
+.match-options--vehicles button { gap: 8px; padding: 16px 8px; }
+.match-options--ages button { height: 48px; gap: 8px; }
+.match-options--lifestyles button { padding: 16px 8px; }
+.match-options--lifestyles strong { margin: 8px 0 0; }
+.match-panel__actions { padding: 16px 32px 16px; }
+.match-panel__actions > button:not(.match-panel__primary) { padding-top: 8px; }
+.match-result__heading h2 { margin: 8px 0; }
+.match-result__chips { gap: 8px; margin: 24px 0; }
+.match-result__chips span { padding: 8px 16px; }
+.match-result__list { gap: 16px; }
+.match-result__card-body { padding: 16px 16px 24px; }
+.match-result__card h3 { margin: 8px 0; }
+.match-result__card .match-result__location { margin-bottom: 8px; }
+.match-result__links { gap: 8px; margin-top: 16px; }
+.match-result__links a { padding: 8px 16px; }
+@media (max-width: 560px) {
+    .match-panel__scroll { padding: 32px 16px 160px; }
+    .match-panel__actions { padding-right: 16px; padding-left: 16px; }
+}
+
+/* 아이콘 원 그림자 조금 더 강하게 */
+.match-page__title > i { box-shadow: 0 8px 24px rgba(0, 0, 0, .14), 0 2px 6px rgba(0, 0, 0, .06); }
+
+/* 탭(선택 카드) 글자 한두 단계 더 작게 */
+.match-options--vehicles button { min-height: 120px; }
+.match-options--vehicles svg { width: 28px; height: 28px; }
+.match-options--vehicles strong { font: 600 13px/1.4 var(--font-ko); }
+.match-options--vehicles span { font: 400 11px/1.4 var(--font-ko); }
+.match-options--ages button { height: 44px; font: 500 13px/1.4 var(--font-ko); }
+.match-options--ages button svg { width: 14px; }
+.match-options--lifestyles button { min-height: 112px; }
+.match-options--lifestyles svg { width: 24px; height: 24px; }
+.match-options--lifestyles strong { font: 500 13px/1.4 var(--font-en); }
+.match-options--lifestyles span { font: 400 11px/1.4 var(--font-ko); }
+
+/* 한글 제목·설명: 진한 그레이 */
+.match-page__title h1 { color: #222; text-shadow: none; }
+.match-page__title p { color: #333; text-shadow: none; }
+
+/* 태블릿·모바일: 패널을 카피와 같은 왼쪽 선에 맞춰 전체 폭으로, 결과 카드 제목 어절 단위 줄바꿈 */
+@media (max-width: 1000px) {
+    .match-panel { max-width: none; margin-left: 0; }
+}
+.match-result__card h3 { word-break: keep-all; }
+
+/* =========================================================
+   크게 + 바깥으로: 헤더 로고·아이콘 선에 맞추고 글자·박스 키움
+   ========================================================= */
+.match-page { --mf-edge: var(--mf-pad); }
+
+/* 왼쪽 카피 */
+.match-page__title { width: min(820px, 48vw); }
+.match-page__title > i { width: 56px; height: 56px; margin-bottom: 32px; }
+.match-page__title > i svg { width: 26px; height: 26px; }
+.match-page__title span { font: 400 clamp(56px, 4.375vw, 84px)/1.05 var(--font-en); }
+.match-page__title h1 { margin-top: 32px; font: 600 22px/1.4 var(--font-ko); }
+.match-page__title p { width: min(480px, 100%); margin-top: 8px; font: 400 16px/1.6 var(--font-ko); }
+
+/* 설문 패널 */
+.match-panel { width: min(520px, 34vw); }
+.match-panel__scroll { padding: 48px 40px 176px; }
+.match-step__heading > span { font: 500 14px/1.4 var(--font-en); }
+.match-step__heading > span svg { width: 18px; height: 18px; }
+.match-step__heading h2 { font: 600 24px/1.4 var(--font-ko); }
+.match-step__heading p { font: 400 14px/1.5 var(--font-ko); }
+.match-options { gap: 12px; margin-top: 24px; }
+.match-options--vehicles button { min-height: 160px; gap: 8px; padding: 24px 12px; }
+.match-options--vehicles svg { width: 36px; height: 36px; }
+.match-options--vehicles strong { font: 600 16px/1.45 var(--font-ko); }
+.match-options--vehicles span { font: 400 13px/1.4 var(--font-ko); }
+.match-options--ages button { height: 56px; font: 500 16px/1.4 var(--font-ko); }
+.match-options--ages button svg { width: 18px; }
+.match-options--lifestyles button { min-height: 148px; padding: 24px 12px; }
+.match-options--lifestyles svg { width: 30px; height: 30px; }
+.match-options--lifestyles strong { font: 500 16px/1.4 var(--font-en); }
+.match-options--lifestyles span { font: 400 13px/1.45 var(--font-ko); }
+.match-panel__actions { padding: 16px 40px 16px; }
+.match-panel__actions > .match-panel__primary,
+.match-panel__actions > a { height: 60px; font: 600 17px/1 var(--font-ko); }
+.match-panel__actions > button:not(.match-panel__primary) { font: 400 14px/1.4 var(--font-ko); }
+
+/* 결과 화면 */
+.match-result__heading > span { font: 500 14px/1.4 var(--font-en); }
+.match-result__heading h2 { font: 600 26px/1.4 var(--font-ko); }
+.match-result__heading p { font: 400 15px/1.55 var(--font-ko); }
+.match-result__chips span { font: 400 13px/1.4 var(--font-ko); }
+.match-result__card > img { height: 180px; }
+.match-result__card-body { padding: 24px 24px 32px; }
+.match-result__category { font: 600 13px/1.4 var(--font-ko); }
+.match-result__card h3 { font: 600 19px/1.4 var(--font-ko); }
+.match-result__card p { font: 400 14px/1.55 var(--font-ko); }
+.match-result__links a { padding: 10px 18px; font: 600 14px/1.4 var(--font-ko); }
+
+@media (max-width: 1000px) {
+    .match-page__title { width: auto; }
+    .match-panel { width: 100%; }
+    .match-panel__scroll { padding: 40px 24px 176px; }
+    .match-panel__actions { padding-right: 24px; padding-left: 24px; }
+}
+@media (max-width: 560px) {
+    .match-page__title span { font-size: 40px; }
+    .match-page__title h1 { margin-top: 20px; font-size: 18px; }
+    .match-page__title p { font-size: 14px; }
+    .match-panel__scroll { padding: 32px 16px 168px; }
+    .match-panel__actions { padding-right: 16px; padding-left: 16px; }
+    .match-step__heading h2 { font-size: 19px; }
+    .match-options { gap: 8px; }
+    .match-options--vehicles button { min-height: 136px; padding: 16px 8px; }
+    .match-options--vehicles strong { font-size: 14px; }
+    .match-options--vehicles span { font-size: 12px; }
+    .match-options--ages button { height: 48px; font-size: 14px; }
+    .match-options--lifestyles button { min-height: 124px; padding: 16px 8px; }
+    .match-options--lifestyles strong { font-size: 14px; }
+    .match-options--lifestyles span { font-size: 12px; }
+}
+
+/* DRAG TO EXPLORE: 회색 */
+.match-page__hint { color: #6f6f6f; text-shadow: none; }
+.match-page__hint span { background: #6f6f6f; }
+
+/* 영문 타이틀: 모빌리티 히어로와 같은 굵기(550), 두 줄 */
+.match-page__title span {
+    font: 550 clamp(52px, 4vw, 76px)/1.05 var(--font-en);
+    letter-spacing: -.01em;
+    white-space: pre-line;
+}
+@media (max-width: 560px) {
+    .match-page__title span { font-size: 38px; }
+}
+
+/* 영문 타이틀: 피그마 값 (Red Hat Display SemiBold 600 / 80px / 행간 100% / 자간 0) */
+.match-page__title span {
+    font: 600 clamp(56px, 4.167vw, 80px)/1 var(--font-en);
+    letter-spacing: 0;
+}
+@media (max-width: 560px) {
+    .match-page__title span { font-size: 40px; }
+}
+
+/* 모바일: 카드 문구가 세 줄로 꺾이지 않게 */
+@media (max-width: 560px) {
+    .match-options--vehicles button { padding: 16px 4px; }
+    .match-options--vehicles strong { font-size: 13px; letter-spacing: -.02em; }
+    .match-page__title { margin-bottom: 32px; }
+}
+
+/* 모바일·태블릿: 흰 그라데이션을 아래에서 위로 (글자 영역까지 덮고 위쪽은 사진) */
+@media (max-width: 1000px) {
+    .match-page__backdrop:after {
+        background: linear-gradient(0deg, rgba(246, 246, 244, .96) 0%, rgba(246, 246, 244, .9) 45%, rgba(246, 246, 244, .55) 62%, rgba(246, 246, 244, 0) 78%);
+    }
+}
+@media (max-width: 560px) {
+    .match-page__title span { font-size: 36px; }
+}
+
+/* PC: 설문 패널을 기존 위치(23.6%)에서 50px 위로 */
+@media (min-width: 1001px) {
+    .match-panel { top: calc(23.6111% - 50px); }
+}

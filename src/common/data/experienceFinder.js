@@ -172,22 +172,27 @@ export const experienceTypeCategories = {
 
 export const experienceFinderHero = {
   default: {
+    english: 'Match Your\nLifestyle',
     title: '나의 일상에 꼭 맞는 경험 추천',
     image: '/images/locations/main.webp',
   },
   mobility: {
+    english: 'Mobility\nin Motion',
     title: '차량을 직접 보고 운전해보고 싶어요',
     image: '/images/experience-finder/mobility.webp',
   },
   art: {
+    english: 'Where Art\nMeets Space',
     title: '작품과 공간을 감상하고 싶어요',
     image: '/images/experience-finder/art.webp',
   },
   experience: {
+    english: 'Immersive\nExperience',
     title: '몰입감 있는 전시를 직접 체험하고 싶어요',
     image: '/images/experience-finder/experience.webp',
   },
   program: {
+    english: 'Join Our Class\n& Program',
     title: '클래스와 프로그램에 참여하고 싶어요',
     image: '/images/experience-finder/program.webp',
   },

@@ -37,9 +37,31 @@ import { CollectionPage, ProductDetailPage, CartPage } from './pages/product/Pro
 import { BoardListPage, BoardDetailPage, BoardFormPage } from './pages/board/BoardPages';
 import ExperienceFinderPage from './pages/experience/ExperienceFinderPage';
 
+const HOME_LOADER_SESSION_KEY = 'hyundai-motorstudio-home-loader-complete';
+const HOME_LOADER_TIMEOUT_MS = 30000;
+
+function hasCompletedHomeLoader() {
+    try {
+        return window.sessionStorage.getItem(HOME_LOADER_SESSION_KEY) === 'true';
+    } catch {
+        return false;
+    }
+}
+
+function markHomeLoaderComplete() {
+    try {
+        window.sessionStorage.setItem(HOME_LOADER_SESSION_KEY, 'true');
+    } catch {
+        // The in-memory preload state still prevents repeats during this page lifecycle.
+    }
+}
+
 function ScrollToTop() {
     const { pathname } = useLocation();
     useLayoutEffect(() => {
+        if ('scrollRestoration' in window.history) {
+            window.history.scrollRestoration = 'manual';
+        }
         window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }, [pathname]);
     return null;
@@ -48,13 +70,15 @@ function ScrollToTop() {
 export default function App() {
     const { pathname } = useLocation();
     const [loaderPhase, setLoaderPhase] = useState(() =>
-        pathname === '/' && !areHomeAssetsPreloaded() ? 'visible' : null
+        pathname === '/' && !hasCompletedHomeLoader() && !areHomeAssetsPreloaded()
+            ? 'visible'
+            : null
     );
     const [loaderProgress, setLoaderProgress] = useState(0);
     const standaloneAuth = ['/login', '/signup'].includes(pathname.replace(/\/+$/, ''));
     const headerVariant = getHeaderVariant(pathname);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         document.documentElement.classList.toggle('is-home-page', pathname === '/');
 
         return () => {
@@ -69,7 +93,7 @@ export default function App() {
             return undefined;
         }
 
-        if (areHomeAssetsPreloaded()) {
+        if (hasCompletedHomeLoader() || areHomeAssetsPreloaded()) {
             setLoaderProgress(100);
             setLoaderPhase(null);
             document.body.classList.remove('is-page-loading');
@@ -83,6 +107,26 @@ export default function App() {
         const abortController = new AbortController();
         let disposed = false;
         let hideTimer;
+        let timedOut = false;
+        let completed = false;
+        const finishLoader = () => {
+            if (disposed || completed) return;
+            completed = true;
+            markHomeLoaderComplete();
+            setLoaderProgress(100);
+            setLoaderPhase('leaving');
+            hideTimer = window.setTimeout(() => {
+                setLoaderPhase(null);
+                document.body.classList.remove('is-page-loading');
+            }, 1500);
+        };
+        const timeoutTimer = window.setTimeout(() => {
+            timedOut = true;
+            abortController.abort();
+            console.warn('Home asset preloading timed out. Continuing to the page.');
+            finishLoader();
+        }, HOME_LOADER_TIMEOUT_MS);
+
         preloadHomeAssets({
             signal: abortController.signal,
             onProgress: (progress) => {
@@ -90,21 +134,20 @@ export default function App() {
             },
         })
             .then(() => {
-                if (disposed) return;
-                setLoaderProgress(100);
-                setLoaderPhase('leaving');
-                hideTimer = window.setTimeout(() => {
-                    setLoaderPhase(null);
-                    document.body.classList.remove('is-page-loading');
-                }, 1500);
+                window.clearTimeout(timeoutTimer);
+                finishLoader();
             })
             .catch((error) => {
-                if (error.name !== 'AbortError') console.error(error);
+                window.clearTimeout(timeoutTimer);
+                if (disposed || timedOut) return;
+                console.error('Home asset preloading failed. Continuing to the page.', error);
+                finishLoader();
             });
 
         return () => {
             disposed = true;
             abortController.abort();
+            window.clearTimeout(timeoutTimer);
             window.clearTimeout(hideTimer);
             document.body.classList.remove('is-page-loading');
         };

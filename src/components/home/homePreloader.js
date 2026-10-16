@@ -9,12 +9,6 @@ const CRITICAL_NAMES = new Set([
     'location.svg',
 ]);
 
-const UNUSED_NAMES = new Set([
-    'hero-1.png',
-    'notice.svg',
-    ...Array.from({ length: 9 }, (_, index) => `experience-ring-${index + 2}.png`),
-]);
-
 const SCROLL_ASSET_PATTERN = /^(drive-|experience-|vehicle-|spiral-|story-|guide-|program\.)/;
 const LARGE_ASSET_THRESHOLD = 1024 * 1024;
 const FALLBACK_ASSET_SIZE = 256 * 1024;
@@ -29,7 +23,7 @@ function createManifest() {
     const entries = [
         { name: 'home-hero-poster.png', url: heroPosterUrl },
         { name: 'home-hero.mp4', url: heroVideoUrl },
-        ...homeAssetEntries().filter(({ name }) => !UNUSED_NAMES.has(name)),
+        ...homeAssetEntries(),
     ];
     const uniqueAssets = new Map();
 

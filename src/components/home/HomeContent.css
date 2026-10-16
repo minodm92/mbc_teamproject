@@ -1604,6 +1604,13 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     --drive-shadow-top: min(70.3981svh, 760.3px);
     --drive-shadow-adjust: 0px;
     --drive-shadow-visible-height: min(3.1643svh, 34.2px);
+    --drive-pair-top: calc(
+        min(25svh, 270px) + 10px + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
+    --drive-vehicle-render-height: min(47.6852svh, 515px);
+    --drive-vehicle-y-adjust: -6px;
+    --drive-shadow-overlap: min(3.2407svh, 35px);
     --drive-group-bottom: max(
         var(--drive-vehicle-bottom),
         calc(var(--drive-shadow-top) + var(--drive-shadow-visible-height))
@@ -1619,17 +1626,38 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     --drive-vehicle-bottom: min(71.0185svh, 767px);
     --drive-shadow-top: min(68.0833svh, 735.3px);
     --drive-shadow-adjust: min(1.0463svh, 11.3px);
+    --drive-pair-top: calc(
+        min(20.1852svh, 190px) + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
+    --drive-vehicle-render-height: min(54.7817svh, 591.6418px);
+    --drive-vehicle-y-adjust: 6px;
+    --drive-shadow-overlap: min(5.2778svh, 57px);
 }
 .renewal-drive__slide.is-casper {
     --drive-vehicle-bottom: min(73.0556svh, 789px);
     --drive-shadow-top: min(67.4352svh, 728.3px);
     --drive-shadow-visible-height: min(3.1535svh, 34.1px);
     --drive-shadow-adjust: min(1.1204svh, 12.1px);
+    --drive-pair-top: calc(
+        min(17.963svh, 194px) + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
+    --drive-vehicle-render-height: min(52.8704svh, 571px);
+    --drive-vehicle-y-adjust: 0px;
+    --drive-shadow-overlap: min(2.3148svh, 25px);
 }
 .renewal-drive__slide.is-g90 {
     --drive-vehicle-bottom: min(71.0185svh, 767px);
     --drive-shadow-top: min(67.4352svh, 728.3px);
     --drive-shadow-adjust: max(-3.4907svh, -37.7px);
+    --drive-pair-top: calc(
+        min(21.1481svh, 228.4px) + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
+    --drive-vehicle-render-height: min(48.3863svh, 522.572px);
+    --drive-vehicle-y-adjust: 0px;
+    --drive-shadow-overlap: min(5.7407svh, 62px);
 }
 .renewal-drive__slide h2 {
     position: absolute;
@@ -1644,7 +1672,10 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
 .renewal-drive__vehicle-frame {
     position: absolute;
     z-index: 2;
-    top: calc(min(25svh, 270px) + 10px + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
+    top: calc(
+        min(25svh, 270px) + 10px + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
     left: calc(50% + var(--drive-vehicle-offset));
     width: min(128.8889svh, 1392px);
     aspect-ratio: 1392/515;
@@ -1694,7 +1725,10 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     transform-origin: center top;
 }
 .renewal-drive__vehicle-frame.is-ioniq5n {
-    top: calc(min(20.1852svh, 190px) + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
+    top: calc(
+        min(20.1852svh, 190px) + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
     width: min(135.0926svh, 1459px);
     aspect-ratio: 1459/591.6418;
 }
@@ -1702,7 +1736,10 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     height: 92.6236%;
 }
 .renewal-drive__vehicle-frame.is-casper {
-    top: calc(min(17.963svh, 194px) + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
+    top: calc(
+        min(17.963svh, 194px) + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
     width: min(113.7037svh, 1228px);
     aspect-ratio: 1228/571;
 }
@@ -1717,23 +1754,37 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
 .renewal-drive__shadow.is-casper {
     width: min(103.7963svh, 1121px);
 }
-@media (min-width: 901px) {
-    .renewal-drive__shadow,
-    .renewal-drive__shadow.is-ioniq5n,
-    .renewal-drive__shadow.is-casper,
-    .renewal-drive__shadow.is-g90 {
-        top: auto;
-        bottom: calc(100% - var(--drive-copy-top) - var(--drive-content-offset) + 50px);
-        transform-origin: center bottom;
-    }
-}
 .renewal-drive__vehicle-frame.is-g90 {
-    top: calc(min(21.1481svh, 228.4px) + var(--drive-content-offset) + var(--drive-group-offset) + var(--drive-vehicle-contact-offset));
+    top: calc(
+        min(21.1481svh, 228.4px) + var(--drive-content-offset) + var(--drive-group-offset) +
+            var(--drive-vehicle-contact-offset)
+    );
     width: min(133.7963svh, 1445px);
     aspect-ratio: 1445/522.572;
 }
 .renewal-drive__vehicle-frame.is-g90 .renewal-drive__vehicle-body-frame {
     height: 92.4275%;
+}
+@media (min-width: 901px) {
+    .renewal-drive__slide h2 {
+        letter-spacing: -0.05em;
+    }
+    .renewal-drive__vehicle-frame,
+    .renewal-drive__vehicle-frame.is-ioniq5n,
+    .renewal-drive__vehicle-frame.is-casper,
+    .renewal-drive__vehicle-frame.is-g90 {
+        top: calc(var(--drive-pair-top) + var(--drive-vehicle-y-adjust));
+    }
+    .renewal-drive__shadow,
+    .renewal-drive__shadow.is-ioniq5n,
+    .renewal-drive__shadow.is-casper,
+    .renewal-drive__shadow.is-g90 {
+        top: calc(
+            var(--drive-pair-top) + var(--drive-vehicle-render-height) - var(--drive-shadow-overlap)
+        );
+        bottom: auto;
+        transform-origin: center top;
+    }
 }
 .renewal-drive__copy {
     position: absolute;
@@ -2449,28 +2500,48 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
     }
     .renewal-drive__slide {
         --drive-content-offset: 0px;
+        --drive-mobile-pair-top: 22%;
+        --drive-mobile-vehicle-y-adjust: 0px;
+        --drive-mobile-vehicle-render-height: 35.1659vw;
+        --drive-mobile-shadow-overlap: 1.6614vw;
+        --drive-mobile-shadow-y-offset: calc(
+            var(--drive-mobile-vehicle-render-height) - var(--drive-mobile-shadow-overlap)
+        );
         flex-basis: 100vw;
         height: 100%;
         scroll-snap-align: start;
     }
+    .renewal-drive__slide.is-ioniq5n {
+        --drive-mobile-vehicle-render-height: 38.5284vw;
+        --drive-mobile-shadow-overlap: 4.5004vw;
+    }
+    .renewal-drive__slide.is-casper {
+        --drive-mobile-vehicle-render-height: 44.1686vw;
+        --drive-mobile-shadow-overlap: 5.9942vw;
+    }
+    .renewal-drive__slide.is-g90 {
+        --drive-mobile-vehicle-render-height: 34.3546vw;
+        --drive-mobile-shadow-overlap: 0.5586vw;
+    }
     .renewal-drive__slide h2 {
         top: 100px;
         font-size: 90px;
+        letter-spacing: -0.04em;
     }
     .renewal-drive__vehicle-frame {
-        top: 22%;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-vehicle-y-adjust));
         width: 95%;
         height: auto;
     }
     .renewal-drive__vehicle-frame.is-ioniq5n,
     .renewal-drive__vehicle-frame.is-casper,
     .renewal-drive__vehicle-frame.is-g90 {
-        top: 22%;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-vehicle-y-adjust));
         width: 95%;
         height: auto;
     }
     .renewal-drive__shadow {
-        top: 70%;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-shadow-y-offset));
         width: 82%;
     }
     .renewal-drive__shadow.is-casper {
@@ -2899,10 +2970,32 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         height: auto;
     }
     .renewal-drive__slide {
+        --drive-mobile-pair-top: 93px;
+        --drive-mobile-vehicle-y-adjust: 0px;
+        --drive-mobile-vehicle-render-height: min(29.5349vw, 127px);
+        --drive-mobile-shadow-overlap: min(2.7907vw, 12px);
+        --drive-mobile-shadow-y-offset: calc(
+            var(--drive-mobile-vehicle-render-height) - var(--drive-mobile-shadow-overlap)
+        );
         position: relative;
         width: 100%;
         height: 410px;
         scroll-snap-align: none;
+    }
+    .renewal-drive__slide.is-ioniq5n {
+        --drive-mobile-vehicle-y-adjust: -3px;
+        --drive-mobile-vehicle-render-height: min(31.8605vw, 137px);
+        --drive-mobile-shadow-overlap: min(5.1163vw, 22px);
+    }
+    .renewal-drive__slide.is-casper {
+        --drive-mobile-vehicle-y-adjust: -13px;
+        --drive-mobile-vehicle-render-height: min(32.5581vw, 140px);
+        --drive-mobile-shadow-overlap: min(5.814vw, 25px);
+    }
+    .renewal-drive__slide.is-g90 {
+        --drive-mobile-vehicle-y-adjust: 12px;
+        --drive-mobile-vehicle-render-height: min(28.6047vw, 123px);
+        --drive-mobile-shadow-overlap: min(1.8605vw, 8px);
     }
     .renewal-drive__slide h2 {
         top: 22px;
@@ -2910,45 +3003,45 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         line-height: 1.3;
     }
     .renewal-drive__vehicle-frame {
-        top: 93px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-vehicle-y-adjust));
         width: min(80%, 344px);
         height: auto;
         aspect-ratio: 344 / 127;
         transform: translateX(-50%);
     }
     .renewal-drive__vehicle-frame.is-ioniq5n {
-        top: 90px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-vehicle-y-adjust));
         width: min(84.42%, 363px);
         height: auto;
         aspect-ratio: 363 / 137;
     }
     .renewal-drive__vehicle-frame.is-casper {
-        top: 80px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-vehicle-y-adjust));
         width: min(67.21%, 289px);
         height: auto;
         aspect-ratio: 289 / 140;
     }
     .renewal-drive__vehicle-frame.is-g90 {
-        top: 105px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-vehicle-y-adjust));
         width: min(88.84%, 382px);
         height: auto;
         aspect-ratio: 382 / 123;
     }
     .renewal-drive__shadow {
-        top: 214px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-shadow-y-offset));
         width: min(86.75%, 373px);
         transform: translateX(-50%);
     }
     .renewal-drive__shadow.is-ioniq5n {
-        top: 214px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-shadow-y-offset));
         width: min(75.82%, 326px);
     }
     .renewal-drive__shadow.is-casper {
-        top: 214px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-shadow-y-offset));
         width: min(73.02%, 314px);
     }
     .renewal-drive__shadow.is-g90 {
-        top: 214px;
+        top: calc(var(--drive-mobile-pair-top) + var(--drive-mobile-shadow-y-offset));
         width: min(86.75%, 373px);
     }
     .renewal-drive__copy {
@@ -3108,12 +3201,12 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         margin-top: 38px;
         gap: 45px;
     }
-    .renewal-vehicle-exhibition-card-list__item > img:not(
-        .renewal-vehicle-exhibition-card-list__mobile-image
-    ) {
+    .renewal-vehicle-exhibition-card-list__item
+        > img:not(.renewal-vehicle-exhibition-card-list__mobile-image) {
         display: none;
     }
-    .renewal-vehicle-exhibition-card-list__item .renewal-vehicle-exhibition-card-list__mobile-image {
+    .renewal-vehicle-exhibition-card-list__item
+        .renewal-vehicle-exhibition-card-list__mobile-image {
         display: block;
         width: 380px;
         max-width: 100%;
@@ -3409,10 +3502,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         display: block;
     }
     .renewal-vehicle-exhibition-card-list {
-        --vehicle-exhibition-extra-gap: max(
-            0px,
-            calc(100svh + 160px - min(25.83333vw, 496px))
-        );
+        --vehicle-exhibition-extra-gap: max(0px, calc(100svh + 160px - min(25.83333vw, 496px)));
         height: calc(min(293.95833vw, 5644px) + var(--vehicle-exhibition-extra-gap));
         margin-top: 0;
         padding: 0;

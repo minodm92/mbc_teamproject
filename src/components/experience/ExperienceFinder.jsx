@@ -197,10 +197,10 @@ export default function ExperienceFinder() {
             </div>
             <div className="match-page__title">
                 <i>
-                    <Sparkles size={29} />
+                    {createElement(experienceTypes.find((item) => item.id === experienceType)?.icon || Sparkles, { size: 29 })}
                 </i>
                 <div>
-                    <span>Lifestyle Match</span>
+                    <span>{hero.english || experienceFinderHero.default.english}</span>
                     <h1>{hero.title}</h1>
                     <p>아래 설문을 완료하면 취향에 맞는 현대 모터스튜디오 경험을 알려드려요.</p>
                 </div>

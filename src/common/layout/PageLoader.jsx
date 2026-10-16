@@ -32,9 +32,12 @@ export default function PageLoader({ phase, progress }) {
     return (
         <div
             className={`page-loader${phase === 'leaving' ? ' is-leaving' : ''}`}
-            role="status"
-            aria-live="polite"
-            aria-label={`메인 페이지 준비 중 ${roundedProgress}%`}
+            role="progressbar"
+            aria-label="메인 페이지 준비 중"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow={roundedProgress}
+            aria-valuetext={`${roundedProgress}% 완료`}
         >
             <svg
                 className="page-loader__gauge"

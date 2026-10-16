@@ -1506,6 +1506,7 @@ export default function HomeContent() {
             };
         });
         window.addEventListener('load', refreshScrollLayout);
+        window.addEventListener('pageshow', refreshScrollLayout);
         if (document.readyState === 'complete') refreshScrollLayout();
         document.fonts?.ready.then(() => {
             if (!disposed) refreshScrollLayout();
@@ -1514,6 +1515,7 @@ export default function HomeContent() {
             disposed = true;
             cancelAnimationFrame(refreshFrame);
             window.removeEventListener('load', refreshScrollLayout);
+            window.removeEventListener('pageshow', refreshScrollLayout);
             media.revert();
         };
     }, []);
