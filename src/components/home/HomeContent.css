@@ -1,4 +1,4 @@
-﻿.renewal-home {
+.renewal-home {
     overflow-x: clip;
     overflow-y: visible;
     background: #fff;
@@ -3504,7 +3504,7 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         padding-top: 0;
         align-content: center;
         justify-items: center;
-        margin-bottom: 40svh;
+        margin-bottom: 0;
         background: var(--color-main-1);
         color: #0e0e0e;
     }
@@ -3652,4 +3652,9 @@ html.is-home-page:has(.renewal-home)::-webkit-scrollbar {
         visibility: visible;
         opacity: 1;
     }
+}
+
+.renewal-vehicle-exhibition-slogan h2,
+.renewal-vehicle-exhibition-floating-title {
+    white-space: nowrap;
 }
