@@ -275,11 +275,11 @@
     margin-left: auto;
 }
 /* Under the detail hero the header no longer overlaps the content: hero → title 80 (PC/tablet), 40 (mobile). */
-#root > main.notice-operating-page .detail-hero + .notice-operating-page__inner {
-    padding-top: 80px;
+#root > main.notice-operating-page > .notices-page__breadcrumb + .notice-operating-page__inner {
+    padding-top: 180px;
 }
 @media (max-width: 767px) {
-    #root > main.notice-operating-page .detail-hero + .notice-operating-page__inner {
+    #root > main.notice-operating-page > .notices-page__breadcrumb + .notice-operating-page__inner {
         padding-top: 40px;
     }
 }

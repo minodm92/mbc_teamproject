@@ -1,5 +1,6 @@
 ﻿import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
+import { ChevronRight } from 'lucide-react';
 import { notices } from '../../common/data/content';
 import { paths } from '../../common/router/routePaths';
 import './NoticesPage.css';
@@ -105,13 +106,6 @@ export default function NoticesListing() {
         <main className="notices-page notices-page--list">
             <header className="notices-page__hero" data-header-theme="dark">
                 <img className="notices-page__hero-image" src="/images/notices/notice-hero.png" alt="" fetchPriority="high" />
-                <nav className="notices-page__breadcrumb" aria-label="현재 위치">
-                    <Link to={paths.home}>HOME</Link>
-                    <span aria-hidden="true">/</span>
-                    <Link to={paths.membership}>안내</Link>
-                    <span aria-hidden="true">/</span>
-                    <span aria-current="page">공지사항</span>
-                </nav>
                 <div className="notices-page__heading">
                     <h1>
                         NOTICE
@@ -119,6 +113,13 @@ export default function NoticesListing() {
                     <p className="notices-page__intro">운영 시간부터 휴관 일정까지,<br />방문 전 필요한 소식을 확인해보세요</p>
                 </div>
             </header>
+            <nav className="notices-page__breadcrumb" aria-label="현재 위치">
+                <Link to={paths.home}>HOME</Link>
+                <ChevronRight size={12} aria-hidden="true" />
+                <Link to={paths.membership}>안내</Link>
+                <ChevronRight size={12} aria-hidden="true" />
+                <span aria-current="page">공지사항</span>
+            </nav>
             <section aria-label="공지사항 목록">
                 <div className="notices-page__toolbar">
                     <div className="notices-page__filters" role="group" aria-label="공지사항 분류">
