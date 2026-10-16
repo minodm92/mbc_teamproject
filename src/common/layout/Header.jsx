@@ -28,12 +28,43 @@ export default function Header({ variant = 'light' }) {
   const [topHovered, setTopHovered] = useState(false);
   const [mobileGroup, setMobileGroup] = useState(null);
   const [subnavOpen, setSubnavOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const accountRef = useRef(null);
   const headerRef = useRef(null);
   const navigate = useNavigate();
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
+  const [showLogoutNotice, setShowLogoutNotice] = useState(Boolean(pathname === paths.home && (state?.loggedOut || sessionStorage.getItem('hms-logout-notice'))));
+  useEffect(() => {
+    if (!showLogoutNotice) return;
+    sessionStorage.removeItem('hms-logout-notice');
+    const timer = window.setTimeout(() => setShowLogoutNotice(false), 3000);
+    navigate(paths.home, { replace: true, state: null });
+    return () => window.clearTimeout(timer);
+  }, [showLogoutNotice, navigate]);
+  const isMyPage = pathname === paths.mypage || pathname.startsWith(`${paths.mypage}/`);
   const isReservation = pathname === paths.reservations || pathname.startsWith(`${paths.reservations}/`);
   const reservationPage = reservationPages.find((page) => page.to === pathname) || reservationPages[0];
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const logout = useAuthStore((state) => state.logout);
+
+  useEffect(() => {
+    const dismiss = (event) => {
+      if (event.type === 'keydown' && event.key === 'Escape') {
+        setAccountOpen(false);
+        if (accountRef.current?.contains(document.activeElement)) {
+          accountRef.current.querySelector('button')?.focus();
+        }
+      } else if (event.type === 'pointerdown' && !accountRef.current?.contains(event.target)) {
+        setAccountOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', dismiss);
+    document.addEventListener('keydown', dismiss);
+    return () => {
+      document.removeEventListener('pointerdown', dismiss);
+      document.removeEventListener('keydown', dismiss);
+    };
+  }, []);
 
   useEffect(() => {
     const closeSubnav = (event) => {
@@ -141,6 +172,7 @@ export default function Header({ variant = 'light' }) {
   }, [pathname, open]);
 
   const closeMenus = () => {
+    setAccountOpen(false);
     setMobileGroup(null);
     setOpen(false);
     setSubnavOpen(false);
@@ -154,6 +186,7 @@ export default function Header({ variant = 'light' }) {
     </>;
 
   return <>
+    {showLogoutNotice && <div className="site-header__logout-notice" role="status">로그아웃되었습니다.</div>}
     {scrolled && <button className="site-header__reveal-zone" type="button" aria-label="상단 메뉴 표시" onFocus={() => setTopHovered(true)} onClick={() => setTopHovered(true)} />}
     <header data-mobile-theme={mobileDarkBackground ? 'light' : 'dark'} onPointerEnter={() => setTopHovered(true)} onPointerLeave={() => { setTopHovered(false); setSubnavOpen(false); }} ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${subnavOpen ? ' site-header--expanded' : ''}${scrolled ? ' site-header--scrolled' : ''}${scrolled && !topHovered && !open ? ' site-header--scroll-hidden' : ''}`}>
     <div className="site-header__bar">
@@ -181,9 +214,25 @@ export default function Header({ variant = 'light' }) {
         <Link className="site-header__experience" to={paths.experience} onClick={closeMenus} aria-label="경험 찾기">
           <img className="site-header__experience-finding" src={experienceFindingIcon} alt="" />
         </Link>
-        <button className="site-header__account" type="button" aria-label={isAuthenticated ? '마이페이지' : '로그인'} onClick={() => { closeMenus(); navigate(isAuthenticated ? paths.mypage : paths.login); }}>
+        <div className="site-header__account-wrap" ref={accountRef} onBlur={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget)) setAccountOpen(false);
+        }}>
+        <button className="site-header__account" type="button" aria-label={isAuthenticated ? (isMyPage ? '마이페이지 메뉴' : '마이페이지') : '로그인'} aria-expanded={isAuthenticated && isMyPage ? accountOpen : undefined} aria-controls={isAuthenticated && isMyPage && accountOpen ? 'header-account-links' : undefined} onClick={() => {
+          if (!isAuthenticated) { closeMenus(); navigate(paths.login); return; }
+          if (!isMyPage) { closeMenus(); navigate(paths.mypage); return; }
+          setAccountOpen((value) => !value);
+        }}>
           {renderAsset('profile', 'site-header__account-image')}
         </button>
+        {isAuthenticated && isMyPage && accountOpen && <div className="site-header__account-links" id="header-account-links">
+          <button type="button" onClick={() => {
+            closeMenus();
+            sessionStorage.setItem('hms-logout-notice', 'true');
+            logout();
+            window.location.replace(paths.home);
+          }}>로그아웃</button>
+        </div>}
+        </div>
         <button className="site-header__toggle" type="button" aria-label={open ? '메뉴 닫기' : '메뉴 열기'} aria-expanded={open} onClick={() => { setOpen((value) => !value); setSubnavOpen(false); }}>{open ? <X /> : <img src="/images/common/mobile-menu/header-menu.svg" alt="" />}</button>
       </div>
     </div>
