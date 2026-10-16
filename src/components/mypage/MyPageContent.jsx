@@ -28,6 +28,44 @@ const preferenceLabels = {
     together: '함께 즐기는 경험',
     discover: '새로운 발견의 경험',
 };
+const dashboardPanels = {
+    reservations: 'RESERVATION HISTORY',
+    inquiries: 'INQUIRY HISTORY',
+    inquiryWrite: 'WRITE AN INQUIRY',
+    profile: 'PROFILE EDIT',
+};
+const periodOptions = [
+    { label: '1개월', months: 1 },
+    { label: '3개월', months: 3 },
+    { label: '6개월', months: 6 },
+    { label: '1년', months: 12 },
+];
+
+function formatDateInput(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+function createDateRange(months = 1) {
+    const end = new Date();
+    const start = new Date(end);
+    const day = start.getDate();
+    start.setDate(1);
+    start.setMonth(start.getMonth() - months);
+    const lastDay = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
+    start.setDate(Math.min(day, lastDay));
+    return { start: formatDateInput(start), end: formatDateInput(end) };
+}
+
+function normalizeReservationDate(value) {
+    if (typeof value !== 'string') return '';
+    const match = value.trim().match(/^(\d{4})[.-](\d{1,2})[.-](\d{1,2})/);
+    if (!match) return '';
+    const [, year, month, day] = match;
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+}
 
 function getExperienceSummary() {
     if (typeof window === 'undefined') return '아직 찾은 경험이 없습니다.';
@@ -50,29 +88,78 @@ export function MyPage() {
     const logout = useAuthStore((state) => state.logout);
     const navigate = useNavigate();
     const [period, setPeriod] = useState('1개월');
+    const [dateRange, setDateRange] = useState(createDateRange);
+    const [appliedRange, setAppliedRange] = useState(createDateRange);
+    const [filterError, setFilterError] = useState('');
+    const [activePanel, setActivePanel] = useState(null);
     const [experienceSummary] = useState(getExperienceSummary);
     const allInquiries = useInquiryStore((state) => state.inquiries ?? []);
     const allReservations = useReservationStore((state) => state.reservations ?? []);
     const inquiries = allInquiries.filter((item) => item.userId === user?.id);
     const reservations = allReservations.filter((item) => item.userId === user?.id);
+    const filteredReservations = reservations.filter((item) => {
+        const reservationDate = normalizeReservationDate(item.date);
+        if (!reservationDate) return true;
+        return reservationDate >= appliedRange.start && reservationDate <= appliedRange.end;
+    });
+
+    function selectPeriod(label, months) {
+        const nextRange = createDateRange(months);
+        setPeriod(label);
+        setDateRange(nextRange);
+        setAppliedRange(nextRange);
+        setFilterError('');
+    }
+
+    function changeDateRange(field, value) {
+        setPeriod('');
+        setDateRange((current) => ({ ...current, [field]: value }));
+        setFilterError('');
+    }
+
+    function applyDateRange(event) {
+        event.preventDefault();
+        if (!dateRange.start || !dateRange.end) {
+            setFilterError('조회할 시작일과 종료일을 모두 선택해 주세요.');
+            return;
+        }
+        if (dateRange.start > dateRange.end) {
+            setFilterError('시작일은 종료일보다 늦을 수 없습니다.');
+            return;
+        }
+        setAppliedRange(dateRange);
+        setFilterError('');
+    }
 
     return (
         <main className="mypage-dashboard">
-            <div className="mypage-dashboard__breadcrumb">
-                <Link to={paths.home}>HOME</Link>
-                <span>/</span>
-                <strong>마이페이지</strong>
-            </div>
+            <div className="mypage-dashboard__breadcrumb" aria-hidden="true" />
             <div className="mypage-dashboard__layout">
                 <aside className="mypage-sidebar">
-                    <h1>마이페이지</h1>
                     <nav aria-label="마이페이지 메뉴">
                         <section>
+                            <h2>마이 페이지</h2>
+                            <button
+                                className="mypage-sidebar__item"
+                                type="button"
+                                aria-pressed={activePanel === null}
+                                onClick={() => setActivePanel(null)}
+                            >
+                                내 정보
+                                <ChevronRight />
+                            </button>
+                        </section>
+                        <section>
                             <h2>나의 예약</h2>
-                            <Link to={paths.myReservations}>
+                            <button
+                                className="mypage-sidebar__item"
+                                type="button"
+                                aria-pressed={activePanel === 'reservations'}
+                                onClick={() => setActivePanel('reservations')}
+                            >
                                 예약 내역
                                 <ChevronRight />
-                            </Link>
+                            </button>
                             <Link to={paths.reservations}>
                                 새로운 예약
                                 <ChevronRight />
@@ -80,21 +167,36 @@ export function MyPage() {
                         </section>
                         <section>
                             <h2>나의 활동</h2>
-                            <Link to={paths.inquiries}>
+                            <button
+                                className="mypage-sidebar__item"
+                                type="button"
+                                aria-pressed={activePanel === 'inquiries'}
+                                onClick={() => setActivePanel('inquiries')}
+                            >
                                 고객문의 내역
                                 <ChevronRight />
-                            </Link>
-                            <Link to={paths.inquiryWrite}>
+                            </button>
+                            <button
+                                className="mypage-sidebar__item"
+                                type="button"
+                                aria-pressed={activePanel === 'inquiryWrite'}
+                                onClick={() => setActivePanel('inquiryWrite')}
+                            >
                                 문의 작성
                                 <ChevronRight />
-                            </Link>
+                            </button>
                         </section>
                         <section>
                             <h2>개인정보 관리</h2>
-                            <Link to={paths.profile}>
+                            <button
+                                className="mypage-sidebar__item"
+                                type="button"
+                                aria-pressed={activePanel === 'profile'}
+                                onClick={() => setActivePanel('profile')}
+                            >
                                 프로필 수정
                                 <ChevronRight />
-                            </Link>
+                            </button>
                             <button
                                 type="button"
                                 onClick={() => {
@@ -127,38 +229,66 @@ export function MyPage() {
                         className="mypage-information"
                         aria-labelledby="mypage-information-title"
                     >
-                        <p className="mypage-information__eyebrow">HYUNDAI MOTORSTUDIO CLUB</p>
-                        <h2 id="mypage-information-title">BASIC</h2>
-                        <p className="mypage-information__description">
-                            현대 모터스튜디오의 기본 멤버십 전시와 프로그램,
-                            <br />
-                            다양한 멤버십 혜택을 경험해보세요.
+                        <p className="mypage-information__eyebrow">
+                            {activePanel ? dashboardPanels[activePanel] : 'HYUNDAI MOTORSTUDIO CLUB'}
                         </p>
-                        <div className="mypage-information__footer">
-                            <ul className="mypage-information__benefits" aria-label="멤버십 혜택">
-                                {['PROGRAM BENEFIT', 'MEMBER CONTENT', 'EVENT ACCESS'].map(
-                                    (benefit, index) => (
-                                        <li key={benefit}>
-                                            {index > 0 && (
-                                                <img
-                                                    src={membershipSeparator}
-                                                    alt=""
-                                                    aria-hidden="true"
-                                                />
-                                            )}
-                                            <span>{benefit}</span>
-                                        </li>
-                                    )
-                                )}
-                            </ul>
-                            <Link className="mypage-information__link" to={paths.membership}>
-                                멤버십 혜택 확인하기
-                                <img src={membershipArrow} alt="" aria-hidden="true" />
-                            </Link>
-                        </div>
+                        <h2 id="mypage-information-title">
+                            {activePanel ? '제작 중인 페이지입니다.' : 'BASIC'}
+                        </h2>
+                        <p className="mypage-information__description">
+                            {activePanel ? (
+                                <>
+                                    상세 페이지는 현재 작업 중인 페이지입니다.
+                                    <br />
+                                    이용에 불편을 드려 죄송합니다.
+                                </>
+                            ) : (
+                                <>
+                                    현대 모터스튜디오의 기본 멤버십 전시와 프로그램,
+                                    <br />
+                                    다양한 멤버십 혜택을 경험해보세요.
+                                </>
+                            )}
+                        </p>
+                        {!activePanel && (
+                            <div className="mypage-information__footer">
+                                <ul className="mypage-information__benefits" aria-label="멤버십 혜택">
+                                    {['PROGRAM BENEFIT', 'MEMBER CONTENT', 'EVENT ACCESS'].map(
+                                        (benefit, index) => (
+                                            <li key={benefit}>
+                                                {index > 0 && (
+                                                    <img
+                                                        src={membershipSeparator}
+                                                        alt=""
+                                                        aria-hidden="true"
+                                                    />
+                                                )}
+                                                <span>{benefit}</span>
+                                            </li>
+                                        )
+                                    )}
+                                </ul>
+                                <Link className="mypage-information__link" to={paths.membership}>
+                                    멤버십 혜택 확인하기
+                                    <img src={membershipArrow} alt="" aria-hidden="true" />
+                                </Link>
+                            </div>
+                        )}
                     </section>
 
-                    <section className="mypage-history">
+                    {activePanel ? (
+                        <section className="mypage-empty mypage-empty--construction">
+                            <FileText />
+                            <strong>제작 중인 페이지입니다.</strong>
+                            <p>
+                                상세 페이지는 현재 작업 중인 페이지입니다.
+                                <br />
+                                이용에 불편을 드려 죄송합니다.
+                            </p>
+                        </section>
+                    ) : (
+                    <>
+                        <section className="mypage-history">
                         <div className="mypage-history__title">
                             <h2>예약 및 활동 현황</h2>
                             <Link to={paths.myReservations}>
@@ -166,33 +296,47 @@ export function MyPage() {
                                 <ChevronRight />
                             </Link>
                         </div>
-                        <div className="mypage-filter">
+                        <form className="mypage-filter" onSubmit={applyDateRange}>
                             <div>
-                                {['1개월', '3개월', '6개월', '1년'].map((item) => (
+                                {periodOptions.map((item) => (
                                     <button
-                                        className={period === item ? 'is-active' : ''}
+                                        className={period === item.label ? 'is-active' : ''}
                                         type="button"
-                                        onClick={() => setPeriod(item)}
-                                        key={item}
+                                        aria-pressed={period === item.label}
+                                        onClick={() => selectPeriod(item.label, item.months)}
+                                        key={item.label}
                                     >
-                                        {item}
+                                        {item.label}
                                     </button>
                                 ))}
                             </div>
                             <label>
                                 <span>시작일</span>
-                                <input type="date" defaultValue="2026-08-22" />
+                                <input
+                                    type="date"
+                                    value={dateRange.start}
+                                    onChange={(event) => changeDateRange('start', event.target.value)}
+                                />
                             </label>
                             <label>
                                 <span>종료일</span>
-                                <input type="date" defaultValue="2026-09-22" />
+                                <input
+                                    type="date"
+                                    value={dateRange.end}
+                                    onChange={(event) => changeDateRange('end', event.target.value)}
+                                />
                             </label>
-                            <button type="button">조회</button>
-                        </div>
+                            <button type="submit">조회</button>
+                            {filterError && (
+                                <p className="mypage-filter__error" role="alert">
+                                    {filterError}
+                                </p>
+                            )}
+                        </form>
 
-                        {reservations.length ? (
+                        {filteredReservations.length ? (
                             <div className="mypage-reservations">
-                                {reservations.map((item) => (
+                                {filteredReservations.map((item) => (
                                     <article key={item.id}>
                                         <CalendarDays />
                                         <div>
@@ -216,29 +360,41 @@ export function MyPage() {
                         ) : (
                             <div className="mypage-empty">
                                 <FileText />
-                                <strong>예약 및 이용 내역이 없습니다.</strong>
-                                <p>현대 모터스튜디오의 새로운 경험을 예약해 보세요.</p>
-                                <Link to={paths.reservations}>예약하러 가기</Link>
+                                <strong>
+                                    {reservations.length
+                                        ? '선택한 기간의 예약 및 이용 내역이 없습니다.'
+                                        : '예약 및 이용 내역이 없습니다.'}
+                                </strong>
+                                <p>
+                                    {reservations.length
+                                        ? '다른 조회 기간을 선택해 주세요.'
+                                        : '현대 모터스튜디오의 새로운 경험을 예약해 보세요.'}
+                                </p>
+                                {!reservations.length && (
+                                    <Link to={paths.reservations}>예약하러 가기</Link>
+                                )}
                             </div>
                         )}
-                    </section>
+                        </section>
 
-                    <section className="mypage-quick-links">
-                        <Link to={paths.myReservations}>
-                            <CalendarDays />
-                            <span>
-                                나의 예약<strong>{reservations.length}건</strong>
-                            </span>
-                            <ChevronRight />
-                        </Link>
-                        <Link to={paths.inquiries}>
-                            <FileText />
-                            <span>
-                                고객문의<strong>{inquiries.length}건</strong>
-                            </span>
-                            <ChevronRight />
-                        </Link>
-                    </section>
+                        <section className="mypage-quick-links">
+                            <Link to={paths.myReservations}>
+                                <CalendarDays />
+                                <span>
+                                    나의 예약<strong>{reservations.length}건</strong>
+                                </span>
+                                <ChevronRight />
+                            </Link>
+                            <Link to={paths.inquiries}>
+                                <FileText />
+                                <span>
+                                    고객문의<strong>{inquiries.length}건</strong>
+                                </span>
+                                <ChevronRight />
+                            </Link>
+                        </section>
+                    </>
+                    )}
                 </div>
             </div>
         </main>

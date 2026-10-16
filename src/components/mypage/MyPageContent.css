@@ -6,6 +6,7 @@
 }
 .mypage-dashboard__breadcrumb {
     display: flex;
+    min-height: 18px;
     align-items: center;
     gap: 10px;
     max-width: 1480px;
@@ -25,14 +26,10 @@
     gap: 70px;
 }
 .mypage-sidebar {
-    padding-top: 4px;
-}
-.mypage-sidebar > h1 {
-    font-size: 30px;
-    font-weight: 700;
+    margin-top: 40px;
 }
 .mypage-sidebar nav {
-    margin-top: 42px;
+    margin-top: 0;
 }
 .mypage-sidebar section + section {
     margin-top: 46px;
@@ -42,7 +39,8 @@
     font-size: 17px;
 }
 .mypage-sidebar a,
-.mypage-sidebar button {
+.mypage-sidebar button,
+.mypage-sidebar__item {
     display: flex;
     width: 100%;
     align-items: center;
@@ -52,6 +50,9 @@
     background: none;
     color: #666;
     font: 500 15px var(--font-ko);
+}
+.mypage-sidebar a,
+.mypage-sidebar button {
     cursor: pointer;
 }
 .mypage-sidebar svg {
@@ -178,6 +179,12 @@
     border: 0;
     background: transparent;
     font: inherit;
+}
+.mypage-filter__error {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #c62828;
+    font-size: 13px;
 }
 .mypage-empty {
     display: grid;
@@ -534,11 +541,15 @@
 
 /* Figma Information membership card. */
 .mypage-dashboard .mypage-information {
-    margin-top: 32px;
+    margin-top: 28px;
     padding: 33px 67px 40px;
     border-radius: 12px;
     background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), var(--color-main-2, #111);
     color: var(--color-main-1, #fff);
+}
+.mypage-empty--construction {
+    margin-top: 38px;
+    border-top: 1px solid #ddd;
 }
 .mypage-dashboard .mypage-information__eyebrow {
     margin: 0;
