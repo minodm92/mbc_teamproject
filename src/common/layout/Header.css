@@ -389,18 +389,6 @@
 }
 #root .site-header--scrolled .site-header__asset--dark { opacity: 0; }
 #root .site-header--scrolled .site-header__asset--light { opacity: 1; }
-#root .site-header.site-header--newsroom {
-  color: #fff;
-}
-
-#root .site-header.site-header--newsroom .site-header__actions .site-header__experience-finding {
-  filter: none;
-}
-
-#root .site-header.site-header--newsroom:is(:hover, :focus-within, .site-header--expanded) {
-  color: #fff;
-}
-
 #root .site-header.site-header--reservation:is(:hover, :focus-within, .site-header--expanded, .site-header--scrolled) {
   color: #fff;
 }

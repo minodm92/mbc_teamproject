@@ -7,7 +7,6 @@ const darkForegroundRoutes = new Set([
   '/motorstudio/busan',
   '/motorstudio/senayan-park',
   '/reservations',
-  '/newsroom',
 ]);
 
 export function getHeaderVariant(pathname) {
@@ -18,7 +17,6 @@ export function getHeaderVariant(pathname) {
   if (/^\/mypage(?:\/|$)/.test(normalizedPath)) return 'dark';
   if (/^\/reservations(?:\/|$)/.test(normalizedPath)) return 'dark';
   if (/^\/notices\/[^/]+$/.test(normalizedPath)) return 'light';
-  if (/^\/newsroom\/[^/]+$/.test(normalizedPath)) return 'light';
   if (/^\/programs\/[^/]+$/.test(normalizedPath)) return 'dark';
   if (/^\/exhibitions\/[^/]+$/.test(normalizedPath)) return 'dark';
 

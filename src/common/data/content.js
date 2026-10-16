@@ -72,13 +72,6 @@ export const notices = [
   },
 ];
 
-export const news = [
-  { id: 'seoul-story', title: 'SEOUL, REBORN FOR CAR CULTURE', subtitle: '현대 모터스튜디오 서울', description: '자동차 문화와 취향을 공유하는 새로운 공간을 만나보세요.', image: '/images/locations/seoul.svg', location: 'seoul' },
-  { id: 'hanam-story', title: 'A NEW EXPERIENCE IN HANAM', subtitle: '현대 모터스튜디오 하남', description: '차량 전시와 미디어 콘텐츠가 선사하는 몰입감 있는 경험', image: '/images/locations/hanam.svg', location: 'hanam' },
-  { id: 'heritage-story', title: 'RETRACING THE FIRST STEP', subtitle: '현대 모터스튜디오 서울', description: '시작과 성장을 돌아보는 헤리티지 전시', image: '/images/exhibitions/heritage.svg', location: 'seoul' },
-  { id: 'plastic-story', title: 'PLASTIC, A NEW DISCOVERY', subtitle: '현대 모터스튜디오 부산', description: '디자인과 지속가능성을 바라보는 새로운 시선', image: '/images/exhibitions/plastic.svg', location: 'busan' },
-];
-
 export const profileAvatars = Array.from({ length: 6 }, (_, index) => ({
   id: `character-0${index + 1}`,
   name: ['블랙 캣', '화이트 래빗', '브라운 베어', '레드 폭스', '그레이 울프', '크림 퍼피'][index],

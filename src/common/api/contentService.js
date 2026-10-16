@@ -1,6 +1,6 @@
-import { locations, exhibitions, programs, notices, news, demoProducts } from '../data/content';
+import { locations, exhibitions, programs, notices, demoProducts } from '../data/content';
 
-const localData = { locations, exhibitions, programs, notices, news, products: demoProducts };
+const localData = { locations, exhibitions, programs, notices, products: demoProducts };
 
 export async function getContent(type) {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -14,5 +14,4 @@ export async function getLocations() { return getContent('locations'); }
 export async function getExhibitions() { return getContent('exhibitions'); }
 export async function getPrograms() { return getContent('programs'); }
 export async function getNotices() { return getContent('notices'); }
-export async function getNews() { return getContent('news'); }
 export async function getProducts() { return getContent('products'); }

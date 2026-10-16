@@ -12,7 +12,7 @@ const nav = [
   { label: '모빌리티', to: paths.mobility },
   { label: '전시/프로그램', to: paths.exhibitions, children: [{ label: '전시', to: paths.exhibitions }, { label: '프로그램', to: paths.programs }] },
   { label: '예약', to: paths.reservations },
-  { label: '안내', to: paths.membership, children: [{ label: '멤버십', to: paths.membership }, { label: '공지사항', to: paths.notices }, { label: '뉴스룸', to: paths.newsroom }] },
+  { label: '안내', to: paths.membership, children: [{ label: '멤버십', to: paths.membership }, { label: '공지사항', to: paths.notices }] },
 ];
 
 const reservationPages = [
@@ -32,7 +32,6 @@ export default function Header({ variant = 'light' }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isReservation = pathname === paths.reservations || pathname.startsWith(`${paths.reservations}/`);
-  const isNewsroom = pathname === paths.newsroom;
   const reservationPage = reservationPages.find((page) => page.to === pathname) || reservationPages[0];
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
@@ -147,7 +146,7 @@ export default function Header({ variant = 'light' }) {
     setSubnavOpen(false);
     window.scrollTo(0, 0);
   };
-  const renderAsset = (name, className) => variant === 'light' || isReservation || isNewsroom
+  const renderAsset = (name, className) => variant === 'light' || isReservation
     ? <img className={className} src={`/images/common/${name}.svg`} alt="" />
     : <>
       <img className={`${className} site-header__asset--dark`} src={`/images/common/${name}-black.svg`} alt="" />
@@ -156,7 +155,7 @@ export default function Header({ variant = 'light' }) {
 
   return <>
     {scrolled && <button className="site-header__reveal-zone" type="button" aria-label="상단 메뉴 표시" onFocus={() => setTopHovered(true)} onClick={() => setTopHovered(true)} />}
-    <header data-mobile-theme={mobileDarkBackground ? 'light' : 'dark'} onPointerEnter={() => setTopHovered(true)} onPointerLeave={() => { setTopHovered(false); setSubnavOpen(false); }} ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${isNewsroom ? ' site-header--newsroom' : ''}${subnavOpen ? ' site-header--expanded' : ''}${scrolled ? ' site-header--scrolled' : ''}${scrolled && !topHovered && !open ? ' site-header--scroll-hidden' : ''}`}>
+    <header data-mobile-theme={mobileDarkBackground ? 'light' : 'dark'} onPointerEnter={() => setTopHovered(true)} onPointerLeave={() => { setTopHovered(false); setSubnavOpen(false); }} ref={headerRef} className={`site-header site-header--${variant}${isReservation ? ' site-header--reservation' : ''}${subnavOpen ? ' site-header--expanded' : ''}${scrolled ? ' site-header--scrolled' : ''}${scrolled && !topHovered && !open ? ' site-header--scroll-hidden' : ''}`}>
     <div className="site-header__bar">
       <Link className="site-header__logo" to={paths.home} onClick={closeMenus} aria-label="현대 모터스튜디오 홈">
         {renderAsset('hyundai-motorstudio-logo', 'site-header__logo-image')}

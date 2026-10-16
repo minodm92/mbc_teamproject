@@ -291,7 +291,6 @@ const guideLinks = [
     ['RESERVATION', 'PLAN YOUR EXPERIENCE', paths.reservations],
     ['MY RESERVATION', 'CHECK YOUR SCHEDULE', paths.myReservations],
     ['MEMBERSHIP', 'JOIN HMS CLUB', paths.membership],
-    ['NEWSROOM', 'DISCOVER WHAT’S NEW', paths.newsroom],
 ];
 const locationDetails = {
     seoul: {

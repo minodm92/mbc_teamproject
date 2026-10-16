@@ -18,8 +18,6 @@ import {
     ProgramDetailPage,
     NoticesPage,
     NoticeDetailPage,
-    NewsroomPage,
-    NewsroomDetailPage,
     NotFoundPage,
 } from './pages/content/ContentPages';
 import MembershipPage from './pages/membership/MembershipPage';
@@ -151,8 +149,6 @@ export default function App() {
                 <Route path="/membership" element={<MembershipPage />} />
                 <Route path="/notices" element={<NoticesPage />} />
                 <Route path="/notices/:noticeId" element={<NoticeDetailPage />} />
-                <Route path="/newsroom" element={<NewsroomPage />} />
-                <Route path="/newsroom/:articleId" element={<NewsroomDetailPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/auth/kakao/callback" element={<KakaoCallbackPage />} />
