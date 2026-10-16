@@ -200,8 +200,9 @@ export function MyPage() {
                             <button
                                 type="button"
                                 onClick={() => {
+                                    sessionStorage.setItem('hms-logout-notice', 'true');
                                     logout();
-                                    navigate(paths.home);
+                                    window.location.replace(paths.home);
                                 }}
                             >
                                 로그아웃
@@ -393,6 +394,11 @@ export function MyPage() {
                                 <ChevronRight />
                             </Link>
                         </section>
+                        <button className="mypage-mobile-logout" type="button" onClick={() => {
+                            sessionStorage.setItem('hms-logout-notice', 'true');
+                            logout();
+                            window.location.replace(paths.home);
+                        }}>로그아웃</button>
                     </>
                     )}
                 </div>
